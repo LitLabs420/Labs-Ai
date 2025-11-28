@@ -1,0 +1,42 @@
+# GLAMFLOW AI - SEO Configuration
+# Allow search engines to crawl and index our pages
+
+User-agent: *
+Allow: /
+Allow: /index.html
+Allow: /landing.html
+Allow: /content.html
+Allow: /analytics.html
+Disallow: /auth.html
+Disallow: /dashboard.html
+Disallow: /dashboard-loader.html
+Disallow: /godmode.html
+Disallow: /admin.html
+Disallow: /admin-direct.html
+Disallow: /admin-google.html
+Disallow: /financial.html
+Disallow: /*.js
+Disallow: /*.css
+Disallow: /functions/
+Disallow: /.git/
+Disallow: /node_modules/
+
+# Crawl delay for heavy crawlers
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://studio-4627045237-a2fe9.web.app/sitemap.xml
+
+# Google-specific
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Bing-specific
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Facebook
+User-agent: facebookexternalhit
+Allow: /
