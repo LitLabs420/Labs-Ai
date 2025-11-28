@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Creator | GLAMFLOW AI</title>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="navigation-system.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .content-wrapper {
+            margin-left: 280px;
+            padding: 2rem;
+            min-height: 100vh;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.02), rgba(0, 0, 0, 0));
+        }
+
+        .page-header {
+            margin-bottom: 3rem;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ff0080, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: #b0b0b0;
+            font-size: 1rem;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .content-card {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(255, 0, 128, 0.05));
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .content-card:hover {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(255, 0, 128, 0.1));
+            border-color: rgba(0, 212, 255, 0.4);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #00d4ff;
+        }
+
+        .card-description {
+            color: #b0b0b0;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-button {
+            background: linear-gradient(135deg, #00d4ff, #40e0d0);
+            color: #000;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .card-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .editor-section {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .editor-header {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .editor-btn {
+            background: linear-gradient(135deg, #ff0080, #ff8c00);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .editor-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 128, 0.3);
+        }
+
+        .editor-btn.secondary {
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+            margin-bottom: 1rem;
+        }
+
+        .tone-selector {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .tone-btn {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tone-btn:hover, .tone-btn.active {
+            background: rgba(0, 212, 255, 0.3);
+            border-color: rgba(0, 212, 255, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            .content-wrapper {
+                margin-left: 0;
+                padding: 1rem;
+            }
+
+            .page-title {
+                font-size: 1.8rem;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h1 class="page-title">✍️ AI Content Creator</h1>
+            <p class="page-subtitle">Generate engaging content in seconds with AI-powered assistance</p>
+        </div>
+
+        <!-- QUICK ACCESS TEMPLATES -->
+        <div class="content-grid">
+            <div class="content-card" onclick="startCreator('social')">
+                <div class="card-icon">📱</div>
+                <div class="card-title">Social Media Posts</div>
+                <div class="card-description">Generate Instagram, Twitter, and LinkedIn posts</div>
+                <button class="card-button">Start Creating</button>
+            </div>
+
+            <div class="content-card" onclick="startCreator('blog')">
+                <div class="card-icon">📝</div>
+                <div class="card-title">Blog Posts</div>
+                <div class="card-description">Write full blog articles with SEO optimization</div>
+                <button class="card-button">Start Writing</button>
+            </div>
+
+            <div class="content-card" onclick="startCreator('email')">
+                <div class="card-icon">📧</div>
+                <div class="card-title">Email Campaigns</div>
+                <div class="card-description">Create compelling email copy and sequences</div>
+                <button class="card-button">Create Email</button>
+            </div>
+
+            <div class="content-card" onclick="startCreator('product')">
+                <div class="card-icon">💄</div>
+                <div class="card-title">Product Descriptions</div>
+                <div class="card-description">Generate product listings and descriptions</div>
+                <button class="card-button">Describe Product</button>
+            </div>
+
+            <div class="content-card" onclick="startCreator('ad')">
+                <div class="card-icon">📢</div>
+                <div class="card-title">Ad Copy</div>
+                <div class="card-description">Write high-converting ad headlines and body</div>
+                <button class="card-button">Create Ads</button>
+            </div>
+
+            <div class="content-card" onclick="startCreator('caption')">
+                <div class="card-icon">✨</div>
+                <div class="card-title">Image Captions</div>
+                <div class="card-description">Generate captions for photos and graphics</div>
+                <button class="card-button">Add Caption</button>
+            </div>
+        </div>
+
+        <!-- CONTENT EDITOR -->
+        <div class="editor-section">
+            <h2 style="color: #00d4ff; margin-bottom: 1.5rem; font-size: 1.5rem;">✍️ Content Editor</h2>
+
+            <!-- TOPIC INPUT -->
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">What do you want to write about?</label>
+                <input type="text" id="topic-input" placeholder="e.g., 'Beauty tips for sensitive skin'" 
+                       style="width: 100%; padding: 0.8rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.2); border-radius: 6px; color: white; font-size: 1rem;">
+            </div>
+
+            <!-- TONE SELECTOR -->
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Tone:</label>
+                <div class="tone-selector">
+                    <button class="tone-btn active" onclick="setTone('professional')">Professional</button>
+                    <button class="tone-btn" onclick="setTone('casual')">Casual</button>
+                    <button class="tone-btn" onclick="setTone('friendly')">Friendly</button>
+                    <button class="tone-btn" onclick="setTone('humorous')">Humorous</button>
+                    <button class="tone-btn" onclick="setTone('luxury')">Luxury</button>
+                </div>
+            </div>
+
+            <!-- LENGTH SELECTOR -->
+            <div style="margin-bottom: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Length:</label>
+                    <select style="width: 100%; padding: 0.8rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.2); border-radius: 6px; color: white;">
+                        <option>Short (100-150 words)</option>
+                        <option>Medium (150-300 words)</option>
+                        <option>Long (300+ words)</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Platform:</label>
+                    <select style="width: 100%; padding: 0.8rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.2); border-radius: 6px; color: white;">
+                        <option>Social Media</option>
+                        <option>Blog</option>
+                        <option>LinkedIn</option>
+                        <option>Email</option>
+                        <option>Website</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- CONTENT OUTPUT -->
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Generated Content:</label>
+                <textarea id="content-output" placeholder="Your generated content will appear here..."></textarea>
+            </div>
+
+            <!-- ACTION BUTTONS -->
+            <div class="editor-header">
+                <button class="editor-btn" onclick="generateContent()">⚡ Generate Content</button>
+                <button class="editor-btn secondary" onclick="copyContent()">📋 Copy</button>
+                <button class="editor-btn secondary" onclick="saveAsDraft()">💾 Save Draft</button>
+                <button class="editor-btn secondary" onclick="shareContent()">📤 Share</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedTone = 'professional';
+
+        function startCreator(type) {
+            document.querySelector('#topic-input').focus();
+            const titles = {
+                'social': '📱 Social Media Post',
+                'blog': '📝 Blog Post',
+                'email': '📧 Email Campaign',
+                'product': '💄 Product Description',
+                'ad': '📢 Ad Copy',
+                'caption': '✨ Image Caption'
+            };
+            alert('Ready to create: ' + titles[type] + '\n\nEnter your topic above and click "Generate Content"');
+        }
+
+        function setTone(tone) {
+            selectedTone = tone;
+            document.querySelectorAll('.tone-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function generateContent() {
+            const topic = document.getElementById('topic-input').value;
+            if (!topic) {
+                alert('Please enter a topic first');
+                return;
+            }
+
+            const output = document.getElementById('content-output');
+            output.value = 'Generating ' + selectedTone + ' content about "' + topic + '"...\n\n[AI content will appear here after processing]';
+            
+            // Simulate API call
+            setTimeout(() => {
+                const samples = {
+                    professional: `Here's a professional take on ${topic}.\n\nOur approach emphasizes quality and expertise. We understand the importance of delivering exceptional results in this space.`,
+                    casual: `Hey! So about ${topic} - honestly, this is pretty cool.\n\nWe've put together some thoughts that might help you out.`,
+                    friendly: `Welcome! We're excited to share insights about ${topic}.\n\nThis topic matters to us, and we hope it brings value to you too!`,
+                    humorous: `${topic}? Don't even get us started! 😄\n\nBut seriously, here's what you need to know...`,
+                    luxury: `Discover the sophistication of ${topic}.\n\nCrafted with precision and excellence for the discerning professional.`
+                };
+                output.value = samples[selectedTone];
+            }, 1000);
+        }
+
+        function copyContent() {
+            const content = document.getElementById('content-output').value;
+            if (!content) {
+                alert('No content to copy');
+                return;
+            }
+            navigator.clipboard.writeText(content).then(() => {
+                alert('✅ Copied to clipboard!');
+            });
+        }
+
+        function saveAsDraft() {
+            const topic = document.getElementById('topic-input').value;
+            const content = document.getElementById('content-output').value;
+            if (!content) {
+                alert('No content to save');
+                return;
+            }
+            localStorage.setItem('content_draft_' + Date.now(), JSON.stringify({ topic, content }));
+            alert('✅ Draft saved!');
+        }
+
+        function shareContent() {
+            const content = document.getElementById('content-output').value;
+            if (!content) {
+                alert('No content to share');
+                return;
+            }
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Check this out!',
+                    text: content
+                });
+            } else {
+                alert('Share functionality not supported. Please copy manually.');
+            }
+        }
+    </script>
+</body>
+</html>
