@@ -53,6 +53,8 @@ jobs:
       - name: Deploy to Firebase
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_CI_TOKEN }}
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         run: |
+          echo "Deploying to Firebase..."
           firebase deploy --only hosting,functions --project studio-4627045237-a2fe9 --force
+          echo "✅ Deployment complete!"
