@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLAMFLOW - Financial Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000000;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+
+        .banner {
+            background: linear-gradient(135deg, #ff0080, #ff8c00);
+            padding: 1rem;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: calc(100vh - 60px);
+        }
+
+        .sidebar {
+            background: #0a0a0a;
+            border-right: 2px solid #ff0080;
+            padding: 2rem 0;
+            overflow-y: auto;
+            max-height: calc(100vh - 60px);
+            position: sticky;
+            top: 60px;
+        }
+
+        .logo {
+            padding: 0 1.5rem 2rem;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ff0080, #40e0d0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav {
+            list-style: none;
+        }
+
+        .nav li {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+            margin: 0.5rem 0;
+        }
+
+        .nav li:hover {
+            background: rgba(255, 0, 128, 0.1);
+            border-left-color: #ff0080;
+        }
+
+        .nav li.active {
+            background: rgba(64, 224, 208, 0.15);
+            border-left-color: #40e0d0;
+            color: #ff0080;
+            font-weight: 700;
+        }
+
+        .content {
+            padding: 2rem;
+            overflow-y: auto;
+            max-height: calc(100vh - 60px);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff0080, #40e0d0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 2rem;
+        }
+
+        .wallet-display {
+            background: linear-gradient(135deg, rgba(99, 91, 255, 0.25), rgba(108, 92, 231, 0.25));
+            border: 3px solid #635bff;
+            border-radius: 15px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .wallet-label {
+            color: #40e0d0;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .wallet-amount {
+            font-size: 4rem;
+            font-weight: 900;
+            color: #635bff;
+            margin-bottom: 1rem;
+        }
+
+        .wallet-info {
+            color: #00d4ff;
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: linear-gradient(135deg, rgba(255, 0, 128, 0.1), rgba(64, 224, 208, 0.1));
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .card h3 {
+            color: #ff0080;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(255, 0, 128, 0.1));
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #ff0080;
+        }
+
+        .stat-label {
+            color: #40e0d0;
+            margin-top: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff0080, #ff8c00);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 20px rgba(255, 0, 128, 0.6);
+        }
+
+        .btn-secondary {
+            background: rgba(64, 224, 208, 0.2);
+            color: #40e0d0;
+            border: 1px solid #40e0d0;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(64, 224, 208, 0.4);
+        }
+
+        .btn-danger {
+            background: rgba(255, 0, 128, 0.3);
+            color: #ff0080;
+            border: 1px solid #ff0080;
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        .input-group label {
+            display: block;
+            color: #40e0d0;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .input-group input,
+        .input-group select,
+        .input-group textarea {
+            width: 100%;
+            background: rgba(0, 212, 255, 0.08);
+            border: 1px solid #40e0d0;
+            border-radius: 8px;
+            padding: 0.75rem;
+            color: #00d4ff;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: #ff0080;
+            box-shadow: 0 0 15px rgba(255, 0, 128, 0.3);
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .table th {
+            background: linear-gradient(135deg, #ff0080, #ff8c00);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+        }
+
+        .table tr:hover {
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        .status {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-success {
+            background: rgba(64, 224, 208, 0.2);
+            color: #40e0d0;
+        }
+
+        .status-pending {
+            background: rgba(255, 140, 0, 0.2);
+            color: #ff8c00;
+        }
+
+        .status-completed {
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+        }
+
+        .transfer-box {
+            background: linear-gradient(135deg, rgba(255, 0, 128, 0.15), rgba(64, 224, 208, 0.15));
+            border: 2px solid #ff0080;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .arrow {
+            text-align: center;
+            font-size: 2rem;
+            color: #ff0080;
+            margin: 1rem 0;
+        }
+
+        .account-box {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid #40e0d0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .container { grid-template-columns: 1fr; }
+            .grid-2 { grid-template-columns: 1fr; }
+            .grid-3 { grid-template-columns: 1fr; }
+            .wallet-amount { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="banner">
+        🔥 FINANCIAL MANAGEMENT SYSTEM | 📧 laidbacknostress4life@gmail.com
+    </div>
+
+    <div class="container">
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="logo">💰 FINANCE</div>
+            <ul class="nav">
+                <li class="active" onclick="showSection('dashboard')">💼 Dashboard</li>
+                <li onclick="showSection('wallet')">💳 Wallet</li>
+                <li onclick="showSection('transfer')">🔄 Transfer Money</li>
+                <li onclick="showSection('accounts')">🏦 Bank Accounts</li>
+                <li onclick="showSection('transactions')">📊 Transactions</li>
+                <li onclick="showSection('payouts')">💸 Payouts</li>
+                <li onclick="showSection('settings')">⚙️ Settings</li>
+                <li onclick="logout()" style="color: #ff0080; margin-top: 2rem;">🚪 Logout</li>
+            </ul>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="content">
+            <!-- DASHBOARD -->
+            <div id="dashboard" class="section active">
+                <div class="header">💼 Financial Dashboard</div>
+
+                <div class="wallet-display">
+                    <div class="wallet-label">Total Wallet Balance</div>
+                    <div class="wallet-amount" id="mainBalance">$2,847.50</div>
+                    <div class="wallet-info">
+                        Available: <span id="availableBalance">$2,847.50</span> | 
+                        Pending: <span id="pendingBalance">$0.00</span>
+                    </div>
+                </div>
+
+                <div class="grid-3">
+                    <div class="stat-box">
+                        <div class="stat-value">$2,847</div>
+                        <div class="stat-label">Total Earned</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">$1,200</div>
+                        <div class="stat-label">This Month</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">28</div>
+                        <div class="stat-label">Transactions</div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <h3>🚀 Quick Actions</h3>
+                        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                            <button class="btn btn-primary" onclick="showSection('transfer')">🔄 Transfer Money</button>
+                            <button class="btn btn-primary" onclick="showSection('payouts')">💸 Request Payout</button>
+                            <button class="btn btn-secondary" onclick="showSection('wallet')">💳 View Wallet</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>📈 Activity</h3>
+                        <p style="color: #40e0d0; line-height: 2;">
+                            ✅ Last Transfer: $500 (Jan 28)<br>
+                            ✅ Last Payout: $200 (Jan 25)<br>
+                            📊 Avg Monthly: $1,420<br>
+                            🔄 Transactions: 28 total
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WALLET -->
+            <div id="wallet" class="section">
+                <div class="header">💳 Wallet Management</div>
+
+                <div class="wallet-display">
+                    <div class="wallet-label">Current Balance</div>
+                    <div class="wallet-amount" id="walletBalance">$2,847.50</div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <h3>💰 Available Funds</h3>
+                        <p style="color: #40e0d0; font-size: 1.3rem; margin: 1rem 0;">$2,847.50</p>
+                        <p style="color: #00d4ff; font-size: 0.9rem; line-height: 1.8;">
+                            Ready to transfer or withdraw<br>
+                            No hold or restrictions<br>
+                            Updated in real-time
+                        </p>
+                    </div>
+
+                    <div class="card">
+                        <h3>📊 Wallet Stats</h3>
+                        <p style="color: #40e0d0; line-height: 2;">
+                            Total Received: $3,047.50<br>
+                            Total Transferred: $200.00<br>
+                            Total Withdrawn: $0.00<br>
+                            Current: $2,847.50
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔄 Add Funds to Wallet</h3>
+                    <div class="grid-2">
+                        <div class="input-group">
+                            <label>Amount to Add</label>
+                            <input type="number" placeholder="100.00" min="1" id="addAmount">
+                        </div>
+                        <div class="input-group">
+                            <label>Payment Method</label>
+                            <select id="addMethod">
+                                <option>Bank Transfer (ACH)</option>
+                                <option>Stripe Card</option>
+                                <option>PayPal</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="addFunds()">➕ Add Funds to Wallet</button>
+                </div>
+            </div>
+
+            <!-- TRANSFER MONEY -->
+            <div id="transfer" class="section">
+                <div class="header">🔄 Transfer Money</div>
+
+                <div class="transfer-box">
+                    <div class="card">
+                        <h3>💸 Send Money</h3>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center;">
+                            <div>
+                                <h4 style="color: #ff0080; margin-bottom: 1rem;">FROM: Your Wallet</h4>
+                                <div class="account-box">
+                                    <div style="color: #40e0d0; font-weight: 600; margin-bottom: 0.5rem;">💳 Main Wallet</div>
+                                    <div style="color: #ff0080; font-size: 1.5rem; font-weight: 900;">$2,847.50</div>
+                                    <div style="color: #00d4ff; font-size: 0.85rem; margin-top: 0.5rem;">Available to transfer</div>
+                                </div>
+                            </div>
+
+                            <div class="arrow">→</div>
+
+                            <div>
+                                <h4 style="color: #ff0080; margin-bottom: 1rem;">TO: Recipient</h4>
+                                <div class="input-group">
+                                    <label>Recipient Email</label>
+                                    <input type="email" id="recipientEmail" placeholder="recipient@email.com">
+                                </div>
+                                <div class="input-group">
+                                    <label>Amount</label>
+                                    <input type="number" id="transferAmount" placeholder="0.00" min="1" max="2847.50">
+                                </div>
+                                <div class="input-group">
+                                    <label>Transfer Type</label>
+                                    <select id="transferType">
+                                        <option>Internal Transfer (instant)</option>
+                                        <option>Bank Transfer (1-2 days)</option>
+                                        <option>Wallet to Wallet (instant)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Memo/Description</label>
+                            <textarea id="transferMemo" placeholder="Why are you sending this?" rows="2"></textarea>
+                        </div>
+
+                        <button class="btn btn-primary" onclick="transferMoney()" style="width: 100%; padding: 1rem; font-size: 1.1rem;">✅ EXECUTE TRANSFER</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Recent Transfers</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>To/From</th>
+                                <th>Amount</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2025-01-28</td>
+                                <td>Sarah Johnson</td>
+                                <td>-$500.00</td>
+                                <td>Wallet Transfer</td>
+                                <td><span class="status status-completed">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>2025-01-25</td>
+                                <td>Business Account</td>
+                                <td>+$200.00</td>
+                                <td>Deposit</td>
+                                <td><span class="status status-completed">Completed</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- BANK ACCOUNTS -->
+            <div id="accounts" class="section">
+                <div class="header">🏦 Bank Account Management</div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <h3>✅ Connected Accounts</h3>
+                        <div class="account-box">
+                            <div style="color: #40e0d0; font-weight: 600;">🏦 Primary Bank Account</div>
+                            <div style="color: #00d4ff; margin: 0.5rem 0;">•••• 4532</div>
+                            <div style="color: #ff0080; font-size: 0.85rem;">Chase Bank</div>
+                            <button class="btn btn-secondary" style="width: 100%; margin-top: 1rem;" onclick="alert('✅ Account verified')">✓ Verified</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>➕ Add Bank Account</h3>
+                        <div class="input-group">
+                            <label>Account Holder Name</label>
+                            <input type="text" placeholder="Your Name">
+                        </div>
+                        <div class="input-group">
+                            <label>Routing Number</label>
+                            <input type="text" placeholder="XXXXXXXXX">
+                        </div>
+                        <div class="input-group">
+                            <label>Account Number</label>
+                            <input type="password" placeholder="••••••••••••">
+                        </div>
+                        <button class="btn btn-primary" onclick="alert('✅ Bank account added! Verification in progress...')">Add Account</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>💳 Connected Stripe Card</h3>
+                    <div class="account-box">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="color: #40e0d0; font-weight: 600;">Visa •••• 4242</div>
+                                <div style="color: #00d4ff; font-size: 0.85rem;">Expires 12/26</div>
+                            </div>
+                            <div style="color: #40e0d0; font-weight: 600;">✓ Active</div>
+                        </div>
+                        <button class="btn btn-danger" style="width: 100%; margin-top: 1rem;" onclick="alert('⚠️ Card removed')">Remove Card</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TRANSACTIONS -->
+            <div id="transactions" class="section">
+                <div class="header">📊 Transaction History</div>
+
+                <div class="card">
+                    <h3>🔍 Filter Transactions</h3>
+                    <div class="grid-3">
+                        <div class="input-group">
+                            <label>Type</label>
+                            <select id="filterType">
+                                <option>All Types</option>
+                                <option>Deposits</option>
+                                <option>Transfers</option>
+                                <option>Withdrawals</option>
+                                <option>Payouts</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Status</label>
+                            <select id="filterStatus">
+                                <option>All Status</option>
+                                <option>Completed</option>
+                                <option>Pending</option>
+                                <option>Failed</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Date Range</label>
+                            <select id="filterDate">
+                                <option>Last 30 Days</option>
+                                <option>Last 90 Days</option>
+                                <option>This Year</option>
+                                <option>All Time</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📋 All Transactions</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                                <th>Amount</th>
+                                <th>Balance After</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2025-01-28 14:32</td>
+                                <td>Transfer</td>
+                                <td>Sent to Sarah Johnson</td>
+                                <td style="color: #ff0080;">-$500.00</td>
+                                <td>$2,347.50</td>
+                                <td><span class="status status-completed">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>2025-01-28 10:15</td>
+                                <td>Deposit</td>
+                                <td>Revenue payment</td>
+                                <td style="color: #40e0d0;">+$500.00</td>
+                                <td>$2,847.50</td>
+                                <td><span class="status status-completed">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>2025-01-25 16:45</td>
+                                <td>Payout</td>
+                                <td>Bank withdrawal</td>
+                                <td style="color: #ff0080;">-$200.00</td>
+                                <td>$2,347.50</td>
+                                <td><span class="status status-completed">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>2025-01-22 09:20</td>
+                                <td>Deposit</td>
+                                <td>Subscription payment</td>
+                                <td style="color: #40e0d0;">+$700.00</td>
+                                <td>$2,547.50</td>
+                                <td><span class="status status-completed">Completed</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- PAYOUTS -->
+            <div id="payouts" class="section">
+                <div class="header">💸 Payout Management</div>
+
+                <div class="grid-2">
+                    <div class="stat-box">
+                        <div class="stat-value">$2,847.50</div>
+                        <div class="stat-label">Available for Payout</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">Successful Payouts</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>💸 Request Payout</h3>
+                    <div class="grid-2">
+                        <div class="input-group">
+                            <label>Amount</label>
+                            <input type="number" id="payoutAmount" placeholder="500.00" min="5" max="2847.50">
+                        </div>
+                        <div class="input-group">
+                            <label>Method</label>
+                            <select id="payoutMethod">
+                                <option>Bank Account (ACH) - 1-2 days</option>
+                                <option>Stripe Card - Instant</option>
+                                <option>PayPal - 24 hours</option>
+                                <option>Wire Transfer - Same Day</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Notes</label>
+                        <textarea id="payoutNotes" placeholder="Any special instructions..." rows="2"></textarea>
+                    </div>
+                    <button class="btn btn-primary" onclick="requestPayout()" style="width: 100%; padding: 1rem; font-size: 1.1rem;">💳 REQUEST PAYOUT</button>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Payout History</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Method</th>
+                                <th>Status</th>
+                                <th>Processed</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2025-01-25</td>
+                                <td>$200.00</td>
+                                <td>Bank ACH</td>
+                                <td><span class="status status-completed">Completed</span></td>
+                                <td>2025-01-27</td>
+                            </tr>
+                            <tr>
+                                <td>2025-01-20</td>
+                                <td>$150.00</td>
+                                <td>Stripe Card</td>
+                                <td><span class="status status-completed">Completed</span></td>
+                                <td>2025-01-20</td>
+                            </tr>
+                            <tr>
+                                <td>2025-01-15</td>
+                                <td>$300.00</td>
+                                <td>Bank ACH</td>
+                                <td><span class="status status-completed">Completed</span></td>
+                                <td>2025-01-17</td>
+                            </tr>
+                            <tr>
+                                <td>2025-01-10</td>
+                                <td>$100.00</td>
+                                <td>PayPal</td>
+                                <td><span class="status status-completed">Completed</span></td>
+                                <td>2025-01-11</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SETTINGS -->
+            <div id="settings" class="section">
+                <div class="header">⚙️ Financial Settings</div>
+
+                <div class="card">
+                    <h3>📋 Wallet Settings</h3>
+                    <div class="input-group">
+                        <label>Minimum Payout Amount</label>
+                        <input type="number" value="5" min="1">
+                    </div>
+                    <div class="input-group">
+                        <label>Default Payout Method</label>
+                        <select>
+                            <option>Bank Account (ACH)</option>
+                            <option>Stripe Card</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Auto-Payout Frequency</label>
+                        <select>
+                            <option>Manual Only</option>
+                            <option>Daily</option>
+                            <option>Weekly</option>
+                            <option>Monthly</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="alert('✅ Wallet settings saved!')">Save Settings</button>
+                </div>
+
+                <div class="card">
+                    <h3>🔔 Notifications</h3>
+                    <label style="display: flex; align-items: center; margin-bottom: 1rem; color: #40e0d0;">
+                        <input type="checkbox" checked style="margin-right: 0.75rem; width: 18px; height: 18px;">
+                        Notify on transfers over $100
+                    </label>
+                    <label style="display: flex; align-items: center; margin-bottom: 1rem; color: #40e0d0;">
+                        <input type="checkbox" checked style="margin-right: 0.75rem; width: 18px; height: 18px;">
+                        Notify on payouts
+                    </label>
+                    <label style="display: flex; align-items: center; margin-bottom: 1rem; color: #40e0d0;">
+                        <input type="checkbox" checked style="margin-right: 0.75rem; width: 18px; height: 18px;">
+                        Weekly balance summary
+                    </label>
+                    <label style="display: flex; align-items: center; color: #40e0d0;">
+                        <input type="checkbox" checked style="margin-right: 0.75rem; width: 18px; height: 18px;">
+                        Monthly financial report
+                    </label>
+                </div>
+
+                <div class="card">
+                    <h3>🔒 Security</h3>
+                    <button class="btn btn-primary" style="width: 100%; margin-bottom: 0.75rem;" onclick="alert('✅ Password updated!')">🔐 Change Password</button>
+                    <button class="btn btn-secondary" style="width: 100%; margin-bottom: 0.75rem;" onclick="alert('✅ 2FA enabled!')">📱 Enable 2-Factor Auth</button>
+                    <button class="btn btn-danger" style="width: 100%;" onclick="alert('✅ Session logged out on all devices')">🚨 Logout All Devices</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize from localStorage
+        let finances = JSON.parse(localStorage.getItem('finances')) || {
+            balance: 2847.50,
+            transactions: [],
+            payouts: []
+        };
+
+        function saveFinances() {
+            localStorage.setItem('finances', JSON.stringify(finances));
+            updateBalances();
+        }
+
+        function updateBalances() {
+            document.getElementById('mainBalance').textContent = '$' + finances.balance.toFixed(2);
+            document.getElementById('walletBalance').textContent = '$' + finances.balance.toFixed(2);
+            document.getElementById('availableBalance').textContent = '$' + finances.balance.toFixed(2);
+        }
+
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav li').forEach(li => li.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function addFunds() {
+            const amount = parseFloat(document.getElementById('addAmount').value);
+            const method = document.getElementById('addMethod').value;
+            
+            if (amount && amount > 0) {
+                finances.balance += amount;
+                finances.transactions.push({
+                    date: new Date().toLocaleString(),
+                    type: 'Deposit',
+                    desc: `Added via ${method}`,
+                    amount: `+$${amount.toFixed(2)}`,
+                    balance: finances.balance.toFixed(2),
+                    status: 'Completed'
+                });
+                saveFinances();
+                alert(`✅ Added $${amount.toFixed(2)} to wallet!`);
+                document.getElementById('addAmount').value = '';
+            }
+        }
+
+        function transferMoney() {
+            const amount = parseFloat(document.getElementById('transferAmount').value);
+            const recipient = document.getElementById('recipientEmail').value;
+            const type = document.getElementById('transferType').value;
+            
+            if (!amount || amount <= 0 || !recipient) {
+                alert('❌ Fill all fields');
+                return;
+            }
+
+            if (amount > finances.balance) {
+                alert('❌ Insufficient balance');
+                return;
+            }
+
+            finances.balance -= amount;
+            finances.transactions.push({
+                date: new Date().toLocaleString(),
+                type: 'Transfer',
+                desc: `Sent to ${recipient}`,
+                amount: `-$${amount.toFixed(2)}`,
+                balance: finances.balance.toFixed(2),
+                status: 'Completed'
+            });
+            saveFinances();
+            alert(`✅ TRANSFER SUCCESSFUL!\n\n💸 Amount: $${amount.toFixed(2)}\n📧 To: ${recipient}\n⏱️ Type: ${type}\n\n✉️ Confirmation sent to both parties`);
+            document.getElementById('transferAmount').value = '';
+            document.getElementById('recipientEmail').value = '';
+        }
+
+        function requestPayout() {
+            const amount = parseFloat(document.getElementById('payoutAmount').value);
+            const method = document.getElementById('payoutMethod').value;
+            
+            if (!amount || amount < 5) {
+                alert('❌ Minimum payout is $5');
+                return;
+            }
+
+            if (amount > finances.balance) {
+                alert('❌ Insufficient balance');
+                return;
+            }
+
+            finances.balance -= amount;
+            finances.payouts.push({
+                date: new Date().toLocaleDateString(),
+                amount: amount.toFixed(2),
+                method: method.split(' - ')[0],
+                status: 'Completed'
+            });
+            finances.transactions.push({
+                date: new Date().toLocaleString(),
+                type: 'Payout',
+                desc: `Withdrawn via ${method}`,
+                amount: `-$${amount.toFixed(2)}`,
+                balance: finances.balance.toFixed(2),
+                status: 'Completed'
+            });
+            saveFinances();
+            alert(`✅ PAYOUT REQUESTED!\n\n💳 Amount: $${amount.toFixed(2)}\n🏦 Method: ${method}\n\n📧 Confirmation email sent`);
+            document.getElementById('payoutAmount').value = '';
+        }
+
+        function logout() {
+            if (confirm('Logout?')) {
+                sessionStorage.removeItem('glamflow_user');
+                window.location.href = '/index.html';
+            }
+        }
+
+        window.addEventListener('load', updateBalances);
+    </script>
+</body>
+</html>

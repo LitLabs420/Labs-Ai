@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLAMFLOW AI - Dashboard</title>
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"></script>
+    <script src="firebase-config.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --dark: #0a0a0a;
+            --darker: #000000;
+            --blue: #00d4ff;
+            --pink: #ff0080;
+            --orange: #ff8c00;
+            --cyan: #40e0d0;
+            --text: #ffffff;
+            --text-secondary: #b0b0b0;
+        }
+
+        body {
+            background: var(--darker);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            background: linear-gradient(180deg, #0a0a0a, #1a1a1a);
+            border-right: 2px solid var(--pink);
+            padding: 2rem 0;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-logo {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--blue), var(--pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 2rem;
+            padding: 0 1rem;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav .nav-item {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-left: 4px solid transparent;
+            transition: all 0.3s;
+            margin: 0.5rem 0;
+        }
+
+        .sidebar-nav .nav-item:hover {
+            background: rgba(0, 212, 255, 0.1);
+            border-left-color: var(--blue);
+            transform: translateX(5px);
+        }
+
+        .sidebar-nav .nav-item.active {
+            background: rgba(0, 212, 255, 0.2);
+            border-left-color: var(--pink);
+            color: var(--pink);
+            font-weight: 700;
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #ff0080, #ff8c00);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            margin: 2rem 1.5rem 0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            width: calc(100% - 3rem);
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(255, 0, 128, 0.5);
+        }
+
+        /* MAIN */
+        .main-content {
+            padding: 2rem;
+            overflow-y: auto;
+            max-height: 100vh;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.02), rgba(0, 0, 0, 0));
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--blue), var(--pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-info p:first-child {
+            font-weight: 700;
+            color: var(--blue);
+        }
+
+        .user-info p:last-child {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .content-pages {
+            display: contents;
+        }
+
+        .page {
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: var(--blue);
+        }
+
+        .page > p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(255, 0, 128, 0.05));
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            border-color: var(--pink);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.15);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-header h3 {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .stat-icon {
+            font-size: 1.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 3px;
+            margin-top: 0.75rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--blue), var(--cyan));
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .quick-actions {
+            margin-bottom: 3rem;
+        }
+
+        .quick-actions h2 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--cyan);
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(255, 0, 128, 0.1));
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .action-btn:hover {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.25), rgba(255, 0, 128, 0.15));
+            border-color: var(--pink);
+            transform: translateY(-3px);
+        }
+
+        .action-btn.upgrade-btn {
+            background: linear-gradient(135deg, #ff0080, #ff8c00);
+            border: none;
+        }
+
+        .action-btn .icon {
+            font-size: 1.5rem;
+        }
+
+        /* PRICING CARDS */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .pricing-card {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(0, 0, 0, 0.3));
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .pricing-card:hover:not(.featured) {
+            border-color: var(--blue);
+        }
+
+        .pricing-card.featured {
+            background: linear-gradient(135deg, rgba(255, 0, 128, 0.15), rgba(255, 140, 0, 0.1));
+            border: 2px solid var(--pink);
+            transform: scale(1.05);
+        }
+
+        .pricing-card .badge {
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: var(--pink);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .pricing-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--cyan);
+        }
+
+        .price {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--blue);
+            margin-bottom: 1.5rem;
+        }
+
+        .price span {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .pricing-card ul {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .pricing-card li {
+            padding: 0.5rem 0;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .pricing-btn {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            background: transparent;
+            color: var(--blue);
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+
+        .pricing-btn:hover:not(:disabled) {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--blue);
+        }
+
+        .pricing-btn.upgrade-btn {
+            background: linear-gradient(135deg, #ff0080, #ff8c00);
+            border: none;
+            color: white;
+        }
+
+        .pricing-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .billing-history {
+            margin-top: 3rem;
+        }
+
+        .billing-history h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--cyan);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(0, 212, 255, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        thead {
+            background: rgba(0, 212, 255, 0.1);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        th {
+            font-weight: 700;
+            color: var(--blue);
+        }
+
+        /* SETTINGS SECTION */
+        .settings-section {
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .settings-section h3 {
+            font-size: 1.2rem;
+            color: var(--cyan);
+            margin-bottom: 1rem;
+        }
+
+        .settings-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--blue);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
+        }
+
+        .save-btn {
+            background: linear-gradient(135deg, #00d4ff, #40e0d0);
+            color: #000;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .api-key-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .key-display {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .key-display code {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 0.75rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            overflow: auto;
+            max-height: 200px;
+        }
+
+        .copy-btn {
+            background: var(--blue);
+            color: #000;
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: var(--cyan);
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                height: auto;
+                border-bottom: 2px solid var(--pink);
+            }
+
+            .main-content {
+                max-height: 100%;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="sidebar-logo">✨ GLAMFLOW AI</div>
+            <ul class="sidebar-nav">
+                <li class="nav-item active" data-page="overview">📊 Overview</li>
+                <li class="nav-item" data-page="chatbot">🤖 Chatbot</li>
+                <li class="nav-item" data-page="billing">💳 Billing</li>
+                <li class="nav-item" data-page="settings">⚙️ Settings</li>
+            </ul>
+            <button class="logout-btn" onclick="setupLogout()">🚪 Logout</button>
+        </div>
+
+        <!-- MAIN -->
+        <div class="main-content">
+            <div class="header">
+                <h1>GLAMFLOW Dashboard</h1>
+                <div class="user-info">
+                    <p id="user-name">User Name</p>
+                    <p id="user-status">Subscription: Free</p>
+                </div>
+            </div>
+
+            <div class="content-pages"></div>
+        </div>
+    </div>
+
+    <!-- Firebase & Dashboard Scripts -->
+    <script src="dashboard.js"></script>
+</body>
+</html>
