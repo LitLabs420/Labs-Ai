@@ -19,7 +19,7 @@ const db = firebase.firestore();
 
 // Enable persistence
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(err => {
-    console.log('Persistence set');
+    console.warn('Persistence warning:', err.message);
 });
 
 // Export for use in other scripts

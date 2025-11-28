@@ -262,19 +262,24 @@
                 await user.updateProfile({ displayName: name });
                 
                 // Create user document in Firestore
-                await window.firebaseDb.collection('users').doc(user.uid).set({
-                    uid: user.uid,
-                    email: user.email,
-                    displayName: name,
-                    createdAt: new Date(),
-                    tier: 'free',
-                    status: 'active',
-                    subscription: {
-                        plan: 'free',
+                try {
+                    await window.firebaseDb.collection('users').doc(user.uid).set({
+                        uid: user.uid,
+                        email: user.email,
+                        displayName: name,
+                        createdAt: new Date(),
+                        tier: 'free',
                         status: 'active',
-                        createdAt: new Date()
-                    }
-                });
+                        subscription: {
+                            plan: 'free',
+                            status: 'active',
+                            createdAt: new Date()
+                        }
+                    });
+                } catch (firestoreError) {
+                    console.warn('Failed to create user profile:', firestoreError.message);
+                    // Continue - user can still use the app, profile will be created later
+                }
                 
                 alert('✅ Account created! Redirecting to dashboard...');
                 window.location.href = '/dashboard.html';
@@ -286,7 +291,7 @@
         async function handleGoogleSignIn() {
             try {
                 // Use Firebase Google Authentication
-                const provider = new firebase.auth.GoogleAuthProvider();
+                const provider = new window.firebase.auth.GoogleAuthProvider();
                 provider.addScope('profile');
                 provider.addScope('email');
                 
@@ -294,24 +299,29 @@
                 const user = result.user;
                 
                 // Check if user document exists, create if not
-                const userRef = window.firebaseDb.collection('users').doc(user.uid);
-                const doc = await userRef.get();
-                
-                if (!doc.exists) {
-                    await userRef.set({
-                        uid: user.uid,
-                        email: user.email,
-                        displayName: user.displayName || 'User',
-                        photoURL: user.photoURL || '',
-                        createdAt: new Date(),
-                        tier: 'free',
-                        status: 'active',
-                        subscription: {
-                            plan: 'free',
+                try {
+                    const userRef = window.firebaseDb.collection('users').doc(user.uid);
+                    const doc = await userRef.get();
+                    
+                    if (!doc.exists) {
+                        await userRef.set({
+                            uid: user.uid,
+                            email: user.email,
+                            displayName: user.displayName || 'User',
+                            photoURL: user.photoURL || '',
+                            createdAt: new Date(),
+                            tier: 'free',
                             status: 'active',
-                            createdAt: new Date()
-                        }
-                    });
+                            subscription: {
+                                plan: 'free',
+                                status: 'active',
+                                createdAt: new Date()
+                            }
+                        });
+                    }
+                } catch (firestoreError) {
+                    console.warn('Failed to create user profile:', firestoreError.message);
+                    // Continue - user can still use the app, profile will be created later
                 }
                 
                 window.location.href = '/dashboard.html';
