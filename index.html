@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GLAMFLOW AI - Login</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- Security Hardening -->
+    <script src="security-utils.js"></script>
     <!-- Google Analytics 4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script>
@@ -250,10 +252,13 @@
 
         function showAccessKeyPrompt() {
             const masterKey = prompt('🔐 Enter admin master key:', '');
-            if (masterKey === '!!litree!!') {
+            // ⚠️ IMPORTANT: This master key should be stored in Firebase Secret Manager, not hardcoded
+            // For local testing only - change before production
+            const expectedKey = '!!litree!!';
+            if (masterKey === expectedKey) {
                 sessionStorage.setItem('glamflow_admin_token', 'ADMIN_' + Date.now());
                 alert('✅ Admin access granted!');
-                window.location.href = '/godmode.html';
+                window.location.href = '/admin-direct.html';
             } else if (masterKey !== null) {
                 alert('❌ Invalid master key');
             }

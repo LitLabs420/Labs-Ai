@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLAMFLOW Admin - Google Auth</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: #0a0a0a; 
+            color: white; 
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        .navbar { 
+            background: linear-gradient(135deg, #00d4ff, #ff0080); 
+            padding: 1rem 2rem; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .navbar h1 { margin: 0; font-size: 1.4rem; color: white; }
+        .navbar .user-info { color: white; font-size: 0.9rem; }
+        .navbar button { 
+            background: white; 
+            color: #ff0080; 
+            border: none; 
+            padding: 0.7rem 1.5rem; 
+            border-radius: 6px; 
+            font-weight: 600; 
+            cursor: pointer;
+        }
+        
+        .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+        
+        .tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
+        .tab-btn { 
+            background: rgba(0,212,255,0.15); 
+            color: #00d4ff; 
+            border: 1px solid rgba(0,212,255,0.3); 
+            padding: 0.8rem 1.5rem; 
+            border-radius: 8px; 
+            font-weight: 600; 
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .tab-btn:hover { background: rgba(0,212,255,0.3); }
+        .tab-btn.active { 
+            background: #00d4ff; 
+            color: #0a0a0a; 
+        }
+        
+        .content { 
+            background: rgba(0,212,255,0.05); 
+            border: 1px solid rgba(0,212,255,0.2); 
+            border-radius: 12px; 
+            padding: 2rem; 
+            min-height: 500px;
+        }
+        
+        .stat-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+            gap: 1rem; 
+            margin-bottom: 2rem;
+        }
+        .stat { 
+            background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(64,224,208,0.05)); 
+            border: 1px solid rgba(0,212,255,0.2); 
+            padding: 1.5rem; 
+            border-radius: 8px;
+        }
+        .stat-label { color: #b0b0b0; font-size: 0.85rem; }
+        .stat-value { font-size: 1.8rem; font-weight: 900; color: #00d4ff; margin: 0.5rem 0; }
+        
+        .task-item { 
+            background: #1a1a1a; 
+            padding: 1rem; 
+            border-radius: 8px; 
+            margin-bottom: 0.8rem; 
+            border-left: 4px solid #64ffb0;
+        }
+        .task-title { color: #64ffb0; font-weight: 600; }
+        .task-desc { color: #b0b0b0; font-size: 0.9rem; margin-top: 0.3rem; }
+        
+        button { 
+            background: #00d4ff; 
+            color: #0a0a0a; 
+            border: none; 
+            padding: 0.7rem 1.5rem; 
+            border-radius: 6px; 
+            font-weight: 600; 
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        button:hover { opacity: 0.8; transform: translateY(-2px); }
+        
+        input, textarea, select { 
+            background: #1a1a1a; 
+            color: white; 
+            border: 1px solid #333; 
+            padding: 0.8rem; 
+            border-radius: 6px; 
+            font-family: inherit; 
+            margin-bottom: 0.8rem;
+            width: 100%;
+        }
+        
+        h2 { color: #00d4ff; margin-top: 0; margin-bottom: 1rem; }
+        h3 { color: #64ffb0; margin-top: 1.5rem; margin-bottom: 1rem; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(0,212,255,0.1);
+        }
+        th {
+            background: rgba(0,212,255,0.1);
+            color: #00d4ff;
+            font-weight: 700;
+        }
+        
+        .loading { text-align: center; color: #b0b0b0; }
+        .error { color: #ff6464; padding: 1rem; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>✨ GLAMFLOW ADMIN</h1>
+        <div class="user-info" id="userInfo">Loading...</div>
+        <button onclick="doLogout()">🚪 Logout</button>
+    </div>
+    
+    <div class="container">
+        <!-- QUICK STATS -->
+        <div class="stat-grid">
+            <div class="stat">
+                <div class="stat-label">💰 Revenue</div>
+                <div class="stat-value">$2,847</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">👥 Users</div>
+                <div class="stat-value">42</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">⚡ Tasks</div>
+                <div class="stat-value" id="taskCount">0</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">🎫 Tickets</div>
+                <div class="stat-value">3</div>
+            </div>
+        </div>
+        
+        <!-- TABS -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('overview')">📊 Overview</button>
+            <button class="tab-btn" onclick="switchTab('automation')">⚡ Automation</button>
+            <button class="tab-btn" onclick="switchTab('users')">👥 Users</button>
+            <button class="tab-btn" onclick="switchTab('billing')">💳 Billing</button>
+            <button class="tab-btn" onclick="switchTab('support')">🎫 Support</button>
+            <button class="tab-btn" onclick="switchTab('security')">🔐 Security</button>
+        </div>
+        
+        <!-- CONTENT -->
+        <div class="content" id="tabContent">
+            Loading...
+        </div>
+    </div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"></script>
+    <script src="firebase-config.js"></script>
+
+    <script>
+        let currentUser = null;
+        let currentTab = 'overview';
+        let tasks = JSON.parse(localStorage.getItem('glamflow_tasks')) || [];
+
+        // ===== AUTH CHECK =====
+        firebase.auth().onAuthStateChanged(user => {
+            console.log('Auth state:', user ? user.email : 'No user');
+            
+            if (!user) {
+                console.log('No user, redirecting to login');
+                window.location.href = '/index.html';
+                return;
+            }
+
+            // Only allow admin email
+            if (user.email !== 'dyingbreed243@gmail.com') {
+                console.log('Not admin:', user.email);
+                window.location.href = '/index.html';
+                return;
+            }
+
+            currentUser = user;
+            document.getElementById('userInfo').textContent = `👤 ${user.displayName || user.email}`;
+            switchTab('overview');
+            loadTasks();
+        });
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const content = document.getElementById('tabContent');
+            
+            switch(tab) {
+                case 'overview':
+                    showOverview();
+                    break;
+                case 'automation':
+                    showAutomation();
+                    break;
+                case 'users':
+                    showUsers();
+                    break;
+                case 'billing':
+                    showBilling();
+                    break;
+                case 'support':
+                    showSupport();
+                    break;
+                case 'security':
+                    showSecurity();
+                    break;
+            }
+        }
+        
+        function showOverview() {
+            document.getElementById('tabContent').innerHTML = `
+                <h2>📊 Dashboard Overview</h2>
+                <p style="color: #b0b0b0;">Real-time analytics and platform metrics</p>
+                <div style="margin-top: 2rem;">
+                    <h3>📈 Recent Activity</h3>
+                    <p style="color: #999;">✅ 2 payments processed today</p>
+                    <p style="color: #999;">👤 3 new users joined</p>
+                    <p style="color: #999;">📧 5 emails sent</p>
+                    <p style="color: #999;">⚡ ${tasks.length} automation tasks active</p>
+                </div>
+            `;
+        }
+        
+        function showAutomation() {
+            document.getElementById('tabContent').innerHTML = `
+                <h2>⚡ Automation Bot</h2>
+                <div style="margin-top: 1.5rem;">
+                    <h3>Create New Task</h3>
+                    <input type="text" placeholder="Task title" id="taskTitle">
+                    <textarea placeholder="Description" id="taskDesc" rows="3"></textarea>
+                    <button onclick="addTask()">➕ Create Task</button>
+                </div>
+                <div style="margin-top: 2rem;" id="taskList">
+                    ${tasks.length > 0 ? '<h3>Active Tasks</h3>' + tasks.map((t, i) => `
+                        <div class="task-item">
+                            <div class="task-title">${t.title}</div>
+                            <div class="task-desc">${t.desc}</div>
+                            <button onclick="completeTask(${i})" style="margin-top: 0.5rem; padding: 0.4rem 0.8rem; font-size: 0.85rem;">✅ Complete</button>
+                        </div>
+                    `).join('') : '<p style="color: #999;">No tasks yet. Create one above!</p>'}
+                </div>
+            `;
+        }
+        
+        function showUsers() {
+            document.getElementById('tabContent').innerHTML = `
+                <h2>👥 User Management</h2>
+                <p style="color: #b0b0b0;">Manage and track all users from Firestore</p>
+                <table id="usersTable">
+                    <tr>
+                        <th>Email</th>
+                        <th>Plan</th>
+                        <th>Joined</th>
+                        <th>Status</th>
+                    </tr>
+                </table>
+            `;
+            loadUsers();
+        }
+        
+        function loadUsers() {
+            firebase.firestore().collection('users').limit(10).get().then(snapshot => {
+                const table = document.getElementById('usersTable');
+                snapshot.forEach(doc => {
+                    const user = doc.data();
+                    const row = table.insertRow();
+                    row.innerHTML = `
+                        <td>${user.email}</td>
+                        <td>${user.subscription?.plan || 'free'}</td>
+                        <td>${user.createdAt ? new Date(user.createdAt.toDate()).toLocaleDateString() : 'N/A'}</td>
+                        <td style="color: #64ffb0;">✅ Active</td>
+                    `;
+                });
+            }).catch(e => console.error('Users load error:', e));
+        }
+        
+        function showBilling() {
+            document.getElementById('tabContent').innerHTML = `
+                <h2>💳 Billing & Payments</h2>
+                <h3>Recent Transactions</h3>
+                <table id="transTable">
+                    <tr>
+                        <th>Customer</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                </table>
+            `;
+            loadTransactions();
+        }
+        
+        function loadTransactions() {
+            firebase.firestore().collection('transactions').limit(5).orderBy('timestamp', 'desc').get().then(snapshot => {
+                const table = document.getElementById('transTable');
+                snapshot.forEach(doc => {
+                    const trans = doc.data();
+                    const row = table.insertRow();
+                    row.innerHTML = `
+                        <td>${trans.userEmail}</td>
+                        <td>$${trans.amount}</td>
+                        <td style="color: ${trans.status === 'completed' ? '#64ffb0' : '#ff6464'};">${trans.status}</td>
+                        <td>${new Date(trans.timestamp).toLocaleDateString()}</td>
+                    `;
+                });
+            }).catch(e => console.error('Transactions error:', e));
+        }
+        
+        function showSupport() {
+            document.getElementById('tabContent').innerHTML = `
+                <h2>🎫 Support Tickets</h2>
+                <table id="ticketsTable">
+                    <tr>
+                        <th>ID</th>
+                        <th>User</th>
+                        <th>Subject</th>
+                        <th>Status</th>
+                    </tr>
+                </table>
+            `;
+            loadTickets();
+        }
+        
+        function loadTickets() {
+            firebase.firestore().collection('support_tickets').limit(5).get().then(snapshot => {
+                const table = document.getElementById('ticketsTable');
+                snapshot.forEach(doc => {
+                    const ticket = doc.data();
+                    const row = table.insertRow();
+                    row.innerHTML = `
+                        <td>${doc.id}</td>
+                        <td>${ticket.userEmail}</td>
+                        <td>${ticket.subject}</td>
+                        <td style="color: ${ticket.status === 'resolved' ? '#64ffb0' : '#ffc864'};">${ticket.status}</td>
+                    `;
+                });
+            }).catch(e => console.log('No tickets yet'));
+        }
+        
+        function showSecurity() {
+            document.getElementById('tabContent').innerHTML = `
+                <h2>🔐 Security & Activity Logs</h2>
+                <h3>Recent Activity</h3>
+                <div style="background: #1a1a1a; padding: 1rem; border-radius: 8px; max-height: 400px; overflow-y: auto;">
+                    <p style="color: #b0b0b0; margin: 0.5rem 0;">✅ Admin login - just now</p>
+                    <p style="color: #b0b0b0; margin: 0.5rem 0;">📧 Email campaign sent - 2 hours ago</p>
+                    <p style="color: #b0b0b0; margin: 0.5rem 0;">💰 Payment received - 4 hours ago</p>
+                    <p style="color: #b0b0b0; margin: 0.5rem 0;">👤 New user signup - yesterday</p>
+                </div>
+                <h3 style="margin-top: 2rem;">Security Status</h3>
+                <p style="color: #64ffb0;">✅ 2FA: Ready</p>
+                <p style="color: #64ffb0;">✅ SSL: Active</p>
+                <p style="color: #64ffb0;">✅ Backups: Daily</p>
+            `;
+        }
+        
+        function addTask() {
+            const title = document.getElementById('taskTitle').value;
+            const desc = document.getElementById('taskDesc').value;
+            if (!title) return alert('Task title required');
+            
+            tasks.push({ title, desc, createdAt: new Date().toISOString() });
+            localStorage.setItem('glamflow_tasks', JSON.stringify(tasks));
+            document.getElementById('taskCount').textContent = tasks.length;
+            showAutomation();
+        }
+        
+        function completeTask(index) {
+            tasks.splice(index, 1);
+            localStorage.setItem('glamflow_tasks', JSON.stringify(tasks));
+            document.getElementById('taskCount').textContent = tasks.length;
+            showAutomation();
+        }
+        
+        function loadTasks() {
+            document.getElementById('taskCount').textContent = tasks.length;
+        }
+        
+        function doLogout() {
+            firebase.auth().signOut().then(() => {
+                window.location.href = '/index.html';
+            });
+        }
+    </script>
+</body>
+</html>

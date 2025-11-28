@@ -1,0 +1,45 @@
+# Firebase
+.firebase/
+.firebaserc
+*.cache
+firebase-debug.log
+functions/node_modules/
+
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+firebase-config-keys.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Build outputs
+dist/
+build/
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# OS
+Thumbs.db
+
+# Stripe & Payment keys (NEVER commit)
+stripe-test-keys.json
+stripe-keys.*.json
+
+# Credentials & secrets
+*-credentials.json
+*-secrets.json
+.credentials
+
+# Editor backups
+*.bak
+*.backup

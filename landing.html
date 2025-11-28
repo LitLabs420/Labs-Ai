@@ -792,10 +792,10 @@
             if (event.key !== 'Enter') return;
 
             const input = document.getElementById('aiInput');
-            const message = input.value.toLowerCase();
+            const message = input.value.toLowerCase().trim();
             input.value = '';
 
-            // Find matching response
+            // Prevent XSS: Use textContent instead of innerHTML
             let response = '🤔 Good question! Ask about: budget, balance, saving, transfers, or security.';
             for (let item of aiResponses) {
                 if (item.q.some(q => message.includes(q))) {
@@ -804,8 +804,9 @@
                 }
             }
 
-            // Update popup text
-            document.getElementById('aiText').innerHTML = response;
+            // Update popup text safely - use textContent, not innerHTML
+            const textElement = document.getElementById('aiText');
+            textElement.textContent = response;
         }
 
         // Smooth scroll

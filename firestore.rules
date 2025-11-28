@@ -1,0 +1,78 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ===== AUTHENTICATION CHECK =====
+    function isAuth() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuth() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    function isOwner(uid) {
+      return isAuth() && request.auth.uid == uid;
+    }
+    
+    // ===== USERS COLLECTION =====
+    match /users/{uid} {
+      // Only authenticated users can read their own data
+      allow read: if isOwner(uid);
+      
+      // Only allow creation with verified email + new user
+      allow create: if isAuth() && 
+        request.resource.data.uid == request.auth.uid &&
+        request.resource.data.email == request.auth.token.email &&
+        request.resource.data.createdAt == request.time;
+      
+      // Users can only update their own data
+      allow update: if isOwner(uid) && 
+        // Prevent privilege escalation (can't change role/tier/status)
+        !('role' in request.resource.data.diff().addedKeys()) &&
+        !('tier' in request.resource.data.diff().addedKeys()) &&
+        request.resource.data.stripeCustomerId == resource.data.stripeCustomerId;
+      
+      // No deletion
+      allow delete: if false;
+    }
+    
+    // ===== SUBSCRIPTIONS COLLECTION =====
+    match /subscriptions/{uid} {
+      // Only the subscription owner can read
+      allow read: if isOwner(uid);
+      
+      // Prevent direct writes (only Cloud Functions can write)
+      allow write: if false;
+    }
+    
+    // ===== PAYMENTS COLLECTION =====
+    match /payments/{document=**} {
+      // Users can only read their own payments
+      allow read: if isAuth() && 
+        resource.data.userId == request.auth.uid;
+      
+      // Prevent user writes (Cloud Functions only)
+      allow write: if false;
+    }
+    
+    // ===== AUDIT LOGS COLLECTION =====
+    match /auditLogs/{document=**} {
+      // Only admins can read logs
+      allow read: if isAdmin();
+      
+      // Only Cloud Functions can write
+      allow write: if false;
+    }
+    
+    // ===== SECURITY: RATE LIMITING =====
+    // Firestore doesn't natively support rate limiting, but we can:
+    // 1. Use Cloud Functions with rate limiting middleware
+    // 2. Use Realtime Database for counters (faster)
+    
+    // ===== DENY EVERYTHING ELSE =====
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

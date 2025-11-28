@@ -1,0 +1,95 @@
+# GLAMFLOW SECURITY HARDENING
+# Prevent unauthorized access and intrusive snoopers
+
+# ===== SECURITY HEADERS =====
+<IfModule mod_headers.c>
+    # Prevent clickjacking (XClickjacking)
+    Header always set X-Frame-Options "SAMEORIGIN"
+    
+    # Prevent MIME sniffing
+    Header always set X-Content-Type-Options "nosniff"
+    
+    # Enable XSS protection
+    Header always set X-XSS-Protection "1; mode=block"
+    
+    # Referrer Policy (don't leak to other sites)
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Content Security Policy (prevent inline scripts/XSS)
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://firebaseapp.com https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://www.google-analytics.com;"
+    
+    # Permissions Policy (restrict camera, microphone, geolocation)
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(self), payment=()"
+    
+    # Hide server information
+    Header always unset Server
+    Header always unset X-Powered-By
+    Header always unset X-AspNet-Version
+</IfModule>
+
+# ===== DISABLE DIRECTORY LISTING =====
+Options -Indexes
+
+# ===== PROTECT SENSITIVE FILES =====
+<FilesMatch "\.(?:env|git|htpasswd|yml|yaml|json|lock|php)$|^(?:composer|package|README|CHANGELOG)">
+    Require all denied
+</FilesMatch>
+
+# ===== BLOCK COMMON ATTACK PATTERNS =====
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Block access to admin/sensitive paths
+    RewriteRule ^(admin|wp-admin|wp-login|config|\.git) - [F,NC,L]
+    
+    # Block SQL injection attempts
+    RewriteCond %{QUERY_STRING} (?:union|select|insert|update|delete|drop|create|alter|exec|script|javascript|onerror|onload|eval|base64|cmd|command|shell|bash|powershell|nc|netcat|perl|python|ruby|php|asp) [NC]
+    RewriteRule ^ - [F,NC,L]
+    
+    # Block XSS attempts
+    RewriteCond %{QUERY_STRING} (?:<|>|%3C|%3E|javascript:|onerror=|onload=|onclick=|<script|%3Cscript) [NC]
+    RewriteRule ^ - [F,NC,L]
+    
+    # Block path traversal attempts
+    RewriteCond %{QUERY_STRING} (?:\.\./|\.\.\\|etc/passwd|boot.ini|windows/system32) [NC]
+    RewriteRule ^ - [F,NC,L]
+    
+    # Block LFI (Local File Inclusion) attempts
+    RewriteCond %{QUERY_STRING} (?:include|require|include_once|require_once|file_get_contents|readfile|fopen|fread|file|php://) [NC]
+    RewriteRule ^ - [F,NC,L]
+    
+    # Block common reconnaissance tools
+    RewriteCond %{HTTP_USER_AGENT} (?:sqlmap|nikto|nmap|masscan|metasploit|burp|zaproxy|nessus) [NC]
+    RewriteRule ^ - [F,NC,L]
+</IfModule>
+
+# ===== REMOVE APACHE VERSION =====
+ServerTokens Prod
+ServerSignature Off
+
+# ===== ENFORCE HTTPS =====
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# ===== PREVENT HOTLINKING =====
+<IfModule mod_rewrite.c>
+    RewriteCond %{HTTP_REFERER} !^https://studio-4627045237-a2fe9.web.app [NC]
+    RewriteCond %{HTTP_REFERER} !^https://studio-4627045237-a2fe9.firebaseapp.com [NC]
+    RewriteCond %{HTTP_REFERER} !^$
+    RewriteRule \.(jpg|jpeg|png|gif|css|js|pdf|txt|svg)$ - [F,NC]
+</IfModule>
+
+# ===== CACHE CONTROL (prevent sensitive data caching) =====
+<FilesMatch "\.(html|htm|php|jsp|asp|aspx)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate, private"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+</FilesMatch>
+
+# ===== COMPRESSION (save bandwidth) =====
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>

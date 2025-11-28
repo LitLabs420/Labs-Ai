@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLAMFLOW AI - Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: #0a0a0a; 
+            color: white; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .loading {
+            text-align: center;
+            padding: 2rem;
+        }
+        .spinner {
+            border: 4px solid rgba(0, 212, 255, 0.1);
+            border-top: 4px solid #00d4ff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .error {
+            background: rgba(255, 100, 100, 0.1);
+            border: 1px solid rgba(255, 100, 100, 0.3);
+            padding: 1.5rem;
+            border-radius: 8px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .error h2 { color: #ff6464; margin-bottom: 1rem; }
+        .error p { color: #b0b0b0; margin: 0.5rem 0; }
+        .error button {
+            background: #00d4ff;
+            color: #0a0a0a;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading" id="container">
+        <div class="spinner"></div>
+        <p>Loading dashboard...</p>
+    </div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"></script>
+    <script src="firebase-config.js"></script>
+
+    <script>
+        let checkCount = 0;
+        const maxChecks = 30; // 30 seconds max wait
+
+        function checkAuth() {
+            checkCount++;
+            console.log(`Auth check ${checkCount}:`, window.firebaseAuth ? 'Ready' : 'Not ready');
+
+            if (!window.firebaseAuth) {
+                if (checkCount < maxChecks) {
+                    setTimeout(checkAuth, 1000);
+                } else {
+                    showError('Firebase did not load. Please refresh the page.');
+                }
+                return;
+            }
+
+            // Check if using easter egg admin token
+            const adminToken = sessionStorage.getItem('glamflow_admin_token');
+            if (adminToken) {
+                console.log('Admin token found, loading dashboard');
+                loadDashboardContent({ email: 'dyingbreed243@gmail.com', uid: 'admin_' + adminToken });
+                return;
+            }
+
+            // Firebase is ready, now check normal auth
+            window.firebaseAuth.onAuthStateChanged(user => {
+                console.log('User state:', user ? user.email : 'None');
+
+                if (!user) {
+                    console.log('No user, redirecting to login');
+                    window.location.href = '/index.html';
+                    return;
+                }
+
+                // User is logged in, load the actual dashboard
+                console.log('Loading dashboard for:', user.email);
+                loadDashboardContent(user);
+            });
+        }
+
+        function loadDashboardContent(user) {
+            const isAdmin = user.email === 'dyingbreed243@gmail.com';
+            console.log('Is admin:', isAdmin);
+
+            // Load the dashboard script
+            const script = document.createElement('script');
+            script.src = 'dashboard-new.js';
+            document.head.appendChild(script);
+        }
+
+        function showError(message) {
+            document.getElementById('container').innerHTML = `
+                <div class="error">
+                    <h2>⚠️ Error</h2>
+                    <p>${message}</p>
+                    <button onclick="location.reload()">Try Again</button>
+                </div>
+            `;
+        }
+
+        // Start checking
+        setTimeout(checkAuth, 500);
+    </script>
+</body>
+</html>

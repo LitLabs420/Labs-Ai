@@ -1,135 +1,177 @@
 # GLAMFLOW AI - Copilot Instructions
 
 ## Project Overview
-GLAMFLOW AI is a beauty business automation SaaS platform offering AI-powered content generation and chatbot management for beauty professionals. The app uses Firebase (Auth + Firestore) for backend services and Stripe for payments. Deployment target is Firebase Hosting.
+**GLAMFLOW AI** is a beauty business automation SaaS platform: AI content generation, chatbot management, payment processing, and business workflow automation for beauty professionals. Uses Firebase (Auth/Firestore/Functions) + Stripe + vanilla JavaScript. Deployment: Firebase Hosting.
 
-**Current Architecture**: Vanilla JavaScript frontend with Firebase SDK (v10.7.0) | No build process | Static file deployment
+**Architecture**: Static vanilla JS frontend (no build tools) + Firebase Cloud Functions backend (Node.js). No React/frameworks—pure DOM manipulation and ES6+.
 
-## Core Architecture Patterns
+---
 
-### 1. Firebase Integration Model
-- **Auth**: Email/password + Google OAuth via `firebase.auth.GoogleAuthProvider()`
-- **Data**: Firestore document structure for users and subscriptions
-- **Config**: Injected via CDN, initialized in `firebase-config.js`, exposed on `window` object
-- **Key Pattern**: Services accessed via `window.firebaseAuth` and `window.firebaseDb` from `auth.js` and `dashboard.js`
+## Critical Architecture Insights
 
-**User Profile Schema (Firestore)**:
+### 1. Global Firebase Context Pattern
+Firebase services are initialized in `firebase-config.js` and exposed globally:
+```javascript
+window.firebaseAuth = firebase.auth();
+window.firebaseDb = firebase.firestore();
+window.firebase = firebase;
+```
+**Access pattern**: Every page accesses `window.firebaseAuth` and `window.firebaseDb` directly. No module system—**all scripts must execute in order**.
+
+### 2. Multi-Page + Frontend Routing
+- **Static pages**: `index.html` (landing), `auth.html` (login/signup), `dashboard.html` (SPA hub)
+- **Admin portals**: `godmode.html` (admin panel), `admin.html` (analytics)
+- **Routes within `dashboard.html`**: Via JavaScript `navigateTo()` function switching DOM display states
+- **Auth guards**: `dashboard.html` checks `onAuthStateChanged()` before rendering; redirects to `index.html` if logged out
+
+### 3. User & Subscription Data Flow
+**Firestore collection: `users`**
 ```javascript
 {
-  uid, email, displayName, photoURL, createdAt,
-  tier: 'free'|'pro'|'enterprise',
-  subscription: { plan, status, createdAt, endsAt }
+  uid, email, displayName, photoURL, createdAt, tier: 'free'|'pro'|'enterprise',
+  subscription: { plan, status, createdAt, endsAt },
+  status: 'active'|'suspended', stripeCustomerId
+}
+```
+Real-time listeners in `dashboard.js` update UI when subscription changes. Firestore rules restrict users to their own documents.
+
+### 4. Cloud Functions as Payment Backbone
+`functions/index.js` exports:
+- **`handleStripeWebhook`**: Listens for `checkout.session.completed`, `invoice.payment_failed`, `customer.subscription.*` events
+- **Action**: Updates Firestore user `subscription` field, sends confirmation emails, tracks transactions
+- **Config**: Reads Stripe keys from environment (deployed via `firebase functions:config:set`)
+- **Status**: Ready to deploy; placeholder keys in `stripe-config.js` need live keys before production
+
+### 5. Admin Dashboard (Incomplete Feature)
+`admin-google.html` / `admin-direct.html` render full SaaS admin panel **inline with styled divs** (no components). Switches tabs via `switchTab('users')|switchTab('billing')`, etc. Reads from Firestore in real-time. **Accessible only if `currentUser.email === ADMIN_EMAIL`** ('dyingbreed243@gmail.com').
+
+---
+
+## Startup Workflows
+
+### **Deploying Changes**
+```powershell
+firebase deploy --only hosting --force
+# Check deployment: firebase deploy --only hosting --force 2>&1 | Select-Object -Last 15
+```
+Static files deploy instantly. Cloud Functions deployment separate: `firebase deploy --only functions`.
+
+### **Testing Authentication Locally**
+1. Open DevTools → Application → Local Storage
+2. Look for Firebase auth token keys (`firebase:...`)
+3. Clear Local Storage to force logout
+4. Check Firestore in Firebase Console for user document creation
+
+### **Payment Flow Testing** (not yet live)
+1. `stripe-config.js` contains test/live key placeholders
+2. Clicking "Upgrade" on dashboard triggers `createCheckoutSession()` Cloud Function
+3. Function returns Stripe session ID → redirects to Stripe checkout
+4. On success, webhook fires → `handleStripeWebhook` → updates Firestore → sends email
+
+---
+
+## Core Developer Patterns
+
+### Adding Features to Dashboard
+**Pattern**: Create `loadXyzPage()` in `dashboard.js` inside the `navigateTo()` switch:
+```javascript
+case 'analytics':
+    loadAnalyticsPage();
+    break;
+
+async function loadAnalyticsPage() {
+    const contentDiv = document.querySelector('.content-pages');
+    contentDiv.innerHTML = `
+        <div class="page" id="analytics-page">
+            <h2>Analytics</h2>
+            <div class="stat-card">
+                <p class="stat-label">Posts This Month</p>
+                <p class="stat-value" id="posts-stat">0</p>
+            </div>
+        </div>
+    `;
+    // Fetch data from Firestore
+    const userDoc = await db.collection('users').doc(currentUser.uid).get();
+    document.getElementById('posts-stat').textContent = userDoc.data().postsCount || 0;
 }
 ```
 
-### 2. Page Architecture
-The app uses **hash-based navigation** with inline content generation:
-- `index.html` - Landing/login page with demo chatbot animation
-- `auth.html` - Authentication page (Google + Email/Password)
-- `dashboard.html` - Main application hub with sidebar navigation
-- Each dashboard section (overview, billing, chatbot, settings) dynamically loaded via `navigateTo()` in `dashboard.js`
+### Firestore Data Operations
+- **Read once**: `db.collection('users').doc(uid).get()` → returns promise
+- **Real-time**: `db.collection('users').where('tier', '==', 'pro').onSnapshot(snapshot => { ... })`
+- **Update field**: `db.collection('users').doc(uid).update({ tier: 'pro' })` (partial)
+- **Set new doc**: `db.collection('users').doc(uid).set({ ... })` (overwrites)
 
-### 3. Chatbot Implementation
-- **Vanilla JS Widget** (`chatbot.js`): Embeddable via script tag, no React dependency
-- **Self-contained**: CSS + HTML bundled inline, auto-initializes on `DOMContentLoaded`
-- **Architecture**: Simple keyword-matching bot responses; no LLM integration yet
-- **Deployment**: Served from Firebase Hosting URL in embed code
+**Always wrap in try/catch** and call `showError(msg)` for UI feedback.
 
-**Embed Pattern**:
-```html
-<script src="https://studio-4627045237-a2fe9.web.app/chatbot.js"></script>
-<div id="chatbot-root"></div>
+### UI State Management
+- **Loading overlay**: Call `showLoading(true)` before async → `showLoading(false)` after
+- **Active navigation**: Add `.active` class to sidebar items; remove from others
+- **Error messages**: Call `showError('message')` — appears 5sec then disappears
+- **Success toast**: Call `showSuccess('message')`
+
+### Event Tracking (GA4)
+```javascript
+trackEvent('feature_name', { key: 'value', user_id: currentUser.uid });
+// Fires: window.gtag('event', 'feature_name', { ... })
 ```
+Use for: signup funnel, upgrade clicks, chatbot interactions, admin actions.
 
-### 4. Payment Integration (Incomplete)
-- **Config**: `stripe-config.js` contains placeholder keys and price IDs
-- **Expected Flow**: Cloud Functions (Netlify) handle checkout sessions and payment verification
-- **Status**: Frontend ready but backend Cloud Functions not yet deployed
-- **Key Functions**: `createCheckoutSession()`, `handlePaymentSuccess()`, `manageStripeSubscription()`
+---
 
-## Project-Specific Conventions
+## Styling & Design System
 
-### Session & Auth State
-- **Temporary Sessions**: `index.html` uses `sessionStorage` for demo purposes
-- **Real Auth**: `auth.html` uses Firebase Authentication with Firestore persistence
-- **Auth Guard**: `dashboard.html` redirects unauthenticated users to `auth.html` via `onAuthStateChanged()`
+**Color palette** (use consistently):
+- Primary Blue: `#00d4ff` (accent, buttons)
+- Pink/Hot: `#ff0080` (CTAs, premium tier)
+- Orange: `#ff8c00` (secondary CTAs)
+- Cyan: `#40e0d0` (tertiary accent)
+- Dark bg: `#0a0a0a` (main), `#1a1a1a` (secondary)
 
-### Subscription Tiers
-```
-FREE:       10 posts/month, 100 messages, basic support
-PRO:        $29/month, 500 posts/month, 10k messages, advanced analytics
-ENTERPRISE: Custom pricing, unlimited everything, 24/7 support
-```
+**CSS location**: 
+- Shared `styles.css`, `auth-styles.css`, `dashboard-styles.css` 
+- Inline `<style>` in HTML files for one-off styles
 
-### Event Tracking
-- Uses Google Analytics 4 with `trackEvent()` function
-- Key events: `google_signin_start`, `signup_start`, `onboarding_complete`, `google_signin_error`
-- Tracked in `auth.js` for funnel analysis
+**No CSS classes for state**—use `.active` for nav items. Most styling is inline due to no CSS preprocessor.
 
-### Styling Approach
-- **Color Palette**: Gradients (blue `#00d4ff` + pink `#ff0080` + orange `#ff8c00` + cyan `#40e0d0`)
-- **Dark theme**: Base color `#0a0a0a`, secondary `#1a1a1a`
-- **Inline CSS**: Each `.html` file contains `<style>` tags; separate `.css` files for large shared styles
-- **Animation**: Keyframes for floating icons, slide-up transitions, typing indicators
+---
 
-## Critical Developer Workflows
+## Payment Integration Checklist
 
-### Adding a New Dashboard Section
-1. Add navigation item to sidebar in `dashboard.html`
-2. Add case handler in `navigateTo()` function in `dashboard.js`
-3. Create corresponding `loadXyzPage()` function that generates HTML and appends to `.content-pages` div
-4. Use consistent stat card and form styling from existing sections
+**Before going live**:
+1. ✅ Get Stripe LIVE keys (pk_live_..., sk_live_...)
+2. ✅ Set Firebase config: `firebase functions:config:set stripe.secret_key="..."`
+3. ✅ Deploy Cloud Functions: `firebase deploy --only functions`
+4. ✅ Create Stripe webhook → `handleStripeWebhook` endpoint
+5. ✅ Test payment flow end-to-end
+6. ✅ Verify Firestore transaction records
+7. ✅ Confirm confirmation emails send
 
-**Example**: To add "Analytics" page, create `loadAnalyticsPage()` similar to `loadChatbotPage()`.
+See `DEPLOYMENT_GUIDE.md` for full setup steps.
 
-### Testing Auth Changes
-- Use browser DevTools → Application → Local Storage to inspect Firebase tokens
-- Clear `sessionStorage` to force re-login in `index.html` test
-- Check Firestore in Firebase Console to verify user profiles are created
+---
 
-### Modifying Chatbot Responses
-- Edit `responses` object in `getBotResponse()` function in `chatbot.js`
-- Add keywords to existing categories or create new response objects
-- Test by opening chatbot widget (fixed bottom-right button) on any page with `<div id="chatbot-root"></div>`
+## Key File Reference
 
-### Stripe Integration (When Ready)
-- Replace placeholder keys in `stripe-config.js` with actual Stripe keys from dashboard
-- Deploy Cloud Functions to Netlify (currently stubbed as `/.netlify/functions/`)
-- Verify payment flow: `handleUpgrade()` → Cloud Function → Stripe redirect → `handlePaymentSuccess()`
+| File | Purpose |
+|------|---------|
+| `firebase-config.js` | Firebase init + global refs |
+| `auth.js` | Auth UI logic (sign in/up/Google) |
+| `dashboard.js` | Main app UI + page routing |
+| `chatbot.js` | Embeddable chatbot widget |
+| `functions/index.js` | Webhook handlers + email |
+| `godmode.html` | Admin panel (incomplete) |
+| `automation-bot.js` | Task automation engine |
 
-## Important Integration Points
+---
 
-### Firebase Project References
-- Project ID: `studio-4627045237-a2fe9`
-- Auth Domain: `studio-4627045237-a2fe9.firebaseapp.com`
-- Storage Bucket: `studio-4627045237-a2fe9.appspot.com`
-- Hosting URL: `https://studio-4627045237-a2fe9.web.app`
+## Known Gaps & TODOs
 
-### Admin Access
-- Easter egg: Type "Around360" on `index.html` login page, then enter `!!litree!!` as master key
-- Grants access to `/godmode.html` (incomplete admin panel)
-
-### External Dependencies
-- **Firebase SDK v10.7.0** via CDN (no npm)
-- **Stripe.js v3** loaded dynamically in dashboard
-- **Chart.js** for analytics/dashboards
-- **Google Analytics 4** for event tracking
-
-## Common Patterns to Maintain
-
-1. **Async User Operations**: Wrap in `try/catch`, use `showError()` for user feedback
-2. **Form Submissions**: Prevent default, validate, show loading overlay via `showLoading(true/false)`
-3. **Firestore Updates**: Always use `updateDoc()` for partial updates, `setDoc()` for full overwrites
-4. **UI State**: Use `.active` class on nav items; toggle via `classList.add/remove()`
-5. **Error Recovery**: Always clear loading state and re-enable form inputs after failures
-
-## Known Gaps & Future Work
-- Stripe Cloud Functions not deployed
-- React Chatbot component (`Chatbot.jsx`) exists but not integrated
-- Admin panel (`godmode.html`) incomplete
-- No local development server setup (pure static files)
-- No automated tests or CI/CD pipeline
-
-## Contact & Maintenance
-- Email contact: `laidbacknostress4life@gmail.com`
-- Active development; maintenance banner in `index.html` indicates ongoing updates
+- ❌ Stripe Cloud Functions: Live deployment pending
+- ❌ Admin panel (`godmode.html`): UI complete, features incomplete
+- ❌ React Chatbot (`Chatbot.jsx`): Exists but unused; vanilla JS widget active
+- ❌ Tests: None yet
+- ❌ Local dev server: Use `firebase serve` (if needed)
+- ✅ GA4 tracking: Implemented
+- ✅ Firebase Auth: Working
+- ✅ Chatbot widget: Deployed

@@ -1,4 +1,8 @@
 {
+  "functions": {
+    "source": "functions",
+    "runtime": "nodejs20"
+  },
   "hosting": {
     "public": ".",
     "ignore": [
@@ -10,7 +14,8 @@
       "*.md",
       "dashboard-old-*",
       "financial.html",
-      "admin.html"
+      "admin.html",
+      "functions/**"
     ],
     "redirects": [
       {
