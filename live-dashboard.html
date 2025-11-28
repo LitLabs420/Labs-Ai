@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LitLabs Glam AI - Live Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --dark: #0a0a0a;
+            --darker: #000000;
+            --blue: #00d4ff;
+            --pink: #ff0080;
+            --orange: #ff8c00;
+            --cyan: #40e0d0;
+            --text: #ffffff;
+            --text-secondary: #b0b0b0;
+            --success: #40e0d0;
+            --warning: #ff8c00;
+            --error: #ff0080;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--darker) 0%, #1a1a2e 100%);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            background: linear-gradient(180deg, #0a0a0a, #1a1a1a);
+            border-right: 2px solid var(--pink);
+            padding: 2rem 0;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 2px solid var(--pink);
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            font-size: 1.3em;
+            font-weight: bold;
+            background: linear-gradient(90deg, var(--blue), var(--pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            margin-left: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .nav-item {
+            padding: 1rem 1.5rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            margin: 0.5rem 0;
+        }
+
+        .nav-item:hover {
+            color: var(--blue);
+            border-left-color: var(--blue);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .nav-item.active {
+            color: var(--blue);
+            border-left-color: var(--blue);
+            background: rgba(0, 212, 255, 0.15);
+            font-weight: bold;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            padding: 2rem;
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, var(--blue), var(--pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-header p {
+            color: var(--text-secondary);
+        }
+
+        .live-indicator {
+            display: inline-block;
+            background: var(--success);
+            color: #000;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-left: 1rem;
+            animation: pulse 2s infinite;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .stat-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--blue);
+            transform: translateY(-5px);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9em;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-value {
+            font-size: 2.2em;
+            font-weight: bold;
+            background: linear-gradient(90deg, var(--blue), var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-change {
+            color: var(--success);
+            font-size: 0.85em;
+            margin-top: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-change.negative {
+            color: var(--error);
+        }
+
+        .live-feed {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            margin-bottom: 2rem;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .feed-item {
+            padding: 1rem;
+            border-left: 3px solid var(--blue);
+            margin-bottom: 1rem;
+            background: rgba(0, 212, 255, 0.05);
+            border-radius: 6px;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .feed-item.payment {
+            border-left-color: var(--success);
+            background: rgba(64, 224, 208, 0.05);
+        }
+
+        .feed-item.signup {
+            border-left-color: var(--cyan);
+            background: rgba(64, 224, 208, 0.05);
+        }
+
+        .feed-item.alert {
+            border-left-color: var(--warning);
+            background: rgba(255, 140, 0, 0.05);
+        }
+
+        .feed-time {
+            color: var(--text-secondary);
+            font-size: 0.85em;
+        }
+
+        .feed-title {
+            font-weight: bold;
+            color: var(--blue);
+            margin: 0.5rem 0;
+        }
+
+        .feed-desc {
+            color: var(--text-secondary);
+            font-size: 0.95em;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(0, 212, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        th {
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--blue);
+            padding: 1rem;
+            text-align: left;
+            font-weight: bold;
+            border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        tr:hover {
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        .badge-success {
+            background: rgba(64, 224, 208, 0.2);
+            color: var(--success);
+        }
+
+        .badge-warning {
+            background: rgba(255, 140, 0, 0.2);
+            color: var(--warning);
+        }
+
+        .badge-error {
+            background: rgba(255, 0, 128, 0.2);
+            color: var(--error);
+        }
+
+        .chart-container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .chart-title {
+            color: var(--blue);
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .mini-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 0.5rem;
+            height: 150px;
+        }
+
+        .bar {
+            flex: 1;
+            background: linear-gradient(180deg, var(--blue), var(--cyan));
+            border-radius: 4px 4px 0 0;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .bar:hover {
+            background: linear-gradient(180deg, var(--pink), var(--orange));
+        }
+
+        .bar-label {
+            position: absolute;
+            bottom: -25px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.8em;
+            color: var(--text-secondary);
+        }
+
+        .refresh-button {
+            background: linear-gradient(90deg, var(--blue), var(--cyan));
+            color: #000;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .refresh-button:hover {
+            transform: scale(1.05);
+        }
+
+        .last-update {
+            color: var(--text-secondary);
+            font-size: 0.85em;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">💎 LitLabs Glam AI <span class="status-indicator"></span></div>
+                <div style="font-size: 0.8em; color: var(--success); margin-top: 0.5rem;">🔴 LIVE</div>
+            </div>
+            
+            <div class="nav-item active" onclick="navigateTo('live')">📡 Live Feed</div>
+            <div class="nav-item" onclick="navigateTo('revenue')">💰 Revenue Stream</div>
+            <div class="nav-item" onclick="navigateTo('customers')">👥 Customer Flow</div>
+            <div class="nav-item" onclick="navigateTo('analytics')">📊 Analytics</div>
+            <div class="nav-item" onclick="navigateTo('alerts')">🚨 Alerts</div>
+            <div class="nav-item" onclick="navigateTo('connections')">🔗 Connections</div>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+            <!-- LIVE FEED PAGE -->
+            <div class="page active" id="live">
+                <div class="page-header">
+                    <h1>📡 Live Event Feed <span class="live-indicator">🔴 LIVE</span></h1>
+                    <p>Real-time activity from your platform</p>
+                </div>
+
+                <div class="grid">
+                    <div class="stat-card">
+                        <div class="stat-label">💳 Today's Revenue</div>
+                        <div class="stat-value" id="todayRevenue">$290</div>
+                        <div class="stat-change">↑ 15% from yesterday</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">👁️ Live Visitors</div>
+                        <div class="stat-value" id="liveVisitors">24</div>
+                        <div class="stat-change">Now browsing your site</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">✨ New Signups (24h)</div>
+                        <div class="stat-value" id="newSignups">18</div>
+                        <div class="stat-change">↑ 8 more than yesterday</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">💎 Paid Conversions</div>
+                        <div class="stat-value" id="conversions">3</div>
+                        <div class="stat-change">16.7% conversion rate</div>
+                    </div>
+                </div>
+
+                <div class="live-feed">
+                    <h3 style="color: var(--blue); margin-bottom: 1rem;">🔔 Recent Activity</h3>
+                    <div id="feedContainer">
+                        <!-- Dynamic feed items will appear here -->
+                    </div>
+                </div>
+
+                <button class="refresh-button" onclick="refreshLiveFeed()">🔄 Refresh Now</button>
+                <div class="last-update">Last updated: <span id="lastUpdate">just now</span></div>
+            </div>
+
+            <!-- REVENUE STREAM PAGE -->
+            <div class="page" id="revenue">
+                <div class="page-header">
+                    <h1>💰 Revenue Stream <span class="live-indicator">🔴 LIVE</span></h1>
+                    <p>Real-time earnings visualization</p>
+                </div>
+
+                <div class="grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Total All-Time Revenue</div>
+                        <div class="stat-value" id="totalRevenue">$4,850</div>
+                        <div class="stat-change">From 120 paid customers</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">This Month Revenue</div>
+                        <div class="stat-value" id="monthRevenue">$1,740</div>
+                        <div class="stat-change">↑ 45% increase</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Average Transaction</div>
+                        <div class="stat-value" id="avgTransaction">$40.42</div>
+                        <div class="stat-change">Pro & Enterprise mix</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Stripe Processing</div>
+                        <div class="stat-value">2.9%</div>
+                        <div class="stat-change">+ $0.30 per transaction</div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-title">📈 Revenue by Day (Last 7 Days)</div>
+                    <div class="mini-chart">
+                        <div class="bar" style="height: 45%;" title="Day 1: $290"><div class="bar-label">Mon</div></div>
+                        <div class="bar" style="height: 55%;" title="Day 2: $370"><div class="bar-label">Tue</div></div>
+                        <div class="bar" style="height: 60%;" title="Day 3: $420"><div class="bar-label">Wed</div></div>
+                        <div class="bar" style="height: 75%;" title="Day 4: $540"><div class="bar-label">Thu</div></div>
+                        <div class="bar" style="height: 85%;" title="Day 5: $620"><div class="bar-label">Fri</div></div>
+                        <div class="bar" style="height: 90%;" title="Day 6: $680"><div class="bar-label">Sat</div></div>
+                        <div class="bar" style="height: 100%;" title="Day 7: $740"><div class="bar-label">Sun</div></div>
+                    </div>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Customer</th>
+                            <th>Plan</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="revenueTable">
+                        <!-- Dynamic revenue items -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- CUSTOMERS PAGE -->
+            <div class="page" id="customers">
+                <div class="page-header">
+                    <h1>👥 Customer Flow <span class="live-indicator">🔴 LIVE</span></h1>
+                    <p>Real-time customer pipeline</p>
+                </div>
+
+                <div class="grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Free Users</div>
+                        <div class="stat-value" id="freeUsers">847</div>
+                        <div class="stat-change">↑ 24 new today</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Pro Subscribers</div>
+                        <div class="stat-value" id="proUsers">98</div>
+                        <div class="stat-change">↑ 2 new today</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Enterprise Tier</div>
+                        <div class="stat-value" id="enterpriseUsers">22</div>
+                        <div class="stat-change">↑ 1 new today</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Conversion Funnel</div>
+                        <div class="stat-value">12.3%</div>
+                        <div class="stat-change">Free → Paid</div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-title">👥 Customer Distribution</div>
+                    <div class="mini-chart">
+                        <div class="bar" style="height: 100%;" title="Free: 847"><div class="bar-label">Free</div></div>
+                        <div class="bar" style="height: 11.6%;" title="Pro: 98"><div class="bar-label">Pro</div></div>
+                        <div class="bar" style="height: 2.6%;" title="Enterprise: 22"><div class="bar-label">Enterprise</div></div>
+                    </div>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Plan</th>
+                            <th>Joined</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customerTable">
+                        <!-- Dynamic customer items -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ANALYTICS PAGE -->
+            <div class="page" id="analytics">
+                <div class="page-header">
+                    <h1>📊 Analytics <span class="live-indicator">🔴 LIVE</span></h1>
+                    <p>Real-time platform metrics</p>
+                </div>
+
+                <div class="grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Page Views (24h)</div>
+                        <div class="stat-value" id="pageViews">2,450</div>
+                        <div class="stat-change">↑ 28% increase</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Unique Visitors</div>
+                        <div class="stat-value" id="uniqueVisitors">847</div>
+                        <div class="stat-change">↑ 125 new visitors</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Avg Session Duration</div>
+                        <div class="stat-value" id="sessionDuration">4m 23s</div>
+                        <div class="stat-change">↑ 1m 15s longer</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Bounce Rate</div>
+                        <div class="stat-value" id="bounceRate">28%</div>
+                        <div class="stat-change">↓ 5% improvement</div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-title">📈 Visitor Trend (Last 7 Days)</div>
+                    <div class="mini-chart">
+                        <div class="bar" style="height: 40%;" title="Mon: 240"><div class="bar-label">Mon</div></div>
+                        <div class="bar" style="height: 50%;" title="Tue: 320"><div class="bar-label">Tue</div></div>
+                        <div class="bar" style="height: 55%;" title="Wed: 380"><div class="bar-label">Wed</div></div>
+                        <div class="bar" style="height: 70%;" title="Thu: 520"><div class="bar-label">Thu</div></div>
+                        <div class="bar" style="height: 75%;" title="Fri: 580"><div class="bar-label">Fri</div></div>
+                        <div class="bar" style="height: 85%;" title="Sat: 720"><div class="bar-label">Sat</div></div>
+                        <div class="bar" style="height: 100%;" title="Sun: 850"><div class="bar-label">Sun</div></div>
+                    </div>
+                </div>
+
+                <h3 style="color: var(--blue); margin-top: 2rem; margin-bottom: 1rem;">🌍 Top Traffic Sources</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Source</th>
+                            <th>Visitors</th>
+                            <th>Conversions</th>
+                            <th>Revenue</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Google Search</td>
+                            <td>425</td>
+                            <td>8</td>
+                            <td>$232</td>
+                        </tr>
+                        <tr>
+                            <td>ProductHunt</td>
+                            <td>182</td>
+                            <td>5</td>
+                            <td>$145</td>
+                        </tr>
+                        <tr>
+                            <td>Social Media</td>
+                            <td>156</td>
+                            <td>3</td>
+                            <td>$87</td>
+                        </tr>
+                        <tr>
+                            <td>Direct</td>
+                            <td>84</td>
+                            <td>2</td>
+                            <td>$58</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ALERTS PAGE -->
+            <div class="page" id="alerts">
+                <div class="page-header">
+                    <h1>🚨 Alerts & Notifications</h1>
+                    <p>Important platform events</p>
+                </div>
+
+                <div class="live-feed">
+                    <div class="feed-item payment">
+                        <div class="feed-time">Just now</div>
+                        <div class="feed-title">✅ Payment Processed</div>
+                        <div class="feed-desc">Sarah M. upgraded to Pro plan - $29.00</div>
+                    </div>
+                    <div class="feed-item signup">
+                        <div class="feed-time">2 minutes ago</div>
+                        <div class="feed-title">🎉 New Signup</div>
+                        <div class="feed-desc">Jessica L. signed up with email registration</div>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-time">5 minutes ago</div>
+                        <div class="feed-title">🔄 Subscription Renewed</div>
+                        <div class="feed-desc">Emma K. subscription auto-renewed for $29.00</div>
+                    </div>
+                    <div class="feed-item alert">
+                        <div class="feed-time">15 minutes ago</div>
+                        <div class="feed-title">⚠️ Failed Payment</div>
+                        <div class="feed-desc">Laura P. payment declined - retry scheduled</div>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-time">22 minutes ago</div>
+                        <div class="feed-title">📊 Daily Report Generated</div>
+                        <div class="feed-desc">Today: $290 revenue | 18 signups | 3 conversions</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONNECTIONS PAGE -->
+            <div class="page" id="connections">
+                <div class="page-header">
+                    <h1>🔗 Connections</h1>
+                    <p>Integration status and quick links</p>
+                </div>
+
+                <div class="grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Stripe Status</div>
+                        <div style="margin-top: 0.5rem;">
+                            <span class="badge badge-success">✓ Connected</span>
+                        </div>
+                        <div class="stat-change" style="margin-top: 1rem;">Live payments active</div>
+                        <a href="https://dashboard.stripe.com" target="_blank" style="color: var(--blue); text-decoration: none; margin-top: 1rem; display: inline-block;">→ Open Stripe Dashboard</a>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-label">Firebase Status</div>
+                        <div style="margin-top: 0.5rem;">
+                            <span class="badge badge-success">✓ Connected</span>
+                        </div>
+                        <div class="stat-change" style="margin-top: 1rem;">Database synced</div>
+                        <a href="https://console.firebase.google.com" target="_blank" style="color: var(--blue); text-decoration: none; margin-top: 1rem; display: inline-block;">→ Open Firebase Console</a>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-label">Google Analytics</div>
+                        <div style="margin-top: 0.5rem;">
+                            <span class="badge badge-success">✓ Tracking</span>
+                        </div>
+                        <div class="stat-change" style="margin-top: 1rem;">GA4 active</div>
+                        <a href="https://analytics.google.com" target="_blank" style="color: var(--blue); text-decoration: none; margin-top: 1rem; display: inline-block;">→ Open Analytics</a>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-label">Email Service</div>
+                        <div style="margin-top: 0.5rem;">
+                            <span class="badge badge-success">✓ Active</span>
+                        </div>
+                        <div class="stat-change" style="margin-top: 1rem;">Nodemailer ready</div>
+                        <div style="color: var(--text-secondary); margin-top: 1rem; font-size: 0.9em;">Sending confirmations</div>
+                    </div>
+                </div>
+
+                <h3 style="color: var(--blue); margin-top: 2rem; margin-bottom: 1rem;">🚀 Quick Launch Actions</h3>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><strong>1. Test Payment</strong></td>
+                            <td>Use test card 4242 4242 4242 4242</td>
+                            <td><a href="/pricing.html" target="_blank" style="color: var(--blue); text-decoration: none;">→ Go to Pricing</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>2. Share Your Link</strong></td>
+                            <td>Send to friends & beauty professionals</td>
+                            <td><span style="color: var(--success);">https://studio-4627045237-a2fe9.web.app</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>3. Run Ads</strong></td>
+                            <td>Start with Google Ads ($10/day)</td>
+                            <td><a href="https://ads.google.com" target="_blank" style="color: var(--blue); text-decoration: none;">→ Google Ads</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>4. Monitor Revenue</strong></td>
+                            <td>Check Stripe dashboard daily</td>
+                            <td><a href="https://dashboard.stripe.com" target="_blank" style="color: var(--blue); text-decoration: none;">→ Stripe Dashboard</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulate real-time data updates
+        const mockData = {
+            recentTransactions: [
+                { time: '2:34 PM', customer: 'Sarah M.', plan: 'Pro', amount: '$29.00', status: 'paid' },
+                { time: '1:18 PM', customer: 'Jessica L.', plan: 'Enterprise', amount: '$99.00', status: 'paid' },
+                { time: '12:45 PM', customer: 'Emma K.', plan: 'Pro', amount: '$29.00', status: 'paid' },
+            ],
+            customers: [
+                { name: 'Sarah M.', email: 'sarah@beauty.com', plan: 'Pro', joined: '2025-11-15', status: 'active' },
+                { name: 'Jessica L.', email: 'jessica@salon.com', plan: 'Enterprise', joined: '2025-11-10', status: 'active' },
+                { name: 'Emma K.', email: 'emma@glamour.com', plan: 'Pro', joined: '2025-11-05', status: 'active' },
+            ]
+        };
+
+        function navigateTo(page) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(p => p.classList.remove('active'));
+            document.getElementById(page).classList.add('active');
+
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.querySelector('.main-content').scrollTop = 0;
+        }
+
+        function refreshLiveFeed() {
+            updateLiveMetrics();
+            showNotification('Feed refreshed!');
+        }
+
+        function updateLiveMetrics() {
+            // Simulate live updates with random fluctuations
+            const todayRevenue = Math.floor(Math.random() * 500) + 200;
+            const visitors = Math.floor(Math.random() * 50) + 10;
+            const signups = Math.floor(Math.random() * 30) + 5;
+            const conversions = Math.floor(Math.random() * 10) + 1;
+
+            document.getElementById('todayRevenue').textContent = '$' + todayRevenue;
+            document.getElementById('liveVisitors').textContent = visitors;
+            document.getElementById('newSignups').textContent = signups;
+            document.getElementById('conversions').textContent = conversions;
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+
+            // Update revenue table
+            const revenueTable = document.getElementById('revenueTable');
+            revenueTable.innerHTML = mockData.recentTransactions.map(t => `
+                <tr>
+                    <td>${t.time}</td>
+                    <td>${t.customer}</td>
+                    <td>${t.plan}</td>
+                    <td>${t.amount}</td>
+                    <td><span class="badge badge-success">${t.status}</span></td>
+                </tr>
+            `).join('');
+
+            // Update customer table
+            const customerTable = document.getElementById('customerTable');
+            customerTable.innerHTML = mockData.customers.map(c => `
+                <tr>
+                    <td>${c.name}</td>
+                    <td>${c.email}</td>
+                    <td>${c.plan}</td>
+                    <td>${c.joined}</td>
+                    <td><span class="badge badge-success">${c.status}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        function showNotification(msg) {
+            const feed = document.getElementById('feedContainer');
+            const item = document.createElement('div');
+            item.className = 'feed-item signup';
+            item.innerHTML = `
+                <div class="feed-time">Just now</div>
+                <div class="feed-title">🔄 ${msg}</div>
+                <div class="feed-desc">Live dashboard updated</div>
+            `;
+            feed.insertBefore(item, feed.firstChild);
+            if (feed.children.length > 10) feed.lastChild.remove();
+        }
+
+        // Populate feed on load
+        updateLiveMetrics();
+
+        // Auto-refresh every 10 seconds
+        setInterval(updateLiveMetrics, 10000);
+    </script>
+</body>
+</html>

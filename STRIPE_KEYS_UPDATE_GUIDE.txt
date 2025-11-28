@@ -1,0 +1,98 @@
+# 🔑 STRIPE KEYS UPDATE GUIDE
+
+## Step 1: Get Your LIVE Stripe Keys
+
+1. **Go to Stripe Dashboard:**
+   ```
+   https://dashboard.stripe.com
+   ```
+
+2. **Log in** with your Stripe account email
+
+3. **Get API Keys:**
+   - Click **Developers** (left sidebar, bottom)
+   - Click **API Keys**
+   - You'll see:
+     - **Publishable key** (starts with `pk_live_`)
+     - **Secret key** (starts with `sk_live_`)
+
+4. **Copy both keys** — keep them safe, never share
+
+---
+
+## Step 2: Update Keys in Firebase
+
+### For the Frontend (Dashboard & Landing):
+
+1. Go to: `stripe-config.js` file in your project
+2. Find this line:
+   ```javascript
+   const STRIPE_PUBLIC_KEY = 'pk_test_...';
+   ```
+3. Replace with your LIVE key:
+   ```javascript
+   const STRIPE_PUBLIC_KEY = 'pk_live_YOUR_KEY_HERE';
+   ```
+
+### For the Backend (Cloud Functions):
+
+1. **Set Firebase Config:**
+   ```bash
+   firebase functions:config:set stripe.secret_key="sk_live_YOUR_KEY_HERE"
+   firebase functions:config:set stripe.webhook_secret="whsec_YOUR_WEBHOOK_SECRET"
+   ```
+
+2. **Or manually:**
+   - Go to Firebase Console
+   - Project Settings → Functions
+   - Set environment variables
+
+---
+
+## Step 3: Add Webhook URL to Stripe
+
+1. Go to **Stripe Dashboard → Webhooks** (Developers section)
+2. Click **Add an endpoint**
+3. Paste this URL:
+   ```
+   https://us-central1-studio-4627045237-a2fe9.cloudfunctions.net/handleStripeWebhook
+   ```
+4. Select events: `checkout.session.completed`, `payment_intent.succeeded`, `invoice.payment_failed`
+5. Copy the **Signing secret** (starts with `whsec_`)
+6. Update in Firebase (see Step 2)
+
+---
+
+## Step 4: Test It
+
+1. Go to your site: https://studio-4627045237-a2fe9.web.app
+2. Click "Get Started Free"
+3. Create account
+4. Go to Upgrade page
+5. Try purchasing $9 tier
+6. Use your LIVE card (not test card anymore)
+7. Complete purchase
+8. Check Stripe Dashboard for payment
+
+---
+
+## ⚠️ IMPORTANT NOTES
+
+- **TEST keys** (pk_test_) = No real money
+- **LIVE keys** (pk_live_) = Real payments
+- **Never share your sk_live_ key** — it's secret
+- **Test THOROUGHLY** before going live
+- **Keep webhook URL exact** — one typo breaks payments
+
+---
+
+## Quick Reference
+
+| Item | Where to Find | What to Do |
+|------|---------------|-----------|
+| pk_live_ | Stripe Dashboard → Developers → API Keys | Update `stripe-config.js` |
+| sk_live_ | Stripe Dashboard → Developers → API Keys | Set in Firebase Functions config |
+| Webhook Secret | Stripe Dashboard → Webhooks → Your endpoint | Set in Firebase Functions config |
+| Webhook URL | Copy from above | Add to Stripe Webhooks |
+
+**After updating, payments will work with real money.** 💰

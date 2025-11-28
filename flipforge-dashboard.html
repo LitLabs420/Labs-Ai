@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLIPFORGE™ Dashboard – Empire Command Center</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --obsidian: #0A0A0A;
+            --gold: #D5A542;
+            --blue: #2D6AFF;
+            --red: #FF0033;
+            --dark-bg: #0f0f0f;
+            --card-bg: #1a1a1a;
+            --border: #2d2d2d;
+            --text: #e0e0e0;
+            --muted: #888888;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--obsidian) 0%, #1a1a2e 100%);
+            color: var(--text);
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            background: rgba(10, 10, 10, 0.95);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem 1rem;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .sidebar-logo {
+            font-size: 1.2em;
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--gold), var(--red));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .nav-items {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 1rem;
+            color: var(--muted);
+            text-decoration: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover {
+            background: rgba(213, 165, 66, 0.1);
+            color: var(--gold);
+            border-left-color: var(--gold);
+        }
+
+        .nav-link.active {
+            background: rgba(213, 165, 66, 0.2);
+            color: var(--gold);
+            border-left-color: var(--gold);
+            font-weight: 700;
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 1.5rem 0;
+        }
+
+        .sidebar-label {
+            font-size: 0.8em;
+            color: var(--muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 1rem 0.5rem;
+            letter-spacing: 1px;
+        }
+
+        /* MAIN */
+        .main-content {
+            margin-left: 250px;
+            padding: 2rem;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            background: rgba(26, 26, 26, 0.8);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .top-bar h1 {
+            font-size: 2em;
+            color: var(--gold);
+        }
+
+        .user-menu {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-upgrade {
+            background: linear-gradient(90deg, var(--gold), var(--red));
+            color: var(--obsidian);
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-upgrade:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(213, 165, 66, 0.5);
+        }
+
+        /* PAGES */
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--gold);
+            background: rgba(26, 26, 26, 0.95);
+            transform: translateY(-3px);
+        }
+
+        .card-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .card-stat {
+            font-size: 2.5em;
+            font-weight: 900;
+            color: var(--blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .card-label {
+            color: var(--muted);
+            font-size: 0.9em;
+        }
+
+        .progress-bar {
+            background: var(--border);
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, var(--blue), var(--gold));
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .button-row {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.2s ease;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, var(--gold), var(--red));
+            color: var(--obsidian);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(213, 165, 66, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(45, 106, 255, 0.2);
+            color: var(--blue);
+            border: 1px solid var(--blue);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(45, 106, 255, 0.3);
+        }
+
+        .quick-action {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: rgba(45, 106, 255, 0.1);
+            border-left: 3px solid var(--blue);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .quick-action-icon {
+            font-size: 2em;
+        }
+
+        .quick-action-content {
+            flex: 1;
+        }
+
+        .quick-action-title {
+            color: var(--blue);
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .quick-action-desc {
+            color: var(--muted);
+            font-size: 0.9em;
+        }
+
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .list-item-content {
+            flex: 1;
+        }
+
+        .list-item-title {
+            color: var(--text);
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .list-item-subtitle {
+            color: var(--muted);
+            font-size: 0.9em;
+        }
+
+        .list-item-value {
+            color: var(--gold);
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
+        .tab-nav {
+            display: flex;
+            gap: 1rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            font-weight: 600;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .tab:hover {
+            color: var(--gold);
+        }
+
+        .tab.active {
+            color: var(--gold);
+            border-bottom-color: var(--gold);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-title {
+            font-size: 1.5em;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            color: var(--text);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--gold);
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="sidebar-logo">🜂 FLIPFORGE</div>
+
+            <ul class="nav-items">
+                <li class="nav-item">
+                    <a class="nav-link active" onclick="switchPage('dashboard')">📊 Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="switchPage('money-map')">🗺️ Money Map</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="switchPage('ai-chat')">💬 AI Chat</a>
+                </li>
+            </ul>
+
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-label">🚀 Build</div>
+
+            <ul class="nav-items">
+                <li class="nav-item">
+                    <a class="nav-link" onclick="switchPage('funnels')">🛣️ Funnels</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="switchPage('ghostwriter')">✍️ Ghostwriter</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="switchPage('emails')">📧 Emails</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="switchPage('leads')">🎁 Lead Magnets</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="switchPage('storefront')">🏪 Storefront</a>
+                </li>
+            </ul>
+
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-label">💰 Grow</div>
+
+            <ul class="nav-items">
+                <li class="nav-item">
+                    <a class="nav-link" onclick="switchPage('referrals')">🤝 Referrals</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="switchPage('challenges')">🎪 Challenges</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="switchPage('analytics')">📈 Analytics</a>
+                </li>
+            </ul>
+
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-label">⚙️ System</div>
+
+            <ul class="nav-items">
+                <li class="nav-item">
+                    <a class="nav-link" onclick="switchPage('settings')">⚙️ Settings</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="logout()">🚪 Logout</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+            <!-- TOP BAR -->
+            <div class="top-bar">
+                <h1>🜂 FLIPFORGE Empire Command Center</h1>
+                <div class="user-menu">
+                    <button class="btn-upgrade" onclick="switchPage('upgrade')">⬆️ Upgrade to Pro</button>
+                    <div class="user-avatar" title="Your Profile">👤</div>
+                </div>
+            </div>
+
+            <!-- DASHBOARD PAGE -->
+            <div id="dashboard" class="page active">
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-title">💵 Money Made This Month</div>
+                        <div class="card-stat">$0</div>
+                        <div class="card-label">Real-time revenue</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%"></div>
+                        </div>
+                        <p style="color: var(--muted); font-size: 0.85em; margin-top: 1rem;">
+                            You're $50 away from your first $100! 🔥
+                        </p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">👥 Customers</div>
+                        <div class="card-stat">0</div>
+                        <div class="card-label">Active buyers</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%"></div>
+                        </div>
+                        <p style="color: var(--muted); font-size: 0.85em; margin-top: 1rem;">
+                            Next milestone: 10 customers 🎯
+                        </p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">📊 Conversion Rate</div>
+                        <div class="card-stat">0%</div>
+                        <div class="card-label">Visitor to customer</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%"></div>
+                        </div>
+                        <p style="color: var(--muted); font-size: 0.85em; margin-top: 1rem;">
+                            Industry avg: 2% | Target: 5%+
+                        </p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">🎯 Growth Score</div>
+                        <div class="card-stat">34</div>
+                        <div class="card-label">Your momentum index</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 34%"></div>
+                        </div>
+                        <p style="color: var(--gold); font-size: 0.85em; margin-top: 1rem;">
+                            Level up by completing tasks ↓
+                        </p>
+                    </div>
+                </div>
+
+                <h2 style="color: var(--gold); margin-top: 2rem; margin-bottom: 1rem;">🚀 Quick Start Tasks</h2>
+
+                <div class="quick-action">
+                    <div class="quick-action-icon">🎯</div>
+                    <div class="quick-action-content">
+                        <div class="quick-action-title">1. Build Your Money Map</div>
+                        <div class="quick-action-desc">AI will personalize exactly how YOU can make $1K-$10K/month based on your skills</div>
+                    </div>
+                    <button class="btn btn-primary" onclick="switchPage('money-map')">Start →</button>
+                </div>
+
+                <div class="quick-action">
+                    <div class="quick-action-icon">✍️</div>
+                    <div class="quick-action-content">
+                        <div class="quick-action-title">2. Create Your First Offer</div>
+                        <div class="quick-action-desc">AI Ghostwriter will help you create a compelling service/product offer in 60 seconds</div>
+                    </div>
+                    <button class="btn btn-primary" onclick="switchPage('funnels')">Start →</button>
+                </div>
+
+                <div class="quick-action">
+                    <div class="quick-action-icon">🛣️</div>
+                    <div class="quick-action-content">
+                        <div class="quick-action-title">3. Build Your First Funnel</div>
+                        <div class="quick-action-desc">Funnel Builder creates a high-converting sales page in 60 seconds. No design skills needed</div>
+                    </div>
+                    <button class="btn btn-primary" onclick="openModal('funnelModal')">Start →</button>
+                </div>
+
+                <div class="quick-action">
+                    <div class="quick-action-icon">📧</div>
+                    <div class="quick-action-content">
+                        <div class="quick-action-title">4. Add Email Automation</div>
+                        <div class="quick-action-desc">Pre-written sequences nurture leads and close sales on autopilot. 40% avg conversion</div>
+                    </div>
+                    <button class="btn btn-primary" onclick="switchPage('emails')">Start →</button>
+                </div>
+
+                <h2 style="color: var(--gold); margin-top: 3rem; margin-bottom: 1rem;">💡 Your Next Steps</h2>
+                <div class="card">
+                    <div class="list-item">
+                        <div class="list-item-content">
+                            <div class="list-item-title">✅ Complete Money Map</div>
+                            <div class="list-item-subtitle">Defines your path to $10K/month</div>
+                        </div>
+                        <div class="list-item-value">35/100 XP</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-content">
+                            <div class="list-item-title">⏳ Create First Funnel</div>
+                            <div class="list-item-subtitle">Get your first 10 customers</div>
+                        </div>
+                        <div class="list-item-value">0/100 XP</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-content">
+                            <div class="list-item-title">⏳ Launch Email Sequence</div>
+                            <div class="list-item-subtitle">Start nurturing leads automatically</div>
+                        </div>
+                        <div class="list-item-value">0/100 XP</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-content">
+                            <div class="list-item-title">⏳ Make First $100</div>
+                            <div class="list-item-subtitle">Proof of concept for your business</div>
+                        </div>
+                        <div class="list-item-value">0/1000 XP</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MONEY MAP PAGE -->
+            <div id="money-map" class="page">
+                <h2 style="color: var(--gold); margin-bottom: 2rem;">🗺️ Your Personalized Money Map</h2>
+                <div class="card">
+                    <p style="color: var(--muted); margin-bottom: 1rem;">
+                        Tell us about yourself and AI will build your custom path to making $1K-$10K+/month:
+                    </p>
+                    <div class="form-group">
+                        <label class="form-label">What are your main skills? (e.g., "copywriting, design, social media")</label>
+                        <input type="text" class="form-input" placeholder="Enter your top 3 skills...">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">What's your ideal income goal?</label>
+                        <select class="form-input">
+                            <option>$1K/month (Quick start)</option>
+                            <option>$5K/month (Serious money)</option>
+                            <option>$10K+/month (God mode)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Do you have an audience already?</label>
+                        <select class="form-input">
+                            <option>No audience yet</option>
+                            <option>Small audience (< 1K followers)</option>
+                            <option>Medium audience (1K-10K followers)</option>
+                            <option>Large audience (10K+ followers)</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="generateMoneyMap()">🤖 Generate My Money Map</button>
+                </div>
+            </div>
+
+            <!-- AI CHAT PAGE -->
+            <div id="ai-chat" class="page">
+                <h2 style="color: var(--gold); margin-bottom: 2rem;">💬 AI Chat – Your Money Coach</h2>
+                <div class="card">
+                    <div style="background: rgba(0, 0, 0, 0.3); height: 400px; border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem; overflow-y: auto;">
+                        <div style="color: var(--gold); margin-bottom: 1rem;">
+                            🤖 AI: "Hi! I'm your FLIPFORGE AI Coach. I'm here to help you build your empire. What would you like to do today?"
+                        </div>
+                        <div style="color: var(--text); margin-bottom: 1rem; text-align: right;">
+                            You: "How do I get my first 10 customers?"
+                        </div>
+                        <div style="color: var(--gold);">
+                            🤖 AI: "Great question! Here's your 3-step blueprint:
+                            <br><br>
+                            1️⃣ <strong>Content Machine</strong> – I'll write 5 viral posts for your Twitter/LinkedIn
+                            <br><br>
+                            2️⃣ <strong>DM Outreach</strong> – I'll generate personalized DM scripts to reach 50 people in your niche
+                            <br><br>
+                            3️⃣ <strong>Email Nurture</strong> – Auto-follow-up sequences to close the deal
+                            <br><br>
+                            Expected result: 5-10 customers in 7 days. Ready?"
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <input type="text" class="form-input" placeholder="Ask your AI coach anything...">
+                        <button class="btn btn-primary">Send</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FUNNELS PAGE -->
+            <div id="funnels" class="page">
+                <h2 style="color: var(--gold); margin-bottom: 2rem;">🛣️ Funnel Builder</h2>
+                <div class="card">
+                    <div class="button-row">
+                        <button class="btn btn-primary" onclick="openModal('funnelModal')">+ Create New Funnel</button>
+                        <button class="btn btn-secondary">Import Template</button>
+                    </div>
+                    <h3 style="color: var(--text); margin-top: 2rem; margin-bottom: 1rem;">Your Funnels</h3>
+                    <p style="color: var(--muted);">No funnels yet. Create one to get started! 🚀</p>
+                </div>
+            </div>
+
+            <!-- GHOSTWRITER PAGE -->
+            <div id="ghostwriter" class="page">
+                <h2 style="color: var(--gold); margin-bottom: 2rem;">✍️ AI Ghostwriter</h2>
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-title">🐦 Twitter / X Posts</div>
+                        <p style="color: var(--muted); margin-bottom: 1rem;">Generate viral tweets that attract customers</p>
+                        <button class="btn btn-primary" style="width: 100%;">Generate Posts →</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">📧 Email Copy</div>
+                        <p style="color: var(--muted); margin-bottom: 1rem;">Write high-converting emails that sell</p>
+                        <button class="btn btn-primary" style="width: 100%;">Write Email →</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">💬 DM Scripts</div>
+                        <p style="color: var(--muted); margin-bottom: 1rem;">Personalized DMs that book calls</p>
+                        <button class="btn btn-primary" style="width: 100%;">Create Scripts →</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">📄 Landing Page Copy</div>
+                        <p style="color: var(--muted); margin-bottom: 1rem;">Sales pages that convert visitors</p>
+                        <button class="btn btn-primary" style="width: 100%;">Write Copy →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EMAILS PAGE -->
+            <div id="emails" class="page">
+                <h2 style="color: var(--gold); margin-bottom: 2rem;">📧 Email Automation</h2>
+                <div class="card">
+                    <div class="card-title">Pre-Written Sequences (Ready to Deploy)</div>
+                    <div class="list-item" style="padding: 1rem; background: rgba(213, 165, 66, 0.1); border-radius: 8px; border-left: 3px solid var(--gold); margin-bottom: 1rem;">
+                        <div class="list-item-content">
+                            <div class="list-item-title">🎯 Welcome Sequence</div>
+                            <div class="list-item-subtitle">5 emails over 10 days. Introduces your offer + builds trust</div>
+                        </div>
+                        <button class="btn btn-secondary">Deploy</button>
+                    </div>
+                    <div class="list-item" style="padding: 1rem; background: rgba(45, 106, 255, 0.1); border-radius: 8px; border-left: 3px solid var(--blue); margin-bottom: 1rem;">
+                        <div class="list-item-content">
+                            <div class="list-item-title">💰 Upgrade Sequence</div>
+                            <div class="list-item-subtitle">3 emails to convert free users to paid. 12% avg conversion</div>
+                        </div>
+                        <button class="btn btn-secondary">Deploy</button>
+                    </div>
+                    <div class="list-item" style="padding: 1rem; background: rgba(255, 0, 51, 0.1); border-radius: 8px; border-left: 3px solid var(--red); margin-bottom: 1rem;">
+                        <div class="list-item-content">
+                            <div class="list-item-title">🔥 Last Chance Sequence</div>
+                            <div class="list-item-subtitle">2 emails to recover abandoned carts + win back churned users</div>
+                        </div>
+                        <button class="btn btn-secondary">Deploy</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LEAD MAGNETS PAGE -->
+            <div id="leads" class="page">
+                <h2 style="color: var(--gold); margin-bottom: 2rem;">🎁 Lead Magnet Generator</h2>
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-title">📘 Ebook</div>
+                        <p style="color: var(--muted); margin-bottom: 1rem;">Generate a full ebook in 5 minutes</p>
+                        <button class="btn btn-primary" style="width: 100%;">Create Ebook →</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">✅ Checklists</div>
+                        <p style="color: var(--muted); margin-bottom: 1rem;">Action checklists your audience needs</p>
+                        <button class="btn btn-primary" style="width: 100%;">Create Checklist →</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">📊 Templates</div>
+                        <p style="color: var(--muted); margin-bottom: 1rem;">Ready-to-use templates (spreadsheets, docs)</p>
+                        <button class="btn btn-primary" style="width: 100%;">Create Template →</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">🎥 Swipe Files</div>
+                        <p style="color: var(--muted); margin-bottom: 1rem;">Copy & paste email/ad swipes that work</p>
+                        <button class="btn btn-primary" style="width: 100%;">Create Swipes →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STOREFRONT PAGE -->
+            <div id="storefront" class="page">
+                <h2 style="color: var(--gold); margin-bottom: 2rem;">🏪 Creator Storefront</h2>
+                <div class="card">
+                    <p style="color: var(--muted); margin-bottom: 2rem;">
+                        Create a digital storefront to sell ebooks, templates, courses, and services. We take 15% platform fee.
+                    </p>
+                    <button class="btn btn-primary">+ Create Storefront</button>
+                </div>
+            </div>
+
+            <!-- REFERRALS PAGE -->
+            <div id="referrals" class="page">
+                <h2 style="color: var(--gold); margin-bottom: 2rem;">🤝 Referral Program</h2>
+                <div class="card">
+                    <h3 style="color: var(--text); margin-bottom: 1rem;">Your Referral Link</h3>
+                    <div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+                        <input type="text" class="form-input" value="https://flipforge.io?ref=YOU123456" readonly>
+                        <button class="btn btn-secondary" onclick="copyToClipboard()">Copy</button>
+                    </div>
+
+                    <h3 style="color: var(--text); margin-bottom: 1rem;">💰 Earn $30 Per Referral</h3>
+                    <div class="list-item">
+                        <div class="list-item-content">
+                            <div class="list-item-title">Referred Customers</div>
+                            <div class="list-item-subtitle">Total people who signed up with your link</div>
+                        </div>
+                        <div class="list-item-value">0</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-content">
+                            <div class="list-item-title">Converted Customers</div>
+                            <div class="list-item-subtitle">People who upgraded to paid plan</div>
+                        </div>
+                        <div class="list-item-value">0</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-item-content">
+                            <div class="list-item-title">Referral Earnings</div>
+                            <div class="list-item-subtitle">Money you've earned so far</div>
+                        </div>
+                        <div class="list-item-value" style="color: var(--gold); font-size: 1.5em;">$0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHALLENGES PAGE -->
+            <div id="challenges" class="page">
+                <h2 style="color: var(--gold); margin-bottom: 2rem;">🎪 Weekly Income Challenges</h2>
+                <div class="card">
+                    <h3 style="color: var(--text); margin-bottom: 1rem;">This Week's Challenge</h3>
+                    <div style="background: rgba(213, 165, 66, 0.1); border-left: 3px solid var(--gold); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+                        <div style="color: var(--gold); font-weight: 700; margin-bottom: 0.5rem; font-size: 1.2em;">
+                            💰 Make Your First $100
+                        </div>
+                        <p style="color: var(--text); margin-bottom: 1rem;">
+                            Get 2 customers to spend $50 each. Complete this challenge and get featured on our leaderboard + 1000 bonus XP + featured badge.
+                        </p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%"></div>
+                        </div>
+                        <p style="color: var(--muted); margin-top: 0.5rem;">0 / $100</p>
+                    </div>
+
+                    <h3 style="color: var(--text); margin-bottom: 1rem;">💪 Past Challenges</h3>
+                    <div class="list-item">
+                        <div class="list-item-content">
+                            <div class="list-item-title">Post Your First Offer</div>
+                            <div class="list-item-subtitle">Completed 2 days ago</div>
+                        </div>
+                        <div style="color: var(--gold);">✓ Completed</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ANALYTICS PAGE -->
+            <div id="analytics" class="page">
+                <h2 style="color: var(--gold); margin-bottom: 2rem;">📈 Analytics Dashboard</h2>
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-title">Visitors</div>
+                        <div class="card-stat">0</div>
+                        <div class="card-label">This month</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Signups</div>
+                        <div class="card-stat">0</div>
+                        <div class="card-label">This month</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Revenue</div>
+                        <div class="card-stat">$0</div>
+                        <div class="card-label">This month</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Avg. Customer Value</div>
+                        <div class="card-stat">$0</div>
+                        <div class="card-label">Lifetime</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- UPGRADE PAGE -->
+            <div id="upgrade" class="page">
+                <h2 style="color: var(--gold); margin-bottom: 2rem;">⬆️ Choose Your Plan</h2>
+                <p style="color: var(--muted); margin-bottom: 2rem; text-align: center;">All plans include money-back guarantee. No lock-in, cancel anytime.</p>
+                
+                <div class="grid-3" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                    
+                    <div class="card" style="border-color: var(--muted); background: rgba(136, 136, 136, 0.1);">
+                        <div style="color: var(--muted); font-weight: 700; font-size: 1.1em; margin-bottom: 0.5rem;">📧 Email Master</div>
+                        <div style="color: var(--gold); font-weight: 700; font-size: 1.5em; margin-bottom: 1rem;">$9<span style="font-size: 0.7em; color: var(--muted);">/mo</span></div>
+                        <ul style="list-style: none; margin-bottom: 1.5rem; font-size: 0.9em;">
+                            <li style="color: var(--text); padding: 0.3rem 0;">✓ Unlimited email sends</li>
+                            <li style="color: var(--text); padding: 0.3rem 0;">✓ 50+ email templates</li>
+                            <li style="color: var(--text); padding: 0.3rem 0;">✓ Autoresponder sequences</li>
+                            <li style="color: var(--text); padding: 0.3rem 0;">✓ 500 AI credits/mo</li>
+                        </ul>
+                        <button class="btn btn-primary" style="width: 100%;" onclick="createCheckoutSession('email_master', 9)">Get Email Master</button>
+                    </div>
+
+                    <div class="card" style="border-color: var(--gold); background: rgba(213, 165, 66, 0.1);">
+                        <div style="color: var(--gold); font-weight: 700; font-size: 1.1em; margin-bottom: 0.5rem;">🚀 Funnel Pro</div>
+                        <div style="color: var(--gold); font-weight: 700; font-size: 1.5em; margin-bottom: 1rem;">$19<span style="font-size: 0.7em; color: var(--muted);">/mo</span></div>
+                        <ul style="list-style: none; margin-bottom: 1.5rem; font-size: 0.9em;">
+                            <li style="color: var(--text); padding: 0.3rem 0;">✓ Everything in Email Master</li>
+                            <li style="color: var(--text); padding: 0.3rem 0;">✓ Advanced funnel builder</li>
+                            <li style="color: var(--text); padding: 0.3rem 0;">✓ 100+ funnel templates</li>
+                            <li style="color: var(--text); padding: 0.3rem 0;">✓ 2,000 AI credits/mo</li>
+                        </ul>
+                        <button class="btn btn-primary" style="width: 100%;" onclick="createCheckoutSession('funnel_pro', 19)">Get Funnel Pro</button>
+                    </div>
+
+                    <div class="card" style="border: 2px solid var(--gold); background: rgba(213, 165, 66, 0.15);">
+                        <div style="background: var(--gold); color: var(--obsidian); padding: 0.4rem; border-radius: 6px; font-weight: 700; text-align: center; margin-bottom: 1rem; font-size: 0.85em;">
+                            ⭐ MOST POPULAR
+                        </div>
+                        <div style="color: var(--gold); font-weight: 700; font-size: 1.1em; margin-bottom: 0.5rem;">⚡ Pro Builder</div>
+                        <div style="color: var(--gold); font-weight: 700; font-size: 1.5em; margin-bottom: 1rem;">$29<span style="font-size: 0.7em; color: var(--muted);">/mo</span></div>
+                        <ul style="list-style: none; margin-bottom: 1.5rem; font-size: 0.9em;">
+                            <li style="color: var(--text); padding: 0.3rem 0;">✓ Everything in Funnel Pro</li>
+                            <li style="color: var(--text); padding: 0.3rem 0;">✓ Unlimited AI writing</li>
+                            <li style="color: var(--text); padding: 0.3rem 0;">✓ Smart CRM</li>
+                            <li style="color: var(--text); padding: 0.3rem 0;">✓ Unlimited AI credits</li>
+                        </ul>
+                        <button class="btn btn-primary" style="width: 100%; background: var(--gold); color: var(--obsidian); font-weight: bold;" onclick="createCheckoutSession('pro_builder', 29)">Get Pro Now</button>
+                    </div>
+
+                    <div class="card" style="border: 2px solid #ff0080; background: rgba(255, 0, 128, 0.1);">
+                        <div style="background: #ff0080; color: white; padding: 0.4rem; border-radius: 6px; font-weight: 700; text-align: center; margin-bottom: 1rem; font-size: 0.85em;">
+                            🔥 UNLIMITED
+                        </div>
+                        <div style="color: #ff0080; font-weight: 700; font-size: 1.1em; margin-bottom: 0.5rem;">🔥 God Mode</div>
+                        <div style="color: #ff0080; font-weight: 700; font-size: 1.5em; margin-bottom: 1rem;">$99<span style="font-size: 0.7em; color: var(--muted);">/mo</span></div>
+                        <ul style="list-style: none; margin-bottom: 1.5rem; font-size: 0.9em;">
+                            <li style="color: var(--text); padding: 0.3rem 0;">✓ Everything in Pro Builder</li>
+                            <li style="color: var(--text); padding: 0.3rem 0;">✓ AI Avatar (24/7 sales)</li>
+                            <li style="color: var(--text); padding: 0.3rem 0;">✓ DM auto-closer</li>
+                            <li style="color: var(--text); padding: 0.3rem 0;">✓ 1-on-1 AI coach</li>
+                        </ul>
+                        <button class="btn btn-primary" style="width: 100%; background: #ff0080; color: white; font-weight: bold;" onclick="createCheckoutSession('god_mode', 99)">Unlock God Mode</button>
+                    </div>
+
+                    <div class="card" style="border: 3px solid var(--gold); background: rgba(213, 165, 66, 0.2); position: relative;">
+                        <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--gold); color: var(--obsidian); padding: 0.4rem 1rem; border-radius: 20px; font-weight: 700; font-size: 0.85em; white-space: nowrap;">
+                            💰 BEST VALUE
+                        </div>
+                        <div style="color: var(--gold); font-weight: 700; font-size: 1.1em; margin-bottom: 0.5rem; margin-top: 1rem;">👑 Lifetime Pass</div>
+                        <div style="color: var(--gold); font-weight: 700; font-size: 1.5em; margin-bottom: 0.5rem;">$199<span style="font-size: 0.7em; color: var(--muted); font-weight: normal;">ONE-TIME</span></div>
+                        <div style="color: var(--muted); font-size: 0.85em; margin-bottom: 1rem;">Pay once, own forever</div>
+                        <ul style="list-style: none; margin-bottom: 1.5rem; font-size: 0.9em;">
+                            <li style="color: var(--text); padding: 0.3rem 0;">✓ Everything FOREVER</li>
+                            <li style="color: var(--text); padding: 0.3rem 0;">✓ All future updates included</li>
+                            <li style="color: var(--text); padding: 0.3rem 0;">✓ Lifetime priority support</li>
+                            <li style="color: var(--gold); padding: 0.3rem 0; font-weight: 700;">✓ Save $1,386+ vs monthly</li>
+                        </ul>
+                        <button class="btn" style="width: 100%; background: var(--gold); color: var(--obsidian); border: none; font-weight: 700; cursor: pointer;" onclick="upgradeToLifetime()">🔥 Get Lifetime Access</button>
+                    </div>
+                </div>
+
+                <div style="background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.3); padding: 1.5rem; border-radius: 8px; text-align: center; margin-top: 2rem;">
+                    <p style="color: var(--text); margin-bottom: 0.5rem;">💯 All plans include <strong>7-30 day money-back guarantee</strong></p>
+                    <p style="color: var(--muted); font-size: 0.9em;">Questions? Email support@flipforge.ai</p>
+                </div>
+            </div>
+
+            <!-- SETTINGS PAGE -->
+            <div id="settings" class="page">
+                <h2 style="color: var(--gold); margin-bottom: 2rem;">⚙️ Settings</h2>
+                <div class="card">
+                    <div class="form-group">
+                        <label class="form-label">Account Email</label>
+                        <input type="email" class="form-input" value="user@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Display Name</label>
+                        <input type="text" class="form-input" value="Your Name">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email Notifications</label>
+                        <label style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; cursor: pointer;">
+                            <input type="checkbox" checked> Daily Money Updates
+                        </label>
+                    </div>
+                    <button class="btn btn-primary">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALS -->
+    <div id="funnelModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">🛣️ Create New Funnel</div>
+            <div class="form-group">
+                <label class="form-label">What are you selling?</label>
+                <input type="text" class="form-input" placeholder="e.g., 'Social Media Course', 'Copywriting Service'">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Price</label>
+                <input type="number" class="form-input" placeholder="$27" value="27">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Target audience</label>
+                <input type="text" class="form-input" placeholder="e.g., 'Entrepreneurs', 'Freelancers'">
+            </div>
+            <div class="button-row">
+                <button class="btn btn-primary" onclick="createFunnel()">🤖 Generate Funnel</button>
+                <button class="btn btn-secondary" onclick="closeModal('funnelModal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+
+            // Update nav
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function createFunnel() {
+            alert('🤖 AI is building your funnel...\n\nYour funnel will be live in 60 seconds!');
+            closeModal('funnelModal');
+        }
+
+        function generateMoneyMap() {
+            alert('🤖 Generating your personalized Money Map...\n\nYour custom path to $10K+/month is ready!');
+        }
+
+        function createCheckoutSession(planId, amount) {
+            // Call Cloud Function to create checkout session for any plan
+            showLoading(true);
+            firebase.functions().httpsCallable('createCheckoutSession')({
+                plan: planId,
+                amount: amount,
+                email: currentUser.email
+            }).then(result => {
+                // Redirect to Stripe checkout
+                const stripe = Stripe('pk_live_51SYJoC440X4TKc4ajFNBrHUeKCD1eIiboY50XhNslaj3uKw4MhMPc678v1cK3k8bECkO7p2D2T8APKCuPXLnuk4P00e3Igq1TQ');
+                return stripe.redirectToCheckout({ sessionId: result.data.sessionId });
+            }).then(result => {
+                if (result.error) {
+                    showLoading(false);
+                    showError(result.error.message);
+                }
+            }).catch(error => {
+                showLoading(false);
+                showError('❌ Error: ' + error.message);
+            });
+        }
+
+        function upgradeToLifetime() {
+            // Call Cloud Function to create lifetime purchase checkout session
+            showLoading(true);
+            firebase.functions().httpsCallable('createLifetimePurchase')({
+                email: currentUser.email
+            }).then(result => {
+                // Redirect to Stripe checkout
+                const stripe = Stripe('pk_live_51SYJoC440X4TKc4ajFNBrHUeKCD1eIiboY50XhNslaj3uKw4MhMPc678v1cK3k8bECkO7p2D2T8APKCuPXLnuk4P00e3Igq1TQ');
+                return stripe.redirectToCheckout({ sessionId: result.data.sessionId });
+            }).then(result => {
+                if (result.error) {
+                    showLoading(false);
+                    showError(result.error.message);
+                }
+            }).catch(error => {
+                showLoading(false);
+                showError('❌ Error: ' + error.message);
+            });
+        }
+
+        function copyToClipboard() {
+            const text = document.querySelector('.form-input').value;
+            navigator.clipboard.writeText(text);
+            alert('✓ Referral link copied to clipboard!');
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = '/flipforge-landing.html';
+            }
+        }
+
+        // Add legal links to footer
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar) {
+                const footer = document.createElement('div');
+                footer.style.cssText = `
+                    position: absolute;
+                    bottom: 20px;
+                    left: 10px;
+                    right: 10px;
+                    border-top: 1px solid var(--border);
+                    padding-top: 1rem;
+                    font-size: 0.85em;
+                    text-align: center;
+                `;
+                footer.innerHTML = `
+                    <a href="/privacy-policy.html" target="_blank" style="color: var(--muted); text-decoration: none; margin: 0 5px;">Privacy</a> |
+                    <a href="/terms-of-service.html" target="_blank" style="color: var(--muted); text-decoration: none; margin: 0 5px;">Terms</a> |
+                    <a href="mailto:support@flipforge.ai" style="color: var(--muted); text-decoration: none; margin: 0 5px;">Support</a>
+                `;
+                sidebar.appendChild(footer);
+            }
+        });
+    </script>
+</body>
+</html>

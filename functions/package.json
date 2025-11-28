@@ -1,15 +1,17 @@
 {
-  "name": "glamflow-functions",
-  "description": "GLAMFLOW AI Payment Processing & Automation",
-  "version": "1.0.0",
+  "name": "flipforge-functions",
+  "description": "FLIPFORGE™ Payment Processing, Security, Analytics & Automation",
+  "version": "2.0.0",
   "private": true,
   "engines": {
     "node": "20"
   },
   "dependencies": {
-    "firebase-admin": "^11.10.0",
-    "firebase-functions": "^4.4.1",
-    "stripe": "^12.16.0",
-    "nodemailer": "^6.9.4"
+    "firebase-admin": "^11.11.1",
+    "firebase-functions": "^4.9.0",
+    "nodemailer": "^6.10.1",
+    "pdfkit": "^0.13.0",
+    "stripe": "^12.18.0",
+    "uuid": "^9.0.1"
   }
 }

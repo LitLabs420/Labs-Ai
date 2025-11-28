@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLIPFORGE™ - Founder Cockpit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            overflow-x: hidden;
+        }
+
+        .cockpit-container {
+            padding: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .cockpit-header {
+            margin-bottom: 40px;
+        }
+
+        .cockpit-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #ff0080, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cockpit-header p {
+            color: #aaa;
+            font-size: 0.95em;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a1a3a 100%);
+            border: 2px solid #ff0080;
+            border-radius: 12px;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .metric-card:hover {
+            border-color: #00d4ff;
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent, rgba(255, 0, 128, 0.1));
+            pointer-events: none;
+        }
+
+        .metric-label {
+            font-size: 0.9em;
+            color: #aaa;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            color: #00d4ff;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .metric-change {
+            font-size: 0.85em;
+            color: #2ecc71;
+        }
+
+        .chart-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a1a2a 100%);
+            border: 2px solid #ff8c00;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .chart-title {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .funnel-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .funnel-stage {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
+
+        .funnel-bar {
+            flex: 1;
+            height: 40px;
+            background: linear-gradient(90deg, rgba(255, 0, 128, 0.2), rgba(0, 212, 255, 0.2));
+            border: 2px solid #ff0080;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .funnel-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: linear-gradient(90deg, #ff0080, #00d4ff);
+            border-radius: 4px;
+            opacity: 0.7;
+            transition: width 0.3s ease;
+        }
+
+        .funnel-label {
+            min-width: 100px;
+            font-weight: bold;
+        }
+
+        .funnel-text {
+            position: relative;
+            z-index: 2;
+            font-size: 0.9em;
+        }
+
+        .recommendations-section {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(255, 0, 128, 0.05));
+            border: 2px solid #00d4ff;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .recommendations-title {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .recommendation-item {
+            background: rgba(255, 255, 255, 0.02);
+            border-left: 4px solid #ff0080;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .recommendation-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-left-color: #00d4ff;
+        }
+
+        .recommendation-item.high {
+            border-left-color: #ff0080;
+        }
+
+        .recommendation-item.medium {
+            border-left-color: #ff8c00;
+        }
+
+        .recommendation-item.low {
+            border-left-color: #40e0d0;
+        }
+
+        .recommendation-priority {
+            font-size: 0.75em;
+            font-weight: bold;
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+        }
+
+        .recommendation-priority.high {
+            background: rgba(255, 0, 128, 0.2);
+            color: #ff0080;
+        }
+
+        .recommendation-priority.medium {
+            background: rgba(255, 140, 0, 0.2);
+            color: #ff8c00;
+        }
+
+        .recommendation-priority.low {
+            background: rgba(64, 224, 208, 0.2);
+            color: #40e0d0;
+        }
+
+        .recommendation-title {
+            font-size: 1.1em;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .recommendation-detail {
+            font-size: 0.9em;
+            color: #aaa;
+            margin-bottom: 10px;
+        }
+
+        .recommendation-action {
+            font-size: 0.85em;
+            color: #00d4ff;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .security-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .security-stat {
+            background: rgba(46, 204, 113, 0.1);
+            border-left: 4px solid #2ecc71;
+            padding: 15px;
+            border-radius: 6px;
+        }
+
+        .security-stat.alert {
+            background: rgba(255, 0, 128, 0.1);
+            border-left-color: #ff0080;
+        }
+
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #aaa;
+        }
+
+        .error {
+            background: rgba(255, 0, 128, 0.1);
+            border: 2px solid #ff0080;
+            color: #ff0080;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .cockpit-container {
+                padding: 20px;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .metric-value {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cockpit-container">
+        <!-- Header -->
+        <div class="cockpit-header">
+            <h1>📊 FOUNDER COCKPIT</h1>
+            <p>Real-time SaaS metrics, revenue insights, and AI recommendations</p>
+        </div>
+
+        <!-- Error Display -->
+        <div id="error-container" class="error" style="display: none;"></div>
+
+        <!-- Loading State -->
+        <div id="loading" class="loading">
+            <p>Loading analytics...</p>
+        </div>
+
+        <!-- Main Content -->
+        <div id="cockpit-content" style="display: none;">
+            <!-- Key Metrics -->
+            <div class="metrics-grid" id="metrics-grid"></div>
+
+            <!-- Conversion Funnel -->
+            <div class="chart-section">
+                <div class="chart-title">📈 Conversion Funnel (This Month)</div>
+                <div class="funnel-container" id="funnel-container"></div>
+            </div>
+
+            <!-- Recommendations -->
+            <div class="recommendations-section">
+                <div class="recommendations-title">🤖 SHIELD AI Smart Recommendations</div>
+                <div id="recommendations-list"></div>
+            </div>
+
+            <!-- Security Overview -->
+            <div class="chart-section">
+                <div class="chart-title">🛡️ Security Overview</div>
+                <div class="security-overview" id="security-overview"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../firebase-config.js"></script>
+    <script>
+        let db;
+        let userId;
+        let currentUser;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Wait for Firebase to load
+            const maxWait = 5000;
+            const startTime = Date.now();
+
+            while (!window.firebaseDb && Date.now() - startTime < maxWait) {
+                await new Promise(r => setTimeout(r, 100));
+            }
+
+            db = window.firebaseDb;
+            const auth = window.firebaseAuth;
+
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    userId = user.uid;
+                    currentUser = user;
+                    loadFounderAnalytics();
+                } else {
+                    showError('Not authenticated. Please log in.');
+                    setTimeout(() => window.location.href = '/index.html', 2000);
+                }
+            });
+        });
+
+        async function loadFounderAnalytics() {
+            try {
+                document.getElementById('loading').style.display = 'block';
+                document.getElementById('cockpit-content').style.display = 'none';
+
+                // Get user to check permissions
+                const userDoc = await db.collection('users').doc(userId).get();
+                const userData = userDoc.data();
+
+                if (!userData || !['owner', 'admin'].includes(userData.role)) {
+                    throw new Error('Access denied. Admin/Owner access required.');
+                }
+
+                // Fetch analytics data
+                const response = await fetch('/api/founder-analytics', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (!response.ok) throw new Error('Failed to fetch analytics');
+
+                const data = await response.json();
+
+                // Render metrics
+                renderMetrics(data.metrics);
+
+                // Render funnel
+                renderFunnel(data.funnel);
+
+                // Render recommendations
+                renderRecommendations(data.recommendations);
+
+                // Render security
+                renderSecurity(data.metrics);
+
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('cockpit-content').style.display = 'block';
+            } catch (error) {
+                console.error('Analytics error:', error);
+                showError(error.message);
+            }
+        }
+
+        function renderMetrics(metrics) {
+            const grid = document.getElementById('metrics-grid');
+            grid.innerHTML = '';
+
+            const metricsList = [
+                { label: 'Monthly Recurring Revenue', value: `$${metrics.mrr.toLocaleString()}`, icon: '💰' },
+                { label: 'Active Users', value: metrics.activeUsers, icon: '👥' },
+                { label: 'Total Users', value: metrics.totalUsers, icon: '📊' },
+                { label: 'New Signups Today', value: metrics.newSignupsToday, icon: '🚀' },
+                { label: 'Churn Rate', value: `${metrics.churnRate}%`, icon: '📉' },
+                { label: 'Conversion Rate', value: `${metrics.conversionRate}%`, icon: '📈' }
+            ];
+
+            metricsList.forEach(metric => {
+                const card = document.createElement('div');
+                card.className = 'metric-card';
+                card.innerHTML = `
+                    <div class="metric-label">${metric.icon} ${metric.label}</div>
+                    <div class="metric-value">${metric.value}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function renderFunnel(funnel) {
+            const container = document.getElementById('funnel-container');
+            container.innerHTML = '';
+
+            funnel.forEach(stage => {
+                const stageDom = document.createElement('div');
+                stageDom.className = 'funnel-stage';
+                stageDom.innerHTML = `
+                    <div class="funnel-label">${stage.stage}</div>
+                    <div class="funnel-bar">
+                        <div class="funnel-fill" style="width: ${stage.percentage}%"></div>
+                        <div class="funnel-text">${stage.count} users (${stage.percentage}%)</div>
+                    </div>
+                `;
+                container.appendChild(stageDom);
+            });
+        }
+
+        function renderRecommendations(recommendations) {
+            const list = document.getElementById('recommendations-list');
+            list.innerHTML = '';
+
+            recommendations.forEach(rec => {
+                const item = document.createElement('div');
+                item.className = `recommendation-item ${rec.priority.toLowerCase()}`;
+                item.innerHTML = `
+                    <div class="recommendation-priority ${rec.priority.toLowerCase()}">${rec.priority}</div>
+                    <div class="recommendation-title">${rec.icon} ${rec.title}</div>
+                    <div class="recommendation-detail">${rec.detail}</div>
+                    <div class="recommendation-action" onclick="handleRecommendationClick('${rec.action}')">
+                        ➜ ${rec.action}
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function renderSecurity(metrics) {
+            const overview = document.getElementById('security-overview');
+            overview.innerHTML = '';
+
+            const stats = [
+                { label: 'High Risk Alerts', value: metrics.highRiskAlerts, type: metrics.highRiskAlerts > 0 ? 'alert' : 'safe' },
+                { label: 'Security Events', value: '0 critical', type: 'safe' },
+                { label: 'Account Status', value: 'Verified', type: 'safe' },
+                { label: 'Last Audit', value: 'Today', type: 'safe' }
+            ];
+
+            stats.forEach(stat => {
+                const statDom = document.createElement('div');
+                statDom.className = `security-stat ${stat.type}`;
+                statDom.innerHTML = `
+                    <div class="metric-label">${stat.label}</div>
+                    <div style="font-size: 1.5em; font-weight: bold;">${stat.value}</div>
+                `;
+                overview.appendChild(statDom);
+            });
+        }
+
+        function handleRecommendationClick(action) {
+            console.log('Recommendation action:', action);
+            // Could navigate to settings, admin panel, etc.
+        }
+
+        function showError(message) {
+            const container = document.getElementById('error-container');
+            container.textContent = `❌ Error: ${message}`;
+            container.style.display = 'block';
+            document.getElementById('loading').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

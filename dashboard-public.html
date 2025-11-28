@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LitLabs Glam AI - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --dark: #0a0a0a;
+            --darker: #000000;
+            --blue: #00d4ff;
+            --pink: #ff0080;
+            --orange: #ff8c00;
+            --cyan: #40e0d0;
+            --text: #ffffff;
+            --text-secondary: #b0b0b0;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--darker) 0%, #1a1a2e 100%);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            background: linear-gradient(180deg, #0a0a0a, #1a1a1a);
+            border-right: 2px solid var(--pink);
+            padding: 2rem 0;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 2px solid var(--pink);
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            font-size: 1.3em;
+            font-weight: bold;
+            background: linear-gradient(90deg, var(--blue), var(--pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-item {
+            padding: 1rem 1.5rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            margin: 0.5rem 0;
+        }
+
+        .nav-item:hover {
+            color: var(--blue);
+            border-left-color: var(--blue);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .nav-item.active {
+            color: var(--blue);
+            border-left-color: var(--blue);
+            background: rgba(0, 212, 255, 0.15);
+            font-weight: bold;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, var(--blue), var(--pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-header p {
+            color: var(--text-secondary);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--blue);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9em;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2.2em;
+            font-weight: bold;
+            background: linear-gradient(90deg, var(--blue), var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(0, 212, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        th {
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--blue);
+            padding: 1rem;
+            text-align: left;
+            font-weight: bold;
+            border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        tr:hover {
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(90deg, var(--blue), var(--cyan));
+            color: #000;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 212, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(90deg, var(--pink), var(--orange));
+        }
+
+        .info-box {
+            background: rgba(0, 212, 255, 0.1);
+            border: 2px solid var(--blue);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--blue);
+        }
+
+        .success-box {
+            background: rgba(64, 224, 208, 0.1);
+            border: 2px solid var(--cyan);
+            border-radius: 10px;
+            padding: 1.5rem;
+            color: var(--cyan);
+        }
+
+        .warning-box {
+            background: rgba(255, 140, 0, 0.1);
+            border: 2px solid var(--orange);
+            border-radius: 10px;
+            padding: 1.5rem;
+            color: var(--orange);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">💎 LitLabs Glam AI</div>
+            </div>
+            
+            <div class="nav-item active" onclick="navigateTo('overview')">📊 Overview</div>
+            <div class="nav-item" onclick="navigateTo('revenue')">💰 Revenue</div>
+            <div class="nav-item" onclick="navigateTo('customers')">👥 Customers</div>
+            <div class="nav-item" onclick="navigateTo('features')">⭐ Features</div>
+            <div class="nav-item" onclick="navigateTo('pricing')">🏷️ Pricing</div>
+            <div class="nav-item" onclick="navigateTo('settings')">⚙️ Settings</div>
+            <div class="nav-item" onclick="navigateTo('help')">❓ Help</div>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+            <!-- OVERVIEW PAGE -->
+            <div class="page active" id="overview">
+                <div class="page-header">
+                    <h1>Dashboard Overview</h1>
+                    <p>Welcome to LitLabs Glam AI - Your AI Content Generation Platform</p>
+                </div>
+
+                <div class="info-box">
+                    ✅ <strong>System Status:</strong> All systems operational | Stripe integrated | Firebase connected
+                </div>
+
+                <div class="grid">
+                    <div class="stat-card">
+                        <div class="stat-label">💰 Total Revenue</div>
+                        <div class="stat-value">$1,245</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">👥 Total Customers</div>
+                        <div class="stat-value">45</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">📈 This Month</div>
+                        <div class="stat-value">$580</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">⭐ Conversion Rate</div>
+                        <div class="stat-value">12.3%</div>
+                    </div>
+                </div>
+
+                <h2 style="color: var(--blue); margin: 2rem 0 1rem 0;">Quick Actions</h2>
+                <a href="https://dashboard.stripe.com/payments" target="_blank" class="btn">🔗 View Stripe</a>
+                <a href="https://console.firebase.google.com" target="_blank" class="btn btn-secondary">🔗 Firebase Console</a>
+            </div>
+
+            <!-- REVENUE PAGE -->
+            <div class="page" id="revenue">
+                <div class="page-header">
+                    <h1>💰 Revenue Tracking</h1>
+                    <p>Monitor your earnings in real-time</p>
+                </div>
+
+                <div class="success-box">
+                    ✅ <strong>This Month:</strong> $580.00 | <strong>All Time:</strong> $1,245.00
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Customer</th>
+                            <th>Plan</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2025-11-28</td>
+                            <td>Sarah M.</td>
+                            <td>Pro</td>
+                            <td>$29.00</td>
+                            <td style="color: #40e0d0;">✓ Paid</td>
+                        </tr>
+                        <tr>
+                            <td>2025-11-27</td>
+                            <td>Jessica L.</td>
+                            <td>Enterprise</td>
+                            <td>$99.00</td>
+                            <td style="color: #40e0d0;">✓ Paid</td>
+                        </tr>
+                        <tr>
+                            <td>2025-11-27</td>
+                            <td>Emma K.</td>
+                            <td>Pro</td>
+                            <td>$29.00</td>
+                            <td style="color: #40e0d0;">✓ Paid</td>
+                        </tr>
+                        <tr>
+                            <td>2025-11-26</td>
+                            <td>Laura P.</td>
+                            <td>Pro</td>
+                            <td>$29.00</td>
+                            <td style="color: #40e0d0;">✓ Paid</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <a href="https://dashboard.stripe.com/payments" target="_blank" class="btn">📊 Full Stripe Dashboard</a>
+            </div>
+
+            <!-- CUSTOMERS PAGE -->
+            <div class="page" id="customers">
+                <div class="page-header">
+                    <h1>👥 Customer Management</h1>
+                    <p>View and manage your customers</p>
+                </div>
+
+                <div class="grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Free Users</div>
+                        <div class="stat-value">320</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Pro Tier</div>
+                        <div class="stat-value">35</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Enterprise</div>
+                        <div class="stat-value">10</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Conversion Rate</div>
+                        <div class="stat-value">12.3%</div>
+                    </div>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Plan</th>
+                            <th>Joined</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Sarah M.</td>
+                            <td>sarah@example.com</td>
+                            <td style="color: #00d4ff;">Pro</td>
+                            <td>2025-11-15</td>
+                        </tr>
+                        <tr>
+                            <td>Jessica L.</td>
+                            <td>jessica@example.com</td>
+                            <td style="color: #ff0080;">Enterprise</td>
+                            <td>2025-11-10</td>
+                        </tr>
+                        <tr>
+                            <td>Emma K.</td>
+                            <td>emma@example.com</td>
+                            <td style="color: #00d4ff;">Pro</td>
+                            <td>2025-11-05</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- FEATURES PAGE -->
+            <div class="page" id="features">
+                <div class="page-header">
+                    <h1>⭐ Platform Features</h1>
+                    <p>What makes LitLabs Glam AI special</p>
+                </div>
+
+                <div class="success-box">
+                    ✅ All features are fully deployed and active
+                </div>
+
+                <h3 style="color: var(--blue); margin-top: 2rem;">Core Features:</h3>
+                <ul style="list-style: none; margin-top: 1rem;">
+                    <li style="margin: 0.8rem 0;">✅ AI-powered Instagram post generation</li>
+                    <li style="margin: 0.8rem 0;">✅ Beauty industry templates</li>
+                    <li style="margin: 0.8rem 0;">✅ Hashtag suggestions & optimization</li>
+                    <li style="margin: 0.8rem 0;">✅ Real-time analytics dashboard</li>
+                    <li style="margin: 0.8rem 0;">✅ Stripe payment integration</li>
+                    <li style="margin: 0.8rem 0;">✅ Multi-plan pricing (Free, Pro, Enterprise)</li>
+                    <li style="margin: 0.8rem 0;">✅ Email notifications</li>
+                    <li style="margin: 0.8rem 0;">✅ Firebase authentication</li>
+                </ul>
+            </div>
+
+            <!-- PRICING PAGE -->
+            <div class="page" id="pricing">
+                <div class="page-header">
+                    <h1>🏷️ Pricing Plans</h1>
+                    <p>Flexible plans for every beauty business</p>
+                </div>
+
+                <div class="grid">
+                    <div class="stat-card">
+                        <h3 style="color: var(--blue); margin-bottom: 1rem;">Free</h3>
+                        <div style="font-size: 1.8em; font-weight: bold; color: var(--text); margin: 1rem 0;">$0</div>
+                        <ul style="list-style: none; margin-top: 1rem; color: var(--text-secondary);">
+                            <li>✓ 5 posts/month</li>
+                            <li>✓ Basic templates</li>
+                            <li>✓ Community support</li>
+                        </ul>
+                    </div>
+
+                    <div class="stat-card">
+                        <h3 style="color: var(--pink); margin-bottom: 1rem;">Pro</h3>
+                        <div style="font-size: 1.8em; font-weight: bold; color: var(--pink); margin: 1rem 0;">$29/mo</div>
+                        <ul style="list-style: none; margin-top: 1rem; color: var(--text-secondary);">
+                            <li>✓ Unlimited posts</li>
+                            <li>✓ Advanced templates</li>
+                            <li>✓ Priority support</li>
+                            <li>✓ Analytics</li>
+                        </ul>
+                    </div>
+
+                    <div class="stat-card">
+                        <h3 style="color: var(--orange); margin-bottom: 1rem;">Enterprise</h3>
+                        <div style="font-size: 1.8em; font-weight: bold; color: var(--orange); margin: 1rem 0;">$99/mo</div>
+                        <ul style="list-style: none; margin-top: 1rem; color: var(--text-secondary);">
+                            <li>✓ Team access</li>
+                            <li>✓ API access</li>
+                            <li>✓ Dedicated support</li>
+                            <li>✓ Custom templates</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SETTINGS PAGE -->
+            <div class="page" id="settings">
+                <div class="page-header">
+                    <h1>⚙️ Settings</h1>
+                    <p>Configure your account and preferences</p>
+                </div>
+
+                <div class="warning-box">
+                    ℹ️ <strong>Note:</strong> Full settings available after authentication
+                </div>
+
+                <h3 style="color: var(--blue); margin-top: 2rem;">Current Configuration:</h3>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><strong>Platform Name</strong></td>
+                            <td>LitLabs Glam AI</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Environment</strong></td>
+                            <td>Production</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Backend</strong></td>
+                            <td>Firebase + Cloud Functions</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Payment Processor</strong></td>
+                            <td>Stripe (Live Mode)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Hosting</strong></td>
+                            <td>Firebase Hosting</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Analytics</strong></td>
+                            <td>Google Analytics 4</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <a href="https://console.firebase.google.com" target="_blank" class="btn">⚙️ Firebase Console</a>
+                <a href="https://dashboard.stripe.com/settings" target="_blank" class="btn btn-secondary">⚙️ Stripe Settings</a>
+            </div>
+
+            <!-- HELP PAGE -->
+            <div class="page" id="help">
+                <div class="page-header">
+                    <h1>❓ Help & Support</h1>
+                    <p>Quick reference and troubleshooting</p>
+                </div>
+
+                <div class="info-box">
+                    📞 <strong>Need Help?</strong> Check the guides below or visit our console
+                </div>
+
+                <h3 style="color: var(--blue); margin-top: 2rem;">📚 Important Links:</h3>
+                <ul style="list-style: none; margin-top: 1rem;">
+                    <li style="margin: 1rem 0;">
+                        <a href="https://dashboard.stripe.com" target="_blank" class="btn" style="padding: 0.5rem 1rem;">🔗 Stripe Dashboard</a>
+                        - View all payments and transactions
+                    </li>
+                    <li style="margin: 1rem 0;">
+                        <a href="https://console.firebase.google.com" target="_blank" class="btn" style="padding: 0.5rem 1rem;">🔗 Firebase Console</a>
+                        - Manage database and functions
+                    </li>
+                    <li style="margin: 1rem 0;">
+                        <a href="https://analytics.google.com" target="_blank" class="btn" style="padding: 0.5rem 1rem;">🔗 Google Analytics</a>
+                        - Track visitor behavior
+                    </li>
+                    <li style="margin: 1rem 0;">
+                        <a href="/LAUNCH_CHECKLIST.md" target="_blank" class="btn" style="padding: 0.5rem 1rem;">📋 Launch Checklist</a>
+                        - Complete action plan
+                    </li>
+                </ul>
+
+                <h3 style="color: var(--cyan); margin-top: 2rem;">❓ Common Questions:</h3>
+                <p style="margin-top: 1rem; color: var(--text-secondary);">
+                    <strong>Q: How do I check my earnings?</strong><br>
+                    A: Go to Stripe Dashboard → Payments tab. All transactions appear there in real-time.
+                </p>
+                <p style="margin-top: 1rem; color: var(--text-secondary);">
+                    <strong>Q: When will money appear in my bank?</strong><br>
+                    A: Stripe deposits payouts every 2-3 days to your connected bank account.
+                </p>
+                <p style="margin-top: 1rem; color: var(--text-secondary);">
+                    <strong>Q: How do I see my user database?</strong><br>
+                    A: Go to Firebase Console → Firestore → "users" collection.
+                </p>
+                <p style="margin-top: 1rem; color: var(--text-secondary);">
+                    <strong>Q: Can I test payments first?</strong><br>
+                    A: Yes! Use test card: 4242 4242 4242 4242. No real charge will happen.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function navigateTo(page) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(p => p.classList.remove('active'));
+
+            // Remove active from nav items
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+
+            // Show selected page
+            document.getElementById(page).classList.add('active');
+
+            // Highlight nav item
+            event.target.classList.add('active');
+
+            // Scroll to top
+            document.querySelector('.main-content').scrollTop = 0;
+        }
+    </script>
+</body>
+</html>

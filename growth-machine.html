@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LitLabs Glam AI - Growth Machine</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #050505;
+            --card: #111111;
+            --border: #1a1a1a;
+            --text: #e0e0e0;
+            --muted: #888888;
+            --accent: #00d4ff;
+            --secondary: #40e0d0;
+            --danger: #ff0080;
+            --success: #00ff88;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg) 0%, #0a0a0a 100%);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: var(--muted);
+        }
+
+        .tabs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.5rem;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--muted);
+            padding: 0.8rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .tab-btn:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .tab-btn.active {
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .card:hover {
+            border-color: var(--accent);
+            background: rgba(0, 212, 255, 0.03);
+        }
+
+        .card-title {
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 1.1em;
+        }
+
+        .card-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: var(--secondary);
+            margin: 0.5rem 0;
+        }
+
+        .card-desc {
+            color: var(--muted);
+            font-size: 0.9em;
+            margin-top: 0.5rem;
+        }
+
+        .btn {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--card);
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+
+        .section {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            font-size: 1.2em;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-item {
+            padding: 0.8rem;
+            margin-bottom: 0.8rem;
+            background: rgba(0, 212, 255, 0.05);
+            border-left: 2px solid var(--accent);
+            border-radius: 4px;
+        }
+
+        .feature-item strong {
+            color: var(--accent);
+        }
+
+        .feature-item p {
+            color: var(--muted);
+            font-size: 0.9em;
+            margin-top: 0.3rem;
+        }
+
+        .code-block {
+            background: #000;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.85em;
+            overflow-x: auto;
+            color: var(--secondary);
+        }
+
+        .copy-btn {
+            background: var(--secondary);
+            color: #000;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+            font-weight: 600;
+            float: right;
+            margin-top: -2.5rem;
+            margin-right: 0.5rem;
+        }
+
+        .copy-btn:hover {
+            opacity: 0.8;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th {
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--accent);
+            padding: 0.8rem;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9em;
+        }
+
+        td {
+            padding: 0.8rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--muted);
+        }
+
+        tr:hover {
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--success);
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        .input-group label {
+            display: block;
+            color: var(--text);
+            margin-bottom: 0.3rem;
+            font-weight: 500;
+        }
+
+        .input-group input,
+        .input-group textarea {
+            width: 100%;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.8rem;
+            border-radius: 6px;
+            font-family: inherit;
+        }
+
+        .input-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .stat-small {
+            display: inline-block;
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--accent);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            margin-right: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            background: var(--border);
+            border-radius: 4px;
+            height: 8px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, var(--accent), var(--secondary));
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .alert {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .success-alert {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .warning-alert {
+            background: rgba(255, 0, 128, 0.1);
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 LitLabs Glam AI - Growth Machine</h1>
+            <p>Advanced tools to scale your business to 1,000+ customers</p>
+        </div>
+
+        <!-- TABS -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('referral')">🎁 Referral System</button>
+            <button class="tab-btn" onclick="switchTab('email')">📧 Email Automation</button>
+            <button class="tab-btn" onclick="switchTab('chatbot')">🤖 AI Chatbot</button>
+            <button class="tab-btn" onclick="switchTab('abtesting')">📊 A/B Testing</button>
+            <button class="tab-btn" onclick="switchTab('affiliate')">💰 Affiliate Dashboard</button>
+        </div>
+
+        <!-- TAB 1: REFERRAL SYSTEM -->
+        <div id="referral" class="tab-content active">
+            <div class="grid">
+                <div class="card">
+                    <div class="card-title">📊 Referral Stats</div>
+                    <div class="card-value">245</div>
+                    <div class="card-desc">Active referral codes</div>
+                    <div style="margin-top: 1rem; font-size: 0.9em;">
+                        <div class="stat-small">↑ 42 this week</div>
+                        <div class="stat-small">💰 $3,150 revenue</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">🎯 Conversion Rate</div>
+                    <div class="card-value">18.2%</div>
+                    <div class="card-desc">Referral to paid conversion</div>
+                    <div class="progress-bar" style="margin-top: 1rem;">
+                        <div class="progress-fill" style="width: 18.2%;"></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">💎 Top Referrer</div>
+                    <div class="card-value">Sarah M.</div>
+                    <div class="card-desc">24 successful referrals</div>
+                    <div style="margin-top: 1rem; color: var(--success);">
+                        Earned: $120 in credits
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">🏆 This Month</div>
+                    <div class="card-value">$3,150</div>
+                    <div class="card-desc">Revenue from referrals</div>
+                    <div style="margin-top: 1rem; font-size: 0.9em; color: var(--accent);">
+                        48 new customers
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">🎁 Referral Program Setup</div>
+                
+                <div class="alert">
+                    ✅ Viral referral system increases customer acquisition by 40-60%
+                </div>
+
+                <h3 style="color: var(--accent); margin: 1.5rem 0 1rem 0;">Program Structure:</h3>
+                <ul class="feature-list">
+                    <li class="feature-item">
+                        <strong>Referrer Gets: $10 credit OR 20% off next month</strong>
+                        <p>Customer incentive to share their link with friends</p>
+                    </li>
+                    <li class="feature-item">
+                        <strong>Referred Friend Gets: $10 credit on signup</strong>
+                        <p>Lower barrier to entry for new users (covers 1/3 of Pro plan)</p>
+                    </li>
+                    <li class="feature-item">
+                        <strong>You Get: Full payment + acquisition cost saved</strong>
+                        <p>Instead of $10-20 ad spend per customer, you pay $5-10 in credits</p>
+                    </li>
+                    <li class="feature-item">
+                        <strong>Viral Coefficient: Each customer brings 1-2 friends</strong>
+                        <p>Exponential growth → 100 customers becomes 300+ in 30 days</p>
+                    </li>
+                </ul>
+
+                <h3 style="color: var(--accent); margin: 1.5rem 0 1rem 0;">Implementation:</h3>
+                
+                <div class="input-group">
+                    <label>Referral Link (Copy to share):</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="text" value="https://litlabs-glam.ai/ref/sarah_m_2024" readonly>
+                        <button class="btn" onclick="copyToClipboard('https://litlabs-glam.ai/ref/sarah_m_2024')">📋 Copy</button>
+                    </div>
+                </div>
+
+                <div class="code-block" style="margin-top: 1rem;">
+<!-- Add to landing page or dashboard -->
+&lt;div id="referral-widget"&gt;
+  &lt;h2&gt;Earn Credits - Share with Friends!&lt;/h2&gt;
+  &lt;p&gt;You get $10 credit per referral&lt;/p&gt;
+  &lt;input type="text" value="YOUR_REF_LINK" id="refLink"&gt;
+  &lt;button onclick="shareViaWhatsApp()"&gt;WhatsApp&lt;/button&gt;
+  &lt;button onclick="shareViaEmail()"&gt;Email&lt;/button&gt;
+&lt;/div&gt;
+                </div>
+
+                <h3 style="color: var(--accent); margin: 1.5rem 0 1rem 0;">Referral Leaderboard:</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Referrer</th>
+                            <th>Referrals</th>
+                            <th>Revenue</th>
+                            <th>Reward Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>🥇 1</td>
+                            <td>Sarah M.</td>
+                            <td>24</td>
+                            <td>$696</td>
+                            <td><span class="badge">$120 credit</span></td>
+                        </tr>
+                        <tr>
+                            <td>🥈 2</td>
+                            <td>Jessica L.</td>
+                            <td>18</td>
+                            <td>$522</td>
+                            <td><span class="badge">$90 credit</span></td>
+                        </tr>
+                        <tr>
+                            <td>🥉 3</td>
+                            <td>Emma K.</td>
+                            <td>15</td>
+                            <td>$435</td>
+                            <td><span class="badge">$75 credit</span></td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Laura P.</td>
+                            <td>12</td>
+                            <td>$348</td>
+                            <td><span class="badge">$60 credit</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB 2: EMAIL AUTOMATION -->
+        <div id="email" class="tab-content">
+            <div class="grid">
+                <div class="card">
+                    <div class="card-title">📧 Subscribers</div>
+                    <div class="card-value">2,847</div>
+                    <div class="card-desc">Active email list</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">📊 Open Rate</div>
+                    <div class="card-value">42.3%</div>
+                    <div class="card-desc">Industry avg: 21%</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">🔗 Click Rate</div>
+                    <div class="card-value">12.7%</div>
+                    <div class="card-desc">Industry avg: 2-3%</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">💰 Revenue from Email</div>
+                    <div class="card-value">$4,200</div>
+                    <div class="card-desc">This month</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">🤖 Automated Email Sequences</div>
+                
+                <div class="alert success-alert">
+                    ✅ Email automation generates $4,200/month with minimal effort
+                </div>
+
+                <h3 style="color: var(--accent); margin: 1.5rem 0 1rem 0;">Setup Email Flows:</h3>
+
+                <div class="feature-item">
+                    <strong>1️⃣ Welcome Sequence (Day 0-3)</strong>
+                    <p>
+                        Day 0: "Welcome! Get $10 off your first purchase"<br>
+                        Day 1: "Here's how to create your first AI post"<br>
+                        Day 2: "3 salons making $5K/month with LitLabs"<br>
+                        Day 3: "Upgrade to Pro and save 10 hours/week"
+                    </p>
+                </div>
+
+                <div class="feature-item">
+                    <strong>2️⃣ Inactive User Recovery (After 7 days no login)</strong>
+                    <p>
+                        "We miss you! Here's what's new in LitLabs"<br>
+                        Offer: 50% off for 1 month to return<br>
+                        Result: 15-20% reactivation rate
+                    </p>
+                </div>
+
+                <div class="feature-item">
+                    <strong>3️⃣ Upgrade Nurture (For free users)</strong>
+                    <p>
+                        Week 1: Show Pro benefits (unlimited posts)<br>
+                        Week 2: Case study: Beauty salon making $10K/month<br>
+                        Week 3: Limited time offer: 50% off first 3 months<br>
+                        Week 4: Last chance: Offer expires tomorrow
+                    </p>
+                </div>
+
+                <div class="feature-item">
+                    <strong>4️⃣ Churn Prevention (For paid users canceling)</strong>
+                    <p>
+                        "Wait! Here's what you'll lose"<br>
+                        Offer: Pause subscription (keep data)<br>
+                        Alternative: Downgrade to Pro (save 66%)<br>
+                        Result: 30% save rate
+                    </p>
+                </div>
+
+                <div class="feature-item">
+                    <strong>5️⃣ Re-engagement (Quarterly digest)</strong>
+                    <p>
+                        "Your account stats: X posts created, Y hours saved"<br>
+                        "Top performing content ideas for salons"<br>
+                        "New AI features you should try"
+                    </p>
+                </div>
+
+                <h3 style="color: var(--accent); margin: 1.5rem 0 1rem 0;">Email Template Example:</h3>
+                <div class="code-block" style="margin-top: 1rem;">
+Subject: Sarah, 3 salons are making $5K/month with LitLabs ✨
+
+Hi Sarah,
+
+Ever wonder how some salons seem to always have amazing Instagram content?
+
+The secret: They're using AI to generate 10 posts in 30 minutes 
+(instead of 10 hours per week).
+
+Here's real proof:
+- Sarah's Salon: +250% engagement (first month)
+- Glam Studio: $8K in new bookings
+- Beauty Lounge: Saved 15 hours/week on content
+
+You're currently on Free tier (5 posts/month).
+
+Pro tier gives you:
+✅ Unlimited posts
+✅ Priority support
+✅ Analytics dashboard
+✅ $1 per day
+
+Try Pro free for 14 days: [UPGRADE LINK]
+
+Questions? Reply to this email!
+- The LitLabs Team
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: AI CHATBOT -->
+        <div id="chatbot" class="tab-content">
+            <div class="grid">
+                <div class="card">
+                    <div class="card-title">💬 Conversations</div>
+                    <div class="card-value">1,240</div>
+                    <div class="card-desc">This month</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">⏱️ Avg Response</div>
+                    <div class="card-value">&lt;2 sec</div>
+                    <div class="card-desc">Instant AI answers</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">😊 Satisfaction</div>
+                    <div class="card-value">4.8/5</div>
+                    <div class="card-desc">User rating</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">📞 Support Tickets Saved</div>
+                    <div class="card-value">892</div>
+                    <div class="card-desc">40 hours/month saved</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">🤖 AI Customer Support Chatbot</div>
+                
+                <div class="alert success-alert">
+                    ✅ AI chatbot answers 80% of questions automatically (24/7)
+                </div>
+
+                <h3 style="color: var(--accent); margin: 1.5rem 0 1rem 0;">Chatbot Features:</h3>
+                
+                <ul class="feature-list">
+                    <li class="feature-item">
+                        <strong>Instant FAQ Answers</strong>
+                        <p>"How do I generate posts?" → Auto-reply with video link + steps</p>
+                    </li>
+                    <li class="feature-item">
+                        <strong>Onboarding Guide</strong>
+                        <p>Guide new users through platform in 3 minutes (increases retention by 35%)</p>
+                    </li>
+                    <li class="feature-item">
+                        <strong>Upgrade Recommendations</strong>
+                        <p>User hits free limit → Chatbot offers Pro trial</p>
+                    </li>
+                    <li class="feature-item">
+                        <strong>Billing Support</strong>
+                        <p>Invoice questions, refund process, payment options → All handled</p>
+                    </li>
+                    <li class="feature-item">
+                        <strong>Technical Help</strong>
+                        <p>Troubleshooting, feature questions, bug reports → AI diagnoses & escalates</p>
+                    </li>
+                </ul>
+
+                <h3 style="color: var(--accent); margin: 1.5rem 0 1rem 0;">Common Conversations:</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User Question</th>
+                            <th>Chatbot Response</th>
+                            <th>Conversion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>"Can I try Pro free?"</td>
+                            <td>"Yes! 14-day free trial. Click here" [LINK]</td>
+                            <td>32% convert</td>
+                        </tr>
+                        <tr>
+                            <td>"How do I cancel?"</td>
+                            <td>"I can help! But first, what's missing?" [SAVE OFFER]</td>
+                            <td>28% stay</td>
+                        </tr>
+                        <tr>
+                            <td>"Why no results?"</td>
+                            <td>"Let's fix this! [Video] + email me details"</td>
+                            <td>92% satisfied</td>
+                        </tr>
+                        <tr>
+                            <td>"Best features for beauty?"</td>
+                            <td>"Templates, hashtags, scheduling. See demo: [LINK]"</td>
+                            <td>18% upgrade</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 style="color: var(--accent); margin: 1.5rem 0 1rem 0;">Implementation:</h3>
+                <div class="code-block">
+&lt;!-- Add this to your website --&gt;
+&lt;script src="https://cdn.litlabs.ai/chatbot.js"&gt;&lt;/script&gt;
+&lt;litlabs-chat 
+  key="YOUR_API_KEY"
+  position="bottom-right"
+  title="Hi! 👋 How can we help?"
+&gt;&lt;/litlabs-chat&gt;
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: A/B TESTING -->
+        <div id="abtesting" class="tab-content">
+            <div class="grid">
+                <div class="card">
+                    <div class="card-title">📊 Active Tests</div>
+                    <div class="card-value">8</div>
+                    <div class="card-desc">Running now</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">🎯 Avg Lift</div>
+                    <div class="card-value">+23%</div>
+                    <div class="card-desc">Improvement</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">💰 Revenue Gained</div>
+                    <div class="card-value">$12,400</div>
+                    <div class="card-desc">From testing</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">🏆 Best Winner</div>
+                    <div class="card-value">+67%</div>
+                    <div class="card-desc">CTA button color</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">🧪 A/B Testing Framework</div>
+                
+                <div class="alert success-alert">
+                    ✅ Small tests = Big results. Average 20-30% conversion lift per test
+                </div>
+
+                <h3 style="color: var(--accent); margin: 1.5rem 0 1rem 0;">Current Tests:</h3>
+                
+                <div style="margin-bottom: 2rem;">
+                    <strong style="color: var(--accent); display: block; margin-bottom: 0.5rem;">Test #1: Pricing Page Copy</strong>
+                    <table>
+                        <tr>
+                            <th>Variant</th>
+                            <th>Copy</th>
+                            <th>Conversion</th>
+                            <th>Confidence</th>
+                        </tr>
+                        <tr>
+                            <td>A (Control)</td>
+                            <td>"Upgrade to Pro - $29/month"</td>
+                            <td>8.2%</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>B (Test) ⭐</td>
+                            <td>"Save 10 hours/week - $29/month"</td>
+                            <td>10.8%</td>
+                            <td>95%</td>
+                        </tr>
+                    </table>
+                    <p style="color: var(--success); margin-top: 0.5rem;">✅ Winner: B (+31% conversion)</p>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <strong style="color: var(--accent); display: block; margin-bottom: 0.5rem;">Test #2: CTA Button Color</strong>
+                    <table>
+                        <tr>
+                            <th>Color</th>
+                            <th>Clicks</th>
+                            <th>CTR</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr>
+                            <td>Blue (#00d4ff)</td>
+                            <td>342</td>
+                            <td>5.2%</td>
+                            <td>Control</td>
+                        </tr>
+                        <tr>
+                            <td>Green (#00ff88) ⭐</td>
+                            <td>567</td>
+                            <td>8.7%</td>
+                            <td>✅ Winner</td>
+                        </tr>
+                    </table>
+                    <p style="color: var(--success); margin-top: 0.5rem;">✅ Winner: Green (+67% CTR)</p>
+                </div>
+
+                <h3 style="color: var(--accent); margin: 1.5rem 0 1rem 0;">What to A/B Test:</h3>
+                <ul class="feature-list">
+                    <li class="feature-item">
+                        <strong>Headline</strong>
+                        <p>"Save 10 hours/week" vs "Generate posts in 2 minutes"</p>
+                    </li>
+                    <li class="feature-item">
+                        <strong>Button Text</strong>
+                        <p>"Get Started" vs "Try Free for 14 Days"</p>
+                    </li>
+                    <li class="feature-item">
+                        <strong>Pricing Presentation</strong>
+                        <p>"$29/month" vs "$0.97/day" vs "$1 per day"</p>
+                    </li>
+                    <li class="feature-item">
+                        <strong>Social Proof</strong>
+                        <p>Customer count vs testimonials vs case studies</p>
+                    </li>
+                    <li class="feature-item">
+                        <strong>Form Fields</strong>
+                        <p>3 fields vs 5 fields (more conversions with fewer fields)</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- TAB 5: AFFILIATE DASHBOARD -->
+        <div id="affiliate" class="tab-content">
+            <div class="grid">
+                <div class="card">
+                    <div class="card-title">🤝 Active Affiliates</div>
+                    <div class="card-value">147</div>
+                    <div class="card-desc">Partners</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">💰 Affiliate Revenue</div>
+                    <div class="card-value">$8,920</div>
+                    <div class="card-desc">This month</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">🏆 Top Affiliate</div>
+                    <div class="card-value">Jessica L.</div>
+                    <div class="card-desc">82 referrals, $2,378</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">📈 Avg Commission Rate</div>
+                    <div class="card-value">20%</div>
+                    <div class="card-desc">Of revenue</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">💰 Affiliate Program Management</div>
+                
+                <div class="alert">
+                    ✅ Affiliate program brings in $8-12K/month with zero marketing spend
+                </div>
+
+                <h3 style="color: var(--accent); margin: 1.5rem 0 1rem 0;">How to Recruit Affiliates:</h3>
+                
+                <ul class="feature-list">
+                    <li class="feature-item">
+                        <strong>Beauty Influencers</strong>
+                        <p>
+                            Look for: 10K-100K followers, beauty/salon niche<br>
+                            Pitch: "Earn $100-500/month sharing our tool"<br>
+                            Conversion: 15-20% of influencers say yes
+                        </p>
+                    </li>
+                    <li class="feature-item">
+                        <strong>Content Creators</strong>
+                        <p>
+                            Reach out on TikTok, YouTube, Instagram<br>
+                            Many creators do affiliate marketing as side income<br>
+                            Best for: Those making "productivity" or "business" content
+                        </p>
+                    </li>
+                    <li class="feature-item">
+                        <strong>Salon/Beauty Consultants</strong>
+                        <p>
+                            Business coaches who serve salon owners<br>
+                            They recommend tools to their clients<br>
+                            High commission = strong incentive
+                        </p>
+                    </li>
+                    <li class="feature-item">
+                        <strong>Tech Bloggers</strong>
+                        <p>
+                            SaaS review sites, business blogs<br>
+                            Reach out with affiliate offer<br>
+                            Often get decent traffic
+                        </p>
+                    </li>
+                </ul>
+
+                <h3 style="color: var(--accent); margin: 1.5rem 0 1rem 0;">Commission Structure:</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tier</th>
+                            <th>Monthly Referrals</th>
+                            <th>Commission</th>
+                            <th>Bonuses</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Bronze</td>
+                            <td>0-5</td>
+                            <td>15%</td>
+                            <td>None</td>
+                        </tr>
+                        <tr>
+                            <td>Silver</td>
+                            <td>6-15</td>
+                            <td>20%</td>
+                            <td>Marketing assets</td>
+                        </tr>
+                        <tr>
+                            <td>Gold</td>
+                            <td>16-50</td>
+                            <td>25%</td>
+                            <td>Custom landing page + support</td>
+                        </tr>
+                        <tr>
+                            <td>Platinum</td>
+                            <td>50+</td>
+                            <td>30%</td>
+                            <td>All + quarterly bonuses + swag</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 style="color: var(--accent); margin: 1.5rem 0 1rem 0;">Top Affiliates Leaderboard:</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Affiliate</th>
+                            <th>Referrals</th>
+                            <th>Commission</th>
+                            <th>Tier</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>🥇 1</td>
+                            <td>Jessica L. (Beauty Coach)</td>
+                            <td>82</td>
+                            <td>$2,378</td>
+                            <td><span class="badge">Platinum</span></td>
+                        </tr>
+                        <tr>
+                            <td>🥈 2</td>
+                            <td>Sarah M. (Salon Owner)</td>
+                            <td>54</td>
+                            <td>$1,458</td>
+                            <td><span class="badge">Gold</span></td>
+                        </tr>
+                        <tr>
+                            <td>🥉 3</td>
+                            <td>Emma K. (Influencer)</td>
+                            <td>42</td>
+                            <td>$1,050</td>
+                            <td><span class="badge">Gold</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text);
+            alert('✅ Copied to clipboard!');
+        }
+    </script>
+</body>
+</html>

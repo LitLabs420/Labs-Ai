@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLIPFORGE™ – Build. Scale. Profit. On Autopilot.</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --obsidian: #0A0A0A;
+            --gold: #D5A542;
+            --blue: #2D6AFF;
+            --red: #FF0033;
+            --dark-bg: #0f0f0f;
+            --card-bg: #1a1a1a;
+            --border: #2d2d2d;
+            --text: #e0e0e0;
+            --muted: #888888;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--obsidian) 0%, #1a1a2e 100%);
+            color: var(--text);
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .neon-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(45, 106, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(213, 165, 66, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(255, 0, 51, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+            animation: pulse-bg 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse-bg {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 4rem;
+            animation: slideDown 0.6s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-size: 3.5em;
+            background: linear-gradient(90deg, var(--gold), var(--blue), var(--red));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            font-weight: 900;
+            letter-spacing: -2px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3em;
+            color: var(--gold);
+            margin-bottom: 2rem;
+            text-shadow: 0 0 10px rgba(213, 165, 66, 0.3);
+        }
+
+        .hero-desc {
+            font-size: 1.1em;
+            color: var(--text);
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, var(--gold), var(--red));
+            color: var(--obsidian);
+            box-shadow: 0 0 30px rgba(213, 165, 66, 0.5);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 50px rgba(213, 165, 66, 0.8);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--blue);
+            border: 2px solid var(--blue);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(45, 106, 255, 0.1);
+            box-shadow: 0 0 20px rgba(45, 106, 255, 0.5);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature-card {
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(213, 165, 66, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .feature-card:hover {
+            border-color: var(--gold);
+            background: rgba(26, 26, 26, 0.95);
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2.5em;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-desc {
+            color: var(--muted);
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        .pricing-section {
+            margin: 4rem 0;
+        }
+
+        .pricing-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .pricing-header h2 {
+            font-size: 2.5em;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .price-card {
+            background: rgba(26, 26, 26, 0.9);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .price-card.featured {
+            border-color: var(--gold);
+            background: rgba(26, 26, 26, 0.95);
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(213, 165, 66, 0.3);
+        }
+
+        .price-card.featured::before {
+            content: '⭐ RECOMMENDED';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(90deg, var(--gold), var(--red));
+            color: var(--obsidian);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.8em;
+        }
+
+        .price-tier {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .price-amount {
+            font-size: 3em;
+            font-weight: 900;
+            color: var(--blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .price-period {
+            color: var(--muted);
+            margin-bottom: 1.5rem;
+            font-size: 0.95em;
+        }
+
+        .price-features {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 1.5rem;
+        }
+
+        .price-features li {
+            padding: 0.6rem 0;
+            color: var(--text);
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9em;
+        }
+
+        .price-features li:before {
+            content: '✓ ';
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+
+        .stat-card {
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--gold), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 0.95em;
+        }
+
+        .roadmap {
+            background: rgba(26, 26, 26, 0.9);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+
+        .roadmap h2 {
+            color: var(--gold);
+            margin-bottom: 2rem;
+            font-size: 1.8em;
+        }
+
+        .roadmap-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .roadmap-item {
+            padding: 1.5rem;
+            background: rgba(45, 106, 255, 0.1);
+            border-left: 3px solid var(--blue);
+            border-radius: 6px;
+        }
+
+        .roadmap-item.phase-2 {
+            background: rgba(213, 165, 66, 0.1);
+            border-left-color: var(--gold);
+        }
+
+        .roadmap-item.phase-3 {
+            background: rgba(255, 0, 51, 0.1);
+            border-left-color: var(--red);
+        }
+
+        .roadmap-title {
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 0.8rem;
+        }
+
+        .roadmap-desc {
+            color: var(--muted);
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .testimonials {
+            margin: 4rem 0;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .testimonial {
+            background: rgba(26, 26, 26, 0.8);
+            border-left: 3px solid var(--gold);
+            border-radius: 8px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .testimonial-stars {
+            color: var(--gold);
+            margin-bottom: 1rem;
+            font-size: 1.2em;
+            letter-spacing: 2px;
+        }
+
+        .testimonial-text {
+            color: var(--text);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .testimonial-role {
+            color: var(--muted);
+            font-size: 0.9em;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            border-top: 1px solid var(--border);
+            margin-top: 4rem;
+            color: var(--muted);
+        }
+
+        .footer a {
+            color: var(--gold);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .footer a:hover {
+            text-shadow: 0 0 10px rgba(213, 165, 66, 0.5);
+        }
+
+        .animated-number {
+            color: var(--gold);
+        }
+    </style>
+</head>
+<body>
+    <div class="neon-bg"></div>
+
+    <div class="container">
+        <!-- HERO -->
+        <div class="hero">
+            <h1>🜂 FLIPFORGE™</h1>
+            <div class="hero-subtitle">Build. Scale. Profit. On Autopilot.</div>
+            <p class="hero-desc">
+                The all-in-one AI platform that turns creators, freelancers, and entrepreneurs into 
+                money-making machines. Generate content, close deals, build funnels, and scale to 
+                <span style="color: var(--gold);">$10K+/month</span> with zero experience.
+            </p>
+
+            <div class="cta-buttons">
+                <button class="btn btn-primary" onclick="goToDashboard()">
+                    🚀 Start Building (Free)
+                </button>
+                <button class="btn btn-secondary" onclick="watchDemo()">
+                    ▶ Watch Demo
+                </button>
+            </div>
+        </div>
+
+        <!-- STATS -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value"><span class="animated-number">48,000+</span></div>
+                <div class="stat-label">Active Creators</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">$2.4M+</div>
+                <div class="stat-label">Generated This Month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">⏱️ <1 min</div>
+                <div class="stat-label">To Build a Funnel</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">4.9 ⭐</div>
+                <div class="stat-label">Customer Rating</div>
+            </div>
+        </div>
+
+        <!-- FEATURES -->
+        <div style="margin: 4rem 0;">
+            <h2 style="text-align: center; font-size: 2.5em; color: var(--gold); margin-bottom: 3rem;">
+                Everything You Need to Dominate
+            </h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <div class="feature-title">AI Money Map</div>
+                    <div class="feature-desc">
+                        Personalized blueprint showing exactly how to make $1K-$10K+/month based on your skills.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">✍️</div>
+                    <div class="feature-title">AI Ghostwriter</div>
+                    <div class="feature-desc">
+                        Generates viral posts, emails, DM scripts, landing pages, sales copy in seconds.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🛣️</div>
+                    <div class="feature-title">Funnel Builder</div>
+                    <div class="feature-desc">
+                        Create high-converting sales funnels in 60 seconds. AI optimizes every step.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎁</div>
+                    <div class="feature-title">Lead Magnet Generator</div>
+                    <div class="feature-desc">
+                        AI creates ebooks, templates, checklists, cheat sheets that attract buyers.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📧</div>
+                    <div class="feature-title">Email Automation</div>
+                    <div class="feature-desc">
+                        Pre-written sequences that nurture leads and close sales on autopilot. 40% average conversion.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🤝</div>
+                    <div class="feature-title">AI Avatar</div>
+                    <div class="feature-desc">
+                        Clones your voice, style, and selling approach. Sells 24/7 while you sleep.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-title">DM Closer</div>
+                    <div class="feature-desc">
+                        AI sends personalized DMs, follows up, and closes deals. 12-18% close rate.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🏪</div>
+                    <div class="feature-title">Creator Storefront</div>
+                    <div class="feature-desc">
+                        Sell ebooks, templates, courses, services. We take a small % and you keep the rest.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎪</div>
+                    <div class="feature-title">Challenge Engine</div>
+                    <div class="feature-desc">
+                        Weekly income challenges. Build community, drive engagement, create buzz.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎫</div>
+                    <div class="feature-title">Reward & Ticket System</div>
+                    <div class="feature-desc">
+                        Gamified progress. Earn tickets, redeem for boosts, go viral, make money.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-title">Smart CRM</div>
+                    <div class="feature-desc">
+                        Auto-track leads, send follow-ups, close deals. Never lose a customer again.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <div class="feature-title">Growth Hacks Hub</div>
+                    <div class="feature-desc">
+                        Referral loops, viral mechanics, upsells, cross-sells. Proven systems to scale 10x.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRICING -->
+        <div class="pricing-section">
+            <div class="pricing-header">
+                <h2>Choose Your Empire Level</h2>
+                <p style="color: var(--muted); font-size: 1.1em;">All plans include money-back guarantee</p>
+            </div>
+
+            <div class="pricing-grid">
+                <div class="price-card">
+                    <div class="price-tier">🌱 Free Tier</div>
+                    <div class="price-amount">$0</div>
+                    <div class="price-period">Forever</div>
+                    <ul class="price-features">
+                        <li>✓ Basic AI Ghostwriter</li>
+                        <li>✓ 1 Funnel Template</li>
+                        <li>✓ 5 Email Templates</li>
+                        <li>✓ Community Access</li>
+                        <li>✓ 100 AI Credits/mo</li>
+                    </ul>
+                    <button class="btn btn-secondary" onclick="goToDashboard()">Start Free</button>
+                </div>
+
+                <div class="price-card">
+                    <span style="position: absolute; top: 10px; right: 10px; background: #ff0080; color: white; padding: 5px 12px; border-radius: 4px; font-size: 0.8em; font-weight: bold;">BEST VALUE</span>
+                    <div class="price-tier">📧 Email Master</div>
+                    <div class="price-amount">$9</div>
+                    <div class="price-period">/month</div>
+                    <ul class="price-features">
+                        <li>✓ Everything in Free</li>
+                        <li>✓ Unlimited Email Sends</li>
+                        <li>✓ Autoresponder Sequences</li>
+                        <li>✓ Email Templates (50+)</li>
+                        <li>✓ 500 AI Credits/mo</li>
+                    </ul>
+                    <button class="btn btn-primary" onclick="upgradeToTier('email_master')">Upgrade Now</button>
+                </div>
+
+                <div class="price-card">
+                    <div class="price-tier">🚀 Funnel Pro</div>
+                    <div class="price-amount">$19</div>
+                    <div class="price-period">/month</div>
+                    <ul class="price-features">
+                        <li>✓ Everything in Email Master</li>
+                        <li>✓ Advanced Funnel Builder</li>
+                        <li>✓ Funnel Templates (100+)</li>
+                        <li>✓ DM Script Generator</li>
+                        <li>✓ 2,000 AI Credits/mo</li>
+                    </ul>
+                    <button class="btn btn-primary" onclick="upgradeToTier('funnel_pro')">Upgrade Now</button>
+                </div>
+
+                <div class="price-card featured">
+                    <span style="position: absolute; top: 10px; right: 10px; background: var(--gold); color: black; padding: 5px 12px; border-radius: 4px; font-size: 0.8em; font-weight: bold;">MOST POPULAR</span>
+                    <div class="price-tier">⚡ Pro Builder</div>
+                    <div class="price-amount">$29</div>
+                    <div class="price-period">/month</div>
+                    <ul class="price-features">
+                        <li>✓ Everything in Funnel Pro</li>
+                        <li>✓ Unlimited AI Writing</li>
+                        <li>✓ Smart CRM</li>
+                        <li>✓ Analytics Dashboard</li>
+                        <li>✓ Priority Email Support</li>
+                        <li>✓ Unlimited AI Credits</li>
+                    </ul>
+                    <button class="btn btn-primary" onclick="upgradeToTier('pro_builder')" style="background: var(--gold); color: black;">Get Pro Now</button>
+                </div>
+
+                <div class="price-card">
+                    <span style="position: absolute; top: 10px; right: 10px; background: #ff0080; color: white; padding: 5px 12px; border-radius: 4px; font-size: 0.8em; font-weight: bold;">LIFETIME</span>
+                    <div class="price-tier">🔥 God Mode</div>
+                    <div class="price-amount">$99</div>
+                    <div class="price-period">/month</div>
+                    <ul class="price-features">
+                        <li>✓ Everything in Pro Builder</li>
+                        <li>✓ AI Avatar (24/7 Sales)</li>
+                        <li>✓ DM Auto-Closer</li>
+                        <li>✓ Creator Storefront</li>
+                        <li>✓ 1-on-1 AI Coach</li>
+                        <li>✓ Custom Branding</li>
+                    </ul>
+                    <button class="btn btn-primary" onclick="upgradeToTier('god_mode')" style="background: #ff0080;">Unlock God Mode</button>
+                </div>
+
+                <div class="price-card">
+                    <span style="position: absolute; top: 10px; right: 10px; background: var(--gold); color: black; padding: 5px 12px; border-radius: 4px; font-size: 0.8em; font-weight: bold;">ONE-TIME</span>
+                    <div class="price-tier">👑 Lifetime Pass</div>
+                    <div class="price-amount">$199</div>
+                    <div class="price-period">One-time charge</div>
+                    <ul class="price-features">
+                        <li>✓ Everything FOREVER</li>
+                        <li>✓ All current + future features</li>
+                        <li>✓ No recurring charges ever</li>
+                        <li>✓ Free lifetime updates</li>
+                        <li>✓ 30-day money-back guarantee</li>
+                    </ul>
+                    <button class="btn btn-primary" onclick="upgradeToTier('lifetime')" style="background: var(--gold); color: black; font-weight: bold;">Buy Lifetime Now</button>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem; color: var(--muted);">
+                <p>⏰ All plans include <strong>7-30 day money-back guarantee</strong> • 🔒 No credit card required to start free tier</p>
+            </div>
+        </div>
+
+        <!-- ROADMAP -->
+        <div class="roadmap">
+            <h2>🗓️ The Empire Building Roadmap</h2>
+            <div class="roadmap-items">
+                <div class="roadmap-item">
+                    <div class="roadmap-title">🔵 Phase 1: Foundation (You Are Here)</div>
+                    <div class="roadmap-desc">
+                        ✓ Sign up in 60 seconds<br>
+                        ✓ AI builds your Money Map<br>
+                        ✓ Create first offer<br>
+                        ✓ Generate content + email<br>
+                        ✓ Launch funnel (done for you)
+                    </div>
+                </div>
+
+                <div class="roadmap-item phase-2">
+                    <div class="roadmap-title">🟡 Phase 2: Automating Sales (Weeks 2-4)</div>
+                    <div class="roadmap-desc">
+                        ✓ DM scripts go live<br>
+                        ✓ Email sequences active<br>
+                        ✓ First customers come in<br>
+                        ✓ Referral loop starts<br>
+                        ✓ First $500 made
+                    </div>
+                </div>
+
+                <div class="roadmap-item phase-3">
+                    <div class="roadmap-title">🔴 Phase 3: Scaling to $10K+ (Month 2+)</div>
+                    <div class="roadmap-desc">
+                        ✓ AI Avatar selling 24/7<br>
+                        ✓ Multiple funnels active<br>
+                        ✓ Marketplace products live<br>
+                        ✓ Affiliate program running<br>
+                        ✓ $10K+ monthly revenue
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TESTIMONIALS -->
+        <div class="testimonials">
+            <h2 style="text-align: center; font-size: 2.5em; color: var(--gold); margin-bottom: 3rem;">
+                What Our Creators Are Saying
+            </h2>
+            <div class="testimonial-grid">
+                <div class="testimonial">
+                    <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                    <div class="testimonial-text">
+                        "I made $3,200 in my first month just using the Email Automation + Ghostwriter. FLIPFORGE literally changed my life."
+                    </div>
+                    <div class="testimonial-author">Sarah M.</div>
+                    <div class="testimonial-role">Freelance Designer</div>
+                </div>
+
+                <div class="testimonial">
+                    <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                    <div class="testimonial-text">
+                        "The AI Avatar feature closed $8K in sales while I was sleeping. This is literally the future of selling."
+                    </div>
+                    <div class="testimonial-author">Mike J.</div>
+                    <div class="testimonial-role">Founder, Digital Agency</div>
+                </div>
+
+                <div class="testimonial">
+                    <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                    <div class="testimonial-text">
+                        "The Funnel Builder saved me $2K in design costs. My conversion rate went from 2% to 6%. Highly recommended."
+                    </div>
+                    <div class="testimonial-author">Jessica L.</div>
+                    <div class="testimonial-role">E-commerce Owner</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FINAL CTA -->
+        <div style="text-align: center; margin: 4rem 0;">
+            <h2 style="font-size: 2.2em; color: var(--gold); margin-bottom: 1rem;">
+                🚀 Ready to Build Your Empire?
+            </h2>
+            <p style="color: var(--text); font-size: 1.1em; margin-bottom: 1rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                Join 50,000+ creators already making money with FLIPFORGE. Start free today, upgrade anytime.
+            </p>
+            <p style="color: var(--gold); font-size: 0.95em; margin-bottom: 2rem; font-weight: bold;">
+                ⏰ Limited time: 30-day guarantee on all plans • 🔒 No credit card required to start
+            </p>
+            <button class="btn btn-primary" style="padding: 1.2rem 2.5rem; font-size: 1.1em; background: var(--gold); color: black; font-weight: bold;" onclick="goToDashboard()">
+                ➡️ GET STARTED FREE (60 SECONDS)
+            </button>
+            <p style="color: var(--muted); font-size: 0.9em; margin-top: 1rem;">Most users upgrade within 7 days after seeing results</p>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <p>© 2025 FLIPFORGE™ | Build. Scale. Profit. On Autopilot.</p>
+            <p style="margin-top: 1rem;">
+                <a href="/privacy-policy.html" target="_blank">Privacy</a> · 
+                <a href="/terms-of-service.html" target="_blank">Terms</a> · 
+                <a href="mailto:support@flipforge.ai">Contact</a> · 
+                <a href="mailto:careers@flipforge.ai">Careers</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function goToDashboard() {
+            window.location.href = '/flipforge-dashboard.html';
+        }
+
+        function upgradeToTier(tier) {
+            // Redirect to dashboard with tier selection
+            window.location.href = '/flipforge-dashboard.html?upgrade=' + tier;
+        }
+
+        function watchDemo() {
+            alert('🎬 Demo video loading...\n\nRedirecting to YouTube demo...');
+        }
+
+        // Animate numbers
+        function animateNumbers() {
+            const elements = document.querySelectorAll('.animated-number');
+            elements.forEach(el => {
+                const finalValue = parseInt(el.textContent.replace(/,/g, ''));
+                let current = 0;
+                const increment = finalValue / 30;
+                const interval = setInterval(() => {
+                    current += increment;
+                    if (current >= finalValue) {
+                        el.textContent = finalValue.toLocaleString();
+                        clearInterval(interval);
+                    } else {
+                        el.textContent = Math.floor(current).toLocaleString();
+                    }
+                }, 30);
+            });
+        }
+
+        // Run on load
+        window.addEventListener('load', animateNumbers);
+    </script>
+</body>
+</html>

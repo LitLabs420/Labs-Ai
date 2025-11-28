@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLIPFORGE™ Email Setup Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            color: #e0e0e0;
+            line-height: 1.8;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            padding: 50px;
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            font-size: 2.2em;
+            background: linear-gradient(135deg, #00d4ff 0%, #ff0080 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
+        }
+        
+        h2 {
+            font-size: 1.4em;
+            color: #00d4ff;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            border-left: 4px solid #ff0080;
+            padding-left: 15px;
+        }
+        
+        .email-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .email-table th {
+            background: rgba(0, 212, 255, 0.15);
+            color: #00d4ff;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+        }
+        
+        .email-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+            color: #d0d0d0;
+        }
+        
+        .email-table tr:hover {
+            background: rgba(0, 212, 255, 0.05);
+        }
+        
+        .email-address {
+            font-family: 'Courier New', monospace;
+            color: #40e0d0;
+            font-weight: 500;
+            background: rgba(0, 212, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        
+        .setup-step {
+            background: rgba(0, 212, 255, 0.05);
+            border-left: 4px solid #00d4ff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .setup-step h3 {
+            color: #00d4ff;
+            margin-bottom: 10px;
+        }
+        
+        .code-block {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #40e0d0;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        
+        .highlight {
+            background: rgba(255, 0, 128, 0.1);
+            border-left: 3px solid #ff0080;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            color: #d0d0d0;
+        }
+        
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 10px;
+            color: #d0d0d0;
+        }
+        
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #00d4ff 0%, #40e0d0 100%);
+            color: #000;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📧 FLIPFORGE™ Email Setup Guide</h1>
+        
+        <h2>Your Professional Email Addresses</h2>
+        <p>FLIPFORGE™ uses these professional business emails for all communications:</p>
+        
+        <table class="email-table">
+            <thead>
+                <tr>
+                    <th>Email Address</th>
+                    <th>Purpose</th>
+                    <th>Use Case</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="email-address">support@flipforge.ai</span></td>
+                    <td>Customer Support</td>
+                    <td>Help tickets, customer inquiries, onboarding</td>
+                </tr>
+                <tr>
+                    <td><span class="email-address">sales@flipforge.ai</span></td>
+                    <td>Sales Team</td>
+                    <td>Upgrade offers, partnerships, enterprise deals</td>
+                </tr>
+                <tr>
+                    <td><span class="email-address">billing@flipforge.ai</span></td>
+                    <td>Billing</td>
+                    <td>Receipts, invoices, payment confirmations</td>
+                </tr>
+                <tr>
+                    <td><span class="email-address">legal@flipforge.ai</span></td>
+                    <td>Legal/Compliance</td>
+                    <td>Terms, policies, legal notices</td>
+                </tr>
+                <tr>
+                    <td><span class="email-address">privacy@flipforge.ai</span></td>
+                    <td>Privacy Inquiries</td>
+                    <td>Data requests, GDPR/CCPA compliance</td>
+                </tr>
+                <tr>
+                    <td><span class="email-address">partnerships@flipforge.ai</span></td>
+                    <td>Partnerships</td>
+                    <td>Business development, integrations</td>
+                </tr>
+                <tr>
+                    <td><span class="email-address">noreply@flipforge.ai</span></td>
+                    <td>System Notifications</td>
+                    <td>Transactional emails (automated)</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h2>Setup Options</h2>
+        
+        <h3>Option 1: Google Workspace (Recommended) ⭐</h3>
+        <div class="setup-step">
+            <h3>Setup Instructions:</h3>
+            <ol>
+                <li>Go to <strong>Google Workspace</strong> (workspace.google.com)</li>
+                <li>Sign up with your domain or use a forwarding domain</li>
+                <li>Create user accounts for each email address above</li>
+                <li>Cost: ~$6-12/user/month</li>
+                <li>Includes: Gmail, Drive, Docs, Calendar</li>
+            </ol>
+            <p style="margin-top: 15px;"><strong>Why this is best:</strong> Professional, reliable, integrates with everything</p>
+        </div>
+        
+        <h3>Option 2: Email Forwarding (Budget)</h3>
+        <div class="setup-step">
+            <h3>Setup Instructions:</h3>
+            <ol>
+                <li>Use your domain registrar's email forwarding</li>
+                <li>Forward all emails to your personal email</li>
+                <li>Cost: Usually FREE with domain</li>
+                <li>Send emails "From:" the business address</li>
+            </ol>
+            <p style="margin-top: 15px;"><strong>Note:</strong> Emails appear to come from business address, but land in your personal inbox</p>
+        </div>
+        
+        <h3>Option 3: Amazon SES (High Volume)</h3>
+        <div class="setup-step">
+            <h3>Setup Instructions:</h3>
+            <ol>
+                <li>Go to <strong>AWS SES</strong> (Simple Email Service)</li>
+                <li>Verify your domain</li>
+                <li>Cost: $0.10 per 1,000 emails</li>
+                <li>Already integrated with Firebase Functions</li>
+            </ol>
+            <p style="margin-top: 15px;"><strong>Note:</strong> Best if you're sending hundreds of emails/month</p>
+        </div>
+        
+        <h2>Integration with Your System</h2>
+        <p>Your Cloud Functions already use these emails for:</p>
+        <ul>
+            <li>✅ Welcome emails (support@flipforge.ai)</li>
+            <li>✅ Payment receipts (billing@flipforge.ai)</li>
+            <li>✅ Upgrade reminders (sales@flipforge.ai)</li>
+            <li>✅ Support responses (support@flipforge.ai)</li>
+            <li>✅ Legal notices (legal@flipforge.ai)</li>
+            <li>✅ System alerts (noreply@flipforge.ai)</li>
+        </ul>
+        
+        <div class="highlight">
+            <strong>🔒 Security Note:</strong> Never expose these email addresses' passwords in code. Use environment variables and Firebase Secrets for credentials.
+        </div>
+        
+        <h2>Current Status</h2>
+        <ul>
+            <li>✅ Email addresses defined</li>
+            <li>✅ Cloud Functions configured</li>
+            <li>✅ Email templates ready</li>
+            <li>⏳ Next: Choose your email provider (Option 1, 2, or 3)</li>
+        </ul>
+        
+        <h2>Next Steps</h2>
+        <ol>
+            <li><strong>Choose an email provider</strong> (Google Workspace recommended)</li>
+            <li><strong>Set up the accounts</strong> above</li>
+            <li><strong>Update Firebase config</strong> with SMTP credentials</li>
+            <li><strong>Test email delivery</strong> by making a test purchase</li>
+            <li><strong>Monitor email logs</strong> in Firebase Functions</li>
+        </ol>
+        
+        <div class="highlight">
+            <strong>💡 Recommendation:</strong> Start with Google Workspace for professionalism and reliability. You can upgrade to higher-volume solutions later if needed.
+        </div>
+        
+        <a href="/flipforge-landing.html" class="btn">← Back to Home</a>
+    </div>
+</body>
+</html>

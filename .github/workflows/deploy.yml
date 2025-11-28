@@ -52,9 +52,7 @@ jobs:
       
       - name: Deploy to Firebase
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          channelId: live
-          projectId: studio-4627045237-a2fe9
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_CI_TOKEN }}
+        run: |
+          firebase deploy --only hosting,functions --project studio-4627045237-a2fe9 --force

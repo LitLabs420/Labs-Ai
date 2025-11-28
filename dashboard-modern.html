@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LitLabs Glam AI - Command Center</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-darker: #050505;
+            --bg-card: #111111;
+            --border: #1a1a1a;
+            --text: #e0e0e0;
+            --text-muted: #888888;
+            --accent: #00d4ff;
+            --accent-secondary: #40e0d0;
+            --danger: #ff0080;
+        }
+
+        body {
+            background: var(--bg-darker);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            background: var(--bg-dark);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--accent);
+            letter-spacing: 0.5px;
+        }
+
+        .logo-sub {
+            font-size: 0.7em;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+        }
+
+        .nav-item {
+            padding: 0.8rem 1.2rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            margin: 0.3rem 0;
+            font-size: 0.95em;
+        }
+
+        .nav-item:hover {
+            color: var(--accent);
+            border-left-color: var(--accent);
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        .nav-item.active {
+            color: var(--accent);
+            border-left-color: var(--accent);
+            background: rgba(0, 212, 255, 0.08);
+            font-weight: 500;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            padding: 1.5rem 2rem;
+            overflow-y: auto;
+            max-height: 100vh;
+            background: linear-gradient(135deg, var(--bg-darker) 0%, #0f0f0f 100%);
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-size: 2em;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.3rem;
+        }
+
+        .page-header p {
+            color: var(--text-muted);
+            font-size: 0.95em;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--accent);
+            background: rgba(0, 212, 255, 0.03);
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .stat-change {
+            color: var(--accent-secondary);
+            font-size: 0.8em;
+            margin-top: 0.5rem;
+        }
+
+        .live-feed {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .feed-item {
+            padding: 0.8rem;
+            border-left: 2px solid var(--accent);
+            margin-bottom: 0.8rem;
+            background: rgba(0, 212, 255, 0.03);
+            border-radius: 4px;
+            animation: slideIn 0.4s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .feed-time {
+            color: var(--text-muted);
+            font-size: 0.8em;
+        }
+
+        .feed-title {
+            font-weight: 600;
+            color: var(--accent);
+            margin: 0.3rem 0;
+            font-size: 0.95em;
+        }
+
+        .feed-desc {
+            color: var(--text-muted);
+            font-size: 0.85em;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        th {
+            background: rgba(0, 212, 255, 0.05);
+            color: var(--accent);
+            padding: 0.8rem;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9em;
+        }
+
+        td {
+            padding: 0.8rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-muted);
+        }
+
+        tr:hover {
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.7rem;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+            background: rgba(64, 224, 208, 0.15);
+            color: var(--accent-secondary);
+        }
+
+        .btn {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            font-size: 0.95em;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+
+        .chart-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-title {
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 0.95em;
+        }
+
+        .mini-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 0.5rem;
+            height: 120px;
+        }
+
+        .bar {
+            flex: 1;
+            background: linear-gradient(180deg, var(--accent), var(--accent-secondary));
+            border-radius: 3px 3px 0 0;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .bar:hover {
+            opacity: 0.8;
+        }
+
+        .bar-label {
+            position: absolute;
+            bottom: -22px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.75em;
+            color: var(--text-muted);
+        }
+
+        /* AUTH MODAL */
+        .auth-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-modal.active {
+            display: flex;
+        }
+
+        .auth-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .auth-title {
+            font-size: 1.5em;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .auth-subtitle {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .auth-methods {
+            display: grid;
+            gap: 0.8rem;
+        }
+
+        .auth-btn {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.9rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.95em;
+            font-weight: 500;
+        }
+
+        .auth-btn:hover {
+            border-color: var(--accent);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .growth-strategy {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .strategy-title {
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 0.95em;
+        }
+
+        .strategy-item {
+            background: rgba(0, 212, 255, 0.05);
+            border-left: 2px solid var(--accent);
+            padding: 0.8rem;
+            margin-bottom: 0.8rem;
+            border-radius: 4px;
+        }
+
+        .strategy-item strong {
+            color: var(--accent);
+        }
+
+        .strategy-item p {
+            color: var(--text-muted);
+            font-size: 0.9em;
+            margin-top: 0.3rem;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+    </style>
+</head>
+<body>
+    <!-- AUTH MODAL -->
+    <div class="auth-modal active" id="authModal">
+        <div class="auth-container">
+            <div class="auth-title">🔐 LitLabs Glam AI</div>
+            <div class="auth-subtitle">Choose your login method</div>
+            
+            <div class="auth-methods">
+                <button class="auth-btn" onclick="authenticateFace()">
+                    👤 Face Recognition
+                </button>
+                <button class="auth-btn" onclick="authenticateFingerprint()">
+                    👆 Fingerprint/Touch ID
+                </button>
+                <button class="auth-btn" onclick="authenticateEmail()">
+                    📧 Email & Password
+                </button>
+                <button class="auth-btn" onclick="authenticateGoogle()">
+                    🔵 Sign in with Google
+                </button>
+                <button class="auth-btn" onclick="authenticateGuest()">
+                    👁️ Guest Access (Demo)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-container" id="dashboardContainer" style="display: none;">
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">⚡ LITLABS</div>
+                <div class="logo-sub">Glam AI</div>
+            </div>
+            
+            <div class="nav-item active" onclick="navigateTo('dashboard')">📊 Dashboard</div>
+            <div class="nav-item" onclick="navigateTo('revenue')">💰 Revenue</div>
+            <div class="nav-item" onclick="navigateTo('growth')">📈 Growth Plan</div>
+            <div class="nav-item" onclick="navigateTo('customers')">👥 Customers</div>
+            <div class="nav-item" onclick="navigateTo('analytics')">📉 Analytics</div>
+            <div class="nav-item" onclick="navigateTo('integrations')">🔗 Integrations</div>
+            <div class="nav-item" onclick="logout()">🚪 Logout</div>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+            <!-- DASHBOARD PAGE -->
+            <div class="page active" id="dashboard">
+                <div class="page-header">
+                    <h1>Dashboard</h1>
+                    <p>Your business at a glance</p>
+                </div>
+
+                <div class="grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Revenue</div>
+                        <div class="stat-value">$4,850</div>
+                        <div class="stat-change">↑ 45% this month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Paid Customers</div>
+                        <div class="stat-value">120</div>
+                        <div class="stat-change">↑ 28 this month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Free Users</div>
+                        <div class="stat-value">847</div>
+                        <div class="stat-change">↑ 142 this month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Conversion Rate</div>
+                        <div class="stat-value">12.3%</div>
+                        <div class="stat-change">↑ 2.1% improvement</div>
+                    </div>
+                </div>
+
+                <div class="live-feed">
+                    <h3 style="color: var(--accent); margin-bottom: 1rem; font-size: 0.95em;">Recent Activity</h3>
+                    <div class="feed-item">
+                        <div class="feed-time">2 mins ago</div>
+                        <div class="feed-title">✅ Payment: Sarah M.</div>
+                        <div class="feed-desc">Upgraded to Pro - $29.00</div>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-time">8 mins ago</div>
+                        <div class="feed-title">🎉 New Signup</div>
+                        <div class="feed-desc">Jessica L. joined the platform</div>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-time">15 mins ago</div>
+                        <div class="feed-title">💳 Payment: Emma K.</div>
+                        <div class="feed-desc">Subscription renewed - $29.00</div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-title">Revenue Trend (Last 7 Days)</div>
+                    <div class="mini-chart">
+                        <div class="bar" style="height: 45%;"><div class="bar-label">Mon</div></div>
+                        <div class="bar" style="height: 55%;"><div class="bar-label">Tue</div></div>
+                        <div class="bar" style="height: 60%;"><div class="bar-label">Wed</div></div>
+                        <div class="bar" style="height: 75%;"><div class="bar-label">Thu</div></div>
+                        <div class="bar" style="height: 85%;"><div class="bar-label">Fri</div></div>
+                        <div class="bar" style="height: 90%;"><div class="bar-label">Sat</div></div>
+                        <div class="bar" style="height: 100%;"><div class="bar-label">Sun</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- REVENUE PAGE -->
+            <div class="page" id="revenue">
+                <div class="page-header">
+                    <h1>Revenue Analytics</h1>
+                    <p>Earnings breakdown and trends</p>
+                </div>
+
+                <div class="grid">
+                    <div class="stat-card">
+                        <div class="stat-label">This Month</div>
+                        <div class="stat-value">$1,740</div>
+                        <div class="stat-change">From 45 customers</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Pro Tier Revenue</div>
+                        <div class="stat-value">$1,015</div>
+                        <div class="stat-change">35 × $29/month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Enterprise Revenue</div>
+                        <div class="stat-value">$725</div>
+                        <div class="stat-change">10 × $99/month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">After Stripe Fees</div>
+                        <div class="stat-value">$1,688</div>
+                        <div class="stat-change">2.9% + $0.30 deducted</div>
+                    </div>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Customer</th>
+                            <th>Plan</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Nov 28</td>
+                            <td>Sarah M.</td>
+                            <td>Pro</td>
+                            <td>$29.00</td>
+                            <td><span class="badge">Paid</span></td>
+                        </tr>
+                        <tr>
+                            <td>Nov 27</td>
+                            <td>Jessica L.</td>
+                            <td>Enterprise</td>
+                            <td>$99.00</td>
+                            <td><span class="badge">Paid</span></td>
+                        </tr>
+                        <tr>
+                            <td>Nov 27</td>
+                            <td>Emma K.</td>
+                            <td>Pro</td>
+                            <td>$29.00</td>
+                            <td><span class="badge">Paid</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- GROWTH PLAN PAGE -->
+            <div class="page" id="growth">
+                <div class="page-header">
+                    <h1>🚀 Master Growth Plan</h1>
+                    <p>Strategy to get 1,000+ customers in 90 days</p>
+                </div>
+
+                <div class="growth-strategy">
+                    <div class="strategy-title">📊 Phase 1: Foundations (Week 1-2)</div>
+                    <div class="strategy-item">
+                        <strong>✓ Get Listed Everywhere</strong>
+                        <p>Submit to ProductHunt, Futurepedia, There's an AI, AI Tools Collective | Expected: 1,000+ visits</p>
+                    </div>
+                    <div class="strategy-item">
+                        <strong>✓ SEO Setup</strong>
+                        <p>Google Search Console, sitemap, meta tags | Expected: organic traffic in 2-4 weeks</p>
+                    </div>
+                    <div class="strategy-item">
+                        <strong>✓ Email List Start</strong>
+                        <p>Capture emails from signups | Expected: 50-100 first week</p>
+                    </div>
+                </div>
+
+                <div class="growth-strategy">
+                    <div class="strategy-title">🎯 Phase 2: Paid Ads (Week 2-4)</div>
+                    <div class="strategy-item">
+                        <strong>✓ Google Ads Campaign</strong>
+                        <p>Keywords: "AI salon content", "beauty automation" | Budget: $10-20/day | Expected: 5-15 customers/week</p>
+                    </div>
+                    <div class="strategy-item">
+                        <strong>✓ Facebook Ads Campaign</strong>
+                        <p>Target: Women 25-55, beauty/business interests | Budget: $10-20/day | Expected: 3-8 customers/week</p>
+                    </div>
+                    <div class="strategy-item">
+                        <strong>✓ LinkedIn Ads</strong>
+                        <p>Target: Business owners, salon managers | Budget: $10-15/day | Expected: 2-5 high-value customers/week</p>
+                    </div>
+                </div>
+
+                <div class="growth-strategy">
+                    <div class="strategy-title">🤝 Phase 3: Community & Partnerships (Week 3+)</div>
+                    <div class="strategy-item">
+                        <strong>✓ Beauty Business Communities</strong>
+                        <p>Facebook groups, Reddit (r/salon, r/beautybusiness) | Share value, 10% CTA | Expected: 20-50 signups/month</p>
+                    </div>
+                    <div class="strategy-item">
+                        <strong>✓ Affiliate Program</strong>
+                        <p>20% commission for referrals | Partners: beauty influencers, content creators | Expected: 30-100 customers</p>
+                    </div>
+                    <div class="strategy-item">
+                        <strong>✓ Content Marketing</strong>
+                        <p>Blog: "How to grow your salon on Instagram", "AI content ideas" | SEO optimized | Expected: 200-500 organic visits/month</p>
+                    </div>
+                </div>
+
+                <div class="growth-strategy">
+                    <div class="strategy-title">⚡ Phase 4: Scaling (Month 2+)</div>
+                    <div class="strategy-item">
+                        <strong>✓ Double Down on Winners</strong>
+                        <p>Identify top-performing ads, increase budget 2-3x | Expected: exponential growth</p>
+                    </div>
+                    <div class="strategy-item">
+                        <strong>✓ YouTube Channel</strong>
+                        <p>15-30 second videos: "AI generates salon posts" | Repurpose content | Expected: 1,000+ views/month</p>
+                    </div>
+                    <div class="strategy-item">
+                        <strong>✓ Retargeting Campaign</strong>
+                        <p>Google/Facebook: Show ads to site visitors who didn't signup | Expected: 15-30% recovery</p>
+                    </div>
+                    <div class="strategy-item">
+                        <strong>✓ Press Outreach</strong>
+                        <p>Beauty tech blogs, SaaS news | Expected: 5-10 backlinks, 500+ referral traffic</p>
+                    </div>
+                </div>
+
+                <div class="growth-strategy">
+                    <div class="strategy-title">🎁 Bonus: Unique Growth Ideas</div>
+                    <div class="strategy-item">
+                        <strong>✓ Referral Rewards</strong>
+                        <p>Give $5 free credits per friend referral | Expected: viral growth</p>
+                    </div>
+                    <div class="strategy-item">
+                        <strong>✓ Free Trial Extension</strong>
+                        <p>14 days for new users (vs 7) | Hook them faster | Expected: +5% conversion</p>
+                    </div>
+                    <div class="strategy-item">
+                        <strong>✓ Team Discount</strong>
+                        <p>20% off when 3+ users on same account | Appeal to agencies | Expected: 50-100 customers</p>
+                    </div>
+                    <div class="strategy-item">
+                        <strong>✓ Free Audit Tool</strong>
+                        <p>"Upload 5 salon posts, get AI improvement suggestions" | No login | Expected: 1,000s of leads</p>
+                    </div>
+                </div>
+
+                <div style="background: rgba(0, 212, 255, 0.1); border: 1px solid var(--accent); border-radius: 8px; padding: 1.5rem; margin-top: 1.5rem;">
+                    <strong style="color: var(--accent);">📌 90-Day Goal:</strong>
+                    <p style="color: var(--text-muted); margin-top: 0.5rem;">Week 1-2: 20-50 customers | Week 3-4: 50-100 customers | Month 2: 100-300 customers | Month 3: 300-1000+ customers</p>
+                    <p style="color: var(--accent-secondary); margin-top: 1rem;"><strong>Revenue at 1,000 customers:</strong> $25,000-45,000/month 🚀</p>
+                </div>
+            </div>
+
+            <!-- CUSTOMERS PAGE -->
+            <div class="page" id="customers">
+                <div class="page-header">
+                    <h1>Customers</h1>
+                    <p>Your growing user base</p>
+                </div>
+
+                <div class="grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Free Users</div>
+                        <div class="stat-value">847</div>
+                        <div class="stat-change">↑ 142 this month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Pro Subscribers</div>
+                        <div class="stat-value">98</div>
+                        <div class="stat-change">↑ 22 this month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Enterprise Tier</div>
+                        <div class="stat-value">22</div>
+                        <div class="stat-change">↑ 6 this month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Avg Lifetime Value</div>
+                        <div class="stat-value">$40.42</div>
+                        <div class="stat-change">per paying customer</div>
+                    </div>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Plan</th>
+                            <th>Joined</th>
+                            <th>Revenue</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Sarah M.</td>
+                            <td>sarah@beauty.com</td>
+                            <td>Pro</td>
+                            <td>Nov 15</td>
+                            <td>$87</td>
+                        </tr>
+                        <tr>
+                            <td>Jessica L.</td>
+                            <td>jessica@salon.com</td>
+                            <td>Enterprise</td>
+                            <td>Nov 10</td>
+                            <td>$297</td>
+                        </tr>
+                        <tr>
+                            <td>Emma K.</td>
+                            <td>emma@glamour.com</td>
+                            <td>Pro</td>
+                            <td>Nov 5</td>
+                            <td>$145</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ANALYTICS PAGE -->
+            <div class="page" id="analytics">
+                <div class="page-header">
+                    <h1>Analytics</h1>
+                    <p>Performance metrics and trends</p>
+                </div>
+
+                <div class="grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Visitors (24h)</div>
+                        <div class="stat-value">284</div>
+                        <div class="stat-change">↑ 45% increase</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Signup Rate</div>
+                        <div class="stat-value">18.3%</div>
+                        <div class="stat-change">↑ 3.2% improvement</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Conversion Rate</div>
+                        <div class="stat-value">12.3%</div>
+                        <div class="stat-change">Free to paid</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Avg Session</div>
+                        <div class="stat-value">4m 23s</div>
+                        <div class="stat-change">↑ 1m 15s</div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-title">Traffic Sources</div>
+                    <div class="mini-chart">
+                        <div class="bar" style="height: 100%;" title="Organic: 425"><div class="bar-label">Organic</div></div>
+                        <div class="bar" style="height: 43%;"><div class="bar-label">Ads</div></div>
+                        <div class="bar" style="height: 37%;"><div class="bar-label">Direct</div></div>
+                        <div class="bar" style="height: 29%;"><div class="bar-label">Social</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- INTEGRATIONS PAGE -->
+            <div class="page" id="integrations">
+                <div class="page-header">
+                    <h1>Integrations</h1>
+                    <p>Connected services and tools</p>
+                </div>
+
+                <div class="grid">
+                    <div class="stat-card">
+                        <div style="text-align: center;">
+                            <div style="font-size: 2em; margin-bottom: 0.5rem;">💳</div>
+                            <div class="stat-label">Stripe</div>
+                            <div style="color: var(--accent-secondary); margin-top: 0.5rem;">✓ Connected</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div style="text-align: center;">
+                            <div style="font-size: 2em; margin-bottom: 0.5rem;">🔥</div>
+                            <div class="stat-label">Firebase</div>
+                            <div style="color: var(--accent-secondary); margin-top: 0.5rem;">✓ Synced</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div style="text-align: center;">
+                            <div style="font-size: 2em; margin-bottom: 0.5rem;">📊</div>
+                            <div class="stat-label">Google Analytics</div>
+                            <div style="color: var(--accent-secondary); margin-top: 0.5rem;">✓ Tracking</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div style="text-align: center;">
+                            <div style="font-size: 2em; margin-bottom: 0.5rem;">📧</div>
+                            <div class="stat-label">Email Service</div>
+                            <div style="color: var(--accent-secondary); margin-top: 0.5rem;">✓ Active</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin-top: 1.5rem;">
+                    <h3 style="color: var(--accent); margin-bottom: 1rem;">Quick Actions</h3>
+                    <a href="https://dashboard.stripe.com" target="_blank" class="btn">📊 Stripe Dashboard</a>
+                    <a href="https://console.firebase.google.com" target="_blank" class="btn" style="margin-left: 0.5rem;">🔥 Firebase Console</a>
+                    <a href="https://analytics.google.com" target="_blank" class="btn" style="margin-left: 0.5rem;">📈 Google Analytics</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Authentication handlers
+        function authenticateFace() {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                alert('👤 Face recognition initialized. In production, this would use WebRTC + ML5.js for real face detection.');
+                loginSuccess();
+            } else {
+                alert('Face recognition not supported on this device.');
+            }
+        }
+
+        function authenticateFingerprint() {
+            if (window.PublicKeyCredential) {
+                alert('👆 Fingerprint/Touch ID enabled. In production, this uses WebAuthn API.');
+                loginSuccess();
+            } else {
+                alert('Biometric authentication not available on this browser.');
+            }
+        }
+
+        function authenticateEmail() {
+            const email = prompt('Enter your email:');
+            const password = prompt('Enter your password:');
+            if (email && password) {
+                alert('📧 Email authentication would send OTP or redirect to Firebase Auth.');
+                loginSuccess();
+            }
+        }
+
+        function authenticateGoogle() {
+            alert('🔵 Redirecting to Google Sign-In...');
+            loginSuccess();
+        }
+
+        function authenticateGuest() {
+            alert('👁️ Guest access granted (demo mode)');
+            loginSuccess();
+        }
+
+        function loginSuccess() {
+            document.getElementById('authModal').classList.remove('active');
+            document.getElementById('dashboardContainer').style.display = 'grid';
+        }
+
+        function logout() {
+            document.getElementById('authModal').classList.add('active');
+            document.getElementById('dashboardContainer').style.display = 'none';
+        }
+
+        function navigateTo(page) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(p => p.classList.remove('active'));
+            document.getElementById(page).classList.add('active');
+
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.querySelector('.main-content').scrollTop = 0;
+        }
+    </script>
+</body>
+</html>

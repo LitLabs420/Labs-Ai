@@ -1,0 +1,113 @@
+# 🚀 QUICK START: Update Stripe Keys in 5 Minutes
+
+## What You Need
+
+Get these from Stripe Dashboard (https://dashboard.stripe.com):
+- **Publishable Key:** `pk_live_...`
+- **Secret Key:** `sk_live_...`
+- **Webhook Secret:** `whsec_...` (from Webhooks section)
+
+---
+
+## Step 1: Update Frontend (2 min)
+
+**File:** `stripe-config.js` (already done ✅)
+- Publishable key loads from Firebase backend
+- No changes needed
+
+**File:** `flipforge-dashboard.html`
+
+Find this line (around line 1105):
+```javascript
+const stripe = Stripe('pk_test_51234567890');
+```
+
+Replace with your LIVE key:
+```javascript
+const stripe = Stripe('pk_live_YOUR_PUBLISHABLE_KEY_HERE');
+```
+
+---
+
+## Step 2: Update Firebase Cloud Functions (3 min)
+
+### Option A: Using Command Line (FASTEST)
+
+```powershell
+# Open PowerShell in your project folder
+cd "C:\Users\dying\public"
+
+# Set your Stripe Secret Key
+firebase functions:config:set stripe.secret_key="sk_live_YOUR_SECRET_KEY_HERE"
+
+# Set your Webhook Secret
+firebase functions:config:set stripe.webhook_secret="whsec_YOUR_WEBHOOK_SECRET_HERE"
+
+# Deploy functions with new config
+firebase deploy --only functions
+```
+
+### Option B: Manual (Firebase Console)
+
+1. Go to: https://console.firebase.google.com
+2. Select your project: `studio-4627045237-a2fe9`
+3. Go to: **Functions** (left menu)
+4. Click: **Configuration** or **Environment variables**
+5. Add:
+   - Key: `stripe.secret_key` → Value: `sk_live_...`
+   - Key: `stripe.webhook_secret` → Value: `whsec_...`
+6. Save and redeploy functions
+
+---
+
+## Step 3: Set Up Webhook (1 min)
+
+1. **Stripe Dashboard** → **Developers** → **Webhooks**
+2. Click **+ Add endpoint**
+3. Paste URL:
+   ```
+   https://us-central1-studio-4627045237-a2fe9.cloudfunctions.net/handleStripeWebhook
+   ```
+4. Select events:
+   - `checkout.session.completed`
+   - `invoice.payment_failed`
+   - `customer.subscription.updated`
+   - `customer.subscription.deleted`
+5. Click **Add endpoint**
+6. Copy the **Signing secret** (starts with `whsec_`)
+7. Use in Step 2 above
+
+---
+
+## Test It
+
+After updating keys:
+
+1. Go to: https://studio-4627045237-a2fe9.web.app
+2. Sign up (free account)
+3. Click "Upgrade" → Select $9 tier
+4. Try payment with your LIVE card
+5. Check Stripe Dashboard for payment
+
+---
+
+## ⚠️ DO NOT
+
+- ❌ Share your `sk_live_` key with anyone
+- ❌ Put `sk_live_` in frontend code (frontend only gets `pk_live_`)
+- ❌ Use test keys after going live
+- ❌ Commit keys to GitHub
+
+---
+
+## Quick Keys Reference
+
+| What | Where | Format |
+|------|-------|--------|
+| Publishable | Stripe Dashboard → API Keys | `pk_live_...` |
+| Secret | Stripe Dashboard → API Keys | `sk_live_...` |
+| Webhook Secret | Stripe Dashboard → Webhooks → Your endpoint | `whsec_...` |
+
+---
+
+**Ready? Follow Steps 1-3 above, then test. You'll start making real money.** 💰

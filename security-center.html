@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLIPFORGE Security Center – SHIELD AI™</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --obsidian: #0A0A0A;
+            --gold: #D5A542;
+            --blue: #2D6AFF;
+            --red: #FF0033;
+            --green: #00D944;
+            --yellow: #FFD700;
+            --dark-bg: #0f0f0f;
+            --card-bg: #1a1a1a;
+            --border: #2d2d2d;
+            --text: #e0e0e0;
+            --muted: #888888;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--obsidian) 0%, #1a1a2e 100%);
+            color: var(--text);
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .security-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .security-sidebar {
+            background: rgba(10, 10, 10, 0.95);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .security-logo {
+            font-size: 1.2em;
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--red), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .security-nav {
+            list-style: none;
+        }
+
+        .security-nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .security-nav-link {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: var(--muted);
+            text-decoration: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            font-size: 0.95em;
+        }
+
+        .security-nav-link:hover {
+            background: rgba(255, 0, 51, 0.1);
+            color: var(--red);
+            border-left-color: var(--red);
+        }
+
+        .security-nav-link.active {
+            background: rgba(255, 0, 51, 0.2);
+            color: var(--red);
+            border-left-color: var(--red);
+            font-weight: 700;
+        }
+
+        /* MAIN CONTENT */
+        .security-main {
+            grid-column: 2;
+            padding: 2rem;
+            margin-left: 0;
+        }
+
+        .security-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .security-header h1 {
+            font-size: 2em;
+            color: var(--red);
+        }
+
+        .security-timestamp {
+            color: var(--muted);
+            font-size: 0.9em;
+        }
+
+        /* STAT CARDS */
+        .stat-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--red);
+            background: rgba(255, 0, 51, 0.05);
+        }
+
+        .stat-card.critical {
+            border-color: var(--red);
+            background: rgba(255, 0, 51, 0.1);
+        }
+
+        .stat-card.warning {
+            border-color: var(--yellow);
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 0.85em;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: 900;
+            color: var(--red);
+        }
+
+        .stat-card.safe .stat-value {
+            color: var(--green);
+        }
+
+        /* ALERTS TABLE */
+        .alerts-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 0, 51, 0.1);
+            border: 1px solid var(--red);
+            color: var(--red);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn.active {
+            background: var(--red);
+            color: white;
+        }
+
+        .alerts-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .alerts-table thead {
+            background: rgba(255, 0, 51, 0.05);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .alerts-table th {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            font-weight: 700;
+            color: var(--red);
+        }
+
+        .alerts-table td {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .alert-severity {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: 700;
+        }
+
+        .severity-critical {
+            background: rgba(255, 0, 51, 0.3);
+            color: var(--red);
+        }
+
+        .severity-high {
+            background: rgba(255, 215, 0, 0.3);
+            color: var(--yellow);
+        }
+
+        .severity-medium {
+            background: rgba(45, 106, 255, 0.3);
+            color: var(--blue);
+        }
+
+        .severity-low {
+            background: rgba(0, 217, 68, 0.3);
+            color: var(--green);
+        }
+
+        .alert-type {
+            color: var(--muted);
+            font-size: 0.9em;
+        }
+
+        .alert-time {
+            color: var(--muted);
+            font-size: 0.85em;
+        }
+
+        .alert-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-small {
+            padding: 0.4rem 0.8rem;
+            background: rgba(45, 106, 255, 0.2);
+            border: 1px solid var(--blue);
+            color: var(--blue);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: all 0.2s ease;
+        }
+
+        .btn-small:hover {
+            background: var(--blue);
+            color: white;
+        }
+
+        .btn-danger {
+            background: rgba(255, 0, 51, 0.2);
+            border-color: var(--red);
+            color: var(--red);
+        }
+
+        .btn-danger:hover {
+            background: var(--red);
+            color: white;
+        }
+
+        /* SESSIONS VIEWER */
+        .sessions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .session-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .session-device {
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .session-info {
+            font-size: 0.85em;
+            color: var(--muted);
+            margin: 0.25rem 0;
+        }
+
+        .session-status {
+            display: inline-block;
+            margin-top: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8em;
+            background: rgba(0, 217, 68, 0.2);
+            color: var(--green);
+        }
+
+        /* SHIELD AI CHAT */
+        .shield-ai-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 6px;
+            line-height: 1.5;
+        }
+
+        .message.user {
+            background: rgba(45, 106, 255, 0.1);
+            border-left: 3px solid var(--blue);
+            text-align: right;
+        }
+
+        .message.shield {
+            background: rgba(255, 0, 51, 0.1);
+            border-left: 3px solid var(--red);
+        }
+
+        .chat-input-row {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-family: inherit;
+        }
+
+        .chat-input::placeholder {
+            color: var(--muted);
+        }
+
+        .btn-send {
+            padding: 0.75rem 1.5rem;
+            background: var(--red);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.2s ease;
+        }
+
+        .btn-send:hover {
+            background: #ff1a4d;
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .modal-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--red);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: 6px;
+            font-family: inherit;
+        }
+
+        .button-row {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--red);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #ff1a4d;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        @media (max-width: 768px) {
+            .security-container {
+                grid-template-columns: 1fr;
+            }
+
+            .security-sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .security-main {
+                grid-column: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="security-container">
+        <!-- SIDEBAR -->
+        <div class="security-sidebar">
+            <div class="security-logo">🛡️ SHIELD AI™</div>
+            <ul class="security-nav">
+                <li class="security-nav-item">
+                    <a class="security-nav-link active" onclick="switchSecurityTab('overview')">📊 Overview</a>
+                </li>
+                <li class="security-nav-item">
+                    <a class="security-nav-link" onclick="switchSecurityTab('alerts')">🚨 Alerts</a>
+                </li>
+                <li class="security-nav-item">
+                    <a class="security-nav-link" onclick="switchSecurityTab('sessions')">🔑 Sessions</a>
+                </li>
+                <li class="security-nav-item">
+                    <a class="security-nav-link" onclick="switchSecurityTab('payments')">💳 Payments</a>
+                </li>
+                <li class="security-nav-item">
+                    <a class="security-nav-link" onclick="switchSecurityTab('referrals')">🎯 Referrals</a>
+                </li>
+                <li class="security-nav-item">
+                    <a class="security-nav-link" onclick="switchSecurityTab('shield-ai')">🤖 SHIELD AI Chat</a>
+                </li>
+                <li class="security-nav-item">
+                    <a class="security-nav-link" onclick="switchSecurityTab('blocked-ips')">🚫 Blocked IPs</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="security-main">
+            <!-- OVERVIEW TAB -->
+            <div id="overview-tab" class="security-tab">
+                <div class="security-header">
+                    <h1>🛡️ Security Overview</h1>
+                    <div class="security-timestamp" id="current-time"></div>
+                </div>
+
+                <div class="stat-cards">
+                    <div class="stat-card critical">
+                        <div class="stat-label">🚨 Critical Alerts (24h)</div>
+                        <div class="stat-value" id="critical-count">0</div>
+                    </div>
+                    <div class="stat-card warning">
+                        <div class="stat-label">⚠️ High-Risk Logins</div>
+                        <div class="stat-value" id="high-risk-count">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">👥 Active Sessions</div>
+                        <div class="stat-value" id="active-sessions">0</div>
+                    </div>
+                    <div class="stat-card safe">
+                        <div class="stat-label">✅ System Status</div>
+                        <div class="stat-value" id="system-status">HEALTHY</div>
+                    </div>
+                </div>
+
+                <div class="alerts-section">
+                    <div class="section-header">
+                        <div class="section-title">Recent Alerts (Last 24h)</div>
+                    </div>
+                    <table class="alerts-table">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Severity</th>
+                                <th>Message</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recent-alerts-body">
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 2rem; color: var(--muted);">
+                                    Loading alerts...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ALERTS TAB -->
+            <div id="alerts-tab" class="security-tab" style="display: none;">
+                <div class="security-header">
+                    <h1>🚨 Security Alerts</h1>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" onclick="filterAlerts('all')">All</button>
+                        <button class="filter-btn" onclick="filterAlerts('open')">Open</button>
+                        <button class="filter-btn" onclick="filterAlerts('critical')">Critical</button>
+                    </div>
+                </div>
+
+                <div class="alerts-section">
+                    <table class="alerts-table">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Severity</th>
+                                <th>Message</th>
+                                <th>User</th>
+                                <th>Time</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="alerts-body">
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 2rem; color: var(--muted);">
+                                    Loading...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SESSIONS TAB -->
+            <div id="sessions-tab" class="security-tab" style="display: none;">
+                <div class="security-header">
+                    <h1>🔑 Active Sessions</h1>
+                </div>
+                <div class="sessions-grid" id="sessions-grid">
+                    <p style="color: var(--muted);">Loading sessions...</p>
+                </div>
+            </div>
+
+            <!-- SHIELD AI CHAT TAB -->
+            <div id="shield-ai-tab" class="security-tab" style="display: none;">
+                <div class="security-header">
+                    <h1>🤖 SHIELD AI Security Assistant</h1>
+                </div>
+                <div class="shield-ai-container">
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="message shield">
+                            <strong>SHIELD AI:</strong> Hi! I'm your security analyst. Ask me about suspicious activity, fraud patterns, or security recommendations.
+                        </div>
+                    </div>
+                    <div class="chat-input-row">
+                        <input type="text" class="chat-input" id="chat-input" placeholder="Ask about security...">
+                        <button class="btn-send" onclick="sendShieldAiMessage()">Send</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OTHER TABS (Payments, Referrals, Blocked IPs) -->
+            <div id="payments-tab" class="security-tab" style="display: none;">
+                <div class="security-header">
+                    <h1>💳 Payment Fraud Monitoring</h1>
+                </div>
+                <div class="alerts-section">
+                    <div class="section-header">
+                        <div class="section-title">Payment Events</div>
+                    </div>
+                    <p style="padding: 1.5rem; color: var(--muted);">Payment monitoring data will appear here.</p>
+                </div>
+            </div>
+
+            <div id="referrals-tab" class="security-tab" style="display: none;">
+                <div class="security-header">
+                    <h1>🎯 Referral Abuse Detection</h1>
+                </div>
+                <div class="alerts-section">
+                    <div class="section-header">
+                        <div class="section-title">Referral Events</div>
+                    </div>
+                    <p style="padding: 1.5rem; color: var(--muted);">Referral monitoring data will appear here.</p>
+                </div>
+            </div>
+
+            <div id="blocked-ips-tab" class="security-tab" style="display: none;">
+                <div class="security-header">
+                    <h1>🚫 Blocked IPs</h1>
+                </div>
+                <div class="alerts-section">
+                    <div class="section-header">
+                        <div class="section-title">IP Blocklist</div>
+                    </div>
+                    <p style="padding: 1.5rem; color: var(--muted);">Blocked IP addresses will appear here.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ACTION MODAL -->
+    <div id="actionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">Take Action</div>
+            <div class="form-group">
+                <label class="form-label">Action Type</label>
+                <select id="action-type" class="form-input">
+                    <option>Mark as Safe</option>
+                    <option>Force Logout User</option>
+                    <option>Block IP</option>
+                    <option>Require MFA</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Reason</label>
+                <textarea class="form-input" id="action-reason" rows="3" placeholder="Why are you taking this action?"></textarea>
+            </div>
+            <div class="button-row">
+                <button class="btn btn-primary" onclick="executeAction()">Execute Action</button>
+                <button class="btn btn-secondary" onclick="closeModal('actionModal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-functions.js"></script>
+    <script src="/firebase-config.js"></script>
+
+    <script>
+        const db = firebase.firestore();
+        const functions = firebase.functions();
+
+        // Tab switching
+        function switchSecurityTab(tabName) {
+            document.querySelectorAll('.security-tab').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            document.getElementById(tabName + '-tab').style.display = 'block';
+
+            document.querySelectorAll('.security-nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            loadTabData(tabName);
+        }
+
+        // Load data based on tab
+        async function loadTabData(tabName) {
+            if (tabName === 'overview') {
+                loadOverviewData();
+            } else if (tabName === 'alerts') {
+                loadAlerts();
+            } else if (tabName === 'sessions') {
+                loadSessions();
+            }
+        }
+
+        // Load overview data
+        async function loadOverviewData() {
+            try {
+                const alertsSnapshot = await db.collection('security_alerts')
+                    .where('status', '==', 'open')
+                    .where('severity', '==', 'critical')
+                    .get();
+
+                document.getElementById('critical-count').textContent = alertsSnapshot.size;
+
+                // Load recent alerts
+                const recentAlerts = await db.collection('security_alerts')
+                    .orderBy('createdAt', 'desc')
+                    .limit(5)
+                    .get();
+
+                const tbody = document.getElementById('recent-alerts-body');
+                tbody.innerHTML = '';
+
+                recentAlerts.forEach(doc => {
+                    const alert = doc.data();
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${alert.type}</td>
+                            <td><span class="alert-severity severity-${alert.severity}">${alert.severity}</span></td>
+                            <td>${alert.message}</td>
+                            <td>${new Date(alert.createdAt.toDate()).toLocaleTimeString()}</td>
+                            <td>${alert.status}</td>
+                        </tr>
+                    `;
+                });
+            } catch (error) {
+                console.error('Error loading overview:', error);
+            }
+        }
+
+        // Load alerts
+        async function loadAlerts() {
+            try {
+                const snapshot = await db.collection('security_alerts')
+                    .orderBy('createdAt', 'desc')
+                    .limit(50)
+                    .get();
+
+                const tbody = document.getElementById('alerts-body');
+                tbody.innerHTML = '';
+
+                snapshot.forEach(doc => {
+                    const alert = doc.data();
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><span class="alert-type">${alert.type}</span></td>
+                            <td><span class="alert-severity severity-${alert.severity}">${alert.severity}</span></td>
+                            <td>${alert.message}</td>
+                            <td>${alert.userId || 'System'}</td>
+                            <td><span class="alert-time">${new Date(alert.createdAt.toDate()).toLocaleTimeString()}</span></td>
+                            <td>
+                                <div class="alert-actions">
+                                    <button class="btn-small" onclick="openActionModal('${doc.id}')">Take Action</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (error) {
+                console.error('Error loading alerts:', error);
+            }
+        }
+
+        // Update timestamp
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('current-time').textContent = now.toLocaleTimeString();
+        }, 1000);
+
+        // Placeholder functions
+        function filterAlerts(filter) {
+            console.log('Filter:', filter);
+        }
+
+        function loadSessions() {
+            console.log('Loading sessions...');
+        }
+
+        function openActionModal(alertId) {
+            document.getElementById('actionModal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function executeAction() {
+            alert('Action executed!');
+            closeModal('actionModal');
+        }
+
+        function sendShieldAiMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            // Add user message
+            const chatMessages = document.getElementById('chat-messages');
+            chatMessages.innerHTML += `
+                <div class="message user">${message}</div>
+            `;
+
+            // Simulate AI response
+            setTimeout(() => {
+                chatMessages.innerHTML += `
+                    <div class="message shield">
+                        <strong>SHIELD AI:</strong><br>
+                        I see. Let me analyze that for you. Based on the security data, here's what I found:<br><br>
+                        ✅ No critical threats detected<br>
+                        ⚠️ 2 high-risk logins from new locations<br>
+                        🟢 All payment systems healthy<br><br>
+                        <strong>Recommended actions:</strong><br>
+                        1. Monitor those 2 login attempts<br>
+                        2. Consider requiring MFA<br>
+                        3. All systems nominal otherwise
+                    </div>
+                `;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 500);
+
+            input.value = '';
+        }
+
+        // Load initial data
+        loadOverviewData();
+    </script>
+</body>
+</html>
