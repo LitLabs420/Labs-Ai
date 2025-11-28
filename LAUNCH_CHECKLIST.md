@@ -1,6 +1,6 @@
 # 🚀 LAUNCH CHECKLIST - EVERYTHING DONE, NOW YOUR TURN
 
-**Your GLAMFLOW AI system is 100% ready. Here's what to do next.**
+**Your LitLabs Glam AI system is 100% ready. Here's what to do next.**
 
 ---
 
@@ -69,8 +69,8 @@ GO TO: https://search.google.com/search-console
 GO TO: https://business.google.com
 
 1. Click "Create account"
-2. Business name: "GLAMFLOW AI"
-3. Category: "Software Company"
+2. Business name: "LitLabs Glam AI"
+   3. Category: "Software Company"
 4. Website: https://studio-4627045237-a2fe9.web.app
 5. Verify by phone
 6. Done! ✅
@@ -111,7 +111,7 @@ GO TO: https://business.google.com
 
 **Use this description for all:**
 ```
-GLAMFLOW AI - AI content generator for beauty businesses.
+LitLabs Glam AI - AI content generator for beauty businesses.
 Generate professional Instagram posts, salon marketing copy, 
 and social media content in seconds using AI.
 Free tier + $29/month Pro + $99/month Enterprise.
@@ -128,7 +128,7 @@ GO TO: https://www.producthunt.com
 1. Create account
 2. Click "Launch a Product"
 3. Fill out form:
-   Name: GLAMFLOW AI
+   Name: LitLabs Glam AI
    Tagline: "AI content generator for beauty salons"
    Category: SaaS, AI, Tools
    Pricing: Free + $29/month
@@ -142,7 +142,7 @@ GO TO: https://www.producthunt.com
 
 **Description for ProductHunt:**
 ```
-GLAMFLOW AI - Generate professional Instagram posts 
+LitLabs Glam AI - Generate professional Instagram posts 
 in seconds using AI.
 
 Why creators love it:
@@ -221,18 +221,18 @@ GO TO: https://www.facebook.com/ads/manager
 
 ```
 LinkedIn:
-"Just launched GLAMFLOW AI - AI content generator for 
+"Just launched LitLabs Glam AI - AI content generator for 
 beauty businesses. Generate Instagram posts in seconds. 
 Try free: [link]"
 
 Instagram:
 "AI-powered beauty content in seconds ✨ 
-Try GLAMFLOW AI free: [link]
+Try LitLabs Glam AI free: [link]
 #beautytech #AI #marketing"
 
 Twitter/X:
 "Salon owners: Stop spending hours on Instagram captions. 
-GLAMFLOW AI generates professional content in seconds. 
+LitLabs Glam AI generates professional content in seconds. 
 Free trial: [link]"
 
 Facebook:
