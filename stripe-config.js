@@ -49,7 +49,7 @@ async function createCheckoutSession(planType) {
             const idToken = await currentUser.getIdToken();
             
             // Call Cloud Function to create checkout session
-            const response = await fetch('/.netlify/functions/create-checkout-session', {
+            const response = await fetch('https://us-central1-studio-4627045237-a2fe9.cloudfunctions.net/createCheckoutSession', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -128,7 +128,7 @@ async function handlePaymentSuccess() {
             const idToken = await currentUser.getIdToken();
             
             // Verify payment with Cloud Function
-            const response = await fetch('/.netlify/functions/verify-payment', {
+            const response = await fetch('https://us-central1-studio-4627045237-a2fe9.cloudfunctions.net/verifyPayment', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -183,7 +183,7 @@ async function manageStripeSubscription() {
         try {
             const idToken = await currentUser.getIdToken();
             
-            const response = await fetch('/.netlify/functions/create-portal-session', {
+            const response = await fetch('https://us-central1-studio-4627045237-a2fe9.cloudfunctions.net/createPortalSession', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
