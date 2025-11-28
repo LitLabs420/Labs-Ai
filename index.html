@@ -23,6 +23,11 @@
     <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75' fill='%23ff0080'>✨</text></svg>">
     <!-- Security Hardening -->
     <script src="security-utils.js"></script>
+    <!-- Firebase (v10.7.0 compat for namespaced API) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
     <!-- Advanced Analytics Tracking -->
     <script src="analytics-tracking.js"></script>
     <!-- Google Analytics 4 -->
@@ -174,7 +179,7 @@
             document.getElementById('signin-form').classList.add('active');
         }
 
-        function handleSignIn(e) {
+        async function handleSignIn(e) {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
@@ -184,18 +189,17 @@
                 return;
             }
             
-            // Store session temporarily
-            sessionStorage.setItem('glamflow_user', JSON.stringify({
-                email: email,
-                name: email.split('@')[0],
-                loginTime: new Date().toISOString()
-            }));
-            
-            // Redirect to dashboard
-            window.location.href = '/dashboard.html';
+            try {
+                // Use Firebase Authentication
+                await window.firebaseAuth.signInWithEmailAndPassword(email, password);
+                // Redirect will be handled by auth state listener
+                window.location.href = '/dashboard.html';
+            } catch (error) {
+                alert('❌ Sign in failed: ' + error.message);
+            }
         }
 
-        function handleSignUp(e) {
+        async function handleSignUp(e) {
             e.preventDefault();
             const name = document.getElementById('signup-name').value;
             const email = document.getElementById('signup-email').value;
@@ -217,36 +221,90 @@
                 return;
             }
             
-            // Store session temporarily
-            sessionStorage.setItem('glamflow_user', JSON.stringify({
-                email: email,
-                name: name,
-                business: name,
-                loginTime: new Date().toISOString(),
-                isNewUser: true
-            }));
-            
-            alert('✅ Account created! Redirecting to dashboard...');
-            window.location.href = '/dashboard.html';
+            try {
+                // Use Firebase Authentication
+                const result = await window.firebaseAuth.createUserWithEmailAndPassword(email, password);
+                const user = result.user;
+                
+                // Update profile with display name
+                await user.updateProfile({ displayName: name });
+                
+                // Create user document in Firestore
+                await window.firebaseDb.collection('users').doc(user.uid).set({
+                    uid: user.uid,
+                    email: user.email,
+                    displayName: name,
+                    createdAt: new Date(),
+                    tier: 'free',
+                    status: 'active',
+                    subscription: {
+                        plan: 'free',
+                        status: 'active',
+                        createdAt: new Date()
+                    }
+                });
+                
+                alert('✅ Account created! Redirecting to dashboard...');
+                window.location.href = '/dashboard.html';
+            } catch (error) {
+                alert('❌ Sign up failed: ' + error.message);
+            }
         }
 
-        function handleGoogleSignIn() {
-            // Simple Google login simulation for now
-            sessionStorage.setItem('glamflow_user', JSON.stringify({
-                email: 'user@gmail.com',
-                name: 'Google User',
-                loginMethod: 'google',
-                loginTime: new Date().toISOString()
-            }));
-            window.location.href = '/dashboard.html';
+        async function handleGoogleSignIn() {
+            try {
+                // Use Firebase Google Authentication
+                const provider = new firebase.auth.GoogleAuthProvider();
+                provider.addScope('profile');
+                provider.addScope('email');
+                
+                const result = await window.firebaseAuth.signInWithPopup(provider);
+                const user = result.user;
+                
+                // Check if user document exists, create if not
+                const userRef = window.firebaseDb.collection('users').doc(user.uid);
+                const doc = await userRef.get();
+                
+                if (!doc.exists) {
+                    await userRef.set({
+                        uid: user.uid,
+                        email: user.email,
+                        displayName: user.displayName || 'User',
+                        photoURL: user.photoURL || '',
+                        createdAt: new Date(),
+                        tier: 'free',
+                        status: 'active',
+                        subscription: {
+                            plan: 'free',
+                            status: 'active',
+                            createdAt: new Date()
+                        }
+                    });
+                }
+                
+                window.location.href = '/dashboard.html';
+            } catch (error) {
+                alert('❌ Google sign in failed: ' + error.message);
+            }
         }
 
         function handleGoogleSignUp() {
             handleGoogleSignIn();
         }
 
-        function handleForgotPassword() {
-            alert('Password reset coming soon');
+        async function handleForgotPassword() {
+            const email = document.getElementById('email').value;
+            if (!email) {
+                alert('Please enter your email address first');
+                return;
+            }
+            
+            try {
+                await window.firebaseAuth.sendPasswordResetEmail(email);
+                alert('✅ Password reset email sent! Check your inbox.');
+            } catch (error) {
+                alert('❌ Failed to send reset email: ' + error.message);
+            }
         }
 
         // Admin access key system - simpler approach

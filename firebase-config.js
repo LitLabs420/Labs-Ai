@@ -1,4 +1,4 @@
-// Firebase Configuration & Initialization (v7 Namespaced)
+// Firebase Configuration & Initialization (v9+ Compat)
 // Get these from: https://console.firebase.google.com/project/studio-4627045237-a2fe9/settings/general
 
 const firebaseConfig = {
@@ -10,7 +10,7 @@ const firebaseConfig = {
     appId: "1:612847421952:web:d66d4ba0666e7f5116e6e5"
 };
 
-// Initialize Firebase
+// Initialize Firebase (compat mode for namespaced API)
 firebase.initializeApp(firebaseConfig);
 
 // Get Firebase services
@@ -27,5 +27,5 @@ window.firebaseAuth = auth;
 window.firebaseDb = db;
 window.firebase = firebase;
 
-console.log('✅ Firebase v7 initialized!');
+console.log('✅ Firebase initialized!');
 
