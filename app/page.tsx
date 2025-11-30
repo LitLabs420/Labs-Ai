@@ -7,238 +7,357 @@ export default function HomePage() {
   return (
     <>
       {/* HEADER */}
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-black/80 backdrop-blur">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 font-bold text-xl">
-            <span className="text-2xl">🔥</span>
-            <span>LitLabs</span>
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-black/95 backdrop-blur">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2 font-black text-2xl">
+            <span className="text-3xl bg-gradient-to-r from-[#9b5cff] to-[#3ef1c2] bg-clip-text text-transparent">⚡</span>
+            <span className="bg-gradient-to-r from-[#9b5cff] via-[#ff4fa3] to-[#3ef1c2] bg-clip-text text-transparent">LitLabs OS</span>
           </Link>
-          <nav className="flex gap-6 text-sm text-gray-400">
-            <a href="/#playbooks" className="hover:text-white transition">Features</a>
-            <a href="/#learn" className="hover:text-white transition">Arcade</a>
-            <Link href="/dashboard" className="text-[#3ef1c2] hover:brightness-110 transition font-semibold">
-              Login
+          <nav className="flex gap-8 text-sm text-gray-300">
+            <a href="/#features" className="hover:text-white transition">Features</a>
+            <a href="/#arcade" className="hover:text-white transition">Arcade</a>
+            <a href="/#pricing" className="hover:text-white transition">Pricing</a>
+            <Link href="/dashboard" className="px-4 py-2 rounded-full bg-gradient-to-r from-[#9b5cff] to-[#ff4fa3] text-black font-bold hover:brightness-110 transition">
+              Log In
             </Link>
           </nav>
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-4 pb-20 pt-10 space-y-16 text-white">
-      {/* HERO SECTION */}
-      <section className="grid lg:grid-cols-2 gap-10 items-center">
-        {/* LEFT: TEXT */}
-        <div className="space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-gray-300">
-            <span className="h-1.5 w-1.5 rounded-full bg-gradient-to-r from-fuchsia-400 to-teal-300" />
-            <span>LitLabs OS is live — built for beauty pros, barbers & creators</span>
-          </div>
+      <main className="max-w-7xl mx-auto px-4 pb-24 pt-16 space-y-24 text-white">
+        {/* HERO SECTION - BOLD */}
+        <section className="grid lg:grid-cols-2 gap-16 items-center">
+          {/* LEFT: TEXT */}
+          <div className="space-y-8">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#9b5cff]/20 to-[#3ef1c2]/20 border border-[#9b5cff]/30">
+              <span className="h-2 w-2 rounded-full bg-[#3ef1c2] animate-pulse" />
+              <span className="text-sm font-semibold bg-gradient-to-r from-[#9b5cff] to-[#3ef1c2] bg-clip-text text-transparent">
+                AI-Powered Business Automation
+              </span>
+            </div>
 
-          <h1 className="text-4xl md:text-5xl font-extrabold leading-tight">
-            Your AI command center built to{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#9b5cff] via-[#ff4fa3] to-[#3ef1c2]">
-              make you money.
-            </span>
-          </h1>
+            <h1 className="text-5xl md:text-6xl font-black leading-tight">
+              Your AI<br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#9b5cff] via-[#ff4fa3] to-[#3ef1c2]">
+                Command Center
+              </span>
+              <br />
+              Built to Make You Money
+            </h1>
 
-          <p className="text-gray-300 text-sm md:text-base max-w-lg">
-            Automate your marketing, create daily content, reply to DMs like a human,
-            run money plays and see your next 30–90 days laid out like a game plan.
-            Stop guessing. Start executing with LitLabs OS.
-          </p>
+            <p className="text-lg text-gray-300 leading-relaxed max-w-lg">
+              LitLabs OS runs your marketing playbook automatically. Generate content daily, reply to DMs like a human, book clients, and watch revenue grow—while you focus on delivering work.
+            </p>
 
-          <div className="flex flex-wrap items-center gap-4">
-            <Link href="/dashboard" className="inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-semibold bg-gradient-to-r from-[#9b5cff] via-[#ff4fa3] to-[#3ef1c2] text-black hover:brightness-110 transition">
-              Activate LitLabs →
-            </Link>
-            <button className="inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-semibold border border-white/15 bg-white/5 text-gray-100 hover:bg-white/10 transition">
-              View plans
-            </button>
-          </div>
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <Link href="/dashboard" className="px-6 py-3 rounded-lg bg-gradient-to-r from-[#9b5cff] via-[#ff4fa3] to-[#3ef1c2] text-black font-bold text-lg hover:brightness-110 transition shadow-lg shadow-[#ff4fa3]/30">
+                Start Free Trial →
+              </Link>
+              <button className="px-6 py-3 rounded-lg border-2 border-white/20 text-white font-bold hover:border-[#3ef1c2] hover:bg-[#3ef1c2]/5 transition">
+                Watch Demo (30s)
+              </button>
+            </div>
 
-          <p className="text-xs text-gray-400">
-            ✨ No contracts. No setup fees. Cancel anytime.
-          </p>
+            <p className="text-sm text-gray-400">
+              ✨ No credit card. 14-day free trial. Cancel anytime.
+            </p>
 
-          {/* MINI "PEOPLE LIKE YOU" STRIP */}
-          <div className="flex items-center gap-3 mt-2">
-            <div className="flex -space-x-2">
-              <div className="relative h-8 w-8 rounded-full overflow-hidden border border-white/20">
-                <Image
-                  src="/litlabs/hero-beauty-grid.png"
-                  alt="Beauty pros using LitLabs"
-                  fill
-                  className="object-cover"
-                />
+            {/* Social Proof */}
+            <div className="flex items-center gap-6 pt-8 border-t border-white/10">
+              <div>
+                <p className="text-3xl font-black text-[#ff4fa3]">2,400+</p>
+                <p className="text-xs text-gray-400">Beauty pros using LitLabs</p>
               </div>
-              <div className="relative h-8 w-8 rounded-full overflow-hidden border border-white/20">
-                <Image
-                  src="/litlabs/hero-mobile.png"
-                  alt="LitLabs OS on mobile"
-                  fill
-                  className="object-cover"
-                />
+              <div>
+                <p className="text-3xl font-black text-[#3ef1c2]">$47M+</p>
+                <p className="text-xs text-gray-400">Booked through LitLabs</p>
+              </div>
+              <div>
+                <p className="text-3xl font-black text-[#9b5cff]">4.9★</p>
+                <p className="text-xs text-gray-400">Average rating</p>
               </div>
             </div>
-            <p className="text-[11px] text-gray-300">
-              Lash techs, barbers, nail techs & creators already running AI plays with LitLabs.
-            </p>
           </div>
-        </div>
 
-        {/* RIGHT: VIDEO + STATS */}
-        <div className="relative">
-          <div className="absolute -top-16 -left-10 h-40 w-40 bg-[#9b5cff]/40 rounded-full blur-3xl" />
-          <div className="absolute -bottom-16 -right-10 h-40 w-40 bg-[#3ef1c2]/40 rounded-full blur-3xl" />
+          {/* RIGHT: VISUAL */}
+          <div className="relative">
+            {/* Glow effects */}
+            <div className="absolute -top-20 -right-20 w-64 h-64 bg-[#9b5cff]/30 rounded-full blur-3xl animate-pulse" />
+            <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-[#3ef1c2]/20 rounded-full blur-3xl" />
 
-          <div className="relative z-10 rounded-2xl border border-white/10 bg-white/5/5 backdrop-blur-xl p-4 md:p-5">
-            <div className="grid grid-cols-5 gap-4 items-stretch">
-              {/* MAIN VIDEO */}
-              <div className="col-span-3">
-                <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden border border-white/10 bg-black/70">
-                  <video
-                    className="h-full w-full object-cover"
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    poster="/litlabs/hero-dashboard.png"
-                  >
-                    <source src="/litlabs/hero-loop.mp4" type="video/mp4" />
-                  </video>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent pointer-events-none" />
+            {/* Card showcase */}
+            <div className="relative z-10 space-y-4">
+              {/* AI Response Card */}
+              <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl p-6 shadow-2xl shadow-[#ff4fa3]/20">
+                <div className="flex gap-3 items-start">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#9b5cff] to-[#3ef1c2] flex items-center justify-center flex-shrink-0 text-lg">
+                    🤖
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs text-gray-400 mb-1">LitLabs AI</p>
+                    <p className="text-white leading-relaxed">
+                      "Hey Sarah! 👋 Just booked you for a lash appointment Thursday at 2pm. Client came from your DM follow-up."
+                    </p>
+                  </div>
                 </div>
               </div>
 
-              {/* STAT CARDS */}
-              <div className="col-span-2 flex flex-col gap-3 text-xs">
-                <div>
-                  <p className="text-gray-400 mb-1">This week's revenue</p>
-                  <p className="text-xl font-bold">$4,320</p>
-                  <p className="text-[11px] text-[#3ef1c2] mt-1">
-                    +27% vs last week
-                  </p>
+              {/* Stats showcase */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
+                  <p className="text-xs text-gray-400">DMs This Week</p>
+                  <p className="text-2xl font-black text-[#3ef1c2]">47</p>
+                  <p className="text-xs text-green-400 mt-1">↑ 12 bookings</p>
                 </div>
-                <div>
-                  <p className="text-gray-400 mb-1">DMs handled</p>
-                  <p className="text-lg font-semibold text-white">83</p>
-                  <p className="text-[11px] text-[#ff4fa3] mt-1">
-                    21 turned into bookings
-                  </p>
+                <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
+                  <p className="text-xs text-gray-400">Revenue Pending</p>
+                  <p className="text-2xl font-black text-[#ff4fa3]">$3,200</p>
+                  <p className="text-xs text-green-400 mt-1">This week</p>
                 </div>
-                <div className="relative w-full aspect-[16/9] rounded-lg overflow-hidden border border-white/10">
-                  <Image
-                    src="/litlabs/hero-beauty-grid.png"
-                    alt="Beauty pros powered by LitLabs"
-                    fill
-                    className="object-cover"
-                  />
-                  <div className="absolute inset-0 bg-black/60 flex items-center justify-center px-2 text-[11px] text-gray-200 text-center">
-                    "LitLabs runs the plays. I just show up and work."
+              </div>
+
+              {/* XP/Arcade teaser */}
+              <div className="rounded-xl border border-[#9b5cff]/30 bg-gradient-to-r from-[#9b5cff]/10 to-[#3ef1c2]/10 p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs text-gray-400 mb-2">Godmode Level</p>
+                    <div className="flex gap-2">
+                      <div className="text-xs font-bold text-white">5</div>
+                      <div className="w-32 h-2 rounded-full bg-white/10 overflow-hidden">
+                        <div className="w-1/2 h-full bg-gradient-to-r from-[#9b5cff] to-[#ff4fa3]" />
+                      </div>
+                    </div>
+                  </div>
+                  <span className="text-2xl">🏅</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>        {/* AI FEATURES - WHAT IT DOES */}
+        <section id="features" className="space-y-8">
+          <div className="space-y-3">
+            <p className="text-sm font-bold text-[#3ef1c2]">POWERED BY AI</p>
+            <h2 className="text-4xl font-black">
+              Your AI does the heavy lifting
+            </h2>
+            <p className="text-gray-400 max-w-2xl">
+              LitLabs runs on GPT-4. It learns your voice, your clients, your business. Then it automates the stuff that kills your day.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              {
+                icon: "📝",
+                title: "Daily Content Generation",
+                desc: "AI writes captions, creates story scripts, generates reel ideas—all in your voice. Just post.",
+              },
+              {
+                icon: "💬",
+                title: "DM Management",
+                desc: "AI replies to clients like you would. Qualifies leads, books appointments, handles FAQs.",
+              },
+              {
+                icon: "💰",
+                title: "Money Plays",
+                desc: "AI suggests promos for slow days, comeback offers, seasonal money moves. Copy & paste.",
+              },
+              {
+                icon: "📊",
+                title: "Revenue Tracking",
+                desc: "Real-time dashboard shows DMs handled, bookings made, money pending. No spreadsheets.",
+              },
+              {
+                icon: "🎯",
+                title: "Playbook Library",
+                desc: "Pre-built money moves for your industry. 'Fill weekends', 'Win back clients', 'Launch service'.",
+              },
+              {
+                icon: "🎮",
+                title: "Gamification",
+                desc: "XP system keeps you motivated. Daily challenges turn your business into a game you're winning.",
+              },
+            ].map((feature, i) => (
+              <div key={i} className="group rounded-xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-6 hover:border-[#3ef1c2]/50 hover:bg-white/10 transition">
+                <p className="text-3xl mb-3 group-hover:scale-110 transition">{feature.icon}</p>
+                <h3 className="font-bold text-lg mb-2">{feature.title}</h3>
+                <p className="text-sm text-gray-400">{feature.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ARCADE - GAMIFICATION */}
+        <section id="arcade" className="relative">
+          <div className="absolute -inset-1 bg-gradient-to-r from-[#9b5cff]/30 to-[#ff4fa3]/30 rounded-3xl blur-2xl" />
+          <div className="relative rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur p-12 overflow-hidden">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-[#9b5cff]/20 rounded-full blur-3xl -z-0" />
+            <div className="relative z-10 grid lg:grid-cols-2 gap-12 items-center">
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <p className="text-sm font-bold text-[#3ef1c2]">GAMIFICATION ENGINE</p>
+                  <h2 className="text-4xl font-black">
+                    Make your business feel like a game you're winning
+                  </h2>
+                </div>
+                <p className="text-gray-300 leading-relaxed">
+                  Boring productivity tools = nobody uses them. LitLabs is built like an arcade. Earn XP for running content. Keep streaks alive. Hit daily challenges. Level up to Godmode.
+                </p>
+                <ul className="space-y-3">
+                  {[
+                    "Earn XP for content, DMs, promos—watch yourself level up",
+                    "Daily challenges keep momentum going (even on slow days)",
+                    "Streaks = accountability + adrenaline rush",
+                    "Godmode unlocks 30–90 day Future Builder planning",
+                  ].map((item, i) => (
+                    <li key={i} className="flex gap-3">
+                      <span className="text-[#3ef1c2] font-bold">✓</span>
+                      <span className="text-gray-300">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="relative h-96">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#9b5cff]/10 to-[#3ef1c2]/10 rounded-2xl border border-[#9b5cff]/20 backdrop-blur p-6 space-y-6">
+                  {/* XP Card Mock */}
+                  <div className="space-y-2">
+                    <p className="text-xs text-gray-400">Your Level</p>
+                    <div className="flex items-end gap-2">
+                      <p className="text-5xl font-black bg-gradient-to-r from-[#9b5cff] to-[#ff4fa3] bg-clip-text text-transparent">7</p>
+                      <p className="text-gray-400 mb-2">Godmode Operator</p>
+                    </div>
+                    <div className="w-full h-3 rounded-full bg-white/10 overflow-hidden">
+                      <div className="w-3/4 h-full bg-gradient-to-r from-[#9b5cff] to-[#ff4fa3]" />
+                    </div>
+                  </div>
+
+                  {/* Streak */}
+                  <div className="flex gap-4 p-3 rounded-lg bg-white/5 border border-[#ff4fa3]/20">
+                    <span className="text-3xl">🔥</span>
+                    <div>
+                      <p className="text-sm font-bold">12 Day Streak</p>
+                      <p className="text-xs text-gray-400">Keep it alive with today's challenge</p>
+                    </div>
+                  </div>
+
+                  {/* Challenge */}
+                  <div className="p-3 rounded-lg bg-gradient-to-r from-[#3ef1c2]/10 to-[#9b5cff]/10 border border-[#3ef1c2]/30">
+                    <p className="text-xs text-[#3ef1c2] font-bold mb-1">TODAY'S CHALLENGE</p>
+                    <p className="text-sm font-bold">Post 3 reels + DM 5 old clients</p>
+                    <p className="text-xs text-gray-400 mt-1">+50 XP · 30 min</p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* PLAYBOOK LIBRARY SECTION */}
-      <section id="playbooks" className="grid lg:grid-cols-[1.2fr,1fr] gap-8 items-center">
-        <div className="space-y-3">
-          <p className="text-xs text-[#3ef1c2]">
-            Playbook Library · Pre-built money moves
-          </p>
-          <h2 className="text-xl font-semibold">
-            Pre-made money plays for barbers, lash techs, nail techs & more.
-          </h2>
-          <p className="text-xs text-gray-300 max-w-md">
-            Don't start from zero. Grab a playbook like "Fill this weekend" or
-            "Comeback clients", copy the scripts, and run the move today.
-          </p>
-          <ul className="text-[11px] text-gray-300 space-y-1 list-disc list-inside">
-            <li>Fill slow days with flash promos.</li>
-            <li>Win back old clients with comeback DMs.</li>
-            <li>Launch new services without looking desperate.</li>
-          </ul>
-          <p className="text-[11px] text-gray-400 max-w-md">
-            Every play comes with steps, captions, DM scripts & story scripts you can
-            paste straight into your socials.
-          </p>
-        </div>
-        <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden border border-white/10">
-          <Image
-            src="/litlabs/playbooks-grid.png"
-            alt="LitLabs playbook library"
-            fill
-            className="object-cover"
-          />
-        </div>
-      </section>
+        {/* PRICING */}
+        <section id="pricing" className="space-y-12">
+          <div className="space-y-3 text-center">
+            <p className="text-sm font-bold text-[#3ef1c2]">SIMPLE PRICING</p>
+            <h2 className="text-4xl font-black">
+              Pick your power level
+            </h2>
+            <p className="text-gray-400 max-w-2xl mx-auto">
+              Start free. Scale when you're ready. No contracts, no surprises.
+            </p>
+          </div>
 
-      {/* FUN / ARCADE + LEARN */}
-      <section id="learn" className="grid lg:grid-cols-[1.2fr,1fr] gap-8 items-center">
-        <div className="space-y-3">
-          <p className="text-xs text-[#3ef1c2]">
-            LitLabs Arcade · Make business feel like a game
-          </p>
-          <h2 className="text-xl font-semibold">
-            XP, streaks & daily money challenges built into your dashboard.
-          </h2>
-          <p className="text-xs text-gray-300 max-w-md">
-            LitLabs OS turns your business into a game you can win. Earn XP for
-            running content, DM and promo plays. Keep streaks alive with daily
-            challenges. Hit "Make me money today" when you're stuck.
-          </p>
-          <ul className="text-[11px] text-gray-300 space-y-1 list-disc list-inside">
-            <li>Daily challenge card keeps you moving.</li>
-            <li>XP & streaks for posting, DMs and promos.</li>
-            <li>Godmode unlocks 30–90 day Future Builder maps.</li>
-          </ul>
-          <Link
-            href="/dashboard"
-            className="mt-2 inline-flex items-center gap-2 text-[11px] text-[#3ef1c2] hover:text-[#ff4fa3]"
-          >
-            Open dashboard and see the arcade →
-          </Link>
-        </div>
-        <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden border border-white/10">
-          <Image
-            src="/litlabs/fun-arcade.png"
-            alt="LitLabs arcade view"
-            fill
-            className="object-cover"
-          />
-        </div>
-      </section>
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              {
+                name: "Starter",
+                price: "Free",
+                period: "Forever",
+                features: ["Daily content generation", "Basic DM replies", "1 playbook", "Community access"],
+                cta: "Start Free",
+                highlight: false,
+              },
+              {
+                name: "Godmode",
+                price: "$49",
+                period: "/month",
+                features: ["Everything in Starter", "Unlimited playbooks", "Advanced money plays", "30-day Future Builder", "Priority support"],
+                cta: "Unlock Godmode",
+                highlight: true,
+              },
+              {
+                name: "Enterprise",
+                price: "Custom",
+                period: "pricing",
+                features: ["Everything in Godmode", "90-day Future Builder", "Team access", "API access", "Custom integrations"],
+                cta: "Contact Sales",
+                highlight: false,
+              },
+            ].map((plan, i) => (
+              <div
+                key={i}
+                className={`rounded-2xl border p-8 transition ${
+                  plan.highlight
+                    ? "border-[#ff4fa3] bg-gradient-to-br from-[#ff4fa3]/20 to-[#9b5cff]/10 ring-2 ring-[#ff4fa3]/50 scale-105"
+                    : "border-white/10 bg-white/5 hover:bg-white/10"
+                }`}
+              >
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-2xl font-black mb-2">{plan.name}</h3>
+                    <div>
+                      <span className="text-4xl font-black">{plan.price}</span>
+                      <span className="text-gray-400 ml-2">{plan.period}</span>
+                    </div>
+                  </div>
 
-      {/* PRICING CTA BOTTOM */}
-      <section className="space-y-4 text-center">
-        <h2 className="text-2xl font-semibold">
-          Simple plans. Real leverage.
-        </h2>
-        <p className="text-xs text-gray-300 max-w-md mx-auto">
-          Start free, then unlock Godmode when you're ready for 30–90 day planning,
-          deeper money plays and extra content & DM variations.
-        </p>
-        <div className="flex items-center justify-center gap-3">
-          <Link href="/dashboard" className="inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-semibold bg-gradient-to-r from-[#9b5cff] via-[#ff4fa3] to-[#3ef1c2] text-black hover:brightness-110 transition">
-            Start free trial
-          </Link>
-          <button
-            className="inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-semibold border border-white/15 bg-white/5 text-gray-100 hover:bg-white/10 transition"
-            onClick={() => {
-              if (typeof window !== "undefined") {
-                window.location.href = "/pricing";
-              }
-            }}
-          >
-            View full pricing
-          </button>
-        </div>
-        <p className="text-[11px] text-gray-400">
-          ✨ 14-day free trial on all plans. No card required.
-        </p>
-      </section>
+                  <ul className="space-y-3">
+                    {plan.features.map((feature, j) => (
+                      <li key={j} className="flex gap-2 text-sm text-gray-300">
+                        <span className="text-[#3ef1c2] font-bold">✓</span>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <button
+                    className={`w-full py-3 rounded-lg font-bold transition ${
+                      plan.highlight
+                        ? "bg-gradient-to-r from-[#9b5cff] via-[#ff4fa3] to-[#3ef1c2] text-black hover:brightness-110"
+                        : "border border-white/20 text-white hover:bg-white/10"
+                    }`}
+                  >
+                    {plan.cta}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* FINAL CTA */}
+        <section className="relative text-center py-12">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#9b5cff]/20 to-[#ff4fa3]/20 rounded-3xl blur-2xl -z-0" />
+          <div className="relative z-10 space-y-6">
+            <h2 className="text-4xl font-black">
+              Ready to run your business like a game?
+            </h2>
+            <p className="text-gray-300 max-w-2xl mx-auto">
+              14-day free trial. No credit card needed. Full access to Godmode features. See what 2,400+ beauty pros already know.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+              <Link
+                href="/dashboard"
+                className="px-8 py-4 rounded-lg bg-gradient-to-r from-[#9b5cff] via-[#ff4fa3] to-[#3ef1c2] text-black font-bold text-lg hover:brightness-110 transition shadow-lg shadow-[#ff4fa3]/30"
+              >
+                Start Your Free Trial
+              </Link>
+              <a
+                href="#pricing"
+                className="px-8 py-4 rounded-lg border-2 border-white/20 text-white font-bold hover:border-[#3ef1c2] hover:bg-[#3ef1c2]/5 transition"
+              >
+                View Pricing
+              </a>
+            </div>
+          </div>
+        </section>
     </main>
     </>
   );
