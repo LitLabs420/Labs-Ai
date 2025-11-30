@@ -155,7 +155,7 @@
 
 ### Stripe Configuration
 - **Test Keys:** Active ✅
-  - API Key: `sk_test_4eC39HqLyjWDarhtT657G51z`
+  - API Key: (configured in .env.local)
   - Status: Ready for testing
 - **Pricing IDs:** Configured ✅
   - Basic: `price_1234567890`
