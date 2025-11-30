@@ -8,6 +8,9 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { trackEvent } from '@/lib/analytics';
 import { useRouter } from 'next/navigation';
+import { FunArcadeBanner } from '@/components/dashboard/FunArcadeBanner';
+import { XPCard } from '@/components/dashboard/XPCard';
+import { DailyChallengeCard } from '@/components/dashboard/DailyChallengeCard';
 
 const MoneyTodayCard = dynamic(() => import('@/components/dashboard/MoneyTodayCard').then(mod => ({ default: mod.MoneyTodayCard })), { ssr: false });
 const ChatBotOnboarding = dynamic(() => import('@/components/dashboard/ChatBot').then(mod => ({ default: mod.ChatBotOnboarding })), { ssr: false });
@@ -61,6 +64,17 @@ export default function DashboardPage() {
   return (
     <DashboardLayout>
       <div className='space-y-8'>
+        {/* ARCADE BANNER */}
+        <FunArcadeBanner />
+
+        {/* XP + CHALLENGE SECTION */}
+        <div className='grid md:grid-cols-3 gap-4'>
+          <XPCard level={4} xp={72} streakDays={5} />
+          <div className='md:col-span-2'>
+            <DailyChallengeCard />
+          </div>
+        </div>
+
         {/* HERO SECTION */}
         <div className='relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-pink-500/20 via-purple-500/10 to-sky-500/20 p-12 shadow-2xl'>
           <div className='absolute -top-32 -right-32 h-80 w-80 bg-pink-500/30 rounded-full blur-3xl opacity-50' />
