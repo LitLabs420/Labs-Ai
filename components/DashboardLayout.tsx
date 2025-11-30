@@ -7,12 +7,10 @@ import { signOut } from "firebase/auth";
 
 interface DashboardLayoutProps {
   children: ReactNode;
-  title?: string;
 }
 
 export default function DashboardLayout({
   children,
-  title = "Dashboard",
 }: DashboardLayoutProps) {
   const router = useRouter();
 
@@ -36,6 +34,12 @@ export default function DashboardLayout({
                 className="text-slate-300 hover:text-white transition"
               >
                 Dashboard
+              </a>
+              <a
+                href="/history"
+                className="text-slate-300 hover:text-white transition"
+              >
+                History
               </a>
               <a
                 href="/profile"

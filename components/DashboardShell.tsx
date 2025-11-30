@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { auth, db } from "@/lib/firebase";
+import { collection, addDoc, Timestamp } from "firebase/firestore";
 
 export default function DashboardShell() {
   const [aiResponse, setAiResponse] = useState<string>("");
@@ -27,10 +29,30 @@ export default function DashboardShell() {
       if (data.error) {
         setAiResponse(`Error: ${data.error}`);
       } else {
-        setAiResponse(data.text || "No response from LitLabs AI");
+        const content = data.text || "No response from LitLabs AI";
+        setAiResponse(content);
+
+        // Save to Firestore if user is logged in
+        if (auth.currentUser) {
+          try {
+            await addDoc(
+              collection(db, "users", auth.currentUser.uid, "contents"),
+              {
+                command,
+                content,
+                createdAt: Timestamp.now(),
+                liked: false,
+              }
+            );
+          } catch (firestoreErr) {
+            console.error("Failed to save to history:", firestoreErr);
+            // Don't fail the UI, just log the error
+          }
+        }
       }
-    } catch (err: any) {
-      setAiResponse(`Error: ${err.message}`);
+    } catch (err) {
+      const error = err as Error;
+      setAiResponse(`Error: ${error.message}`);
     } finally {
       setLoading(false);
     }
