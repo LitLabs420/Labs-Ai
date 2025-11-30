@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import { FunArcadeBanner } from '@/components/dashboard/FunArcadeBanner';
 import { XPCard } from '@/components/dashboard/XPCard';
 import { DailyChallengeCard } from '@/components/dashboard/DailyChallengeCard';
+import { FutureBuilderCard } from '@/components/dashboard/FutureBuilderCard';
 
 const MoneyTodayCard = dynamic(() => import('@/components/dashboard/MoneyTodayCard').then(mod => ({ default: mod.MoneyTodayCard })), { ssr: false });
 const ChatBotOnboarding = dynamic(() => import('@/components/dashboard/ChatBot').then(mod => ({ default: mod.ChatBotOnboarding })), { ssr: false });
@@ -154,10 +155,14 @@ export default function DashboardPage() {
         </div>
 
         {/* MONEY TODAY + CHATBOT SECTION */}
-        <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+        <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
           <div>
-            <h2 className='text-2xl font-bold text-white mb-4'>🚀 GODMODE Features</h2>
+            <h2 className='text-2xl font-bold text-white mb-4'>🚀 Make Money Today</h2>
             <MoneyTodayCard />
+          </div>
+          <div>
+            <h2 className='text-2xl font-bold text-white mb-4'>🗺️ Future Builder</h2>
+            <FutureBuilderCard plan={stats.tier as any} />
           </div>
           <div>
             <h2 className='text-2xl font-bold text-white mb-4'>🤖 Get Onboarded</h2>
