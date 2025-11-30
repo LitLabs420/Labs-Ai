@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🔥 LitLabs Web - Complete Setup Checklist"
+echo "🔥 Litree Web - Complete Setup Checklist"
 echo "=========================================="
 echo ""
 
@@ -18,13 +18,13 @@ if ! command -v npm &> /dev/null; then
 fi
 echo "✅ npm $(npm -v)"
 
-# Check if in litlabs-web directory
+# Check if in Litree-web directory
 if [ ! -f "package.json" ]; then
-    echo "❌ Not in litlabs-web directory"
-    echo "Run: cd litlabs-web"
+    echo "❌ Not in Litree-web directory"
+    echo "Run: cd Litree-web"
     exit 1
 fi
-echo "✅ In litlabs-web directory"
+echo "✅ In Litree-web directory"
 
 # Check dependencies installed
 if [ ! -d "node_modules" ]; then
@@ -96,3 +96,4 @@ echo "4. Try checkout with test card: 4242 4242 4242 4242"
 echo ""
 echo "Need help? See SETUP.md"
 echo ""
+

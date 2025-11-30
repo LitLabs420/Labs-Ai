@@ -1,4 +1,4 @@
-# 📚 LitLabs AI Command Reference
+# 📚 Litree Command Reference
 
 **Complete user-facing guide to all supported commands and features**
 
@@ -44,7 +44,7 @@
 - **You only need to do this ONCE** (or if you want to reset)
 
 **When to use:**
-- First time using LitLabs AI
+- First time using Litree
 - Want to completely change your profile
 - Update your business info (new city, new services, etc.)
 
@@ -61,7 +61,7 @@ Bot: Here's your profile...
 
 **Example output:**
 ```
-📋 YOUR LITLABS PROFILE
+📋 YOUR Litree PROFILE
 
 Name: Maya Singh
 Business: Divine Nails NYC
@@ -574,7 +574,7 @@ STORY 5 - Quick Tip
 
 ## HOW TO USE (STEP-BY-STEP)
 
-### First Time Ever Using LitLabs AI
+### First Time Ever Using Litree
 
 **Step 1: Onboard**
 ```
@@ -591,7 +591,7 @@ You: /daily_post
 **Step 3: Post It Somewhere**
 - Copy the caption
 - Post on Instagram, TikTok, or other platform
-- Tag LitLabs AI in the caption (optional but appreciated!)
+- Tag Litree in the caption (optional but appreciated!)
 
 **Step 4: Reply to a DM**
 ```
@@ -610,7 +610,7 @@ You: /dm_reply
 ### Daily Workflow
 
 **Morning (5 min):**
-1. Open LitLabs AI
+1. Open Litree
 2. Type `/daily_post`
 3. Copy caption to Instagram
 4. Post
@@ -647,10 +647,10 @@ You: /dm_reply
 
 ---
 
-### Q: Can I use the bot without a LitLabs account?
+### Q: Can I use the bot without a Litree account?
 
 **A:** Yes! The bot works without an account.
-BUT: If you want your history saved + to upgrade your plan, you'll want to create an account at https://litlabs.com
+BUT: If you want your history saved + to upgrade your plan, you'll want to create an account at https://Litree.com
 
 ---
 
@@ -695,7 +695,7 @@ Bot will adjust. You can iterate until it's perfect.
 
 ### Q: Does the bot know about my past content?
 
-**A:** If you have a LitLabs account + are logged in, yes!
+**A:** If you have a Litree account + are logged in, yes!
 Bot can see:
 - Your profile info
 - Your past generated content
@@ -707,7 +707,7 @@ If you're not logged in, it's a fresh chat each time.
 
 ### Q: Can I export all my generated content?
 
-**A:** Yes! In your LitLabs account dashboard, you can:
+**A:** Yes! In your Litree account dashboard, you can:
 - View all generated content
 - Export to CSV
 - Download in bulk
@@ -734,14 +734,15 @@ Check your dashboard to see your usage.
 
 ---
 
-### Q: How do I contact LitLabs if I have issues?
+### Q: How do I contact Litree if I have issues?
 
-**A:** Email: support@litlabs.com
-Or DM: @litlabs_ai on Instagram
+**A:** Email: support@Litree.com
+Or DM: @Litree_ai on Instagram
 
 We're here to help! 💚
 
 ---
 
-**— Powered by LitLabs AI 🔥**
+**— Powered by Litree 🔥**
+
 

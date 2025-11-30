@@ -1,10 +1,10 @@
-# 🔥 LitLabs Web Setup Guide
+# 🔥 Litree Web Setup Guide
 
 ## Quick Start (5 minutes)
 
 ### Step 1: Install Dependencies
 ```bash
-cd litlabs-web
+cd Litree-web
 npm install
 ```
 
@@ -33,7 +33,7 @@ NEXT_PUBLIC_STRIPE_DELUXE_PRICE_ID=price_xxx_deluxe
 
 # Google AI
 GOOGLE_AI_STUDIO_API_KEY=your_api_key
-LITLABS_MASTER_SYSTEM_PROMPT=You are LitLabs AI...
+Litree_MASTER_SYSTEM_PROMPT=You are Litree...
 
 # App
 NEXT_PUBLIC_APP_URL=http://localhost:3000
@@ -118,8 +118,8 @@ Then add environment variables in Vercel dashboard.
 
 ### Option 2: Docker
 ```bash
-docker build -t litlabs-web .
-docker run -p 3000:3000 litlabs-web
+docker build -t Litree-web .
+docker run -p 3000:3000 Litree-web
 ```
 
 ### Update Stripe Webhook URL
@@ -167,3 +167,4 @@ After deployment, go to Stripe Dashboard and update webhook endpoint URL to your
 ---
 
 **You're all set! 🎉 Start building!**
+

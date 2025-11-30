@@ -461,5 +461,6 @@ Yo, I had you down for 3pm today. Everything good? I can move you to tomorrow or
 
 ---
 
-End with: **— Powered by LitLabs AI 🔥**
+End with: **— Powered by Litree 🔥**
+
 

@@ -1,4 +1,4 @@
-# 🔥 LitLabs Web App - COMPLETE SYSTEM
+# 🔥 Litree Web App - COMPLETE SYSTEM
 
 **Status**: ✅ **PRODUCTION READY**  
 **Built**: November 30, 2025  
@@ -173,7 +173,7 @@ lib/stripe.ts
 
 ### Step 1: Install
 ```bash
-cd litlabs-web
+cd Litree-web
 npm install
 ```
 
@@ -238,7 +238,7 @@ Open http://localhost:3000
 ## 📁 Project Structure
 
 ```
-litlabs-web/
+Litree-web/
 ├── app/
 │   ├── api/
 │   │   ├── ai-chat/route.ts              ← AI generation
@@ -377,7 +377,7 @@ When you launch, track:
 
 ## 🎉 You Now Have
 
-A **complete, production-ready Next.js application** for LitLabs AI with:
+A **complete, production-ready Next.js application** for Litree with:
 
 - ✅ Real user authentication
 - ✅ Real payment processing
@@ -395,7 +395,7 @@ A **complete, production-ready Next.js application** for LitLabs AI with:
 ## 🚀 Next Command
 
 ```bash
-cd litlabs-web
+cd Litree-web
 npm run dev
 ```
 
@@ -406,3 +406,4 @@ Then go to http://localhost:3000 and start building your empire. 🔥
 **Built with ❤️ for beauty professionals**
 
 *AI that books clients for you*
+

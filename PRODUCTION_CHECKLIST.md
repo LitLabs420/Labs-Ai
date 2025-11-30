@@ -1,4 +1,4 @@
-# 📋 LitLabs Web - Production Launch Checklist
+# 📋 Litree Web - Production Launch Checklist
 
 ## Pre-Launch (This Week)
 
@@ -38,7 +38,7 @@
 ### Git Setup ✅
 - [ ] Repository initialized with `git init`
 - [ ] All 30 files committed: `git commit -m "Initial commit"`
-- [ ] GitHub repo created at github.com/YOUR_USERNAME/litlabs-web
+- [ ] GitHub repo created at github.com/YOUR_USERNAME/Litree-web
 - [ ] Local repo connected: `git remote add origin https://github.com/...`
 - [ ] Code pushed to main branch: `git push -u origin main`
 
@@ -60,7 +60,7 @@
 - [ ] All 12 environment variables added to Vercel dashboard
 - [ ] Production deployment triggered
 - [ ] Deployment successful (no build errors)
-- [ ] App loads at https://litlabs-web.vercel.app (or custom domain)
+- [ ] App loads at https://Litree-web.vercel.app (or custom domain)
 
 ### Post-Deployment Testing ✅
 - [ ] Homepage loads (https://yourdomain.com)
@@ -231,7 +231,7 @@
 ✅ Team trained on monitoring/escalation
 ```
 
-**When all boxes are checked, your LitLabs Web app is PRODUCTION READY and can handle real customers.**
+**When all boxes are checked, your Litree Web app is PRODUCTION READY and can handle real customers.**
 
 ---
 
@@ -270,3 +270,4 @@
 **Last Updated:** $(date)
 **Project Status:** READY FOR PRODUCTION
 **Next Review:** Weekly on Mondays
+

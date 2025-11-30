@@ -1,6 +1,6 @@
-# 🧪 LitLabs AI Prompt Testing Guide
+# 🧪 Litree Prompt Testing Guide
 
-**How to set up, test, and iterate on the LitLabs Master System Prompt in Google AI Studio**
+**How to set up, test, and iterate on the Litree Master System Prompt in Google AI Studio**
 
 ---
 
@@ -20,15 +20,15 @@
 
 1. Go to **Google AI Studio**: https://aistudio.google.com
 2. Click **Create new chat**
-3. In the **System Instruction** box (top right), paste the entire **LitLabs Master System Prompt**
+3. In the **System Instruction** box (top right), paste the entire **Litree Master System Prompt**
 4. Replace placeholders:
    - `<YOUR NAME>` → Your actual name
-   - `<APP_URL>` → `https://litlabs.com` (or your live domain)
+   - `<APP_URL>` → `https://Litree.com` (or your live domain)
 
 ### Step 2: Name Your Chat
 
 1. Click the chat name at the top
-2. Change to: **"LitLabs AI - Main Bot"**
+2. Change to: **"Litree - Main Bot"**
 3. Click **Save**
 
 ### Step 3: Test the API Key
@@ -171,7 +171,7 @@ Example quality check:
 
 **Expected Output:**
 - Bot gives a **small teaser** (1-2 ideas max)
-- Bot says: "Your LitLabs subscription isn't active right now. For full daily packs, upgrade at [APP_URL]."
+- Bot says: "Your Litree subscription isn't active right now. For full daily packs, upgrade at [APP_URL]."
 - No full 5-part package
 
 **Your Score: ___/5**
@@ -638,7 +638,7 @@ NOT: "Sorry, I can't do that."
 **Use this to track your overall testing:**
 
 ```
-LitLabs AI Prompt Test Summary
+Litree Prompt Test Summary
 Date: __________
 
 FEATURE TESTS:
@@ -679,5 +679,6 @@ READY FOR PRODUCTION? [ ] YES [ ] NO (if no, why? _____)
 
 ---
 
-**— Powered by LitLabs AI 🔥**
+**— Powered by Litree 🔥**
+
 

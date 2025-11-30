@@ -1,4 +1,4 @@
-# 🔐 LitLabs Subscription & Plan Gating Logic
+# 🔐 Litree Subscription & Plan Gating Logic
 
 **Implementation guide for enforcing plan-based access in your Next.js app**
 
@@ -513,5 +513,6 @@ export const handleStripeWebhook = onRequest(async (req, res) => {
 
 ---
 
-**— Powered by LitLabs AI 🔥**
+**— Powered by Litree 🔥**
+
 

@@ -1,4 +1,4 @@
-# 🔧 LitLabs Web - Troubleshooting Guide
+# 🔧 Litree Web - Troubleshooting Guide
 
 ## Common Issues & Solutions
 
@@ -465,3 +465,4 @@ If nothing else works:
 **Status:** Production Ready
 
 Good luck! 🚀
+

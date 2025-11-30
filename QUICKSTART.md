@@ -1,4 +1,4 @@
-# 🚀 LitLabs Web - 5 Minute Quickstart
+# 🚀 Litree Web - 5 Minute Quickstart
 
 ## Your Done List ✅
 - ✅ Next.js 14.2.5 + TypeScript + Tailwind CSS fully configured
@@ -55,9 +55,9 @@
    ```
    GOOGLE_AI_STUDIO_API_KEY
    ```
-4. Create system prompt for LitLabs (or use default):
+4. Create system prompt for Litree (or use default):
    ```
-   LITLABS_MASTER_SYSTEM_PROMPT=You are an expert beauty business AI assistant. Help create Instagram/TikTok content, DM scripts, promos, and business templates.
+   Litree_MASTER_SYSTEM_PROMPT=You are an expert beauty business AI assistant. Help create Instagram/TikTok content, DM scripts, promos, and business templates.
    ```
 
 **App (1 credential):**
@@ -67,7 +67,7 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000  (or your deployment domain)
 
 ### Step 2: Fill .env.local (2 min)
 ```bash
-cd litlabs-web
+cd Litree-web
 cat > .env.local << 'EOF'
 # Firebase
 NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
@@ -86,7 +86,7 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 
 # Google AI
 GOOGLE_AI_STUDIO_API_KEY=AIza...
-LITLABS_MASTER_SYSTEM_PROMPT=You are an expert beauty business AI assistant...
+Litree_MASTER_SYSTEM_PROMPT=You are an expert beauty business AI assistant...
 
 # App
 NEXT_PUBLIC_APP_URL=http://localhost:3000
@@ -112,7 +112,7 @@ npm run dev
 ### Step 5: Deploy to Vercel (10 min)
 ```bash
 # Option A: GitHub + Vercel (recommended)
-git remote add origin https://github.com/YOUR_USERNAME/litlabs-web.git
+git remote add origin https://github.com/YOUR_USERNAME/Litree-web.git
 git push -u origin main
 # Then: Go to vercel.com → import repo → add env vars → deploy
 
@@ -177,3 +177,4 @@ A: Run `npm run build` locally first to see exact errors. Fix, commit, push to V
 ---
 
 **Everything is ready. Just add your 12 API keys and launch. 🚀**
+

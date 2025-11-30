@@ -350,5 +350,6 @@ CTA: Book your New Year set
 
 ---
 
-**— Powered by LitLabs AI 🔥**
+**— Powered by Litree 🔥**
+
 

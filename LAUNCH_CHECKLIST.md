@@ -1,6 +1,6 @@
-# 🚀 LitLabs Launch Checklist
+# 🚀 Litree Launch Checklist
 
-**Complete checklist to launch LitLabs AI to production**
+**Complete checklist to launch Litree to production**
 
 ---
 
@@ -41,7 +41,7 @@
 
 ### Week 2: Testing & Quality Assurance
 
-#### AI Bot Testing (Using LITLABS_PROMPT_TESTING_GUIDE.md)
+#### AI Bot Testing (Using Litree_PROMPT_TESTING_GUIDE.md)
 - [ ] Onboarding flow tested ✅ (Score: ___/5)
 - [ ] Daily post generator tested ✅ (Score: ___/5)
 - [ ] 7-day content pack tested ✅ (Score: ___/5)
@@ -88,11 +88,11 @@
 ### Week 3: Documentation & Training
 
 #### Documentation Complete
-- [ ] `LITLABS_COMPLETE_SETUP.md` reviewed ✅
-- [ ] `LITLABS_OWNER_DEV_GUIDE.md` reviewed ✅
-- [ ] `LITLABS_PROMPT_TESTING_GUIDE.md` reviewed ✅
-- [ ] `LITLABS_COMMAND_REFERENCE.md` reviewed ✅
-- [ ] `LITLABS_SUBSCRIPTION_LOGIC.md` reviewed ✅
+- [ ] `Litree_COMPLETE_SETUP.md` reviewed ✅
+- [ ] `Litree_OWNER_DEV_GUIDE.md` reviewed ✅
+- [ ] `Litree_PROMPT_TESTING_GUIDE.md` reviewed ✅
+- [ ] `Litree_COMMAND_REFERENCE.md` reviewed ✅
+- [ ] `Litree_SUBSCRIPTION_LOGIC.md` reviewed ✅
 - [ ] Template packs reviewed ✅
 - [ ] `DOCUMENTATION_INDEX.md` reviewed ✅
 
@@ -104,7 +104,7 @@
 - [ ] Launch announcement prepared
 
 #### Support & Training
-- [ ] Support email address set up (support@litlabs.com)
+- [ ] Support email address set up (support@Litree.com)
 - [ ] FAQ page created
 - [ ] Video tutorials recorded (optional)
 - [ ] Help documentation linked in app
@@ -343,4 +343,5 @@ firebase deploy --force
 ---
 
 **🚀 Good luck with your launch! You've got this!**
+
 

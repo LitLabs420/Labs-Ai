@@ -389,5 +389,6 @@ CTA: Book your January set
 
 ---
 
-**— Powered by LitLabs AI 🔥**
+**— Powered by Litree 🔥**
+
 

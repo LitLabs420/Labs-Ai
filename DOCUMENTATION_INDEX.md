@@ -1,29 +1,29 @@
-# 📖 LitLabs Documentation Index
+# 📖 Litree Documentation Index
 
-**Complete guide to all LitLabs documentation and resources**
+**Complete guide to all Litree documentation and resources**
 
 ---
 
 ## 🎯 START HERE
 
-**New to LitLabs?** Start with one of these based on your role:
+**New to Litree?** Start with one of these based on your role:
 
 ### For Business Owners / Founders
-👉 **Start with:** [`LITLABS_COMPLETE_SETUP.md`](./LITLABS_COMPLETE_SETUP.md)
+👉 **Start with:** [`Litree_COMPLETE_SETUP.md`](./Litree_COMPLETE_SETUP.md)
 - Overview of everything that's been created
 - Quick start timeline
 - Key metrics to track
 - Next steps
 
 ### For Developers / Technical Implementation
-👉 **Start with:** [`LITLABS_OWNER_DEV_GUIDE.md`](./LITLABS_OWNER_DEV_GUIDE.md)
+👉 **Start with:** [`Litree_OWNER_DEV_GUIDE.md`](./Litree_OWNER_DEV_GUIDE.md)
 - Firebase setup
 - Stripe integration
 - Deployment
 - Monitoring
 
-### For LitLabs Users (Service Professionals)
-👉 **Start with:** [`LITLABS_COMMAND_REFERENCE.md`](./LITLABS_COMMAND_REFERENCE.md)
+### For Litree Users (Service Professionals)
+👉 **Start with:** [`Litree_COMMAND_REFERENCE.md`](./Litree_COMMAND_REFERENCE.md)
 - How to use every command
 - Examples and workflows
 - FAQ
@@ -36,11 +36,11 @@
 
 | File | Purpose | For Whom | Read Time |
 |------|---------|----------|-----------|
-| [`LITLABS_COMPLETE_SETUP.md`](./LITLABS_COMPLETE_SETUP.md) | Overview + quick start guide | Founders | 10 min |
-| [`LITLABS_OWNER_DEV_GUIDE.md`](./LITLABS_OWNER_DEV_GUIDE.md) | Backend setup + deployment | Developers | 20 min |
-| [`LITLABS_PROMPT_TESTING_GUIDE.md`](./LITLABS_PROMPT_TESTING_GUIDE.md) | How to test the AI bot | QA/Founders | 15 min |
-| [`LITLABS_COMMAND_REFERENCE.md`](./LITLABS_COMMAND_REFERENCE.md) | User guide for all features | End Users | 10 min |
-| [`LITLABS_SUBSCRIPTION_LOGIC.md`](./LITLABS_SUBSCRIPTION_LOGIC.md) | Plan gating + implementation | Developers | 15 min |
+| [`Litree_COMPLETE_SETUP.md`](./Litree_COMPLETE_SETUP.md) | Overview + quick start guide | Founders | 10 min |
+| [`Litree_OWNER_DEV_GUIDE.md`](./Litree_OWNER_DEV_GUIDE.md) | Backend setup + deployment | Developers | 20 min |
+| [`Litree_PROMPT_TESTING_GUIDE.md`](./Litree_PROMPT_TESTING_GUIDE.md) | How to test the AI bot | QA/Founders | 15 min |
+| [`Litree_COMMAND_REFERENCE.md`](./Litree_COMMAND_REFERENCE.md) | User guide for all features | End Users | 10 min |
+| [`Litree_SUBSCRIPTION_LOGIC.md`](./Litree_SUBSCRIPTION_LOGIC.md) | Plan gating + implementation | Developers | 15 min |
 | [`TEMPLATE_PACK_BARBERS.md`](./TEMPLATE_PACK_BARBERS.md) | 30+ barber captions + scripts | Barber Content/Marketing | 10 min |
 | [`TEMPLATE_PACK_LASH_TECHS.md`](./TEMPLATE_PACK_LASH_TECHS.md) | 20+ lash tech promos | Lash Tech Content/Marketing | 8 min |
 | [`TEMPLATE_PACK_NAIL_TECHS.md`](./TEMPLATE_PACK_NAIL_TECHS.md) | 15+ nail tech ideas | Nail Tech Content/Marketing | 7 min |
@@ -53,10 +53,10 @@
 
 **If you need help with...**
 
-- **Firebase configuration** → [`LITLABS_OWNER_DEV_GUIDE.md`](./LITLABS_OWNER_DEV_GUIDE.md) - Section 1
-- **Stripe payment setup** → [`LITLABS_OWNER_DEV_GUIDE.md`](./LITLABS_OWNER_DEV_GUIDE.md) - Section 2
-- **Deploying to production** → [`LITLABS_OWNER_DEV_GUIDE.md`](./LITLABS_OWNER_DEV_GUIDE.md) - Section 5
-- **Monitoring systems** → [`LITLABS_OWNER_DEV_GUIDE.md`](./LITLABS_OWNER_DEV_GUIDE.md) - Section 6
+- **Firebase configuration** → [`Litree_OWNER_DEV_GUIDE.md`](./Litree_OWNER_DEV_GUIDE.md) - Section 1
+- **Stripe payment setup** → [`Litree_OWNER_DEV_GUIDE.md`](./Litree_OWNER_DEV_GUIDE.md) - Section 2
+- **Deploying to production** → [`Litree_OWNER_DEV_GUIDE.md`](./Litree_OWNER_DEV_GUIDE.md) - Section 5
+- **Monitoring systems** → [`Litree_OWNER_DEV_GUIDE.md`](./Litree_OWNER_DEV_GUIDE.md) - Section 6
 
 ---
 
@@ -64,14 +64,14 @@
 
 **If you need help with...**
 
-- **Setting up the AI bot** → [`LITLABS_COMPLETE_SETUP.md`](./LITLABS_COMPLETE_SETUP.md) - Quick Start section
-- **Testing the bot** → [`LITLABS_PROMPT_TESTING_GUIDE.md`](./LITLABS_PROMPT_TESTING_GUIDE.md) - All sections
-- **Understanding commands** → [`LITLABS_COMMAND_REFERENCE.md`](./LITLABS_COMMAND_REFERENCE.md) - Sections 1-2
-- **Using daily posts** → [`LITLABS_COMMAND_REFERENCE.md`](./LITLABS_COMMAND_REFERENCE.md) - Section 2.1
-- **Using 7-day packs** → [`LITLABS_COMMAND_REFERENCE.md`](./LITLABS_COMMAND_REFERENCE.md) - Section 2.2
-- **Using promotions** → [`LITLABS_COMMAND_REFERENCE.md`](./LITLABS_COMMAND_REFERENCE.md) - Section 2.3
-- **DM responses** → [`LITLABS_COMMAND_REFERENCE.md`](./LITLABS_COMMAND_REFERENCE.md) - Section 2.4
-- **Fraud detection** → [`LITLABS_COMMAND_REFERENCE.md`](./LITLABS_COMMAND_REFERENCE.md) - Section 2.5
+- **Setting up the AI bot** → [`Litree_COMPLETE_SETUP.md`](./Litree_COMPLETE_SETUP.md) - Quick Start section
+- **Testing the bot** → [`Litree_PROMPT_TESTING_GUIDE.md`](./Litree_PROMPT_TESTING_GUIDE.md) - All sections
+- **Understanding commands** → [`Litree_COMMAND_REFERENCE.md`](./Litree_COMMAND_REFERENCE.md) - Sections 1-2
+- **Using daily posts** → [`Litree_COMMAND_REFERENCE.md`](./Litree_COMMAND_REFERENCE.md) - Section 2.1
+- **Using 7-day packs** → [`Litree_COMMAND_REFERENCE.md`](./Litree_COMMAND_REFERENCE.md) - Section 2.2
+- **Using promotions** → [`Litree_COMMAND_REFERENCE.md`](./Litree_COMMAND_REFERENCE.md) - Section 2.3
+- **DM responses** → [`Litree_COMMAND_REFERENCE.md`](./Litree_COMMAND_REFERENCE.md) - Section 2.4
+- **Fraud detection** → [`Litree_COMMAND_REFERENCE.md`](./Litree_COMMAND_REFERENCE.md) - Section 2.5
 
 ---
 
@@ -79,10 +79,10 @@
 
 **If you need help with...**
 
-- **Understanding plans** → [`LITLABS_SUBSCRIPTION_LOGIC.md`](./LITLABS_SUBSCRIPTION_LOGIC.md) - Section 1
-- **Subscription status** → [`LITLABS_SUBSCRIPTION_LOGIC.md`](./LITLABS_SUBSCRIPTION_LOGIC.md) - Section 2
-- **Implementing plan gating** → [`LITLABS_SUBSCRIPTION_LOGIC.md`](./LITLABS_SUBSCRIPTION_LOGIC.md) - Sections 3-5
-- **Testing paid features** → [`LITLABS_SUBSCRIPTION_LOGIC.md`](./LITLABS_SUBSCRIPTION_LOGIC.md) - Section 6
+- **Understanding plans** → [`Litree_SUBSCRIPTION_LOGIC.md`](./Litree_SUBSCRIPTION_LOGIC.md) - Section 1
+- **Subscription status** → [`Litree_SUBSCRIPTION_LOGIC.md`](./Litree_SUBSCRIPTION_LOGIC.md) - Section 2
+- **Implementing plan gating** → [`Litree_SUBSCRIPTION_LOGIC.md`](./Litree_SUBSCRIPTION_LOGIC.md) - Sections 3-5
+- **Testing paid features** → [`Litree_SUBSCRIPTION_LOGIC.md`](./Litree_SUBSCRIPTION_LOGIC.md) - Section 6
 
 ---
 
@@ -101,12 +101,12 @@
 
 ## 🎯 Common Workflows
 
-### "I want to launch LitLabs this week"
+### "I want to launch Litree this week"
 
 **Read in this order:**
-1. [`LITLABS_COMPLETE_SETUP.md`](./LITLABS_COMPLETE_SETUP.md) (10 min)
-2. [`LITLABS_OWNER_DEV_GUIDE.md`](./LITLABS_OWNER_DEV_GUIDE.md) - Sections 1-3 (20 min)
-3. [`LITLABS_PROMPT_TESTING_GUIDE.md`](./LITLABS_PROMPT_TESTING_GUIDE.md) - Test your bot (15 min)
+1. [`Litree_COMPLETE_SETUP.md`](./Litree_COMPLETE_SETUP.md) (10 min)
+2. [`Litree_OWNER_DEV_GUIDE.md`](./Litree_OWNER_DEV_GUIDE.md) - Sections 1-3 (20 min)
+3. [`Litree_PROMPT_TESTING_GUIDE.md`](./Litree_PROMPT_TESTING_GUIDE.md) - Test your bot (15 min)
 4. Deploy using section 5 of Owner Dev Guide (30 min)
 
 **Total time: ~1.5 hours**
@@ -116,7 +116,7 @@
 ### "I'm a user - how do I get started?"
 
 **Read in this order:**
-1. [`LITLABS_COMMAND_REFERENCE.md`](./LITLABS_COMMAND_REFERENCE.md) - Sections 1-3 (10 min)
+1. [`Litree_COMMAND_REFERENCE.md`](./Litree_COMMAND_REFERENCE.md) - Sections 1-3 (10 min)
 2. Run `/onboard` command (5 min)
 3. Try `/daily_post` (2 min)
 4. Check FAQ section for common questions (5 min)
@@ -133,7 +133,7 @@
 3. Create 15-20 tattoo-specific captions
 4. Add 5-10 DM scripts
 5. Document any niche-specific commands needed
-6. Add to [`LITLABS_PROMPT_TESTING_GUIDE.md`](./LITLABS_PROMPT_TESTING_GUIDE.md) for testing
+6. Add to [`Litree_PROMPT_TESTING_GUIDE.md`](./Litree_PROMPT_TESTING_GUIDE.md) for testing
 
 ---
 
@@ -141,7 +141,7 @@
 
 **Reference:**
 1. Current Master Prompt (provided earlier)
-2. [`LITLABS_PROMPT_TESTING_GUIDE.md`](./LITLABS_PROMPT_TESTING_GUIDE.md) - Troubleshooting section
+2. [`Litree_PROMPT_TESTING_GUIDE.md`](./Litree_PROMPT_TESTING_GUIDE.md) - Troubleshooting section
 3. After changes, re-test using the Testing Guide
 
 ---
@@ -164,7 +164,7 @@
 /story_pack          – Story ideas for today
 ```
 
-See [`LITLABS_COMMAND_REFERENCE.md`](./LITLABS_COMMAND_REFERENCE.md) for details on each.
+See [`Litree_COMMAND_REFERENCE.md`](./Litree_COMMAND_REFERENCE.md) for details on each.
 
 ---
 
@@ -177,7 +177,7 @@ See [`LITLABS_COMMAND_REFERENCE.md`](./LITLABS_COMMAND_REFERENCE.md) for details
 | Brand strategy | ❌ | ❌ | ✅ | ✅ |
 | Priority support | ❌ | ❌ | ❌ | ✅ |
 
-See [`LITLABS_SUBSCRIPTION_LOGIC.md`](./LITLABS_SUBSCRIPTION_LOGIC.md) for full comparison.
+See [`Litree_SUBSCRIPTION_LOGIC.md`](./Litree_SUBSCRIPTION_LOGIC.md) for full comparison.
 
 ---
 
@@ -209,9 +209,9 @@ More niches coming soon!
 ## ❓ Need Help?
 
 **Check the FAQ in:**
-- [`LITLABS_COMMAND_REFERENCE.md`](./LITLABS_COMMAND_REFERENCE.md) - Section 10 (User FAQ)
-- [`LITLABS_OWNER_DEV_GUIDE.md`](./LITLABS_OWNER_DEV_GUIDE.md) - Section 6.2 (Common Issues)
-- [`LITLABS_PROMPT_TESTING_GUIDE.md`](./LITLABS_PROMPT_TESTING_GUIDE.md) - Section "Troubleshooting"
+- [`Litree_COMMAND_REFERENCE.md`](./Litree_COMMAND_REFERENCE.md) - Section 10 (User FAQ)
+- [`Litree_OWNER_DEV_GUIDE.md`](./Litree_OWNER_DEV_GUIDE.md) - Section 6.2 (Common Issues)
+- [`Litree_PROMPT_TESTING_GUIDE.md`](./Litree_PROMPT_TESTING_GUIDE.md) - Section "Troubleshooting"
 
 ---
 
@@ -231,9 +231,9 @@ More niches coming soon!
 
 ## 🎉 Ready to Launch?
 
-1. **Read** [`LITLABS_COMPLETE_SETUP.md`](./LITLABS_COMPLETE_SETUP.md) (10 min)
+1. **Read** [`Litree_COMPLETE_SETUP.md`](./Litree_COMPLETE_SETUP.md) (10 min)
 2. **Follow** the Quick Start timeline (2-3 weeks)
-3. **Test** using [`LITLABS_PROMPT_TESTING_GUIDE.md`](./LITLABS_PROMPT_TESTING_GUIDE.md) (1 hour)
+3. **Test** using [`Litree_PROMPT_TESTING_GUIDE.md`](./Litree_PROMPT_TESTING_GUIDE.md) (1 hour)
 4. **Deploy** and go live! 🚀
 
 ---
@@ -244,5 +244,6 @@ More niches coming soon!
 
 ---
 
-Made with 🔥 by LitLabs AI
+Made with 🔥 by Litree
+
 

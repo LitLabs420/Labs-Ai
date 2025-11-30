@@ -1,4 +1,4 @@
-# 🔥 LitLabs Web - Deployment & Launch Checklist
+# 🔥 Litree Web - Deployment & Launch Checklist
 
 ## Pre-Launch (Before Vercel)
 
@@ -34,11 +34,11 @@ npm run build
 
 ### Step 1: Prepare GitHub
 ```bash
-cd litlabs-web
+cd Litree-web
 git init
 git add .
-git commit -m "Initial LitLabs Web commit"
-git remote add origin https://github.com/your-username/litlabs-web.git
+git commit -m "Initial Litree Web commit"
+git remote add origin https://github.com/your-username/Litree-web.git
 git push -u origin main
 ```
 
@@ -52,7 +52,7 @@ git push -u origin main
 1. Go to https://vercel.com
 2. Click "New Project"
 3. Connect your GitHub repo
-4. Select `litlabs-web` folder
+4. Select `Litree-web` folder
 5. Click "Deploy"
 
 **Option B: Via CLI**
@@ -83,7 +83,7 @@ NEXT_PUBLIC_STRIPE_BASIC_PRICE_ID
 NEXT_PUBLIC_STRIPE_PRO_PRICE_ID
 NEXT_PUBLIC_STRIPE_DELUXE_PRICE_ID
 GOOGLE_AI_STUDIO_API_KEY
-LITLABS_MASTER_SYSTEM_PROMPT
+Litree_MASTER_SYSTEM_PROMPT
 NEXT_PUBLIC_APP_URL (set to your Vercel domain)
 ```
 
@@ -154,7 +154,7 @@ NEXT_PUBLIC_APP_URL (set to your Vercel domain)
 ## Custom Domain (Optional)
 
 1. Go to Vercel Project Settings → Domains
-2. Add your custom domain (e.g., `litlabs.io`)
+2. Add your custom domain (e.g., `Litree.io`)
 3. Update DNS records per Vercel instructions
 4. Wait for SSL certificate (~2-3 minutes)
 
@@ -245,7 +245,7 @@ NEXT_PUBLIC_APP_URL (set to your Vercel domain)
 
 ## 🎉 You're Live!
 
-Once you see ✅ on all items above, LitLabs Web is officially launched.
+Once you see ✅ on all items above, Litree Web is officially launched.
 
 **Share your link:**
 ```
@@ -297,3 +297,4 @@ Now that you're live:
 ---
 
 *Congratulations! You've deployed a production-grade SaaS app. 🎉*
+

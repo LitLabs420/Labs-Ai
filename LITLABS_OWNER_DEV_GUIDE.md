@@ -1,8 +1,8 @@
-# 🚀 LitLabs Owner Development Guide
+# 🚀 Litree Owner Development Guide
 
-**For: LitLabs platform owner/developer only**
+**For: Litree platform owner/developer only**
 
-This guide covers setup, deployment, and maintenance of the LitLabs backend, payment processing, and AI integration.
+This guide covers setup, deployment, and maintenance of the Litree backend, payment processing, and AI integration.
 
 ---
 
@@ -210,10 +210,10 @@ Create in Stripe Dashboard:
 
 1. Go to **Google AI Studio** (https://aistudio.google.com)
 2. Click **Create new chat**
-3. Paste the **LitLabs Master System Prompt** into the System Instructions box
+3. Paste the **Litree Master System Prompt** into the System Instructions box
 4. Replace placeholders:
    - `<YOUR NAME>` → Your name
-   - `<APP_URL>` → `https://litlabs.com` (or your domain)
+   - `<APP_URL>` → `https://Litree.com` (or your domain)
 
 ### 3.2 Get API Key
 
@@ -284,7 +284,7 @@ firebase functions:config:set \
   stripe.publishable_key="pk_test_..." \
   stripe.webhook_secret="whsec_..." \
   resend.api_key="re_your_key" \
-  app.url="https://litlabs.com"
+  app.url="https://Litree.com"
 ```
 
 ---
@@ -392,4 +392,5 @@ firebase functions:log
 ---
 
 **Need help?** Check Firebase docs at https://firebase.google.com/docs or Stripe at https://stripe.com/docs
+
 
