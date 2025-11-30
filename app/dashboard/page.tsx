@@ -35,16 +35,21 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (!auth) {
-      router.push('/auth');
-      return;
+      console.warn("Auth not initialized, delaying redirect");
+      const timer = setTimeout(() => {
+        router.push('/auth');
+      }, 500);
+      return () => clearTimeout(timer);
     }
 
     const unsub = onAuthStateChanged(auth, async (user) => {
       if (!user) {
+        console.warn("No user, redirecting to auth");
         router.push('/auth');
         return;
       }
 
+      console.log("User authenticated:", user.email);
       setDisplayName(user.displayName || user.email?.split('@')[0] || 'Creator');
       trackEvent('dashboard_view', { uid: user.uid });
 
