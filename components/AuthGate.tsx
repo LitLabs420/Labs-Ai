@@ -9,6 +9,7 @@ import {
   signOut,
   User,
 } from "firebase/auth";
+import LitLabsAssistant from "./LitLabsAssistant";
 
 export default function AuthGate({
   children,
@@ -63,58 +64,61 @@ export default function AuthGate({
 
   if (!user) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="max-w-sm w-full space-y-6 bg-gray-900 p-8 rounded-lg border border-gray-800">
-          <h1 className="text-2xl font-bold text-center">
-            {mode === "login"
-              ? "Login to LitLabs"
-              : "Create LitLabs Account"}
-          </h1>
+      <>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="max-w-sm w-full space-y-6 bg-gray-900 p-8 rounded-lg border border-gray-800">
+            <h1 className="text-2xl font-bold text-center">
+              {mode === "login"
+                ? "Login to LitLabs"
+                : "Create LitLabs Account"}
+            </h1>
 
-          {error && (
-            <div className="bg-red-900/30 border border-red-700 text-red-200 px-4 py-3 rounded text-sm">
-              {error}
-            </div>
-          )}
+            {error && (
+              <div className="bg-red-900/30 border border-red-700 text-red-200 px-4 py-3 rounded text-sm">
+                {error}
+              </div>
+            )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <input
-              className="w-full px-4 py-2 rounded bg-gray-800 border border-gray-700 text-sm focus:border-pink-500 focus:outline-none transition"
-              placeholder="Email address"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            <input
-              className="w-full px-4 py-2 rounded bg-gray-800 border border-gray-700 text-sm focus:border-pink-500 focus:outline-none transition"
-              placeholder="Password (min 6 chars)"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <input
+                className="w-full px-4 py-2 rounded bg-gray-800 border border-gray-700 text-sm focus:border-pink-500 focus:outline-none transition"
+                placeholder="Email address"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <input
+                className="w-full px-4 py-2 rounded bg-gray-800 border border-gray-700 text-sm focus:border-pink-500 focus:outline-none transition"
+                placeholder="Password (min 6 chars)"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <button
+                className="w-full px-4 py-2 rounded bg-pink-500 text-sm font-semibold hover:bg-pink-600 transition"
+                type="submit"
+              >
+                {mode === "login" ? "Login" : "Sign up"}
+              </button>
+            </form>
+
             <button
-              className="w-full px-4 py-2 rounded bg-pink-500 text-sm font-semibold hover:bg-pink-600 transition"
-              type="submit"
+              className="text-xs text-gray-400 hover:text-gray-300 underline w-full text-center transition"
+              onClick={() => {
+                setMode(mode === "login" ? "signup" : "login");
+                setError("");
+              }}
             >
-              {mode === "login" ? "Login" : "Sign up"}
+              {mode === "login"
+                ? "New here? Create an account"
+                : "Already have an account? Log in"}
             </button>
-          </form>
-
-          <button
-            className="text-xs text-gray-400 hover:text-gray-300 underline w-full text-center transition"
-            onClick={() => {
-              setMode(mode === "login" ? "signup" : "login");
-              setError("");
-            }}
-          >
-            {mode === "login"
-              ? "New here? Create an account"
-              : "Already have an account? Log in"}
-          </button>
+          </div>
         </div>
-      </div>
+        <LitLabsAssistant />
+      </>
     );
   }
 
