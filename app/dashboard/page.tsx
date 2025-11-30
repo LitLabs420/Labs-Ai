@@ -64,7 +64,18 @@ export default function DashboardPage() {
     return () => unsub();
   }, [router]);
 
-  if (loading) return null;
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="inline-block animate-spin">
+            <div className="text-4xl">⚡</div>
+          </div>
+          <p className="text-gray-400">Loading your dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <DashboardLayout>
