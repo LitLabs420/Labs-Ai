@@ -1,9 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import SiteHeader from "../components/SiteHeader";
 import { LiveActivityFeed } from "@/components/LiveActivityFeed";
+import { trackEvent } from "@/lib/analytics";
 
 function StatCard({ label, value }: { label: string; value: string }) {
   return (
@@ -76,6 +78,28 @@ function PricingCard({
 }
 
 export default function HomePage() {
+  const [timeLeft, setTimeLeft] = useState(0);
+
+  useEffect(() => {
+    const launchDate = new Date("2025-12-15T00:00:00Z").getTime();
+    const updateTimer = () => {
+      const now = new Date().getTime();
+      setTimeLeft(Math.max(0, launchDate - now));
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+  const hours = Math.floor(
+    (timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+  );
+
+  const handleSignup = () => {
+    trackEvent("landing_signup_click", { source: "hero_cta" });
+  };
   return (
     <div className="min-h-screen bg-black text-white">
       <SiteHeader />
@@ -146,6 +170,61 @@ export default function HomePage() {
             <p className="text-sm text-white/60 mb-4">🔴 LIVE NOW</p>
             <h2 className="text-2xl font-bold mb-8">Beauty Pros Signing Up Right Now</h2>
             <LiveActivityFeed />
+          </div>
+        </section>
+
+        {/* TESTIMONIALS */}
+        <section className="space-y-6">
+          <h2 className="text-xl sm:text-2xl font-semibold">
+            Loved by beauty professionals.
+          </h2>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            {[
+              {
+                name: "Sarah M.",
+                role: "Lash Tech",
+                image: "👸",
+                quote:
+                  "LitLabs saved me 5+ hours per week. I went from manual DMs to AI handling everything.",
+                stat: "3x more bookings",
+              },
+              {
+                name: "Jessica L.",
+                role: "Nail Artist",
+                image: "💅",
+                quote:
+                  "I'm not tech-savvy, but LitLabs was so easy. My posts go out automatically now!",
+                stat: "+$2k/month",
+              },
+              {
+                name: "Maria P.",
+                role: "Hair Stylist",
+                image: "✨",
+                quote:
+                  "The fraud detection saved me from a scam. Worth it just for that.",
+                stat: "98% lead quality",
+              },
+            ].map((testimonial, i) => (
+              <div
+                key={i}
+                className="rounded-xl border border-white/10 bg-white/5 p-6"
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <p className="text-3xl">{testimonial.image}</p>
+                  <div>
+                    <p className="font-semibold text-sm">{testimonial.name}</p>
+                    <p className="text-[11px] text-white/60">{testimonial.role}</p>
+                  </div>
+                </div>
+                <p className="text-xs text-white/80 mb-4 italic">
+                  &ldquo;{testimonial.quote}&rdquo;
+                </p>
+                <p className="text-pink-400 text-xs font-bold">
+                  ✨ {testimonial.stat}
+                </p>
+              </div>
+            ))}
           </div>
         </section>
 
