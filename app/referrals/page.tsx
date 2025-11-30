@@ -8,9 +8,10 @@ import { doc, getDoc } from 'firebase/firestore';
 
 export default function ReferralsPage() {
   const router = useRouter();
-  const [user, setUser] = useState<{ uid: string } | null>(null);
+  const [user, setUser] = useState<{ uid: string; email?: string } | null>(null);
   const [referralCode, setReferralCode] = useState('');
   const [referralLink, setReferralLink] = useState('');
+  const [copied, setCopied] = useState(false);
   const [stats, setStats] = useState({
     referralCount: 0,
     totalBonus: 0,
@@ -23,11 +24,11 @@ export default function ReferralsPage() {
         return;
       }
 
-      setUser(authUser);
+      setUser(authUser as any);
 
       const code = Buffer.from(`${authUser.uid}:referral`).toString('base64').slice(0, 12);
       setReferralCode(code);
-      setReferralLink(`${window.location.origin}/signup?ref=${code}`);
+      setReferralLink(`${window.location.origin}?ref=${code}`);
 
       const userDoc = await getDoc(doc(db, 'users', authUser.uid));
       if (userDoc.exists()) {
@@ -42,82 +43,180 @@ export default function ReferralsPage() {
     return () => unsubscribe();
   }, [router]);
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(referralLink);
-    alert('Referral link copied!');
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   if (!user) return null;
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-8">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-4xl font-bold text-white mb-8">
-          🚀 Invite Friends &amp; Earn
-        </h1>
+  const templates = [
+    {
+      platform: "Instagram Caption",
+      text: "Just automated my entire DM game with LitLabs 🤖 Replies send in seconds. Revenue up 3x. Try free → [link]",
+      emoji: "📸"
+    },
+    {
+      platform: "TikTok Hook",
+      text: "POV: You automated your customer service and now you have an extra 20 hours per week 🚀",
+      emoji: "🎬"
+    },
+    {
+      platform: "Twitter/X Post",
+      text: "Using LitLabs to reply to 1,000+ DMs per month automatically. My business runs while I sleep 💤 Free trial → [link]",
+      emoji: "𝕏"
+    },
+    {
+      platform: "Email Subject",
+      text: "This AI tool just saved me $10k in freelancer costs",
+      emoji: "📧"
+    },
+    {
+      platform: "LinkedIn Post",
+      text: "Just discovered this AI automation platform that's handling all my customer service. Scaling my business without hiring more people. Highly recommend checking it out.",
+      emoji: "💼"
+    }
+  ];
 
-        <div className="bg-gradient-to-br from-slate-800 to-slate-900 border border-purple-500/30 rounded-2xl p-8 mb-8">
-          <h2 className="text-xl font-bold text-white mb-4">Your Referral Link</h2>
-          <div className="bg-slate-900/50 border border-purple-500/20 rounded-lg p-4 mb-4">
-            <p className="text-slate-300 text-sm mb-2">Share this link:</p>
-            <div className="flex items-center gap-2">
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-slate-950 to-black text-white p-8">
+      <div className="max-w-4xl mx-auto">
+        {/* HEADER */}
+        <div className="mb-12">
+          <h1 className="text-4xl font-black mb-2">💰 Earn with LitLabs</h1>
+          <p className="text-white/60">Share your referral link and earn $10 for every signup</p>
+        </div>
+
+        {/* STATS */}
+        <div className="grid md:grid-cols-3 gap-4 mb-12">
+          <div className="border border-pink-500/30 rounded-xl bg-pink-500/10 p-6">
+            <p className="text-white/60 text-sm mb-2">Your Referrals</p>
+            <p className="text-3xl font-black text-pink-400">{stats.referralCount}</p>
+          </div>
+          <div className="border border-purple-500/30 rounded-xl bg-purple-500/10 p-6">
+            <p className="text-white/60 text-sm mb-2">Total Earned</p>
+            <p className="text-3xl font-black text-purple-400">${stats.totalBonus}</p>
+          </div>
+          <div className="border border-cyan-500/30 rounded-xl bg-cyan-500/10 p-6">
+            <p className="text-white/60 text-sm mb-2">Avg per Referral</p>
+            <p className="text-3xl font-black text-cyan-400">$10</p>
+          </div>
+        </div>
+
+        {/* YOUR REFERRAL CODE */}
+        <div className="border-2 border-white/20 rounded-2xl bg-gradient-to-b from-slate-900 to-slate-950 p-8 mb-12 space-y-6">
+          <h2 className="text-2xl font-bold">Your Referral Code</h2>
+          <div className="space-y-3">
+            <div className="flex gap-3">
               <input
                 type="text"
                 value={referralLink}
                 readOnly
-                placeholder="Referral link"
-                aria-label="Referral link"
-                className="flex-1 bg-slate-800 border border-purple-500/30 rounded px-3 py-2 text-white text-sm font-mono"
+                className="flex-1 px-4 py-3 rounded-lg bg-white/5 border border-white/20 text-white text-sm"
               />
               <button
-                onClick={copyToClipboard}
-                className="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white px-4 py-2 rounded font-semibold transition-all"
+                onClick={() => copyToClipboard(referralLink)}
+                className={`px-6 py-3 rounded-lg font-bold transition ${
+                  copied
+                    ? 'bg-green-500 text-white'
+                    : 'bg-pink-500 hover:bg-pink-600 text-white'
+                }`}
               >
-                Copy
+                {copied ? '✓ Copied!' : 'Copy'}
               </button>
             </div>
-          </div>
-
-          <div className="bg-slate-900/50 border border-emerald-500/20 rounded-lg p-4">
-            <p className="text-slate-300 text-sm mb-2">Unique Code:</p>
-            <p className="text-2xl font-bold text-emerald-400 font-mono">{referralCode}</p>
+            <p className="text-xs text-white/50">
+              📌 Pin this: <code className="text-cyan-400">{referralCode}</code>
+            </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mb-8">
-          <div className="bg-gradient-to-br from-slate-800 to-slate-900 border border-pink-500/30 rounded-lg p-6">
-            <p className="text-slate-400 text-sm mb-2">Referrals</p>
-            <p className="text-3xl font-bold text-pink-400">{stats.referralCount}</p>
-          </div>
-          <div className="bg-gradient-to-br from-slate-800 to-slate-900 border border-emerald-500/30 rounded-lg p-6">
-            <p className="text-slate-400 text-sm mb-2">Bonus Credits</p>
-            <p className="text-3xl font-bold text-emerald-400">${stats.totalBonus}</p>
+        {/* HOW IT WORKS */}
+        <div className="border border-white/20 rounded-2xl bg-white/5 p-8 mb-12">
+          <h2 className="text-2xl font-bold mb-6">How It Works</h2>
+          <ol className="space-y-4">
+            {[
+              "Share your link on Instagram, TikTok, email, or anywhere",
+              "Someone clicks → signs up with your code",
+              "They create account (takes 30 sec)",
+              "You earn $10 instantly ✨"
+            ].map((step, i) => (
+              <li key={i} className="flex gap-4 items-start">
+                <span className="text-2xl font-black text-pink-500 flex-shrink-0">{i + 1}.</span>
+                <p className="text-white/80 pt-1">{step}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        {/* MARKETING TEMPLATES */}
+        <div className="mb-12">
+          <h2 className="text-2xl font-bold mb-6">📱 Marketing Templates</h2>
+          <p className="text-white/60 mb-6">Copy & paste these to your socials</p>
+          <div className="space-y-4">
+            {templates.map((template, i) => (
+              <div key={i} className="border border-white/10 rounded-lg p-6 hover:border-pink-500/50 transition">
+                <div className="flex items-start justify-between mb-3">
+                  <div>
+                    <p className="font-bold text-lg">{template.platform}</p>
+                  </div>
+                  <span className="text-2xl">{template.emoji}</span>
+                </div>
+                <p className="text-white/80 mb-4 leading-relaxed">{template.text}</p>
+                <button
+                  onClick={() => copyToClipboard(template.text)}
+                  className="text-sm text-cyan-400 hover:text-cyan-300 font-semibold"
+                >
+                  📋 Copy text
+                </button>
+              </div>
+            ))}
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-slate-800 to-slate-900 border border-blue-500/30 rounded-2xl p-8">
-          <h3 className="text-lg font-bold text-white mb-4">💡 How It Works</h3>
-          <ul className="space-y-3 text-slate-300">
-            <li className="flex items-start gap-3">
-              <span className="text-blue-400 font-bold">1.</span>
-              <span>Share your unique referral link with beauty professionals</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <span className="text-blue-400 font-bold">2.</span>
-              <span>They sign up using your link</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <span className="text-blue-400 font-bold">3.</span>
-              <span>You earn $10 credit for each signup</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <span className="text-blue-400 font-bold">4.</span>
-              <span>Use credits for premium features or cash out</span>
-            </li>
+        {/* TIPS */}
+        <div className="border border-white/20 rounded-2xl bg-white/5 p-8 mb-12">
+          <h2 className="text-2xl font-bold mb-6">💡 Pro Tips</h2>
+          <ul className="space-y-3">
+            {[
+              "Show results: Use case studies and before/afters",
+              "Be authentic: Only promote if you truly use & love LitLabs",
+              "DM your network: Personal messages convert 5x better",
+              "Post consistently: The more you share, the more you earn",
+              "Include social proof: Link to testimonials or demo",
+            ].map((tip, i) => (
+              <li key={i} className="flex gap-3 text-white/80">
+                <span className="text-pink-400 font-bold flex-shrink-0">✓</span>
+                <span>{tip}</span>
+              </li>
+            ))}
           </ul>
+        </div>
+
+        {/* LEADERBOARD */}
+        <div>
+          <h2 className="text-2xl font-bold mb-6">🏆 Top Affiliates</h2>
+          <div className="space-y-2">
+            {[
+              { name: "Sarah M.", referrals: 42, earned: "$420", badge: "🥇" },
+              { name: "Jessica L.", referrals: 38, earned: "$380", badge: "🥈" },
+              { name: "Maria P.", referrals: 31, earned: "$310", badge: "🥉" },
+            ].map((affiliate, i) => (
+              <div key={i} className="flex items-center justify-between p-4 border border-pink-500/30 rounded-lg bg-pink-500/5">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">{affiliate.badge}</span>
+                  <div>
+                    <p className="font-bold">{affiliate.name}</p>
+                    <p className="text-sm text-white/60">{affiliate.referrals} referrals</p>
+                  </div>
+                </div>
+                <p className="text-2xl font-black text-pink-400">{affiliate.earned}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
   );
 }
-

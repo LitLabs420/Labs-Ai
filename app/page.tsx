@@ -292,7 +292,32 @@ export default function HomePage() {
             <p className="text-white/60 text-lg">Pick the plan that scales with you</p>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-4 lg:grid-cols-5">
+            {/* FREE TIER */}
+            <PricingCard
+              plan="🎁 Free"
+              price="$0"
+              features={[
+                "50 generations/month",
+                "Basic content engine",
+                "Email support",
+                "Community access",
+              ]}
+            />
+
+            {/* FREEMIUM TIER */}
+            <PricingCard
+              plan="⭐ Freemium"
+              price="$19"
+              features={[
+                "300 generations/month",
+                "Everything in Free",
+                "Priority email support",
+                "Content calendar",
+              ]}
+            />
+
+            {/* STARTER */}
             <PricingCard
               plan="🚀 Starter"
               price="$49"
@@ -304,6 +329,8 @@ export default function HomePage() {
                 "Email support",
               ]}
             />
+
+            {/* PRO - HIGHLIGHTED */}
             <PricingCard
               highlight
               plan="⚡ Pro"
@@ -316,6 +343,8 @@ export default function HomePage() {
                 "Priority support",
               ]}
             />
+
+            {/* DELUXE */}
             <PricingCard
               plan="👑 Deluxe"
               price="$199"
