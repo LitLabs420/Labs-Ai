@@ -1,12 +1,16 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 import DashboardLayout from '@/components/DashboardLayout';
 import { auth, db } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { trackEvent } from '@/lib/analytics';
 import { useRouter } from 'next/navigation';
+
+const MoneyTodayCard = dynamic(() => import('@/components/dashboard/MoneyTodayCard').then(mod => ({ default: mod.MoneyTodayCard })), { ssr: false });
+const ChatBotOnboarding = dynamic(() => import('@/components/dashboard/ChatBot').then(mod => ({ default: mod.ChatBotOnboarding })), { ssr: false });
 
 type Stats = {
   postsThisMonth: number;
@@ -132,6 +136,18 @@ export default function DashboardPage() {
             <h3 className='text-xl font-bold text-white mb-2'>Real-Time Analytics</h3>
             <p className='text-white/70 mb-6'>Track everything in real-time</p>
             <button className='px-4 py-2 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-sm font-semibold transition'>View Stats →</button>
+          </div>
+        </div>
+
+        {/* MONEY TODAY + CHATBOT SECTION */}
+        <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+          <div>
+            <h2 className='text-2xl font-bold text-white mb-4'>🚀 GODMODE Features</h2>
+            <MoneyTodayCard />
+          </div>
+          <div>
+            <h2 className='text-2xl font-bold text-white mb-4'>🤖 Get Onboarded</h2>
+            <ChatBotOnboarding />
           </div>
         </div>
 

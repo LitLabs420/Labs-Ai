@@ -3,9 +3,12 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import SiteHeader from "../components/SiteHeader";
 import { LiveActivityFeed } from "@/components/LiveActivityFeed";
 import { trackEvent } from "@/lib/analytics";
+
+const PricingSection = dynamic(() => import("@/components/PricingSection").then(mod => ({ default: mod.PricingSection })), { ssr: false });
 
 function StatCard({ label, value }: { label: string; value: string }) {
   return (
@@ -21,58 +24,6 @@ function FeatureCard({ title, body }: { title: string; body: string }) {
     <div className="rounded-xl border border-white/10 bg-white/5 p-5 hover:bg-white/10 hover:border-pink-500/50 transition">
       <h3 className="font-semibold mb-2">{title}</h3>
       <p className="text-white/70 text-xs leading-relaxed">{body}</p>
-    </div>
-  );
-}
-
-function PricingCard({
-  plan,
-  price,
-  features,
-  highlight,
-}: {
-  plan: string;
-  price: string;
-  features: string[];
-  highlight?: boolean;
-}) {
-  return (
-    <div
-      className={`rounded-2xl border p-8 transition ${
-        highlight
-          ? "border-pink-500/50 bg-gradient-to-b from-pink-500/10 to-transparent shadow-lg shadow-pink-500/20"
-          : "border-white/10 bg-white/5"
-      }`}
-    >
-      {highlight && (
-        <div className="inline-block px-3 py-1 rounded-full text-xs font-semibold text-pink-400 bg-pink-500/10 border border-pink-500/30 mb-4">
-          Most Popular
-        </div>
-      )}
-      <h3 className="text-lg font-bold mb-2">{plan}</h3>
-      <p className="text-xs text-white/60 mb-6">Per month, paid yearly</p>
-      <p className="text-4xl font-black mb-8">
-        {price}
-        <span className="text-lg text-white/50">/mo</span>
-      </p>
-      <ul className="space-y-3 mb-8 text-xs text-white/80">
-        {features.map((feature, i) => (
-          <li key={i} className="flex items-start gap-2">
-            <span className="text-pink-400 font-bold mt-0.5">✓</span>
-            {feature}
-          </li>
-        ))}
-      </ul>
-      <Link
-        href="/dashboard"
-        className={`w-full block text-center py-2.5 rounded-full font-semibold text-xs transition ${
-          highlight
-            ? "bg-pink-500 hover:bg-pink-400 text-white shadow-lg shadow-pink-500/40"
-            : "border border-white/20 hover:border-pink-500/50 text-white/80 hover:text-white"
-        }`}
-      >
-        Get Started
-      </Link>
     </div>
   );
 }
@@ -284,84 +235,7 @@ export default function HomePage() {
         </section>
 
         {/* PRICING */}
-        <section id="pricing" className="space-y-8">
-          <div className="text-center space-y-2">
-            <h2 className="text-3xl sm:text-4xl font-black">
-              💰 Simple plans. Real leverage.
-            </h2>
-            <p className="text-white/60 text-lg">Pick the plan that scales with you</p>
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-4 lg:grid-cols-5">
-            {/* FREE TIER */}
-            <PricingCard
-              plan="🎁 Free"
-              price="$0"
-              features={[
-                "50 generations/month",
-                "Basic content engine",
-                "Email support",
-                "Community access",
-              ]}
-            />
-
-            {/* FREEMIUM TIER */}
-            <PricingCard
-              plan="⭐ Freemium"
-              price="$19"
-              features={[
-                "300 generations/month",
-                "Everything in Free",
-                "Priority email support",
-                "Content calendar",
-              ]}
-            />
-
-            {/* STARTER */}
-            <PricingCard
-              plan="🚀 Starter"
-              price="$49"
-              features={[
-                "Daily content engine",
-                "DM reply scripts",
-                "Promo generator",
-                "Fraud checks",
-                "Email support",
-              ]}
-            />
-
-            {/* PRO - HIGHLIGHTED */}
-            <PricingCard
-              highlight
-              plan="⚡ Pro"
-              price="$99"
-              features={[
-                "Everything in Starter",
-                "7-day content packs",
-                "Brand voice training",
-                "Client reactivation",
-                "Priority support",
-              ]}
-            />
-
-            {/* DELUXE */}
-            <PricingCard
-              plan="👑 Deluxe"
-              price="$199"
-              features={[
-                "Everything in Pro",
-                "Holiday templates",
-                "Growth coaching",
-                "1-on-1 onboarding",
-                "24/7 VIP support",
-              ]}
-            />
-          </div>
-
-          <p className="text-center text-white/60 text-sm">
-            ✨ All plans include 14-day free trial. No card required.
-          </p>
-        </section>
+        <PricingSection />
 
         {/* CTA */}
         <section className="relative">
