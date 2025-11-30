@@ -41,8 +41,9 @@ export default function AuthGate({
       }
       setEmail("");
       setPassword("");
-    } catch (err: any) {
-      setError(err.message || "Authentication failed");
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error("Authentication failed");
+      setError(error.message || "Authentication failed");
     }
   };
 

@@ -106,7 +106,7 @@ function OnboardingInner() {
               <input
                 className="w-full px-3 py-2 rounded bg-slate-800 border border-slate-600 text-slate-100 text-sm placeholder-slate-500 focus:border-pink-500 focus:outline-none transition"
                 placeholder={placeholder as string}
-                value={(form as any)[field]}
+                value={(form as Record<string, string>)[field]}
                 onChange={(e) => handleChange(field, e.target.value)}
               />
             </div>
