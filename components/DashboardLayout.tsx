@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import LitLabsAssistant from "./LitLabsAssistant";
+import { auth } from "@/lib/firebase";
 
 const navItems = [
   { href: "/dashboard", label: "Home", icon: "🏠" },
@@ -14,6 +15,18 @@ const navItems = [
 ];
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
+  const [isAdmin, setIsAdmin] = useState(false);
+  
+  useEffect(() => {
+    if (!auth) return;
+    
+    const unsub = auth.onAuthStateChanged((user) => {
+      const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+      setIsAdmin(!!user && !!adminEmail && user.email === adminEmail);
+    });
+    
+    return () => unsub();
+  }, []);
   const pathname = usePathname();
 
   return (
@@ -64,6 +77,24 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 </Link>
               );
             })}
+            
+            {/* Admin link - only for founder */}
+            {isAdmin && (
+              <>
+                <div className="border-t border-white/10 my-2" />
+                <Link
+                  href="/admin"
+                  className={`flex items-center gap-2 rounded-xl px-3 py-2 transition ${
+                    pathname === "/admin"
+                      ? "bg-purple-500/20 border border-purple-500/70 text-white shadow-[0_0_20px_rgba(168,85,247,0.5)]"
+                      : "text-white/70 hover:bg-white/5 hover:text-white"
+                  }`}
+                >
+                  <span>👑</span>
+                  <span>God Mode</span>
+                </Link>
+              </>
+            )}
           </nav>
 
           <div className="px-3 pb-4 text-[11px] text-white/45 border-t border-white/10">
