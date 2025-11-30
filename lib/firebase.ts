@@ -30,3 +30,4 @@ if (typeof window !== "undefined") {
 
 export const auth = authInstance || null;
 export const db = dbInstance || null;
+export { app };
