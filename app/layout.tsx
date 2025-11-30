@@ -4,6 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "LitLabs AI - Your Personal Marketing Plug",
   description: "AI that books clients for beauty professionals.",
+  keywords: "AI, marketing, beauty, chatbot, content, automation",
 };
 
 export default function RootLayout({
