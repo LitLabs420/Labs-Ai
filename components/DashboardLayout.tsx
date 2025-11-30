@@ -1,99 +1,100 @@
 "use client";
 
-import { ReactNode } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { auth } from "@/lib/firebase";
-import { signOut } from "firebase/auth";
+import { usePathname } from "next/navigation";
+import { ReactNode } from "react";
 
-interface DashboardLayoutProps {
-  children: ReactNode;
-}
-
-const navLinks = [
-  { href: "/dashboard", label: "Home" },
-  { href: "/onboarding", label: "Onboarding" },
-  { href: "/profile", label: "Profile" },
-  { href: "/billing", label: "Billing" },
-  { href: "/history", label: "History" },
+const navItems = [
+  { href: "/dashboard", label: "Home", icon: "🏠" },
+  { href: "/dashboard/onboarding", label: "Onboarding", icon: "🧩" },
+  { href: "/dashboard/profile", label: "Profile", icon: "👤" },
+  { href: "/dashboard/billing", label: "Billing", icon: "💳" },
+  { href: "/dashboard/stats", label: "Stats", icon: "📊" },
 ];
 
-export default function DashboardLayout({
-  children,
-}: DashboardLayoutProps) {
-  const router = useRouter();
+export default function DashboardLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
-  const handleLogout = async () => {
-    await signOut(auth);
-    router.push("/");
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-slate-900 to-black">
-      {/* Header */}
-      <header className="border-b border-slate-700 bg-slate-900/50 backdrop-blur sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          <h1 className="text-xl font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
-            LitLabs Business OS™
-          </h1>
-          <button
-            onClick={handleLogout}
-            className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition text-white text-sm font-semibold"
-          >
-            Logout
-          </button>
-        </div>
-      </header>
+    <div className="min-h-screen bg-black text-white relative overflow-hidden">
+      {/* Futuristic background */}
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute -top-32 -left-24 h-72 w-72 rounded-full bg-pink-500/25 blur-3xl" />
+        <div className="absolute -bottom-40 -right-10 h-80 w-80 rounded-full bg-sky-500/25 blur-3xl" />
+        <div className="absolute top-1/2 left-1/3 h-72 w-72 rounded-full bg-purple-500/20 blur-3xl" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_#ffffff11,_transparent_65%),linear-gradient(90deg,#ffffff08_1px,transparent_1px),linear-gradient(180deg,#ffffff08_1px,transparent_1px)] bg-[position:0_0,0_0,0_0] bg-[size:100%_100%,80px_80px,80px_80px] opacity-25" />
+      </div>
 
-      {/* Main Content with Sidebar */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex gap-6">
-          {/* Sidebar Navigation */}
-          <aside className="w-48 flex-shrink-0">
-            <div className="sticky top-24 border border-slate-700 rounded-lg p-3 bg-slate-900/50">
-              <p className="text-xs text-slate-400 mb-3 font-semibold uppercase tracking-wide">
-                Navigation
-              </p>
-              <nav className="space-y-2">
-                {navLinks.map((link) => {
-                  const isActive = pathname === link.href;
-                  return (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      className={`block px-3 py-2 rounded text-sm font-medium transition ${
-                        isActive
-                          ? "bg-pink-500 text-white"
-                          : "text-slate-300 hover:bg-slate-800 hover:text-white"
-                      }`}
-                    >
-                      {link.label}
-                    </Link>
-                  );
-                })}
-                
-                {/* Admin Link */}
+      <div className="flex min-h-screen">
+        {/* SIDEBAR */}
+        <aside className="hidden md:flex w-60 flex-col border-r border-white/15 bg-black/70 backdrop-blur-xl">
+          <div className="px-4 pt-4 pb-3 border-b border-white/10">
+            <Link href="/" className="flex items-center gap-2">
+              <div className="h-9 w-9 rounded-2xl bg-gradient-to-br from-pink-500 to-sky-500 flex items-center justify-center text-xs font-black">
+                LL
+              </div>
+              <div className="leading-tight">
+                <p className="text-sm font-semibold tracking-wide">LitLabs</p>
+                <p className="text-[10px] uppercase tracking-[0.2em] text-white/50">
+                  Business OS
+                </p>
+              </div>
+            </Link>
+            <p className="mt-3 text-[11px] text-white/50">
+              Command center for your posts, promos, DMs and fraud checks.
+            </p>
+          </div>
+
+          <nav className="flex-1 px-3 py-4 space-y-1 text-xs">
+            {navItems.map((item) => {
+              const active = pathname === item.href;
+              return (
                 <Link
-                  href="/admin"
-                  className={`block mt-4 pt-2 px-3 py-2 rounded text-xs font-medium border transition ${
-                    pathname === "/admin"
-                      ? "border-pink-500 bg-pink-500/10 text-pink-300"
-                      : "border-slate-700 text-slate-400 hover:border-slate-600 hover:bg-slate-800"
+                  key={item.href}
+                  href={item.href}
+                  className={`flex items-center gap-2 rounded-xl px-3 py-2 transition ${
+                    active
+                      ? "bg-pink-500/20 border border-pink-500/70 text-white shadow-[0_0_20px_rgba(236,72,153,0.5)]"
+                      : "text-white/70 hover:bg-white/5 hover:text-white"
                   }`}
                 >
-                  👑 Admin
+                  <span>{item.icon}</span>
+                  <span>{item.label}</span>
                 </Link>
-              </nav>
-            </div>
-          </aside>
+              );
+            })}
+          </nav>
 
-          {/* Page Content */}
-          <section className="flex-1 min-w-0">
+          <div className="px-3 pb-4 text-[11px] text-white/45 border-t border-white/10">
+            <p className="mb-1 font-semibold text-white/60">LitLabs tips</p>
+            <p>Start each day with /daily_post, then /promo if your calendar is light.</p>
+          </div>
+        </aside>
+
+        {/* MAIN AREA */}
+        <main className="flex-1 flex flex-col">
+          {/* Top bar */}
+          <div className="flex items-center justify-between border-b border-white/15 bg-black/60 backdrop-blur px-4 py-2 text-[11px]">
+            <div className="flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-white/60">
+                LitLabs Business OS™ · Dashboard online
+              </span>
+            </div>
+            <div className="flex items-center gap-3 text-white/60">
+              <span className="hidden sm:inline">
+                Plan: <span className="text-emerald-300 font-semibold">Pro</span>
+              </span>
+              <span className="hidden sm:inline">Detroit, MI</span>
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
             {children}
-          </section>
-        </div>
-      </main>
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
