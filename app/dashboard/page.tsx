@@ -34,6 +34,11 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!auth) {
+      router.push('/auth');
+      return;
+    }
+
     const unsub = onAuthStateChanged(auth, async (user) => {
       if (!user) {
         router.push('/auth');

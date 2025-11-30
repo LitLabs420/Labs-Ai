@@ -14,20 +14,24 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:612847421952:web:d66d4ba0666e7f5116e6e5",
 };
 
-let app: any;
-let authInstance: any;
-let dbInstance: any;
+let app: any = null;
+let authInstance: any = null;
+let dbInstance: any = null;
 
+// Initialize Firebase synchronously if in browser
 if (typeof window !== "undefined") {
   try {
-    app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
+    const apps = getApps();
+    app = apps.length > 0 ? apps[0] : initializeApp(firebaseConfig);
     authInstance = getAuth(app);
     dbInstance = getFirestore(app);
   } catch (e) {
-    console.warn("Firebase init error:", e);
+    console.error("Firebase initialization error:", e);
   }
 }
 
-export const auth = authInstance || null;
-export const db = dbInstance || null;
+// Export instances (will be ready immediately on client)
+export const auth = authInstance;
+export const db = dbInstance;
 export { app };
+
