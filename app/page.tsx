@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import SiteHeader from "../components/SiteHeader";
+import { LiveActivityFeed } from "@/components/LiveActivityFeed";
 
 function StatCard({ label, value }: { label: string; value: string }) {
   return (
@@ -135,6 +136,16 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* LIVE ACTIVITY - Social Proof */}
+        <section className="relative">
+          <div className="absolute -inset-1 bg-gradient-to-r from-pink-600 to-sky-600 rounded-2xl blur opacity-20"></div>
+          <div className="relative bg-black rounded-2xl border border-white/10 p-8 text-center">
+            <p className="text-sm text-white/60 mb-4">🔴 LIVE NOW</p>
+            <h2 className="text-2xl font-bold mb-8">Beauty Pros Signing Up Right Now</h2>
+            <LiveActivityFeed />
           </div>
         </section>
 

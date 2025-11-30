@@ -77,6 +77,18 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 </Link>
               );
             })}
+
+            <Link
+              href="/referrals"
+              className={`flex items-center gap-2 rounded-xl px-3 py-2 transition ${
+                pathname === "/referrals"
+                  ? "bg-emerald-500/20 border border-emerald-500/70 text-white shadow-[0_0_20px_rgba(16,185,129,0.5)]"
+                  : "text-white/70 hover:bg-white/5 hover:text-white"
+              }`}
+            >
+              <span>🎁</span>
+              <span>Referrals</span>
+            </Link>
             
             {/* Admin link - only for founder */}
             {isAdmin && (
