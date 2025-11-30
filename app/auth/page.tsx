@@ -46,12 +46,13 @@ export default function AuthPage() {
     setLoading(true);
     try {
       const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
-      router.push('/dashboard');
+      const result = await signInWithPopup(auth, provider);
+      if (result.user) {
+        router.push('/dashboard');
+      }
     } catch (err) {
       const error = err as Error;
       setError(error.message || 'Google auth failed');
-    } finally {
       setLoading(false);
     }
   };
@@ -63,12 +64,13 @@ export default function AuthPage() {
       const provider = new OAuthProvider('apple.com');
       provider.addScope('email');
       provider.addScope('name');
-      await signInWithPopup(auth, provider);
-      router.push('/dashboard');
+      const result = await signInWithPopup(auth, provider);
+      if (result.user) {
+        router.push('/dashboard');
+      }
     } catch (err) {
       const error = err as Error;
       setError(error.message || 'Apple auth failed');
-    } finally {
       setLoading(false);
     }
   };
@@ -80,12 +82,13 @@ export default function AuthPage() {
       const provider = new OAuthProvider('microsoft.com');
       provider.addScope('email');
       provider.addScope('profile');
-      await signInWithPopup(auth, provider);
-      router.push('/dashboard');
+      const result = await signInWithPopup(auth, provider);
+      if (result.user) {
+        router.push('/dashboard');
+      }
     } catch (err) {
       const error = err as Error;
       setError(error.message || 'Microsoft auth failed');
-    } finally {
       setLoading(false);
     }
   };
@@ -96,12 +99,13 @@ export default function AuthPage() {
     try {
       const provider = new GithubAuthProvider();
       provider.addScope('user:email');
-      await signInWithPopup(auth, provider);
-      router.push('/dashboard');
+      const result = await signInWithPopup(auth, provider);
+      if (result.user) {
+        router.push('/dashboard');
+      }
     } catch (err) {
       const error = err as Error;
       setError(error.message || 'GitHub auth failed');
-    } finally {
       setLoading(false);
     }
   };
