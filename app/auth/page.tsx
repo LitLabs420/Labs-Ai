@@ -117,6 +117,18 @@ export default function AuthPage() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-gradient-to-r from-[#ff006e]/20 via-[#8338ec]/20 to-[#3a86ff]/20 rounded-full blur-3xl" />
       </div>
 
+      {/* Loading overlay */}
+      {loading && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center">
+          <div className="text-center space-y-4">
+            <div className="inline-block animate-spin">
+              <div className="text-5xl">⚡</div>
+            </div>
+            <p className="text-lg text-gray-300">Completing sign up...</p>
+          </div>
+        </div>
+      )}
+
       <div className="min-h-screen flex">
         {/* LEFT SIDE - INFO */}
         <div className="hidden lg:flex lg:w-1/2 flex-col justify-center px-12 py-12">
