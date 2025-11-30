@@ -1,6 +1,5 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
-import OpenAI from "openai";
 import Stripe from "stripe";
 import { generateMoneyTodayLLM, MoneyTodayRequest } from "./llm";
 
@@ -8,13 +7,16 @@ import { generateMoneyTodayLLM, MoneyTodayRequest } from "./llm";
 admin.initializeApp();
 const db = admin.firestore();
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+let stripe: Stripe | null = null;
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2024-11-20",
-});
+function getStripe(): Stripe {
+  if (!stripe) {
+    stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
+      apiVersion: "2025-11-17.clover" as any,
+    });
+  }
+  return stripe;
+}
 
 const STRIPE_PRICE_IDS = {
   growth: process.env.STRIPE_PRICE_GROWTH || "price_growth_placeholder",
@@ -98,7 +100,7 @@ export const createCheckoutSession = functions.https.onCall(
     const email = userData.email || "";
 
     try {
-      const session = await stripe.checkout.sessions.create({
+      const session = await getStripe().checkout.sessions.create({
         mode: "subscription",
         payment_method_types: ["card"],
         customer_email: email,
@@ -138,7 +140,7 @@ export const handleStripeWebhook = functions.https.onRequest(async (req, res) =>
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(
+    event = getStripe().webhooks.constructEvent(
       req.rawBody,
       sig as string,
       process.env.STRIPE_WEBHOOK_SECRET || ""
@@ -158,7 +160,7 @@ export const handleStripeWebhook = functions.https.onRequest(async (req, res) =>
         const subscriptionId = session.subscription as string;
 
         if (subscriptionId) {
-          const subs = await stripe.subscriptions.retrieve(subscriptionId);
+          const subs = await getStripe().subscriptions.retrieve(subscriptionId);
           const priceId = subs.items.data[0]?.price.id;
 
           let planToSet: "growth" | "godmode" | null = null;
