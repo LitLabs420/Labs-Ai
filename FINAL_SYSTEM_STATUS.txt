@@ -148,7 +148,7 @@ Firebase Auth:
 
 Stripe Integration:
   ✅ API Version: Latest
-  ✅ Test Keys: Active (sk_test_4eC39HqLyjWDarhtT657G51z)
+  ✅ Test Keys: Active (configured in .env.local)
   ✅ Pricing IDs: Configured
   ✅ Webhook Secret: Set
   ✅ Checkout Flow: Implemented

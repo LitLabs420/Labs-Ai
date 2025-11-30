@@ -48,7 +48,7 @@
 ### `.env.local` (Do NOT commit)
 All required variables are configured:
 - ✅ Firebase credentials (API key, auth domain, project ID, etc)
-- ✅ Stripe test key (sk_test_4eC39HqLyjWDarhtT657G51z)
+- ✅ Stripe test key configured (see .env.local)
 - ✅ Stripe webhook secret
 - ✅ Google AI API key (for AI chat)
 - ✅ Admin email (dyingbreed243@gmail.com)
