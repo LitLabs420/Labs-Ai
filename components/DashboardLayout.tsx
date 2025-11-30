@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
+import LitLabsAssistant from "./LitLabsAssistant";
 
 const navItems = [
   { href: "/dashboard", label: "Home", icon: "🏠" },
@@ -95,6 +96,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           </div>
         </main>
       </div>
+
+      {/* Floating LitLabs AI Assistant */}
+      <LitLabsAssistant />
     </div>
   );
 }
