@@ -275,3 +275,30 @@ export const generateOnboardingResponse = functions.https.onCall(
 export const health = functions.https.onCall(async (data, context) => {
   return { status: "ok", timestamp: new Date().toISOString() };
 });
+
+// ===== AUTO-CREATE USER DOCUMENT ON SIGNUP =====
+export const createUserOnSignup = functions.auth.user().onCreate(
+  async (user: admin.auth.UserRecord) => {
+    try {
+      const userRef = db.collection("users").doc(user.uid);
+      
+      await userRef.set({
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName || user.email?.split("@")[0] || "User",
+        photoURL: user.photoURL || "",
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        tier: "free",
+        plan: "free",
+        status: "active",
+        businessProfile: {},
+        onboardingCompleted: false,
+      }, { merge: true });
+
+      console.log(`User document created for ${user.uid}`);
+    } catch (error) {
+      console.error("Error creating user document:", error);
+      throw error;
+    }
+  }
+);
