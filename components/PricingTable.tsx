@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const plans = [
   {
@@ -49,6 +50,7 @@ const plans = [
 ];
 
 export default function PricingTable() {
+  const router = useRouter();
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState("");
 
@@ -74,10 +76,11 @@ export default function PricingTable() {
       }
 
       if (data.url) {
-        window.location.href = data.url;
+        router.push(data.url);
       }
-    } catch (err: any) {
-      setError("Failed to create checkout session");
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to create checkout session";
+      setError(errorMessage);
       setLoading(null);
     }
   };

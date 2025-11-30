@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
-import { stripe } from "@/lib/stripe";
+import { getStripe } from "@/lib/stripe";
 import { db } from "@/lib/firebase";
 import { doc, updateDoc, Timestamp } from "firebase/firestore";
 import {
@@ -25,6 +25,7 @@ export async function POST(req: NextRequest) {
     }
 
     const rawBody = await req.text();
+    const stripe = getStripe();
 
     let event: Stripe.Event;
 
@@ -66,7 +67,7 @@ export async function POST(req: NextRequest) {
             const amount = subscription.items.data[0].price.unit_amount || 0;
 
             // Update Firestore with subscription details
-            const userRef = doc(db, "users", userId);
+            const userRef = doc(db!, "users", userId);
             const subData = subscription as unknown as Record<string, number>;
             await updateDoc(userRef, {
               tier,

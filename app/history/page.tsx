@@ -43,6 +43,11 @@ export default function HistoryPage() {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
+    if (!auth) {
+      setLoading(false);
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (!user) {
         router.push("/");
@@ -50,6 +55,10 @@ export default function HistoryPage() {
       }
 
       try {
+        if (!db) {
+          setLoading(false);
+          return;
+        }
         // Query Firestore for user's content history
         const q = query(
           collection(db, "users", user.uid, "contents"),

@@ -70,10 +70,11 @@ Respond with practical, actionable content that the user can copy-paste directly
       "LitLabs AI could not generate a response. Please try again.";
 
     return NextResponse.json({ text });
-  } catch (err: any) {
-    console.error("AI Chat Error:", err);
+  } catch (err) {
+    const error = err instanceof Error ? err : new Error("Unknown error");
+    console.error("AI Chat Error:", error);
     return NextResponse.json(
-      { error: err.message || "Error calling LitLabs AI" },
+      { error: error.message || "Error calling LitLabs AI" },
       { status: 500 }
     );
   }

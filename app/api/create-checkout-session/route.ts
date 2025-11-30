@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { stripe } from "@/lib/stripe";
+import { getStripe } from "@/lib/stripe";
 
 export async function POST(req: NextRequest) {
   try {
@@ -26,6 +26,7 @@ export async function POST(req: NextRequest) {
     }
 
     const origin = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const stripe = getStripe();
 
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
@@ -49,10 +50,11 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ url: session.url });
-  } catch (err: any) {
-    console.error("Stripe Checkout Error:", err);
+  } catch (err) {
+    const error = err instanceof Error ? err : new Error("Unknown error");
+    console.error("Stripe Checkout Error:", error);
     return NextResponse.json(
-      { error: err.message || "Failed to create checkout session" },
+      { error: error.message || "Failed to create checkout session" },
       { status: 500 }
     );
   }
