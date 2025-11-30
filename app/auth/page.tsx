@@ -286,8 +286,12 @@ export default function AuthPage() {
               <p>🔒 Secure. No spam. No setup fees.</p>
               <p>
                 By signing up, you agree to our{' '}
-                <Link href="/" className="text-[#ff006e] hover:text-[#ff006e]/80">
+                <Link href="/terms-of-service" className="text-[#ff006e] hover:text-[#ff006e]/80">
                   terms
+                </Link>
+                {' '}and{' '}
+                <Link href="/privacy-policy" className="text-[#ff006e] hover:text-[#ff006e]/80">
+                  privacy policy
                 </Link>
               </p>
             </div>
