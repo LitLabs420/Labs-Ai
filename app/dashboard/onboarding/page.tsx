@@ -1,14 +1,76 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { getAuth } from "firebase/auth";
+import { getFirestore, doc, updateDoc, serverTimestamp } from "firebase/firestore";
 import DashboardLayout from "../../../components/DashboardLayout";
 import AuthGate from "../../../components/AuthGate";
 
 function OnboardingInner() {
   const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    businessName: "",
+    location: "",
+    services: "",
+    vibe: "",
+    brandWords: "",
+    idealClients: "",
+    priceRange: "",
+    dontWantClients: "",
+    platforms: "",
+    contentRules: "",
+    workDays: "",
+    slowDays: "",
+    bookingWindow: "",
+    bookingMethod: "",
+    additionalInfo: "",
+  });
+  const router = useRouter();
+  const auth = getAuth();
+  const db = getFirestore();
 
   const next = () => setStep((s) => Math.min(s + 1, 3));
   const prev = () => setStep((s) => Math.max(s - 1, 1));
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleFinish = async () => {
+    if (!auth.currentUser) {
+      alert("Please log in first");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // Save to Firestore
+      const userRef = doc(db, "users", auth.currentUser.uid);
+      await updateDoc(userRef, {
+        onboarding: {
+          ...formData,
+          completedAt: serverTimestamp(),
+          completed: true,
+        },
+        onboardingStep: 3,
+      });
+
+      // Show success message
+      alert("✅ Your profile is set up! Redirecting...");
+      
+      // Redirect back to dashboard
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 1000);
+    } catch (error) {
+      console.error("Error saving onboarding:", error);
+      alert("❌ Error saving profile. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <DashboardLayout>
@@ -33,9 +95,9 @@ function OnboardingInner() {
         </section>
 
         {/* Steps */}
-        {step === 1 && <StepBasics />}
-        {step === 2 && <StepClients />}
-        {step === 3 && <StepSchedule />}
+        {step === 1 && <StepBasics formData={formData} onChange={handleInputChange} />}
+        {step === 2 && <StepClients formData={formData} onChange={handleInputChange} />}
+        {step === 3 && <StepSchedule formData={formData} onChange={handleInputChange} />}
 
         {/* Nav buttons */}
         <section className="flex items-center justify-between pt-3 text-[11px]">
@@ -56,15 +118,11 @@ function OnboardingInner() {
               </button>
             ) : (
               <button
-                onClick={() => {
-                  // TODO: Save onboarding to Firestore
-                  alert(
-                    "This is where you'll save to Firestore and maybe redirect back to /dashboard."
-                  );
-                }}
-                className="px-4 py-1.5 rounded-full bg-emerald-500 text-[11px] font-semibold shadow-[0_0_18px_rgba(16,185,129,0.6)] hover:bg-emerald-400"
+                onClick={handleFinish}
+                disabled={loading}
+                className="px-4 py-1.5 rounded-full bg-emerald-500 text-[11px] font-semibold shadow-[0_0_18px_rgba(16,185,129,0.6)] hover:bg-emerald-400 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Finish & return to dashboard
+                {loading ? "Saving..." : "Finish & return to dashboard"}
               </button>
             )}
           </div>
@@ -133,15 +191,21 @@ function Input({
   label,
   placeholder,
   helper,
+  value,
+  onChange,
 }: {
   label: string;
   placeholder?: string;
   helper?: string;
+  value?: string;
+  onChange?: (val: string) => void;
 }) {
   return (
     <div className="space-y-1">
       <label className="block text-[11px] text-white/65">{label}</label>
       <input
+        value={value || ""}
+        onChange={(e) => onChange?.(e.target.value)}
         className="w-full rounded-2xl border border-white/20 bg-black/70 px-3 py-2 text-xs focus:outline-none focus:border-pink-500/80 focus:ring-1 focus:ring-pink-500/60"
         placeholder={placeholder}
       />
@@ -156,15 +220,21 @@ function TextArea({
   label,
   placeholder,
   helper,
+  value,
+  onChange,
 }: {
   label: string;
   placeholder?: string;
   helper?: string;
+  value?: string;
+  onChange?: (val: string) => void;
 }) {
   return (
     <div className="space-y-1">
       <label className="block text-[11px] text-white/65">{label}</label>
       <textarea
+        value={value || ""}
+        onChange={(e) => onChange?.(e.target.value)}
         rows={3}
         className="w-full rounded-2xl border border-white/20 bg-black/70 px-3 py-2 text-xs focus:outline-none focus:border-pink-500/80 focus:ring-1 focus:ring-pink-500/60"
         placeholder={placeholder}
@@ -178,7 +248,7 @@ function TextArea({
 
 /* STEP CONTENTS */
 
-function StepBasics() {
+function StepBasics({ formData, onChange }: { formData: any; onChange: (field: string, val: string) => void }) {
   return (
     <section className="grid gap-4 lg:grid-cols-2">
       <Card>
@@ -188,14 +258,20 @@ function StepBasics() {
         <Input
           label="Business name"
           placeholder="LitLabs Studio, Faded by Rae, Glow Room Lash Bar..."
+          value={formData.businessName}
+          onChange={(val) => onChange("businessName", val)}
         />
         <Input
           label="Location (city & area)"
           placeholder="Detroit, MI — Downtown / East side / etc."
+          value={formData.location}
+          onChange={(val) => onChange("location", val)}
         />
         <Input
           label="Main services"
           placeholder="Example: fades, tapers, wigs, acrylics, lash extensions..."
+          value={formData.services}
+          onChange={(val) => onChange("services", val)}
         />
       </Card>
 
@@ -206,17 +282,21 @@ function StepBasics() {
         <TextArea
           label="How do you want people to feel when they see your page?"
           placeholder="Example: clean, luxury, cozy, street, colorful, edgy..."
+          value={formData.vibe}
+          onChange={(val) => onChange("vibe", val)}
         />
         <TextArea
           label="Words you like for your brand"
           placeholder="Example: booked & busy, lowkey, chill, bougie, underground..."
+          value={formData.brandWords}
+          onChange={(val) => onChange("brandWords", val)}
         />
       </Card>
     </section>
   );
 }
 
-function StepClients() {
+function StepClients({ formData, onChange }: { formData: any; onChange: (field: string, val: string) => void }) {
   return (
     <section className="grid gap-4 lg:grid-cols-2">
       <Card>
@@ -226,15 +306,21 @@ function StepClients() {
         <TextArea
           label="Who do you WANT more of?"
           placeholder="Example: full sets, color clients, big-ticket lash sets, beard trims..."
+          value={formData.idealClients}
+          onChange={(val) => onChange("idealClients", val)}
         />
         <Input
           label="Average price range"
           placeholder="Example: $60–$120 per appointment"
+          value={formData.priceRange}
+          onChange={(val) => onChange("priceRange", val)}
         />
         <TextArea
           label="Clients you DO NOT want"
           placeholder="Example: last-minute cancellations, no-shows, price shoppers..."
           helper="LitLabs will avoid calling in people you don't want."
+          value={formData.dontWantClients}
+          onChange={(val) => onChange("dontWantClients", val)}
         />
       </Card>
 
@@ -245,17 +331,21 @@ function StepClients() {
         <TextArea
           label="Where do you post now?"
           placeholder="Example: Instagram Reels, TikTok, Facebook, Snapchat..."
+          value={formData.platforms}
+          onChange={(val) => onChange("platforms", val)}
         />
         <TextArea
           label="Any rules or things you never want in your content?"
           placeholder="Example: no cussing in captions, no mentioning kids, no politics..."
+          value={formData.contentRules}
+          onChange={(val) => onChange("contentRules", val)}
         />
       </Card>
     </section>
   );
 }
 
-function StepSchedule() {
+function StepSchedule({ formData, onChange }: { formData: any; onChange: (field: string, val: string) => void }) {
   return (
     <section className="grid gap-4 lg:grid-cols-2">
       <Card>
@@ -265,15 +355,21 @@ function StepSchedule() {
         <Input
           label="Normal work days"
           placeholder="Example: Tue–Sat, or Wed–Sun"
+          value={formData.workDays}
+          onChange={(val) => onChange("workDays", val)}
         />
         <Input
           label="Slow days / times"
           placeholder="Example: Tuesdays, weekday mornings, Sunday evenings..."
           helper="LitLabs will push promos harder on these days."
+          value={formData.slowDays}
+          onChange={(val) => onChange("slowDays", val)}
         />
         <Input
           label="How far ahead do you like to book?"
           placeholder="Example: 1 week, 2 weeks, end of the month..."
+          value={formData.bookingWindow}
+          onChange={(val) => onChange("bookingWindow", val)}
         />
       </Card>
 
@@ -284,10 +380,14 @@ function StepSchedule() {
         <Input
           label="Main way clients book"
           placeholder="Example: DM, text, booking link, website..."
+          value={formData.bookingMethod}
+          onChange={(val) => onChange("bookingMethod", val)}
         />
         <TextArea
           label="Anything else LitLabs should know?"
           placeholder="Example: you're balancing a 9–5, family schedule, or limited days."
+          value={formData.additionalInfo}
+          onChange={(val) => onChange("additionalInfo", val)}
         />
         <p className="text-[10px] text-emerald-300 pt-1">
           The more real you are here, the smarter your scripts and promos will feel.

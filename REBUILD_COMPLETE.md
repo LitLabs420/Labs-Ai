@@ -1,4 +1,4 @@
-# 🚀 GLAMFLOW LITLABS - COMPLETE REBUILD FINISHED
+# 🚀 LITLABS - COMPLETE REBUILD FINISHED
 
 ## ✅ What Just Happened (Live in 20 Minutes)
 
