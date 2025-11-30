@@ -1,19 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
+import Stripe from "stripe";
 import { stripe } from "@/lib/stripe";
 import { db } from "@/lib/firebase";
-import { doc, updateDoc, setDoc, arrayUnion, Timestamp } from "firebase/firestore";
+import { doc, updateDoc, Timestamp } from "firebase/firestore";
 import {
   sendUpgradeConfirmationEmail,
   sendPaymentFailedEmail,
   sendCancellationConfirmationEmail,
 } from "@/lib/email";
-import Stripe from "stripe";
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+export const maxDuration = 60;
 
 export async function POST(req: NextRequest) {
   try {
