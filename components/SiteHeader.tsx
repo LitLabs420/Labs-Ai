@@ -7,8 +7,11 @@ export default function SiteHeader() {
   const pathname = usePathname();
 
   const navItems = [
-    { href: "#features", label: "Features" },
-    { href: "#pricing", label: "Pricing" },
+    { href: "/#features", label: "Features" },
+    { href: "/#pricing", label: "Pricing" },
+    { href: "/demo", label: "Demo" },
+    { href: "/faq", label: "FAQ" },
+    { href: "/referrals", label: "Earn $" },
     { href: "/dashboard", label: "Login" },
   ];
 
