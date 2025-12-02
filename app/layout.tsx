@@ -3,19 +3,19 @@ import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 
 export const metadata: Metadata = {
-  title: "LitLabs AI - Your Personal Marketing Plug",
-  description: "AI that books clients for beauty professionals.",
-  keywords: "AI, marketing, beauty, chatbot, content, automation",
+  title: "LitLabs OS – Money-Making AI Command Center",
+  description:
+    "LitLabs OS: daily content, DM sales, promos, fraud detection + live dashboard for beauty pros.",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-black text-white antialiased">
+      <body className="bg-slate-950 text-slate-50 antialiased">
         <AuthProvider>
           {children}
         </AuthProvider>
