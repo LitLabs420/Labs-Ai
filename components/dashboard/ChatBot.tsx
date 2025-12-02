@@ -69,8 +69,9 @@ export function ChatBotOnboarding() {
       if (nextStep === "complete") {
         setComplete(true);
       }
-    } catch (err: any) {
-      console.error("Onboarding error:", err);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error("Onboarding error:", msg);
       setMessages((prev) => [
         ...prev,
         { role: "bot", text: "Oops, something went wrong. Please try again." },

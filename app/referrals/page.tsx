@@ -24,7 +24,7 @@ export default function ReferralsPage() {
         return;
       }
 
-      setUser(authUser as any);
+      setUser(authUser as unknown as any);
 
       const code = Buffer.from(`${authUser.uid}:referral`).toString('base64').slice(0, 12);
       setReferralCode(code);

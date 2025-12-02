@@ -31,7 +31,7 @@ export default function DemoPage() {
       description: "Generate daily posts in seconds, not hours",
       trigger: "Monday morning, posting time",
       response:
-        '"Your Monday mood: 💪 Ready to crush it. Here\'s 3 ways to level up today..." [Generates 3 tips] #Goals #Monday',
+        '"Your Monday mood: 💪 Ready to crush it. Here&apos;s 3 ways to level up today..." [Generates 3 tips] #Goals #Monday',
       stats: "300+ variations/month",
       color: "from-orange-500 to-yellow-500",
     },

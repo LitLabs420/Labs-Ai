@@ -17,9 +17,10 @@ export function MoneyTodayCard() {
       const result = await callGenerateMoneyToday();
       setSummary(result.summary);
       setPlan(result.todayPlan);
-    } catch (err: any) {
-      setError(err.message || "Failed to generate money today plan");
-      console.error(err);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setError(msg || "Failed to generate money today plan");
+      console.error(msg);
     } finally {
       setLoading(false);
     }
