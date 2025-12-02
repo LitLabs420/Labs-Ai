@@ -23,8 +23,19 @@ export async function runtimeConsume(ip) {
 
   initialized = true;
   try {
-    const IORedisMod = await import(ioredisName).catch(() => null);
-    const RateLimiterFlexibleMod = await import(rateLimiterFlexibleName).catch(() => null);
+    let IORedisMod = null;
+    let RateLimiterFlexibleMod = null;
+    try {
+      // Use an indirect `import()` via Function to avoid static bundler resolution.
+      IORedisMod = await (new Function('n', 'return import(n)')(ioredisName));
+    } catch (_) {
+      IORedisMod = null;
+    }
+    try {
+      RateLimiterFlexibleMod = await (new Function('n', 'return import(n)')(rateLimiterFlexibleName));
+    } catch (_) {
+      RateLimiterFlexibleMod = null;
+    }
 
     if (process.env.REDIS_URL && IORedisMod && RateLimiterFlexibleMod) {
       const IORedis = (IORedisMod.default || IORedisMod);
@@ -55,9 +66,9 @@ export async function runtimeConsume(ip) {
     throw new Error('no-redis');
   } catch (e) {
     // Propagate reject-like shapes upward so caller can fallback
-    if (e && typeof e.msBeforeNext === 'number') {
-      const sec = Math.ceil((e.msBeforeNext || 1000) / 1000) || 1;
-      return { ok: false, retryAfter: sec, remaining: typeof e.remainingPoints === 'number' ? e.remainingPoints : undefined };
+    if (e && typeof (e as any).msBeforeNext === 'number') {
+      const sec = Math.ceil(((e as any).msBeforeNext || 1000) / 1000) || 1;
+      return { ok: false, retryAfter: sec, remaining: typeof (e as any).remainingPoints === 'number' ? (e as any).remainingPoints : undefined };
     }
     throw e;
   }
