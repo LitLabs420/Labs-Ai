@@ -6,57 +6,18 @@
 type IORedisConstructor = new (uri: string) => unknown;
 type RateLimiterRedisConstructor = new (opts: { storeClient: unknown; points?: number; duration?: number; keyPrefix?: string }) => RedisLimiterLike;
 
-type RedisConsumeResponse = { remainingPoints?: number };
-type RedisRejectResponse = { msBeforeNext?: number; remainingPoints?: number };
-type RedisLimiterLike = {
-  consume: (key: string) => Promise<RedisConsumeResponse>
-};
+// Runtime loader function type returned by the runtime-only file.
+type RuntimeConsumeResult = { ok: true; remaining?: number } | { ok: false; retryAfter?: number; remaining?: number };
 
-let redisClient: unknown = null;
-let redisLimiter: RedisLimiterLike | null = null;
-let initialized = false;
+let runtimeConsume: ((ip: string) => Promise<RuntimeConsumeResult>) | null = null;
 
-async function initLimiterIfNeeded() {
-  if (initialized) return;
-  initialized = true;
+async function ensureRuntimeLoader() {
+  if (runtimeConsume) return;
   try {
-    // Dynamic import optional dependencies at runtime so the bundler doesn't 
-    // fail when they aren't installed for local dev.
-    const ioredisName = 'ioredis';
-    const rateLimiterFlexibleName = 'rate-limiter-flexible';
-    const IORedisMod = await import(ioredisName).catch(() => null);
-    const RateLimiterFlexibleMod = await import(rateLimiterFlexibleName).catch(() => null);
-    if (process.env.REDIS_URL && IORedisMod && RateLimiterFlexibleMod) {
-      // Normalize possible default export shape without using `any`.
-      const IORedisCandidate = (IORedisMod as unknown) as { default?: unknown };
-      const IORedisCtor = (IORedisCandidate.default ?? IORedisMod) as unknown as IORedisConstructor;
-
-      const RateLimiterCandidate = (RateLimiterFlexibleMod as unknown) as { default?: unknown };
-      const RateLimiterFlexible = (RateLimiterCandidate.default ?? RateLimiterFlexibleMod) as unknown;
-
-      // grab the RateLimiterRedis constructor if present
-      const RateLimiterRedisCtor = ((RateLimiterFlexible as unknown) as { RateLimiterRedis?: unknown }).RateLimiterRedis as unknown as RateLimiterRedisConstructor | undefined;
-
-      if (typeof IORedisCtor === 'function' && RateLimiterRedisCtor) {
-        redisClient = new IORedisCtor(process.env.REDIS_URL); 
-        redisLimiter = new RateLimiterRedisCtor({
-          storeClient: redisClient,
-          points: parseInt(process.env.DEMO_RATE_LIMIT || '20', 10),
-          duration: parseInt(process.env.DEMO_RATE_LIMIT_WINDOW || '60', 10),
-          keyPrefix: 'rl_demo',
-        });
-      } else {
-        redisClient = null;
-        redisLimiter = null;
-      }
-    } else {
-      redisClient = null;
-      redisLimiter = null;
-    }
+    const runtime = await import('./rateLimiter.runtime');
+    runtimeConsume = runtime?.runtimeConsume ?? null;
   } catch (e) {
-    // optional deps not present — fall back to in-memory limiter
-    redisClient = null;
-    redisLimiter = null;
+    runtimeConsume = null;
   }
 }
 
@@ -68,17 +29,15 @@ const WINDOW_MS = DEFAULT_WINDOW_SEC * 1000;
 const MAX_PER_WINDOW = DEFAULT_DEMO_RATE_LIMIT;
 
 export async function checkRateLimit(ip: string) {
-  await initLimiterIfNeeded();
-  if (redisLimiter) {
+  await ensureRuntimeLoader();
+
+  if (runtimeConsume) {
     try {
-      const res = await redisLimiter.consume(ip);
-      const remaining = typeof res.remainingPoints === 'number' ? res.remainingPoints : undefined;
-      return { ok: true, remaining };
-    } catch (rejResUnknown) {
-      const rej = rejResUnknown as RedisRejectResponse & { msBeforeNext: number };
-      const sec = Math.ceil((rej.msBeforeNext || 1000) / 1000) || 1;
-      const remaining = typeof rej.remainingPoints === 'number' ? rej.remainingPoints : undefined;
-      return { ok: false, retryAfter: sec, remaining };
+      const res = await runtimeConsume(ip);
+      if (res.ok === true) return { ok: true, remaining: res.remaining };
+      return { ok: false, retryAfter: res.retryAfter };
+    } catch (e) {
+      // fall through to in-memory fallback
     }
   }
 
