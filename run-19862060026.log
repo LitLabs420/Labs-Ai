@@ -1,0 +1,704 @@
+Build, Lint & Audit	Set up job	﻿2025-12-02T14:27:54.7956710Z Current runner version: '2.329.0'
+Build, Lint & Audit	Set up job	2025-12-02T14:27:54.8027957Z ##[group]Runner Image Provisioner
+Build, Lint & Audit	Set up job	2025-12-02T14:27:54.8029369Z Hosted Compute Agent
+Build, Lint & Audit	Set up job	2025-12-02T14:27:54.8030611Z Version: 20251016.436
+Build, Lint & Audit	Set up job	2025-12-02T14:27:54.8031588Z Commit: 8ab8ac8bfd662a3739dab9fe09456aba92132568
+Build, Lint & Audit	Set up job	2025-12-02T14:27:54.8032858Z Build Date: 2025-10-15T20:44:12Z
+Build, Lint & Audit	Set up job	2025-12-02T14:27:54.8033768Z ##[endgroup]
+Build, Lint & Audit	Set up job	2025-12-02T14:27:54.8034657Z ##[group]Operating System
+Build, Lint & Audit	Set up job	2025-12-02T14:27:54.8035596Z Ubuntu
+Build, Lint & Audit	Set up job	2025-12-02T14:27:54.8036429Z 24.04.3
+Build, Lint & Audit	Set up job	2025-12-02T14:27:54.8037199Z LTS
+Build, Lint & Audit	Set up job	2025-12-02T14:27:54.8038094Z ##[endgroup]
+Build, Lint & Audit	Set up job	2025-12-02T14:27:54.8039017Z ##[group]Runner Image
+Build, Lint & Audit	Set up job	2025-12-02T14:27:54.8060297Z Image: ubuntu-24.04
+Build, Lint & Audit	Set up job	2025-12-02T14:27:54.8061471Z Version: 20251112.124.1
+Build, Lint & Audit	Set up job	2025-12-02T14:27:54.8063314Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20251112.124/images/ubuntu/Ubuntu2404-Readme.md
+Build, Lint & Audit	Set up job	2025-12-02T14:27:54.8065881Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20251112.124
+Build, Lint & Audit	Set up job	2025-12-02T14:27:54.8067990Z ##[endgroup]
+Build, Lint & Audit	Set up job	2025-12-02T14:27:54.8070285Z ##[group]GITHUB_TOKEN Permissions
+Build, Lint & Audit	Set up job	2025-12-02T14:27:54.8073126Z Contents: read
+Build, Lint & Audit	Set up job	2025-12-02T14:27:54.8073961Z Metadata: read
+Build, Lint & Audit	Set up job	2025-12-02T14:27:54.8074846Z Packages: read
+Build, Lint & Audit	Set up job	2025-12-02T14:27:54.8075604Z ##[endgroup]
+Build, Lint & Audit	Set up job	2025-12-02T14:27:54.8078362Z Secret source: Actions
+Build, Lint & Audit	Set up job	2025-12-02T14:27:54.8079507Z Prepare workflow directory
+Build, Lint & Audit	Set up job	2025-12-02T14:27:54.8702050Z Prepare all required actions
+Build, Lint & Audit	Set up job	2025-12-02T14:27:54.8760771Z Getting action download info
+Build, Lint & Audit	Set up job	2025-12-02T14:27:55.3489564Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+Build, Lint & Audit	Set up job	2025-12-02T14:27:56.0640823Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+Build, Lint & Audit	Set up job	2025-12-02T14:27:56.2475163Z Complete job name: Build, Lint & Audit
+Build, Lint & Audit	Checkout	﻿2025-12-02T14:27:56.3149115Z ##[group]Run actions/checkout@v4
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.3150364Z with:
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.3150904Z   repository: LiTree89/glamflow-ai
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.3151629Z   token: ***
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.3152069Z   ssh-strict: true
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.3152512Z   ssh-user: git
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.3152946Z   persist-credentials: true
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.3153443Z   clean: true
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.3153877Z   sparse-checkout-cone-mode: true
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.3154400Z   fetch-depth: 1
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.3154814Z   fetch-tags: false
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.3155247Z   show-progress: true
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.3155692Z   lfs: false
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.3156100Z   submodules: false
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.3156534Z   set-safe-directory: true
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.3157312Z ##[endgroup]
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4323145Z Syncing repository: LiTree89/glamflow-ai
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4325323Z ##[group]Getting Git version info
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4326140Z Working directory is '/home/runner/work/glamflow-ai/glamflow-ai'
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4327173Z [command]/usr/bin/git version
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4387793Z git version 2.51.2
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4419414Z ##[endgroup]
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4434461Z Temporarily overriding HOME='/home/runner/work/_temp/f931433a-93fb-48e8-a342-257d89abb0b6' before making global git config changes
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4438323Z Adding repository directory to the temporary git global config as a safe directory
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4452145Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/glamflow-ai/glamflow-ai
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4518382Z Deleting the contents of '/home/runner/work/glamflow-ai/glamflow-ai'
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4520702Z ##[group]Initializing the repository
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4522073Z [command]/usr/bin/git init /home/runner/work/glamflow-ai/glamflow-ai
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4623931Z hint: Using 'master' as the name for the initial branch. This default branch name
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4625803Z hint: is subject to change. To configure the initial branch name to use in all
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4627445Z hint: of your new repositories, which will suppress this warning, call:
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4628797Z hint:
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4629720Z hint: 	git config --global init.defaultBranch <name>
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4631311Z hint:
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4632356Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4634185Z hint: 'development'. The just-created branch can be renamed via this command:
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4635690Z hint:
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4637180Z hint: 	git branch -m <name>
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4638151Z hint:
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4639385Z hint: Disable this message with "git config set advice.defaultBranchName false"
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4642581Z Initialized empty Git repository in /home/runner/work/glamflow-ai/glamflow-ai/.git/
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4648386Z [command]/usr/bin/git remote add origin https://github.com/LiTree89/glamflow-ai
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4687393Z ##[endgroup]
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4688852Z ##[group]Disabling automatic garbage collection
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4692148Z [command]/usr/bin/git config --local gc.auto 0
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4726042Z ##[endgroup]
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4727462Z ##[group]Setting up auth
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4733531Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.4767229Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.5128353Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.5162925Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.5397356Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.5430751Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.5677639Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.5714787Z ##[endgroup]
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.5716376Z ##[group]Fetching the repository
+Build, Lint & Audit	Checkout	2025-12-02T14:27:56.5724725Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +a073c5232cac8ce1488f9c435185e0a3f21bce87:refs/remotes/origin/master
+Build, Lint & Audit	Checkout	2025-12-02T14:28:10.1844508Z From https://github.com/LiTree89/glamflow-ai
+Build, Lint & Audit	Checkout	2025-12-02T14:28:10.1845980Z  * [new ref]         a073c5232cac8ce1488f9c435185e0a3f21bce87 -> origin/master
+Build, Lint & Audit	Checkout	2025-12-02T14:28:10.1883191Z ##[endgroup]
+Build, Lint & Audit	Checkout	2025-12-02T14:28:10.1884459Z ##[group]Determining the checkout info
+Build, Lint & Audit	Checkout	2025-12-02T14:28:10.1885865Z ##[endgroup]
+Build, Lint & Audit	Checkout	2025-12-02T14:28:10.1892290Z [command]/usr/bin/git sparse-checkout disable
+Build, Lint & Audit	Checkout	2025-12-02T14:28:10.1937486Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+Build, Lint & Audit	Checkout	2025-12-02T14:28:10.1966428Z ##[group]Checking out the ref
+Build, Lint & Audit	Checkout	2025-12-02T14:28:10.1971129Z [command]/usr/bin/git checkout --progress --force -B master refs/remotes/origin/master
+Build, Lint & Audit	Checkout	2025-12-02T14:28:11.0229366Z Reset branch 'master'
+Build, Lint & Audit	Checkout	2025-12-02T14:28:11.0240352Z branch 'master' set up to track 'origin/master'.
+Build, Lint & Audit	Checkout	2025-12-02T14:28:11.0281254Z ##[endgroup]
+Build, Lint & Audit	Checkout	2025-12-02T14:28:11.0333233Z [command]/usr/bin/git log -1 --format=%H
+Build, Lint & Audit	Checkout	2025-12-02T14:28:11.0360353Z a073c5232cac8ce1488f9c435185e0a3f21bce87
+Build, Lint & Audit	Set up Node	﻿2025-12-02T14:28:11.0604884Z ##[group]Run actions/setup-node@v4
+Build, Lint & Audit	Set up Node	2025-12-02T14:28:11.0605206Z with:
+Build, Lint & Audit	Set up Node	2025-12-02T14:28:11.0605379Z   node-version: 20
+Build, Lint & Audit	Set up Node	2025-12-02T14:28:11.0605585Z   always-auth: false
+Build, Lint & Audit	Set up Node	2025-12-02T14:28:11.0605775Z   check-latest: false
+Build, Lint & Audit	Set up Node	2025-12-02T14:28:11.0606109Z   token: ***
+Build, Lint & Audit	Set up Node	2025-12-02T14:28:11.0606288Z ##[endgroup]
+Build, Lint & Audit	Set up Node	2025-12-02T14:28:11.2394421Z Found in cache @ /opt/hostedtoolcache/node/20.19.5/x64
+Build, Lint & Audit	Set up Node	2025-12-02T14:28:11.2400847Z ##[group]Environment details
+Build, Lint & Audit	Set up Node	2025-12-02T14:28:11.7499293Z node: v20.19.5
+Build, Lint & Audit	Set up Node	2025-12-02T14:28:11.7501108Z npm: 10.8.2
+Build, Lint & Audit	Set up Node	2025-12-02T14:28:11.7501961Z yarn: 1.22.22
+Build, Lint & Audit	Set up Node	2025-12-02T14:28:11.7502743Z ##[endgroup]
+Build, Lint & Audit	Install dependencies	﻿2025-12-02T14:28:11.7573050Z ##[group]Run npm ci
+Build, Lint & Audit	Install dependencies	2025-12-02T14:28:11.7573570Z [36;1mnpm ci[0m
+Build, Lint & Audit	Install dependencies	2025-12-02T14:28:11.7619083Z shell: /usr/bin/bash -e {0}
+Build, Lint & Audit	Install dependencies	2025-12-02T14:28:11.7619393Z ##[endgroup]
+Build, Lint & Audit	Install dependencies	2025-12-02T14:28:31.4428334Z 
+Build, Lint & Audit	Install dependencies	2025-12-02T14:28:31.4437894Z added 534 packages, and audited 535 packages in 20s
+Build, Lint & Audit	Install dependencies	2025-12-02T14:28:31.4439729Z 
+Build, Lint & Audit	Install dependencies	2025-12-02T14:28:31.4440479Z 150 packages are looking for funding
+Build, Lint & Audit	Install dependencies	2025-12-02T14:28:31.4442034Z   run `npm fund` for details
+Build, Lint & Audit	Install dependencies	2025-12-02T14:28:31.4446092Z 
+Build, Lint & Audit	Install dependencies	2025-12-02T14:28:31.4446669Z found 0 vulnerabilities
+Build, Lint & Audit	Build	﻿2025-12-02T14:28:31.4853034Z ##[group]Run npm run build
+Build, Lint & Audit	Build	2025-12-02T14:28:31.4853306Z [36;1mnpm run build[0m
+Build, Lint & Audit	Build	2025-12-02T14:28:31.4886593Z shell: /usr/bin/bash -e {0}
+Build, Lint & Audit	Build	2025-12-02T14:28:31.4886823Z ##[endgroup]
+Build, Lint & Audit	Build	2025-12-02T14:28:31.6037149Z 
+Build, Lint & Audit	Build	2025-12-02T14:28:31.6039021Z > Litree-web@0.1.0 build
+Build, Lint & Audit	Build	2025-12-02T14:28:31.6039459Z > next build
+Build, Lint & Audit	Build	2025-12-02T14:28:31.6039654Z 
+Build, Lint & Audit	Build	2025-12-02T14:28:32.4058059Z ⚠ No build cache found. Please configure build caching for faster rebuilds. Read more: https://nextjs.org/docs/messages/no-cache
+Build, Lint & Audit	Build	2025-12-02T14:28:32.4182731Z Attention: Next.js now collects completely anonymous telemetry regarding usage.
+Build, Lint & Audit	Build	2025-12-02T14:28:32.4185836Z This information is used to shape Next.js' roadmap and prioritize features.
+Build, Lint & Audit	Build	2025-12-02T14:28:32.4187311Z You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+Build, Lint & Audit	Build	2025-12-02T14:28:32.4188372Z https://nextjs.org/telemetry
+Build, Lint & Audit	Build	2025-12-02T14:28:32.4188684Z 
+Build, Lint & Audit	Build	2025-12-02T14:28:32.4314026Z    ▲ Next.js 16.0.6 (Turbopack)
+Build, Lint & Audit	Build	2025-12-02T14:28:32.4315857Z 
+Build, Lint & Audit	Build	2025-12-02T14:28:32.5188279Z    Creating an optimized production build ...
+Build, Lint & Audit	Build	2025-12-02T14:28:47.8232295Z  ✓ Compiled successfully in 14.8s
+Build, Lint & Audit	Build	2025-12-02T14:28:47.8401747Z    Running TypeScript ...
+Build, Lint & Audit	Build	2025-12-02T14:28:55.9379031Z    Collecting page data using 1 worker ...
+Build, Lint & Audit	Build	2025-12-02T14:28:56.5754782Z    Generating static pages using 1 worker (0/49) ...
+Build, Lint & Audit	Build	2025-12-02T14:28:57.2393865Z    Generating static pages using 1 worker (12/49) 
+Build, Lint & Audit	Build	2025-12-02T14:28:57.2950654Z    Generating static pages using 1 worker (24/49) 
+Build, Lint & Audit	Build	2025-12-02T14:28:57.5058081Z    Generating static pages using 1 worker (36/49) 
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6368337Z  ✓ Generating static pages using 1 worker (49/49) in 1061.2ms
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6550700Z    Finalizing page optimization ...
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6594693Z 
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6674488Z Route (app)
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6679231Z ┌ ƒ /
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6683355Z ├ ○ /_not-found
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6687197Z ├ ○ /admin
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6691520Z ├ ○ /admin/analytics
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6695248Z ├ ○ /admin/dashboard
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6699232Z ├ ○ /admin/users
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6701603Z ├ ƒ /api/activity
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6710825Z ├ ƒ /api/admin/users
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6711520Z ├ ƒ /api/ai-chat
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6716216Z ├ ƒ /api/ai/dm-reply
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6717182Z ├ ƒ /api/ai/generate-content
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6718007Z ├ ƒ /api/ai/money-play
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6718655Z ├ ƒ /api/analytics/bigquery
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6723616Z ├ ƒ /api/assistant
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6724570Z ├ ƒ /api/checkout-session
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6725459Z ├ ƒ /api/create-checkout-session
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6728494Z ├ ƒ /api/demo
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6728976Z ├ ƒ /api/email-sequences-enhanced
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6729480Z ├ ƒ /api/paypal-checkout
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6729903Z ├ ƒ /api/referrals
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6730629Z ├ ƒ /api/referrals/[referralCode]
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6731102Z ├ ƒ /api/security
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6731518Z ├ ƒ /api/send-email-sequence
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6732040Z ├ ƒ /api/send-verification-email
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6732563Z ├ ƒ /api/stripe-checkout
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6733002Z ├ ƒ /api/stripe-webhook
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6733447Z ├ ƒ /api/subscription-update
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6733912Z ├ ƒ /api/webhooks/paypal
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6734345Z ├ ƒ /api/webhooks/stripe
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6734718Z ├ ○ /auth
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6735030Z ├ ○ /billing
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6735336Z ├ ○ /dashboard
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6735690Z ├ ○ /dashboard/admin
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6736406Z ├ ○ /dashboard/ai
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6736766Z ├ ○ /dashboard/billing
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6737182Z ├ ○ /dashboard/onboarding
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6737615Z ├ ○ /dashboard/playbooks
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6738032Z ├ ○ /dashboard/profile
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6738411Z ├ ○ /dashboard/security
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6738809Z ├ ○ /dashboard/settings
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6739214Z ├ ○ /dashboard/stats
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6739560Z ├ ○ /demo
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6739881Z ├ ○ /faq
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6748917Z ├ ○ /history
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6749644Z ├ ○ /onboarding
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6750284Z ├ ○ /privacy-policy
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6750671Z ├ ○ /profile
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6751020Z ├ ○ /referrals
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6751399Z └ ○ /terms-of-service
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6751627Z 
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6751640Z 
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6752000Z ○  (Static)   prerendered as static content
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6823631Z ƒ  (Dynamic)  server-rendered on demand
+Build, Lint & Audit	Build	2025-12-02T14:28:57.6823964Z 
+Build, Lint & Audit	Run ESLint	﻿2025-12-02T14:28:57.7672884Z ##[group]Run npm run lint --if-present
+Build, Lint & Audit	Run ESLint	2025-12-02T14:28:57.7673269Z [36;1mnpm run lint --if-present[0m
+Build, Lint & Audit	Run ESLint	2025-12-02T14:28:57.7706072Z shell: /usr/bin/bash -e {0}
+Build, Lint & Audit	Run ESLint	2025-12-02T14:28:57.7706302Z ##[endgroup]
+Build, Lint & Audit	Run ESLint	2025-12-02T14:28:57.8899002Z 
+Build, Lint & Audit	Run ESLint	2025-12-02T14:28:57.8899363Z > Litree-web@0.1.0 lint
+Build, Lint & Audit	Run ESLint	2025-12-02T14:28:57.8899776Z > eslint
+Build, Lint & Audit	Run ESLint	2025-12-02T14:28:57.8900178Z 
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3319132Z 
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3324243Z /home/runner/work/glamflow-ai/glamflow-ai/app/api/ai/generate-content/route.ts
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3381121Z ##[warning]  2:27  warning  'GenerateContentRequest' is defined but never used  @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3390800Z 
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3391408Z /home/runner/work/glamflow-ai/glamflow-ai/app/api/analytics/bigquery/route.ts
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3392961Z ##[warning]  5:16  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3394135Z 
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3394722Z /home/runner/work/glamflow-ai/glamflow-ai/app/api/email-sequences-enhanced/route.ts
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3396249Z ##[warning]  237:34  warning  'delay' is assigned a value but never used  @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3397449Z 
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3397906Z /home/runner/work/glamflow-ai/glamflow-ai/app/dashboard/admin/page.tsx
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3399278Z ##[warning]  10:9   warning  'router' is assigned a value but never used   @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3401683Z ##[warning]  11:10  warning  'mounted' is assigned a value but never used  @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3402833Z 
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3403355Z /home/runner/work/glamflow-ai/glamflow-ai/app/dashboard/billing/page.tsx
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3404569Z ##[warning]  9:8  warning  'Link' is defined but never used  @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3405662Z 
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3406080Z /home/runner/work/glamflow-ai/glamflow-ai/app/dashboard/page.tsx
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3407357Z ##[warning]  27:10  warning  'displayName' is assigned a value but never used  @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3408589Z 
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3409076Z /home/runner/work/glamflow-ai/glamflow-ai/components/AdminUserManager.tsx
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3410532Z ##[warning]  4:10  warning  'auth' is defined but never used  @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3411654Z 
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3412089Z /home/runner/work/glamflow-ai/glamflow-ai/components/LiveDemo.tsx
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3413232Z ##[warning]  36:20  warning  'e' is defined but never used    @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3415057Z ##[warning]  66:14  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3416176Z 
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3416638Z /home/runner/work/glamflow-ai/glamflow-ai/components/PricingSection.tsx
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3417980Z ##[warning]   3:10  warning  'useEffect' is defined but never used                  @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3420212Z ##[warning]   5:10  warning  'trackEvent' is defined but never used                 @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3422931Z ##[warning]   6:10  warning  'callCreateCheckoutSession' is defined but never used  @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3425062Z ##[warning]  24:32  warning  'stripeplan' is defined but never used                 @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3426245Z 
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3426779Z /home/runner/work/glamflow-ai/glamflow-ai/components/dashboard/MoneyTodayCard.tsx
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3428074Z ##[warning]  29:42  warning  'type' is defined but never used  @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3429195Z 
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3429607Z /home/runner/work/glamflow-ai/glamflow-ai/functions/lib/index.js
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3431337Z ##[warning]  193:9   warning  'systemPrompt' is assigned a value but never used  @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3433495Z ##[warning]  194:9   warning  'userPrompt' is assigned a value but never used    @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3435981Z ##[warning]  253:48  warning  'data' is defined but never used                   @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3438066Z ##[warning]  253:54  warning  'context' is defined but never used                @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3439273Z 
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3439701Z /home/runner/work/glamflow-ai/glamflow-ai/functions/src/index.ts
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3441388Z ##[warning]  200:11  warning  'systemPrompt' is assigned a value but never used  @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3443516Z ##[warning]  201:11  warning  'userPrompt' is assigned a value but never used    @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3445550Z ##[warning]  279:53  warning  'data' is defined but never used                   @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3447503Z ##[warning]  279:59  warning  'context' is defined but never used                @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3448702Z 
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3449039Z /home/runner/work/glamflow-ai/glamflow-ai/lib/email.ts
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3450454Z ##[warning]  1:16  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3451650Z 
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3452106Z /home/runner/work/glamflow-ai/glamflow-ai/lib/rateLimiter.runtime.js
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3453524Z ##[warning]  28:14  warning  '_' is defined but never used                                   @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3455505Z ##[warning]  33:14  warning  '_' is defined but never used                                   @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3457690Z ##[warning]  73:1   warning  Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3459002Z 
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3459448Z /home/runner/work/glamflow-ai/glamflow-ai/lib/rateLimiter.runtime.ts
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3461188Z ##[warning]  75:1  warning  Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3462558Z 
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3462939Z /home/runner/work/glamflow-ai/glamflow-ai/lib/rateLimiter.ts
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3464324Z ##[warning]   6:6   warning  'IORedisConstructor' is defined but never used                  @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3466633Z ##[warning]   8:6   warning  'RateLimiterRedisConstructor' is defined but never used         @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3468762Z ##[warning]  20:12  warning  'e' is defined but never used                                   @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3471013Z ##[warning]  40:14  warning  'e' is defined but never used                                   @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3473183Z ##[warning]  62:1   warning  Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3474510Z 
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3475112Z /home/runner/work/glamflow-ai/glamflow-ai/lib/recaptcha.ts
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3476337Z ##[warning]  16:12  warning  'e' is defined but never used                                   @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3478490Z ##[warning]  21:1   warning  Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3479781Z 
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3480394Z /home/runner/work/glamflow-ai/glamflow-ai/lib/sentry.ts
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3481620Z ##[warning]  20:12  warning  'e' is defined but never used                                   @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3483635Z ##[warning]  33:12  warning  'e' is defined but never used                                   @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3485751Z ##[warning]  38:1   warning  Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3487033Z 
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3487676Z /home/runner/work/glamflow-ai/glamflow-ai/lib/serverLogger.ts
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3489084Z ##[warning]  24:1  warning  Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3490660Z 
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3491048Z /home/runner/work/glamflow-ai/glamflow-ai/lib/tier-limits.ts
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3492173Z ##[warning]  1:14  warning  'auth' is defined but never used  @typescript-eslint/no-unused-vars
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3493306Z 
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3493828Z ✖ 40 problems (0 errors, 40 warnings)
+Build, Lint & Audit	Run ESLint	2025-12-02T14:29:06.3494108Z 
+Build, Lint & Audit	Run npm audit	﻿2025-12-02T14:29:06.3941868Z ##[group]Run npm audit --audit-level=high || true
+Build, Lint & Audit	Run npm audit	2025-12-02T14:29:06.3942255Z [36;1mnpm audit --audit-level=high || true[0m
+Build, Lint & Audit	Run npm audit	2025-12-02T14:29:06.3974506Z shell: /usr/bin/bash -e {0}
+Build, Lint & Audit	Run npm audit	2025-12-02T14:29:06.3974745Z ##[endgroup]
+Build, Lint & Audit	Run npm audit	2025-12-02T14:29:07.0727772Z found 0 vulnerabilities
+Build, Lint & Audit	Post Set up Node	﻿2025-12-02T14:29:07.0930927Z Post job cleanup.
+Build, Lint & Audit	Post Checkout	﻿2025-12-02T14:29:07.3221217Z Post job cleanup.
+Build, Lint & Audit	Post Checkout	2025-12-02T14:29:07.4203347Z [command]/usr/bin/git version
+Build, Lint & Audit	Post Checkout	2025-12-02T14:29:07.4244730Z git version 2.51.2
+Build, Lint & Audit	Post Checkout	2025-12-02T14:29:07.4293928Z Temporarily overriding HOME='/home/runner/work/_temp/9a0716a0-341d-42f3-9642-a11f4c4e8ba7' before making global git config changes
+Build, Lint & Audit	Post Checkout	2025-12-02T14:29:07.4295917Z Adding repository directory to the temporary git global config as a safe directory
+Build, Lint & Audit	Post Checkout	2025-12-02T14:29:07.4300558Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/glamflow-ai/glamflow-ai
+Build, Lint & Audit	Post Checkout	2025-12-02T14:29:07.4346174Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Build, Lint & Audit	Post Checkout	2025-12-02T14:29:07.4383461Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Build, Lint & Audit	Post Checkout	2025-12-02T14:29:07.4646553Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Build, Lint & Audit	Post Checkout	2025-12-02T14:29:07.4670539Z http.https://github.com/.extraheader
+Build, Lint & Audit	Post Checkout	2025-12-02T14:29:07.4686429Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+Build, Lint & Audit	Post Checkout	2025-12-02T14:29:07.4722158Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Build, Lint & Audit	Post Checkout	2025-12-02T14:29:07.4973633Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Build, Lint & Audit	Post Checkout	2025-12-02T14:29:07.5009512Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Build, Lint & Audit	Complete job	﻿2025-12-02T14:29:07.5430568Z Cleaning up orphan processes
+Secrets Scan (Gitleaks)	Set up job	﻿2025-12-02T14:29:15.0619010Z Current runner version: '2.329.0'
+Secrets Scan (Gitleaks)	Set up job	2025-12-02T14:29:15.0677894Z ##[group]Runner Image Provisioner
+Secrets Scan (Gitleaks)	Set up job	2025-12-02T14:29:15.0679066Z Hosted Compute Agent
+Secrets Scan (Gitleaks)	Set up job	2025-12-02T14:29:15.0680320Z Version: 20251016.436
+Secrets Scan (Gitleaks)	Set up job	2025-12-02T14:29:15.0681307Z Commit: 8ab8ac8bfd662a3739dab9fe09456aba92132568
+Secrets Scan (Gitleaks)	Set up job	2025-12-02T14:29:15.0682473Z Build Date: 2025-10-15T20:44:12Z
+Secrets Scan (Gitleaks)	Set up job	2025-12-02T14:29:15.0683520Z ##[endgroup]
+Secrets Scan (Gitleaks)	Set up job	2025-12-02T14:29:15.0684422Z ##[group]Operating System
+Secrets Scan (Gitleaks)	Set up job	2025-12-02T14:29:15.0685262Z Ubuntu
+Secrets Scan (Gitleaks)	Set up job	2025-12-02T14:29:15.0686135Z 24.04.3
+Secrets Scan (Gitleaks)	Set up job	2025-12-02T14:29:15.0686825Z LTS
+Secrets Scan (Gitleaks)	Set up job	2025-12-02T14:29:15.0687540Z ##[endgroup]
+Secrets Scan (Gitleaks)	Set up job	2025-12-02T14:29:15.0688381Z ##[group]Runner Image
+Secrets Scan (Gitleaks)	Set up job	2025-12-02T14:29:15.0689346Z Image: ubuntu-24.04
+Secrets Scan (Gitleaks)	Set up job	2025-12-02T14:29:15.0690407Z Version: 20251112.124.1
+Secrets Scan (Gitleaks)	Set up job	2025-12-02T14:29:15.0692155Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20251112.124/images/ubuntu/Ubuntu2404-Readme.md
+Secrets Scan (Gitleaks)	Set up job	2025-12-02T14:29:15.0694601Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20251112.124
+Secrets Scan (Gitleaks)	Set up job	2025-12-02T14:29:15.0696682Z ##[endgroup]
+Secrets Scan (Gitleaks)	Set up job	2025-12-02T14:29:15.0698601Z ##[group]GITHUB_TOKEN Permissions
+Secrets Scan (Gitleaks)	Set up job	2025-12-02T14:29:15.0701694Z Contents: read
+Secrets Scan (Gitleaks)	Set up job	2025-12-02T14:29:15.0702642Z Metadata: read
+Secrets Scan (Gitleaks)	Set up job	2025-12-02T14:29:15.0703513Z Packages: read
+Secrets Scan (Gitleaks)	Set up job	2025-12-02T14:29:15.0704298Z ##[endgroup]
+Secrets Scan (Gitleaks)	Set up job	2025-12-02T14:29:15.0707889Z Secret source: Actions
+Secrets Scan (Gitleaks)	Set up job	2025-12-02T14:29:15.0709267Z Prepare workflow directory
+Secrets Scan (Gitleaks)	Set up job	2025-12-02T14:29:15.1660017Z Prepare all required actions
+Secrets Scan (Gitleaks)	Set up job	2025-12-02T14:29:15.1780841Z Getting action download info
+Secrets Scan (Gitleaks)	Set up job	2025-12-02T14:29:15.5959974Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+Secrets Scan (Gitleaks)	Set up job	2025-12-02T14:29:16.2483363Z Download action repository 'actions/setup-go@v4' (SHA:19bb51245e9c80abacb2e91cc42b33fa478b8639)
+Secrets Scan (Gitleaks)	Set up job	2025-12-02T14:29:16.7715909Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+Secrets Scan (Gitleaks)	Set up job	2025-12-02T14:29:16.8722037Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+Secrets Scan (Gitleaks)	Set up job	2025-12-02T14:29:17.1187480Z Complete job name: Secrets Scan (Gitleaks)
+Secrets Scan (Gitleaks)	Checkout	﻿2025-12-02T14:29:17.1998414Z ##[group]Run actions/checkout@v4
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.1999985Z with:
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.2000793Z   repository: LiTree89/glamflow-ai
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.2002084Z   token: ***
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.2002837Z   ssh-strict: true
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.2003607Z   ssh-user: git
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.2004401Z   persist-credentials: true
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.2005279Z   clean: true
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.2006077Z   sparse-checkout-cone-mode: true
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.2007061Z   fetch-depth: 1
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.2007833Z   fetch-tags: false
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.2008655Z   show-progress: true
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.2009456Z   lfs: false
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.2010577Z   submodules: false
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.2011405Z   set-safe-directory: true
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.2012630Z ##[endgroup]
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3205308Z Syncing repository: LiTree89/glamflow-ai
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3209522Z ##[group]Getting Git version info
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3217162Z Working directory is '/home/runner/work/glamflow-ai/glamflow-ai'
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3219406Z [command]/usr/bin/git version
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3313306Z git version 2.51.2
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3329420Z ##[endgroup]
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3357847Z Temporarily overriding HOME='/home/runner/work/_temp/5da0a67d-5eb6-44fd-aec8-16479e8f10b3' before making global git config changes
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3362695Z Adding repository directory to the temporary git global config as a safe directory
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3369645Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/glamflow-ai/glamflow-ai
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3410025Z Deleting the contents of '/home/runner/work/glamflow-ai/glamflow-ai'
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3414148Z ##[group]Initializing the repository
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3419930Z [command]/usr/bin/git init /home/runner/work/glamflow-ai/glamflow-ai
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3531142Z hint: Using 'master' as the name for the initial branch. This default branch name
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3534910Z hint: is subject to change. To configure the initial branch name to use in all
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3538340Z hint: of your new repositories, which will suppress this warning, call:
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3544559Z hint:
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3561668Z hint: 	git config --global init.defaultBranch <name>
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3563544Z hint:
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3565105Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3568016Z hint: 'development'. The just-created branch can be renamed via this command:
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3570722Z hint:
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3571959Z hint: 	git branch -m <name>
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3573365Z hint:
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3575245Z hint: Disable this message with "git config set advice.defaultBranchName false"
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3578417Z Initialized empty Git repository in /home/runner/work/glamflow-ai/glamflow-ai/.git/
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3583933Z [command]/usr/bin/git remote add origin https://github.com/LiTree89/glamflow-ai
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3622862Z ##[endgroup]
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3625165Z ##[group]Disabling automatic garbage collection
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3627302Z [command]/usr/bin/git config --local gc.auto 0
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3662127Z ##[endgroup]
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3664293Z ##[group]Setting up auth
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3671601Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.3709953Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.4099006Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.4136765Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.4381918Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.4421615Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.4682575Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.4722621Z ##[endgroup]
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.4725567Z ##[group]Fetching the repository
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:17.4736034Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +a073c5232cac8ce1488f9c435185e0a3f21bce87:refs/remotes/origin/master
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:19.3435987Z From https://github.com/LiTree89/glamflow-ai
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:19.3436854Z  * [new ref]         a073c5232cac8ce1488f9c435185e0a3f21bce87 -> origin/master
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:19.3463286Z ##[endgroup]
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:19.3465273Z ##[group]Determining the checkout info
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:19.3472738Z ##[endgroup]
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:19.3480987Z [command]/usr/bin/git sparse-checkout disable
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:19.3526783Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:19.3559220Z ##[group]Checking out the ref
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:19.3564345Z [command]/usr/bin/git checkout --progress --force -B master refs/remotes/origin/master
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:20.1959958Z Reset branch 'master'
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:20.1960512Z branch 'master' set up to track 'origin/master'.
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:20.2034503Z ##[endgroup]
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:20.2146783Z [command]/usr/bin/git log -1 --format=%H
+Secrets Scan (Gitleaks)	Checkout	2025-12-02T14:29:20.2174579Z a073c5232cac8ce1488f9c435185e0a3f21bce87
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	﻿2025-12-02T14:29:20.2460996Z ##[group]Run actions/setup-go@v4
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:20.2461315Z with:
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:20.2461486Z   go-version: 1.25.4
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:20.2461684Z   check-latest: false
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:20.2462003Z   token: ***
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:20.2462180Z   cache: true
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:20.2462345Z ##[endgroup]
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:20.4078174Z Setup go version spec 1.25.4
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:20.4114579Z Found in cache @ /opt/hostedtoolcache/go/1.25.4/x64
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:20.4117981Z Added go to the path
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:20.4122434Z Successfully set up Go version 1.25.4
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:20.9400042Z [command]/opt/hostedtoolcache/go/1.25.4/x64/bin/go env GOMODCACHE
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:20.9442069Z [command]/opt/hostedtoolcache/go/1.25.4/x64/bin/go env GOCACHE
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:20.9473962Z /home/runner/go/pkg/mod
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:20.9507217Z /home/runner/.cache/go-build
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:20.9568213Z ##[warning]Restore cache failed: Dependencies file is not found in /home/runner/work/glamflow-ai/glamflow-ai. Supported file pattern: go.sum
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:20.9598546Z go version go1.25.4 linux/amd64
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:20.9598791Z 
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:20.9599095Z ##[group]go env
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5438204Z AR='ar'
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5439126Z CC='gcc'
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5446306Z CGO_CFLAGS='-O2 -g'
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5446686Z CGO_CPPFLAGS=''
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5447022Z CGO_CXXFLAGS='-O2 -g'
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5447371Z CGO_ENABLED='1'
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5447701Z CGO_FFLAGS='-O2 -g'
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5448020Z CGO_LDFLAGS='-O2 -g'
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5448339Z CXX='g++'
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5448609Z GCCGO='gccgo'
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5448913Z GO111MODULE=''
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5449201Z GOAMD64='v1'
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5449488Z GOARCH='amd64'
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5449949Z GOAUTH='netrc'
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5450254Z GOBIN=''
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5450571Z GOCACHE='/home/runner/.cache/go-build'
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5451007Z GOCACHEPROG=''
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5451279Z GODEBUG=''
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5451600Z GOENV='/home/runner/.config/go/env'
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5451988Z GOEXE=''
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5452249Z GOEXPERIMENT=''
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5452541Z GOFIPS140='off'
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5452814Z GOFLAGS=''
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5453794Z GOGCCFLAGS='-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=0 -ffile-prefix-map=/tmp/go-build342592365=/tmp/go-build -gno-record-gcc-switches'
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5454777Z GOHOSTARCH='amd64'
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5455092Z GOHOSTOS='linux'
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5455377Z GOINSECURE=''
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5455661Z GOMOD='/dev/null'
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5455998Z GOMODCACHE='/home/runner/go/pkg/mod'
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5456387Z GONOPROXY=''
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5456659Z GONOSUMDB=''
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5456916Z GOOS='linux'
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5457215Z GOPATH='/home/runner/go'
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5457537Z GOPRIVATE=''
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5457900Z GOPROXY='https://proxy.golang.org,direct'
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5458366Z GOROOT='/opt/hostedtoolcache/go/1.25.4/x64'
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5458780Z GOSUMDB='sum.golang.org'
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5459108Z GOTELEMETRY='local'
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5459488Z GOTELEMETRYDIR='/home/runner/.config/go/telemetry'
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5483462Z GOTMPDIR=''
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5483770Z GOTOOLCHAIN='auto'
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5484285Z GOTOOLDIR='/opt/hostedtoolcache/go/1.25.4/x64/pkg/tool/linux_amd64'
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5484840Z GOVCS=''
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5485131Z GOVERSION='go1.25.4'
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5485473Z GOWORK=''
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5485783Z PKG_CONFIG='pkg-config'
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5486006Z 
+Secrets Scan (Gitleaks)	Setup Go (required for gitleaks build fallback)	2025-12-02T14:29:21.5486671Z ##[endgroup]
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	﻿2025-12-02T14:29:21.5580786Z ##[group]Run set -e
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5581125Z [36;1mset -e[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5581421Z [36;1mecho "Downloading gitleaks binary and running scan"[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5581877Z [36;1m# Try pinned release URLs first (avoid 'latest' HTML redirect), then fall back to latest[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5582252Z [36;1mARCHIVE_URLS=([0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5582662Z [36;1m  "https://github.com/zricethezav/gitleaks/releases/download/v8.30.0/gitleaks-linux-amd64"[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5583288Z [36;1m  "https://github.com/gitleaks/gitleaks/releases/download/v8.30.0/gitleaks-linux-amd64"[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5583878Z [36;1m  "https://github.com/zricethezav/gitleaks/releases/latest/download/gitleaks-linux-amd64"[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5646571Z [36;1m  "https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks-linux-amd64"[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5647754Z [36;1m)[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5648111Z [36;1mdownloaded=0[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5648509Z [36;1mfor url in "${ARCHIVE_URLS[@]}"; do[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5648962Z [36;1m  echo "trying $url"[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5649337Z [36;1m  if curl -sSL "$url" -o gitleaks.tmp; then[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5650120Z [36;1m    # quick validation: the file should be a binary (not HTML)[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5650692Z [36;1m    if head -c 4 gitleaks.tmp | grep -q "\x7fELF\|MZ"; then[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5651180Z [36;1m      mv gitleaks.tmp gitleaks[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5651572Z [36;1m      downloaded=1[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5651930Z [36;1m      break[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5652276Z [36;1m    else[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5652746Z [36;1m      echo "downloaded file doesn't look like a binary, trying next" >&2[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5653354Z [36;1m    fi[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5653628Z [36;1m  else[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5653947Z [36;1m    echo "curl failed for $url" >&2[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5654364Z [36;1m  fi[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5654645Z [36;1mdone[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5654968Z [36;1mif [ "$downloaded" -ne 1 ]; then[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5655706Z [36;1m  echo "Failed to download a usable gitleaks binary from known URLs; will attempt to build via Go"[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5656492Z [36;1m  if command -v go >/dev/null 2>&1; then[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5657026Z [36;1m    GOPATH=$(go env GOPATH 2>/dev/null || echo "$HOME/go")[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5657566Z [36;1m    GITLEAKS_BIN="$GOPATH/bin/gitleaks"[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5658125Z [36;1m    echo "Attempting 'go install' using known module paths"[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5658912Z [36;1m    # Try module path declared by upstream (zricethezav) first, then the canonical path[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5660087Z [36;1m    GOFLAGS="" GO111MODULE=on go install github.com/zricethezav/gitleaks/v8@v8.30.0 || true[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5660811Z [36;1m    if [ ! -x "$GITLEAKS_BIN" ]; then[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5661509Z [36;1m      GOFLAGS="" GO111MODULE=on go install github.com/gitleaks/gitleaks/v8@v8.30.0 || true[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5662151Z [36;1m    fi[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5662480Z [36;1m    if [ -x "$GITLEAKS_BIN" ]; then[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5663016Z [36;1m      echo "Running built gitleaks at $GITLEAKS_BIN"[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5663925Z [36;1m      "$GITLEAKS_BIN" detect --source . --redact --report-format json --report-path gitleaks-report.json || true[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5664610Z [36;1m    else[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5664910Z [36;1m      echo "gitleaks build failed or binary not found; skipping scan" >&2[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5665249Z [36;1m      exit 0[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5665425Z [36;1m    fi[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5665580Z [36;1m  else[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5665803Z [36;1m    echo "Go not available; skipping gitleaks scan" >&2[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5666070Z [36;1m    exit 0[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5666239Z [36;1m  fi[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5666399Z [36;1melse[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5666568Z [36;1m  chmod +x gitleaks[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5666973Z [36;1m  ./gitleaks detect --source . --redact --report-format json --report-path gitleaks-report.json || true[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5667656Z [36;1mfi[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5705066Z shell: /usr/bin/bash -e {0}
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5705317Z ##[endgroup]
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5782665Z Downloading gitleaks binary and running scan
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.5785443Z trying https://github.com/zricethezav/gitleaks/releases/download/v8.30.0/gitleaks-linux-amd64
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.8527198Z downloaded file doesn't look like a binary, trying next
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.8528086Z trying https://github.com/gitleaks/gitleaks/releases/download/v8.30.0/gitleaks-linux-amd64
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.9394384Z downloaded file doesn't look like a binary, trying next
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:21.9395378Z trying https://github.com/zricethezav/gitleaks/releases/latest/download/gitleaks-linux-amd64
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:22.2933071Z downloaded file doesn't look like a binary, trying next
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:22.2934359Z trying https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks-linux-amd64
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:22.4131924Z downloaded file doesn't look like a binary, trying next
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:22.4133894Z Failed to download a usable gitleaks binary from known URLs; will attempt to build via Go
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:22.4171563Z Attempting 'go install' using known module paths
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:22.5347987Z go: downloading github.com/zricethezav/gitleaks/v8 v8.30.0
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:23.1393784Z go: downloading github.com/rs/zerolog v1.33.0
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:23.3462457Z go: downloading github.com/spf13/cobra v1.9.1
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:23.3788688Z go: downloading github.com/spf13/viper v1.19.0
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:24.9188166Z go: downloading github.com/mattn/go-colorable v0.1.14
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:25.3491172Z go: downloading github.com/spf13/pflag v1.0.6
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:25.4603048Z go: downloading github.com/BobuSumisu/aho-corasick v1.0.3
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:25.4767714Z go: downloading github.com/hashicorp/go-version v1.7.0
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:25.6643267Z go: downloading golang.org/x/exp v0.0.0-20250218142911-aa4b98e5adaa
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:26.2751093Z go: downloading github.com/charmbracelet/lipgloss v0.5.0
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:26.3382556Z go: downloading github.com/fatih/semgroup v1.2.0
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:26.8392562Z go: downloading github.com/Masterminds/sprig/v3 v3.3.0
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:26.8584268Z go: downloading github.com/gitleaks/go-gitdiff v0.9.1
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:26.9718426Z go: downloading github.com/h2non/filetype v1.1.3
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:27.0377139Z go: downloading github.com/mholt/archives v0.1.2
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:27.1998268Z go: downloading github.com/fsnotify/fsnotify v1.8.0
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:27.3375871Z go: downloading github.com/mitchellh/mapstructure v1.5.0
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:27.3568095Z go: downloading github.com/sagikazarmark/slog-shim v0.1.0
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:27.4784843Z go: downloading github.com/spf13/afero v1.12.0
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:27.4982177Z go: downloading github.com/spf13/cast v1.7.1
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:27.9521894Z go: downloading github.com/mattn/go-isatty v0.0.20
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:28.0414734Z go: downloading github.com/lucasb-eyer/go-colorful v1.2.0
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:28.0646646Z go: downloading github.com/mattn/go-runewidth v0.0.14
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:28.1775062Z go: downloading github.com/muesli/reflow v0.2.1-0.20210115123740-9e1d0d53df68
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:28.3010226Z go: downloading github.com/muesli/termenv v0.15.1
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:28.3011065Z go: downloading golang.org/x/sync v0.11.0
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:28.5188143Z go: downloading dario.cat/mergo v1.0.1
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:28.5971716Z go: downloading github.com/Masterminds/goutils v1.1.1
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:28.6737569Z go: downloading github.com/Masterminds/semver/v3 v3.3.0
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:28.7488434Z go: downloading github.com/google/uuid v1.6.0
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:28.7855458Z go: downloading github.com/huandu/xstrings v1.5.0
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:28.8907970Z go: downloading github.com/mitchellh/copystructure v1.2.0
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:28.8990515Z go: downloading github.com/shopspring/decimal v1.4.0
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:29.0043000Z go: downloading golang.org/x/crypto v0.35.0
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:29.3129658Z go: downloading github.com/STARRY-S/zip v0.2.1
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:29.3388994Z go: downloading github.com/andybalholm/brotli v1.1.2-0.20250424173009-453214e765f3
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:29.4387962Z go: downloading github.com/bodgit/sevenzip v1.6.0
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:29.5156703Z go: downloading github.com/dsnet/compress v0.0.2-0.20230904184137-39efe44ab707
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:29.5919488Z go: downloading github.com/klauspost/compress v1.17.11
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:30.6200192Z go: downloading github.com/klauspost/pgzip v1.2.6
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:30.6204216Z go: downloading github.com/minio/minlz v1.0.0
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:30.7360328Z go: downloading github.com/nwaples/rardecode/v2 v2.1.0
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:30.8586882Z go: downloading github.com/pierrec/lz4/v4 v4.1.21
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:31.1074218Z go: downloading github.com/sorairolake/lzip-go v0.3.5
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:31.2400213Z go: downloading github.com/therootcompany/xz v1.0.1
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:31.3759270Z go: downloading github.com/ulikunitz/xz v0.5.12
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:31.7863488Z go: downloading golang.org/x/text v0.22.0
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:32.6671002Z go: downloading golang.org/x/sys v0.30.0
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:32.7118463Z go: downloading github.com/subosito/gotenv v1.6.0
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:32.8358990Z go: downloading github.com/hashicorp/hcl v1.0.0
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:33.0352120Z go: downloading gopkg.in/ini.v1 v1.67.0
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:33.0355020Z go: downloading github.com/magiconair/properties v1.8.9
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:33.2275697Z go: downloading github.com/pelletier/go-toml/v2 v2.2.3
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:33.2276347Z go: downloading gopkg.in/yaml.v3 v3.0.1
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:33.5682087Z go: downloading github.com/rivo/uniseg v0.2.0
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:33.5946884Z go: downloading github.com/aymanbagabas/go-osc52/v2 v2.0.1
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:33.8055666Z go: downloading github.com/mitchellh/reflectwalk v1.0.2
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:33.8255212Z go: downloading github.com/bodgit/plumbing v1.3.0
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:33.9411501Z go: downloading github.com/bodgit/windows v1.0.1
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:33.9472963Z go: downloading github.com/hashicorp/go-multierror v1.1.1
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:34.0630844Z go: downloading go4.org v0.0.0-20230225012048-214862532bf5
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:34.2400963Z go: downloading github.com/hashicorp/golang-lru/v2 v2.0.7
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:29:34.2622533Z go: downloading github.com/hashicorp/errwrap v1.1.0
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:30:13.4518512Z Running built gitleaks at /home/runner/go/bin/gitleaks
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:30:13.4566695Z 
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:30:13.4570978Z     ○
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:30:13.4571398Z     │╲
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:30:13.4571726Z     │ ○
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:30:13.4572036Z     ○ ░
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:30:13.4572381Z     ░    gitleaks
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:30:13.4572576Z 
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:34:05.4751302Z [90m2:34PM[0m [32mINF[0m [1m1 commits scanned.[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:34:05.4752691Z [90m2:34PM[0m [32mINF[0m [1mscanned ~139329694 bytes (139.33 MB) in 3m52s[0m
+Secrets Scan (Gitleaks)	Run Gitleaks (binary or build)	2025-12-02T14:34:05.4754217Z [90m2:34PM[0m [33mWRN[0m [1mleaks found: 518[0m
+Secrets Scan (Gitleaks)	Setup Node (fallback scanner)	﻿2025-12-02T14:34:05.4900799Z ##[group]Run actions/setup-node@v4
+Secrets Scan (Gitleaks)	Setup Node (fallback scanner)	2025-12-02T14:34:05.4901056Z with:
+Secrets Scan (Gitleaks)	Setup Node (fallback scanner)	2025-12-02T14:34:05.4901222Z   node-version: 20
+Secrets Scan (Gitleaks)	Setup Node (fallback scanner)	2025-12-02T14:34:05.4901401Z   always-auth: false
+Secrets Scan (Gitleaks)	Setup Node (fallback scanner)	2025-12-02T14:34:05.4901577Z   check-latest: false
+Secrets Scan (Gitleaks)	Setup Node (fallback scanner)	2025-12-02T14:34:05.4901881Z   token: ***
+Secrets Scan (Gitleaks)	Setup Node (fallback scanner)	2025-12-02T14:34:05.4902045Z ##[endgroup]
+Secrets Scan (Gitleaks)	Setup Node (fallback scanner)	2025-12-02T14:34:05.6775307Z Found in cache @ /opt/hostedtoolcache/node/20.19.5/x64
+Secrets Scan (Gitleaks)	Setup Node (fallback scanner)	2025-12-02T14:34:05.6782784Z ##[group]Environment details
+Secrets Scan (Gitleaks)	Setup Node (fallback scanner)	2025-12-02T14:34:07.9347783Z node: v20.19.5
+Secrets Scan (Gitleaks)	Setup Node (fallback scanner)	2025-12-02T14:34:07.9349687Z npm: 10.8.2
+Secrets Scan (Gitleaks)	Setup Node (fallback scanner)	2025-12-02T14:34:07.9350258Z yarn: 1.22.22
+Secrets Scan (Gitleaks)	Setup Node (fallback scanner)	2025-12-02T14:34:07.9350965Z ##[endgroup]
+Secrets Scan (Gitleaks)	Run JS fallback scanner if no gitleaks report	﻿2025-12-02T14:34:07.9453181Z ##[group]Run set -e
+Secrets Scan (Gitleaks)	Run JS fallback scanner if no gitleaks report	2025-12-02T14:34:07.9453559Z [36;1mset -e[0m
+Secrets Scan (Gitleaks)	Run JS fallback scanner if no gitleaks report	2025-12-02T14:34:07.9454044Z [36;1mif [ -f gitleaks-report.json ] && [ -s gitleaks-report.json ]; then[0m
+Secrets Scan (Gitleaks)	Run JS fallback scanner if no gitleaks report	2025-12-02T14:34:07.9454822Z [36;1m  echo "gitleaks-report.json exists and is non-empty; skipping JS fallback"[0m
+Secrets Scan (Gitleaks)	Run JS fallback scanner if no gitleaks report	2025-12-02T14:34:07.9455563Z [36;1m  cat gitleaks-report.json | head -c 200 || true[0m
+Secrets Scan (Gitleaks)	Run JS fallback scanner if no gitleaks report	2025-12-02T14:34:07.9456006Z [36;1melse[0m
+Secrets Scan (Gitleaks)	Run JS fallback scanner if no gitleaks report	2025-12-02T14:34:07.9456523Z [36;1m  echo "gitleaks-report.json missing or empty; running Node fallback scanner"[0m
+Secrets Scan (Gitleaks)	Run JS fallback scanner if no gitleaks report	2025-12-02T14:34:07.9457281Z [36;1m  node ./scripts/generate-secret-report.js || true[0m
+Secrets Scan (Gitleaks)	Run JS fallback scanner if no gitleaks report	2025-12-02T14:34:07.9457749Z [36;1mfi[0m
+Secrets Scan (Gitleaks)	Run JS fallback scanner if no gitleaks report	2025-12-02T14:34:07.9504259Z shell: /usr/bin/bash -e {0}
+Secrets Scan (Gitleaks)	Run JS fallback scanner if no gitleaks report	2025-12-02T14:34:07.9504517Z ##[endgroup]
+Secrets Scan (Gitleaks)	Run JS fallback scanner if no gitleaks report	2025-12-02T14:34:07.9571568Z gitleaks-report.json exists and is non-empty; skipping JS fallback
+Secrets Scan (Gitleaks)	Run JS fallback scanner if no gitleaks report	2025-12-02T14:34:07.9582860Z [
+Secrets Scan (Gitleaks)	Run JS fallback scanner if no gitleaks report	2025-12-02T14:34:07.9583292Z  {
+Secrets Scan (Gitleaks)	Run JS fallback scanner if no gitleaks report	2025-12-02T14:34:07.9583681Z   "RuleID": "generic-api-key",
+Secrets Scan (Gitleaks)	Run JS fallback scanner if no gitleaks report	2025-12-02T14:34:07.9584756Z   "Description": "Detected a Generic API Key, potentially exposing access to various services and sensitive operations.",
+Secrets Scan (Gitleaks)	Run JS fallback scanner if no gitleaks report	2025-12-02T14:34:07.9585649Z   "StartLine": 151,
+Secrets Scan (Gitleaks)	Run JS fallback scanner if no gitleaks report	2025-12-02T14:34:07.9585980Z   "EndLine": 151,
+Secrets Scan (Gitleaks)	Run JS fallback scanner if no gitleaks report	2025-12-02T14:34:07.9588326Z cat: write error: Broken pipe
+Secrets Scan (Gitleaks)	Run JS fallback scanner if no gitleaks report	2025-12-02T14:34:07.9595609Z   "S
+Secrets Scan (Gitleaks)	Check gitleaks report threshold	﻿2025-12-02T14:34:07.9631879Z ##[group]Run node ./scripts/check-report.js
+Secrets Scan (Gitleaks)	Check gitleaks report threshold	2025-12-02T14:34:07.9632206Z [36;1mnode ./scripts/check-report.js[0m
+Secrets Scan (Gitleaks)	Check gitleaks report threshold	2025-12-02T14:34:07.9663843Z shell: /usr/bin/bash -e {0}
+Secrets Scan (Gitleaks)	Check gitleaks report threshold	2025-12-02T14:34:07.9664059Z env:
+Secrets Scan (Gitleaks)	Check gitleaks report threshold	2025-12-02T14:34:07.9664222Z   GITLEAKS_FAIL_THRESHOLD: 0
+Secrets Scan (Gitleaks)	Check gitleaks report threshold	2025-12-02T14:34:07.9664438Z ##[endgroup]
+Secrets Scan (Gitleaks)	Check gitleaks report threshold	2025-12-02T14:34:07.9985535Z gitleaks-report.json not found — failing CI
+Secrets Scan (Gitleaks)	Check gitleaks report threshold	2025-12-02T14:34:08.0026978Z ##[error]Process completed with exit code 1.
+Secrets Scan (Gitleaks)	Upload gitleaks report	﻿2025-12-02T14:34:08.0068776Z ##[group]Run actions/upload-artifact@v4
+Secrets Scan (Gitleaks)	Upload gitleaks report	2025-12-02T14:34:08.0069039Z with:
+Secrets Scan (Gitleaks)	Upload gitleaks report	2025-12-02T14:34:08.0069203Z   name: gitleaks-report
+Secrets Scan (Gitleaks)	Upload gitleaks report	2025-12-02T14:34:08.0069413Z   path: gitleaks-report.json
+Secrets Scan (Gitleaks)	Upload gitleaks report	2025-12-02T14:34:08.0069626Z   if-no-files-found: warn
+Secrets Scan (Gitleaks)	Upload gitleaks report	2025-12-02T14:34:08.0070107Z   compression-level: 6
+Secrets Scan (Gitleaks)	Upload gitleaks report	2025-12-02T14:34:08.0070290Z   overwrite: false
+Secrets Scan (Gitleaks)	Upload gitleaks report	2025-12-02T14:34:08.0070476Z   include-hidden-files: false
+Secrets Scan (Gitleaks)	Upload gitleaks report	2025-12-02T14:34:08.0070672Z ##[endgroup]
+Secrets Scan (Gitleaks)	Upload gitleaks report	2025-12-02T14:34:08.2357265Z With the provided path, there will be 1 file uploaded
+Secrets Scan (Gitleaks)	Upload gitleaks report	2025-12-02T14:34:08.2360608Z Artifact name is valid!
+Secrets Scan (Gitleaks)	Upload gitleaks report	2025-12-02T14:34:08.2362060Z Root directory input is valid!
+Secrets Scan (Gitleaks)	Upload gitleaks report	2025-12-02T14:34:08.4580835Z Beginning upload of artifact content to blob storage
+Secrets Scan (Gitleaks)	Upload gitleaks report	2025-12-02T14:34:08.6573505Z Uploaded bytes 8794
+Secrets Scan (Gitleaks)	Upload gitleaks report	2025-12-02T14:34:08.7016929Z Finished uploading artifact content to blob storage!
+Secrets Scan (Gitleaks)	Upload gitleaks report	2025-12-02T14:34:08.7027279Z SHA256 digest of uploaded artifact zip is 7d539ad0d59bd7033ab34deae9f7b5ae9f7556b8de3e47a88b6e4ce763060202
+Secrets Scan (Gitleaks)	Upload gitleaks report	2025-12-02T14:34:08.7028310Z Finalizing artifact upload
+Secrets Scan (Gitleaks)	Upload gitleaks report	2025-12-02T14:34:08.8416164Z Artifact gitleaks-report.zip successfully finalized. Artifact ID 4738569729
+Secrets Scan (Gitleaks)	Upload gitleaks report	2025-12-02T14:34:08.8420042Z Artifact gitleaks-report has been successfully uploaded! Final size is 8794 bytes. Artifact ID is 4738569729
+Secrets Scan (Gitleaks)	Upload gitleaks report	2025-12-02T14:34:08.8425991Z Artifact download URL: https://github.com/LiTree89/glamflow-ai/actions/runs/19862060026/artifacts/4738569729
+Secrets Scan (Gitleaks)	Post Checkout	﻿2025-12-02T14:34:08.8587595Z Post job cleanup.
+Secrets Scan (Gitleaks)	Post Checkout	2025-12-02T14:34:08.9575710Z [command]/usr/bin/git version
+Secrets Scan (Gitleaks)	Post Checkout	2025-12-02T14:34:08.9617218Z git version 2.51.2
+Secrets Scan (Gitleaks)	Post Checkout	2025-12-02T14:34:08.9664701Z Temporarily overriding HOME='/home/runner/work/_temp/868a22db-19bf-402d-8bbe-cc8f4cadef73' before making global git config changes
+Secrets Scan (Gitleaks)	Post Checkout	2025-12-02T14:34:08.9667142Z Adding repository directory to the temporary git global config as a safe directory
+Secrets Scan (Gitleaks)	Post Checkout	2025-12-02T14:34:08.9682955Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/glamflow-ai/glamflow-ai
+Secrets Scan (Gitleaks)	Post Checkout	2025-12-02T14:34:08.9723076Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Secrets Scan (Gitleaks)	Post Checkout	2025-12-02T14:34:08.9758601Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Secrets Scan (Gitleaks)	Post Checkout	2025-12-02T14:34:09.0023030Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Secrets Scan (Gitleaks)	Post Checkout	2025-12-02T14:34:09.0048287Z http.https://github.com/.extraheader
+Secrets Scan (Gitleaks)	Post Checkout	2025-12-02T14:34:09.0063541Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+Secrets Scan (Gitleaks)	Post Checkout	2025-12-02T14:34:09.0099209Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Secrets Scan (Gitleaks)	Post Checkout	2025-12-02T14:34:09.0356987Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Secrets Scan (Gitleaks)	Post Checkout	2025-12-02T14:34:09.0393552Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Secrets Scan (Gitleaks)	Complete job	﻿2025-12-02T14:34:09.0861927Z Cleaning up orphan processes
