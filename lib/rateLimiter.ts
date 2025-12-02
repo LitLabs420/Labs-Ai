@@ -1,29 +1,38 @@
 // Optional Redis-backed rate limiter. If REDIS_URL is set, uses Redis for global limits.
 // Falls back to in-memory limiter when REDIS_URL is not provided.
 
-let redisClient: any = null;
-let redisLimiter: any = null;
+let redisClient: unknown = null;
+let redisLimiter: unknown = null;
 let initialized = false;
 
 async function initLimiterIfNeeded() {
   if (initialized) return;
   initialized = true;
   try {
-    // Lazy-require optional dependencies at runtime so the bundler doesn't
+    // Dynamic import optional dependencies at runtime so the bundler doesn't
     // fail when they aren't installed for local dev.
-     
-    const IORedis = require('ioredis');
-     
-    const RateLimiterFlexible = require('rate-limiter-flexible');
-    if (process.env.REDIS_URL) {
+    const IORedisMod = await import('ioredis').catch(() => null);
+    const RateLimiterFlexibleMod = await import('rate-limiter-flexible').catch(() => null);
+    if (process.env.REDIS_URL && IORedisMod && RateLimiterFlexibleMod) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const IORedis = (IORedisMod as any).default || IORedisMod;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const RateLimiterFlexible = (RateLimiterFlexibleMod as any).default || RateLimiterFlexibleMod;
+      // @ts-expect-error dynamic import types are not enforced here
+       
       redisClient = new IORedis(process.env.REDIS_URL);
+      // @ts-expect-error dynamic import shape unknown at runtime
       const { RateLimiterRedis } = RateLimiterFlexible;
+      // @ts-expect-error dynamic import shape unknown at runtime
       redisLimiter = new RateLimiterRedis({
         storeClient: redisClient,
         points: parseInt(process.env.DEMO_RATE_LIMIT || '20', 10),
         duration: parseInt(process.env.DEMO_RATE_LIMIT_WINDOW || '60', 10),
         keyPrefix: 'rl_demo',
       });
+    } else {
+      redisClient = null;
+      redisLimiter = null;
     }
   } catch (e) {
     // optional deps not present — fall back to in-memory limiter
