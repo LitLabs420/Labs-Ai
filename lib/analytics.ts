@@ -3,12 +3,13 @@ import { collection, addDoc } from 'firebase/firestore';
 
 export async function trackEvent(
   eventName: string,
-  data: Record<string, any> = {}
+  data: Record<string, unknown> = {}
 ) {
   try {
     // GA4 tracking if gtag is available
     if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', eventName, {
+      const win = window as unknown as { gtag?: (...args: unknown[]) => void };
+      win.gtag?.('event', eventName, {
         ...data,
         timestamp: new Date().toISOString(),
       });

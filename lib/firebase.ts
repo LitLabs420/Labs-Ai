@@ -5,6 +5,12 @@ import { initializeApp, getApps, FirebaseApp } from "firebase/app";
 import { getAuth, Auth } from "firebase/auth";
 import { getFirestore, Firestore } from "firebase/firestore";
 
+declare global {
+  interface Window {
+    FIREBASE_APPCHECK_DEBUG_TOKEN?: boolean | string;
+  }
+}
+
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyDh7to-ioQOrlwIuvrmmNV1O9sY-eSD5LM",
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "studio-4627045237-a2fe9.firebaseapp.com",
@@ -27,7 +33,7 @@ if (typeof window !== "undefined") {
     dbInstance = getFirestore(app);
     
     // Disable App Check enforcement by setting debug token
-    (window as any).FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+    window.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
   } catch (e) {
     console.error("Firebase initialization error:", e);
   }
