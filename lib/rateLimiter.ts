@@ -1,10 +1,15 @@
 // Optional Redis-backed rate limiter. If REDIS_URL is set, uses Redis for global limits.
 // Falls back to in-memory limiter when REDIS_URL is not provided.
 
+// Minimal constructor shapes used for runtime normalization. Kept narrow so
+// TypeScript doesn't require the optional packages to be installed.
+type IORedisConstructor = new (uri: string) => unknown;
+type RateLimiterRedisConstructor = new (opts: { storeClient: unknown; points?: number; duration?: number; keyPrefix?: string }) => RedisLimiterLike;
+
 type RedisConsumeResponse = { remainingPoints?: number };
 type RedisRejectResponse = { msBeforeNext?: number; remainingPoints?: number };
 type RedisLimiterLike = {
-  consume: (key: string) => Promise<RedisConsumeResponse>;
+  consume: (key: string) => Promise<RedisConsumeResponse>
 };
 
 let redisClient: unknown = null;
@@ -15,7 +20,7 @@ async function initLimiterIfNeeded() {
   if (initialized) return;
   initialized = true;
   try {
-    // Dynamic import optional dependencies at runtime so the bundler doesn't
+    // Dynamic import optional dependencies at runtime so the bundler doesn't 
     // fail when they aren't installed for local dev.
     const ioredisName = 'ioredis';
     const rateLimiterFlexibleName = 'rate-limiter-flexible';
@@ -33,7 +38,7 @@ async function initLimiterIfNeeded() {
       const RateLimiterRedisCtor = ((RateLimiterFlexible as unknown) as { RateLimiterRedis?: unknown }).RateLimiterRedis as unknown as RateLimiterRedisConstructor | undefined;
 
       if (typeof IORedisCtor === 'function' && RateLimiterRedisCtor) {
-        redisClient = new IORedisCtor(process.env.REDIS_URL);
+        redisClient = new IORedisCtor(process.env.REDIS_URL); 
         redisLimiter = new RateLimiterRedisCtor({
           storeClient: redisClient,
           points: parseInt(process.env.DEMO_RATE_LIMIT || '20', 10),
@@ -62,7 +67,7 @@ const DEFAULT_DEMO_RATE_LIMIT = parseInt(process.env.DEMO_RATE_LIMIT || '20', 10
 const WINDOW_MS = DEFAULT_WINDOW_SEC * 1000;
 const MAX_PER_WINDOW = DEFAULT_DEMO_RATE_LIMIT;
 
-export async function checkRateLimit(ip: string): Promise<{ ok: boolean; retryAfter?: number; remaining?: number }> {
+export async function checkRateLimit(ip: string) {
   await initLimiterIfNeeded();
   if (redisLimiter) {
     try {
