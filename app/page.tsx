@@ -1,5 +1,9 @@
 import React from "react";
 
+// Force the app router to render this page server-side on every request
+// This bypasses Vercel edge HTML caching so we can validate the live change immediately
+export const dynamic = "force-dynamic";
+
 // Visible build timestamp to verify live deploy / CDN cache
 const BUILD_TS = new Date().toISOString();
 
