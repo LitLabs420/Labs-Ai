@@ -1,4 +1,5 @@
 import React from "react";
+import LiveDemo from "../components/LiveDemo";
 
 // Force the app router to render this page server-side on every request
 // This bypasses Vercel edge HTML caching so we can validate the live change immediately
@@ -81,6 +82,8 @@ export default function Home() {
                 Watch 2-min demo
               </button>
             </div>
+
+            <LiveDemo />
 
             <ul className="grid gap-2 text-xs text-slate-300 md:grid-cols-2">
               <li>✅ Daily content engine for IG/TikTok</li>
