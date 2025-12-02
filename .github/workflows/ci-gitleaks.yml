@@ -96,6 +96,21 @@ jobs:
             chmod +x gitleaks
             ./gitleaks detect --source . --redact --report-format json --report-path gitleaks-report.json || true
           fi
+      - name: Setup Node (fallback scanner)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run JS fallback scanner if no gitleaks report
+        run: |
+          set -e
+          if [ -f gitleaks-report.json ] && [ -s gitleaks-report.json ]; then
+            echo "gitleaks-report.json exists and is non-empty; skipping JS fallback"
+            cat gitleaks-report.json | head -c 200 || true
+          else
+            echo "gitleaks-report.json missing or empty; running Node fallback scanner"
+            node ./scripts/generate-secret-report.js || true
+          fi
 
       - name: Upload gitleaks report
         uses: actions/upload-artifact@v4
