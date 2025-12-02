@@ -2,6 +2,9 @@ import React from "react";
 import Link from "next/link";
 
 export default function Home() {
+  // Force cache bust: new design deployed
+  const timestamp = new Date().getTime();
+  
   return (
     <main className="min-h-screen bg-slate-950 text-slate-50">
       <div className="mx-auto max-w-6xl px-4 py-8 md:py-12 space-y-16">
