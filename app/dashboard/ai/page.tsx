@@ -16,7 +16,7 @@ export default function AIActionsPage() {
   const [formData, setFormData] = useState({
     contentType: "instagram_caption" as ContentType,
     description: "",
-    tone: "casual" as const,
+    tone: "casual" as "casual" | "professional" | "funny" | "urgent",
   });
 
   const handleGenerateContent = async () => {
@@ -69,7 +69,7 @@ export default function AIActionsPage() {
   };
 
   // MONEY PLAY
-  const [moneyPlay, setMoneyPlay] = useState<any>(null);
+  const [moneyPlay, setMoneyPlay] = useState<Record<string, unknown> | null>(null);
 
   const handleGenerateMoneyPlay = async () => {
     setLoading(true);
