@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/firebase';
 import { collection, addDoc, serverTimestamp, query, where, getDocs } from 'firebase/firestore';
 import { Resend } from 'resend';
+import { info, error } from '@/lib/serverLogger';
 
 interface EmailTemplate {
   type: 'welcome' | 'tutorial' | 'incentive';
@@ -259,7 +260,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (response.error) {
-      console.error('Resend error:', response.error);
+      error('Resend error:', response.error);
       return NextResponse.json({ error: 'Failed to send email' }, { status: 500 });
     }
 
@@ -275,15 +276,15 @@ export async function POST(request: NextRequest) {
       clickedAt: null,
     });
 
-    console.log(`✅ Email sent: ${email} - ${type}`);
+    info(`✅ Email sent: ${email} - ${type}`);
 
     return NextResponse.json({
       success: true,
       message: `${type} email sent to ${email}`,
       emailId: response.data?.id,
     });
-  } catch (error) {
-    console.error('Email sequence error:', error);
+  } catch (err) {
+    error('Email sequence error:', err);
     return NextResponse.json({ error: 'Failed to send email' }, { status: 500 });
   }
 }

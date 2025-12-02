@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/firebase';
 import { doc, updateDoc, collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { info, error } from '@/lib/serverLogger';
 
 /**
  * SUBSCRIPTION MANAGER
@@ -53,7 +54,7 @@ export async function POST(request: NextRequest) {
       timestamp: serverTimestamp(),
     });
 
-    console.log(`✅ Subscription updated: ${email} → ${tier}`);
+    info(`✅ Subscription updated: ${email} → ${tier}`);
 
     return NextResponse.json(
       {
@@ -63,8 +64,8 @@ export async function POST(request: NextRequest) {
       },
       { status: 200 }
     );
-  } catch (error) {
-    console.error('Subscription manager error:', error);
+  } catch (err) {
+    error('Subscription manager error:', err);
     return NextResponse.json({ error: 'Failed to update subscription' }, { status: 500 });
   }
 }
