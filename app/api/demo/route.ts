@@ -27,13 +27,14 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json().catch(() => ({}));
+    const parsed = body as Record<string, unknown>;
     // If RECAPTCHA_SECRET is set, require a recaptcha token and verify it
-    const recaptchaToken = (body as any)?.recaptchaToken;
+    const recaptchaToken = parsed.recaptchaToken as string | undefined;
     const rec = await verifyRecaptcha(recaptchaToken);
     if (!rec.ok) {
       return NextResponse.json({ error: 'recaptcha failed' }, { status: 403 });
     }
-    const message = typeof body?.message === "string" ? body.message.trim().slice(0, 500) : "";
+    const message = typeof parsed.message === "string" ? parsed.message.trim().slice(0, 500) : "";
 
     if (!message || message.length < 3) {
       return NextResponse.json({ error: "Please provide a short description (3+ chars)." }, { status: 400 });
