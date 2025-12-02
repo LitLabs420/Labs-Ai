@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
               <li>✅ Track your growth in real-time</li>
             </ul>
             <div style="margin: 30px 0; text-align: center;">
-              <a href="https://litlabs-393dohjw9-larry-bols-projects.vercel.app/dashboard" style="display: inline-block; background: linear-gradient(135deg, #ee4898, #a855f7); color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: bold;">
+              <a href="https://REDACTED_SECRET_Generic_long_secret.vercel.app/dashboard" style="display: inline-block; background: linear-gradient(135deg, #ee4898, #a855f7); color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: bold;">
                 Access Your Dashboard →
               </a>
             </div>
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
             <div style="background: rgba(238, 72, 152, 0.1); padding: 20px; border-left: 4px solid #ee4898; margin: 20px 0;">
               <p style="margin: 0;"><strong>Pro Tip:</strong> Start with /daily_post — it's a game changer.</p>
             </div>
-            <a href="https://litlabs-393dohjw9-larry-bols-projects.vercel.app/dashboard" style="display: block; text-align: center; background: linear-gradient(135deg, #ee4898, #a855f7); color: white; padding: 14px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 20px 0;">
+            <a href="https://REDACTED_SECRET_Generic_long_secret.vercel.app/dashboard" style="display: block; text-align: center; background: linear-gradient(135deg, #ee4898, #a855f7); color: white; padding: 14px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 20px 0;">
               Try Your First Command Now
             </a>
           </div>
@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
               <li>💎 Priority AI response queue</li>
               <li>💎 Growth coaching (coming soon)</li>
             </ul>
-            <a href="https://litlabs-393dohjw9-larry-bols-projects.vercel.app/dashboard/billing" style="display: block; text-align: center; background: linear-gradient(135deg, #ee4898, #a855f7); color: white; padding: 14px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 20px 0;">
+            <a href="https://REDACTED_SECRET_Generic_long_secret.vercel.app/dashboard/billing" style="display: block; text-align: center; background: linear-gradient(135deg, #ee4898, #a855f7); color: white; padding: 14px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 20px 0;">
               Claim Your $20 Off Now
             </a>
             <p style="font-size: 12px; color: #888; text-align: center;">Offer expires in 48 hours ⏱️</p>

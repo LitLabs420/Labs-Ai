@@ -44,7 +44,7 @@ export default function BillingPage() {
                     const res = await fetch("/api/create-checkout-session", {
                       method: "POST",
                       body: JSON.stringify({
-                        priceIdEnv: "NEXT_PUBLIC_STRIPE_PRICE_FREEMIUM",
+                        priceIdEnv: "REDACTED_SECRET_Generic_long_secret",
                       }),
                     });
                     const data = await res.json();
@@ -60,7 +60,7 @@ export default function BillingPage() {
                     const res = await fetch("/api/create-checkout-session", {
                       method: "POST",
                       body: JSON.stringify({
-                        priceIdEnv: "NEXT_PUBLIC_STRIPE_PRICE_STARTER",
+                        priceIdEnv: "REDACTED_SECRET_Generic_long_secret",
                       }),
                     });
                     const data = await res.json();
@@ -92,7 +92,7 @@ export default function BillingPage() {
                     const res = await fetch("/api/create-checkout-session", {
                       method: "POST",
                       body: JSON.stringify({
-                        priceIdEnv: "NEXT_PUBLIC_STRIPE_PRICE_ENTERPRISE",
+                        priceIdEnv: "REDACTED_SECRET_Generic_long_secret",
                       }),
                     });
                     const data = await res.json();

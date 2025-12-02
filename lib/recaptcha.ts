@@ -8,7 +8,7 @@ export async function verifyRecaptcha(token?: string): Promise<{ ok: boolean; sc
     const res = await fetch(`https://www.google.com/recaptcha/api/siteverify`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: `secret=${encodeURIComponent(process.env.RECAPTCHA_SECRET)}&response=${encodeURIComponent(token)}`,
+      body: `REDACTED_SECRET_Possible_password_env
     });
     const data = await res.json();
     if (!data.success) return { ok: false, error: 'recaptcha-failed' };

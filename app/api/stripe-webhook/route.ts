@@ -6,7 +6,7 @@ import { doc, updateDoc, Timestamp } from "firebase/firestore";
 import {
   sendUpgradeConfirmationEmail,
   sendPaymentFailedEmail,
-  sendCancellationConfirmationEmail,
+  REDACTED_SECRET_Generic_long_secret,
 } from "@/lib/email";
 
 export const maxDuration = 60;
@@ -14,7 +14,7 @@ export const maxDuration = 60;
 export async function POST(req: NextRequest) {
   try {
     const sig = req.headers.get("stripe-signature");
-    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+    const webhookREDACTED_SECRET_Possible_password_env
 
     if (!sig || !webhookSecret) {
       console.error("Missing webhook signature or secret");
@@ -42,9 +42,9 @@ export async function POST(req: NextRequest) {
 
     // Helper function to determine tier from price ID
     const getTierFromPriceId = (priceId: string): string => {
-      if (priceId === process.env.NEXT_PUBLIC_STRIPE_BASIC_PRICE_ID) return "basic";
+      if (priceId === process.env.REDACTED_SECRET_Generic_long_secret) return "basic";
       if (priceId === process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID) return "pro";
-      if (priceId === process.env.NEXT_PUBLIC_STRIPE_DELUXE_PRICE_ID) return "deluxe";
+      if (priceId === process.env.REDACTED_SECRET_Generic_long_secret) return "deluxe";
       return "free";
     };
 
@@ -137,7 +137,7 @@ export async function POST(req: NextRequest) {
           const customerEmail = (customerData.email as string) || "";
 
           if (customerEmail) {
-            await sendCancellationConfirmationEmail(customerEmail, customerEmail);
+            await REDACTED_SECRET_Generic_long_secret(customerEmail, customerEmail);
           }
 
           console.log(`Subscription ${subscription.id} canceled`);

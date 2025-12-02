@@ -38,9 +38,9 @@ Go to: https://vercel.com/dyingbreed243/litlabs-web/settings/environment-variabl
 
 Add three environment variables (set all to "Production"):
 ```
-GOOGLE_GENERATIVE_AI_API_KEY = [key from step 1]
-STRIPE_WEBHOOK_SECRET = [secret from step 2]
-RESEND_API_KEY = [key from step 3 - optional]
+GOOGLE_GENERATIVE_AI_REDACTED_SECRET_Possible_password_env from step 1]
+STRIPE_WEBHOOK_REDACTED_SECRET_Possible_password_env from step 2]
+RESEND_REDACTED_SECRET_Possible_password_env from step 3 - optional]
 ```
 
 **Verify:**

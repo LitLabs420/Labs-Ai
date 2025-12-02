@@ -376,7 +376,7 @@ TOTAL: ~15 minutes to LIVE
 
 ### Step 1 - Get API Keys (5 min)
 1. Google Generative AI: https://makersuite.google.com/app/apikey
-2. Stripe Webhook Secret: https://dashboard.stripe.com/webhooks
+2. Stripe Webhook REDACTED_SECRET_Possible_password_env
 3. Resend Email API: https://resend.com/api-keys (optional)
 
 ### Step 2 - Configure Vercel (3 min)

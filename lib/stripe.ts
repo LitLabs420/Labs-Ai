@@ -15,7 +15,7 @@ export function getStripe(): Stripe {
 
 export const STRIPE_PRODUCTS = {
   starter: {
-    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_STARTER || "",
+    priceId: process.env.REDACTED_SECRET_Generic_long_secret || "",
     name: "Starter",
     price: 0,
     features: ["AI content gen", "Basic DM replies", "1 playbook"],
@@ -34,7 +34,7 @@ export const STRIPE_PRODUCTS = {
     ],
   },
   enterprise: {
-    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ENTERPRISE || "",
+    priceId: process.env.REDACTED_SECRET_Generic_long_secret || "",
     name: "Enterprise",
     price: 299,
     features: [

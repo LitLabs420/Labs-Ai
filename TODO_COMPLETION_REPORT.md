@@ -152,7 +152,7 @@
 - ✅ **All builds passing**
 
 ### Live URL
-**https://litlabs-3bm0r42rx-larry-bols-projects.vercel.app**
+**https://REDACTED_SECRET_Generic_long_secret.vercel.app**
 
 ### Core Infrastructure
 - ✅ Firebase Auth (Email + Google OAuth)

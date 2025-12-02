@@ -188,7 +188,7 @@ type Stats = {
 
 ```typescript
 firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  REDACTED_SECRET_Possible_password_env
   authDomain: "studio-4627045237-a2fe9.firebaseapp.com",
   projectId: "studio-4627045237-a2fe9",
   storageBucket: "studio-4627045237-a2fe9.firebasestorage.app",
@@ -358,24 +358,24 @@ interface AuthContextType {
 
 ```env
 # Firebase
-NEXT_PUBLIC_FIREBASE_API_KEY=REDACTED_FIREBASE_API_KEY
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=studio-4627045237-a2fe9.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_REDACTED_SECRET_Possible_password_env
+REDACTED_SECRET_Generic_long_secret=studio-4627045237-a2fe9.firebaseapp.com
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=studio-4627045237-a2fe9
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=studio-4627045237-a2fe9.firebasestorage.app
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=612847421952
+REDACTED_SECRET_Generic_long_secret=studio-4627045237-a2fe9.firebasestorage.app
+REDACTED_SECRET_Generic_long_secret=612847421952
 NEXT_PUBLIC_FIREBASE_APP_ID=1:612847421952:web:d66d4ba0666e7f5116e6e5
 
 # Stripe
 STRIPE_SECRET_KEY=REDACTED_STRIPE_SECRET
 STRIPE_PUBLIC_KEY=pk_live_51SZ8oA3GB9IAma1Q...
-STRIPE_WEBHOOK_SECRET=whsec_test_...
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_...
+STRIPE_WEBHOOK_REDACTED_SECRET_Possible_password_env
+REDACTED_SECRET_Generic_long_secret=pk_live_...
 
 # Google AI
-GOOGLE_GENERATIVE_AI_API_KEY=AIzaSy...
+GOOGLE_GENERATIVE_AI_REDACTED_SECRET_Possible_password_env
 
 # Email (Resend)
-RESEND_API_KEY=re_...
+RESEND_REDACTED_SECRET_Possible_password_env
 
 # Admin
 NEXT_PUBLIC_ADMIN_EMAIL=dyingbreed243@gmail.com

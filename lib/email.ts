@@ -219,7 +219,7 @@ export async function sendPasswordResetEmail(
   });
 }
 
-export async function sendCancellationConfirmationEmail(
+export async function REDACTED_SECRET_Generic_long_secret(
   email: string,
   displayName: string
 ): Promise<void> {

@@ -12,7 +12,7 @@
 
 📍 LIVE DEPLOYMENT
 
-   URL:    https://litlabs-3sb9edb1i-larry-bols-projects.vercel.app
+   URL:    https://REDACTED_SECRET_Generic_long_secret.vercel.app
    Status: 🟢 LIVE & SERVING
    CDN:    Global (Vercel Edge Network)
    SSL:    ✅ Enabled
@@ -226,7 +226,7 @@
 
 📍 NEXT STEPS (OPTIONAL)
 
-   1. Test the signup/login flow at https://litlabs-3sb9edb1i-larry-bols-projects.vercel.app
+   1. Test the signup/login flow at https://REDACTED_SECRET_Generic_long_secret.vercel.app
    2. Create a test account to explore the dashboard
    3. Try admin access at /admin with founder email
    4. Test payment flow with Stripe test cards

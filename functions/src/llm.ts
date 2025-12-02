@@ -6,7 +6,7 @@ let openai: OpenAI | null = null;
 function getOpenAI(): OpenAI {
   if (!openai) {
     openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
+      REDACTED_SECRET_Possible_password_env
     });
   }
   return openai;

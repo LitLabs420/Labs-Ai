@@ -46,9 +46,9 @@ Go to: https://vercel.com/dyingbreed243/litlabs-web/settings/environment-variabl
 
 Add these environment variables (Production):
 ```
-GOOGLE_GENERATIVE_AI_API_KEY = [your key]
-STRIPE_WEBHOOK_SECRET = [your secret]
-RESEND_API_KEY = [your key] (optional)
+GOOGLE_GENERATIVE_AI_REDACTED_SECRET_Possible_password_env key]
+STRIPE_WEBHOOK_REDACTED_SECRET_Possible_password_env secret]
+RESEND_REDACTED_SECRET_Possible_password_env key] (optional)
 ```
 
 ### Step 3: Done! ✅
@@ -126,22 +126,22 @@ Create `.env.local`:
 
 ```bash
 # Firebase
-NEXT_PUBLIC_FIREBASE_API_KEY=...
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=...
+NEXT_PUBLIC_FIREBASE_REDACTED_SECRET_Possible_password_env
+REDACTED_SECRET_Generic_long_secret=...
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=...
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=...
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=...
+REDACTED_SECRET_Generic_long_secret=...
+REDACTED_SECRET_Generic_long_secret=...
 NEXT_PUBLIC_FIREBASE_APP_ID=...
 
 # Stripe (LIVE KEYS)
 STRIPE_SECRET_KEY=sk_live_...
-STRIPE_WEBHOOK_SECRET=whsec_1_... (UPDATE with production secret)
+STRIPE_WEBHOOK_REDACTED_SECRET_Possible_password_env (UPDATE with production secret)
 
 # Google AI (ADD THIS)
-GOOGLE_GENERATIVE_AI_API_KEY=... (from makersuite.google.com)
+GOOGLE_GENERATIVE_AI_REDACTED_SECRET_Possible_password_env (from makersuite.google.com)
 
 # Resend Email (OPTIONAL)
-RESEND_API_KEY=re_...
+RESEND_REDACTED_SECRET_Possible_password_env
 
 # Admin
 NEXT_PUBLIC_ADMIN_EMAIL=dyingbreed243@gmail.com

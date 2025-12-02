@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
         // Map Stripe price IDs to tiers
         const tierMap: Record<string, string> = {
           [process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO || '']: 'pro',
-          [process.env.NEXT_PUBLIC_STRIPE_PRICE_ENTERPRISE || '']: 'enterprise',
+          [process.env.REDACTED_SECRET_Generic_long_secret || '']: 'enterprise',
         };
 
         const tier = tierMap[planId] || 'free';

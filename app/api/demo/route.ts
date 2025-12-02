@@ -10,8 +10,8 @@ export async function POST(req: Request) {
     // For limited access, set a server env `DEMO_TOKEN` and provide it in
     // the request header `x-demo-token`.
     const demoEnabled = process.env.NEXT_PUBLIC_ENABLE_DEMO === "true";
-    const demoToken = process.env.DEMO_TOKEN;
-    const reqToken = req.headers.get("x-demo-token");
+    const demoREDACTED_SECRET_Possible_password_env
+    const reqREDACTED_SECRET_Possible_password_env"x-demo-token");
 
     if (!demoEnabled && (!demoToken || reqToken !== demoToken)) {
       return NextResponse.json({ error: "Demo is disabled" }, { status: 403 });
@@ -29,7 +29,7 @@ export async function POST(req: Request) {
     const body = await req.json().catch(() => ({}));
     const parsed = body as Record<string, unknown>;
     // If RECAPTCHA_SECRET is set, require a recaptcha token and verify it
-    const recaptchaToken = parsed.recaptchaToken as string | undefined;
+    const recaptchaREDACTED_SECRET_Possible_password_env as string | undefined;
     const rec = await verifyRecaptcha(recaptchaToken);
     if (!rec.ok) {
       return NextResponse.json({ error: 'recaptcha failed' }, { status: 403 });

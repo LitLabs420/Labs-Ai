@@ -3,7 +3,7 @@
 ═══════════════════════════════════════════════════════════════
 
 📍 DEPLOYMENT LOCATION
-   https://litlabs-3sb9edb1i-larry-bols-projects.vercel.app
+   https://REDACTED_SECRET_Generic_long_secret.vercel.app
 
 ✅ BUILD STATUS
    ✓ Zero Errors
@@ -65,7 +65,7 @@ Build & Deploy:
 🛡️ ENVIRONMENT VARIABLES (Vercel)
 
    NEXT_PUBLIC_FIREBASE_API_KEY ........... ✓ Set
-   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN ...... ✓ Set
+   REDACTED_SECRET_Generic_long_secret ...... ✓ Set
    NEXT_PUBLIC_FIREBASE_PROJECT_ID ....... ✓ Set
    STRIPE_SECRET_KEY ..................... ✓ Set (Test)
    NEXT_PUBLIC_ADMIN_EMAIL ............... ✓ dyingbreed243@gmail.com

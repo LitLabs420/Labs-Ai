@@ -69,7 +69,7 @@
 ## 🚀 DEPLOYMENT STATUS
 
 ### Vercel Production
-- **URL:** https://litlabs-3sb9edb1i-larry-bols-projects.vercel.app
+- **URL:** https://REDACTED_SECRET_Generic_long_secret.vercel.app
 - **Status:** ✅ LIVE
 - **Build Command:** `npm run build`
 - **Start Command:** `npm run start`
@@ -161,7 +161,7 @@
   - Basic: `price_1234567890`
   - Pro: `price_0987654321`
   - Deluxe: `price_1111111111`
-- **Webhook Secret:** Configured ✅
+- **Webhook REDACTED_SECRET_Possible_password_env Configured ✅
 - **Checkout Flow:** Implemented ✅
 - **Subscription Management:** Ready ✅
 
@@ -383,7 +383,7 @@ litlabs-web/
 
 **Public URL:**
 ```
-https://litlabs-3sb9edb1i-larry-bols-projects.vercel.app
+https://REDACTED_SECRET_Generic_long_secret.vercel.app
 ```
 
 **Status:** 🟢 OPERATIONAL

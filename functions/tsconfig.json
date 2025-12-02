@@ -8,7 +8,7 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
+    "REDACTED_SECRET_Generic_long_secret": true,
     "resolveJsonModule": true,
     "declaration": true,
     "declarationMap": true,

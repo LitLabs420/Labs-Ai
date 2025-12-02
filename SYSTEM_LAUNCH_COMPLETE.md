@@ -2,7 +2,7 @@
 
 ## Current Status: PRODUCTION READY ✅
 
-**Live URL:** https://litlabs-h0wbcvrok-larry-bols-projects.vercel.app
+**Live URL:** https://REDACTED_SECRET_Generic_long_secret.vercel.app
 
 ---
 

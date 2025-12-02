@@ -59,7 +59,7 @@ const templates: Record<string, EmailTemplate> = {
               <li>Start automating!</li>
             </ol>
 
-            <a href="https://litlabs-h0wbcvrok-larry-bols-projects.vercel.app/dashboard" class="button">Go to Dashboard</a>
+            <a href="https://REDACTED_SECRET_Generic_long_secret.vercel.app/dashboard" class="button">Go to Dashboard</a>
 
             <h3>💡 Pro Tip:</h3>
             <p>Check out our template library in the left sidebar. We've pre-built templates for lash techs, nail artists, and stylists!</p>
@@ -110,7 +110,7 @@ const templates: Record<string, EmailTemplate> = {
                 <li>Choose a template or create custom response</li>
                 <li>Set trigger keywords (e.g., "booking", "price", "available")</li>
               </ol>
-              <a href="https://litlabs-h0wbcvrok-larry-bols-projects.vercel.app/dashboard?tab=dm-replies" class="button">Try It Now</a>
+              <a href="https://REDACTED_SECRET_Generic_long_secret.vercel.app/dashboard?tab=dm-replies" class="button">Try It Now</a>
             </div>
 
             <h3>⚡ Quick Win #2: Daily Post Generator (3 min)</h3>
@@ -123,7 +123,7 @@ const templates: Record<string, EmailTemplate> = {
                 <li>Pick your niche (lash tech, nail artist, etc)</li>
                 <li>Generate posts → copy to clipboard → share</li>
               </ol>
-              <a href="https://litlabs-h0wbcvrok-larry-bols-projects.vercel.app/dashboard?tab=posts" class="button">Generate Now</a>
+              <a href="https://REDACTED_SECRET_Generic_long_secret.vercel.app/dashboard?tab=posts" class="button">Generate Now</a>
             </div>
 
             <h3>⚡ Quick Win #3: Fraud Detection Shield (2 min)</h3>
@@ -136,7 +136,7 @@ const templates: Record<string, EmailTemplate> = {
                 <li>Toggle "Auto-Screen" ON</li>
                 <li>That's it! Fake inquiries flagged automatically</li>
               </ol>
-              <a href="https://litlabs-h0wbcvrok-larry-bols-projects.vercel.app/dashboard?tab=fraud" class="button">Activate Shield</a>
+              <a href="https://REDACTED_SECRET_Generic_long_secret.vercel.app/dashboard?tab=fraud" class="button">Activate Shield</a>
             </div>
 
             <h3>📊 Expected Results (After 1 Week):</h3>
@@ -216,7 +216,7 @@ const templates: Record<string, EmailTemplate> = {
             <h3>⏰ Time-sensitive offer:</h3>
             <p><strong>This 50% discount expires in 48 hours.</strong> After that, it's back to full price. Don't miss out!</p>
 
-            <a href="https://litlabs-h0wbcvrok-larry-bols-projects.vercel.app/dashboard/billing" class="button">Upgrade Now (50% Off)</a>
+            <a href="https://REDACTED_SECRET_Generic_long_secret.vercel.app/dashboard/billing" class="button">Upgrade Now (50% Off)</a>
 
             <h3>Still deciding?</h3>
             <p>📞 Reply to this email with any questions. We're here to help!</p>

@@ -26,13 +26,13 @@ export default function LiveDemo() {
 
       // If reCAPTCHA site key is present, attempt to get a token and include it
       const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY as unknown as string | undefined;
-      let recaptchaToken: string | undefined = undefined;
+      let recaptchaREDACTED_SECRET_Possible_password_env | undefined = undefined;
       if (siteKey) {
         type GrecaptchaWindow = { grecaptcha?: { execute?: (key: string, opts: { action: string }) => Promise<string> } };
         const w = window as unknown as GrecaptchaWindow;
         if (w.grecaptcha && w.grecaptcha.execute) {
           try {
-            recaptchaToken = await w.grecaptcha.execute(siteKey, { action: 'demo' });
+            recaptchaREDACTED_SECRET_Possible_password_env w.grecaptcha.execute(siteKey, { action: 'demo' });
           } catch (e) {
             // ignore recaptcha failures here; server will reject if required
           }

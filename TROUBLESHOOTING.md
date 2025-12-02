@@ -57,7 +57,7 @@ npm run dev
 1. Go to Firebase Console → Settings → Project Settings
 2. Copy exact values:
    - `NEXT_PUBLIC_FIREBASE_API_KEY` (labeled "Web API Key")
-   - `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` (looks like `project.firebaseapp.com`)
+   - `REDACTED_SECRET_Generic_long_secret` (looks like `project.firebaseapp.com`)
    - `NEXT_PUBLIC_FIREBASE_PROJECT_ID` (your project ID)
 3. Paste into `.env.local`
 4. Restart dev server: `npm run dev`
@@ -69,7 +69,7 @@ npm run dev
 2. Enable "Email/Password"
 3. Test with:
    - Email: `test@example.com`
-   - Password: `Test123!` (min 6 chars)
+   - REDACTED_SECRET_Possible_password_env (min 6 chars)
 
 #### ❌ "Login works but Dashboard shows 'Loading...'"
 **Cause:** Firestore rules blocking reads or user document missing
@@ -108,9 +108,9 @@ npm run dev
 4. Copy the "Price ID" (looks like `price_1ABC123...`)
 5. Set in `.env.local`:
    ```
-   NEXT_PUBLIC_STRIPE_BASIC_PRICE_ID=price_xxx
+   REDACTED_SECRET_Generic_long_secret=price_xxx
    NEXT_PUBLIC_STRIPE_PRO_PRICE_ID=price_yyy
-   NEXT_PUBLIC_STRIPE_DELUXE_PRICE_ID=price_zzz
+   REDACTED_SECRET_Generic_long_secret=price_zzz
    ```
 6. Restart dev server
 
@@ -138,7 +138,7 @@ npm run dev
    - Endpoint URL: `https://yourdomain.com/api/stripe-webhook`
    - Events: `checkout.session.completed`, `customer.subscription.*`, `invoice.*`
    - Copy "Signing Secret" (starts with `whsec_`)
-3. Add to `.env.local`: `STRIPE_WEBHOOK_SECRET=whsec_xxx`
+3. Add to `.env.local`: `STRIPE_WEBHOOK_REDACTED_SECRET_Possible_password_env
 4. Redeploy to Vercel
 5. Test payment again
 
@@ -178,7 +178,7 @@ vercel --prod
 2. Left sidebar: "Get API Key"
 3. Click "Create new secret key"
 4. Copy full key: `AIza...` (starts with `AIza`)
-5. Set `GOOGLE_AI_STUDIO_API_KEY=AIza...` in `.env.local`
+5. Set `GOOGLE_AI_STUDIO_REDACTED_SECRET_Possible_password_env in `.env.local`
 6. Restart dev server
 
 #### ❌ "AI button clicked but no response appears"
@@ -248,7 +248,7 @@ npm run dev
 1. Check email field is filled
 2. Check password is 6+ characters
 3. Check network connection working
-4. Try test email: `test@example.com` password: `Test123!`
+4. Try test email: `test@example.com` REDACTED_SECRET_Possible_password_env
 5. Check console for error messages
 
 ---

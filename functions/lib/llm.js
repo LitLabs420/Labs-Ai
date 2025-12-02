@@ -44,7 +44,7 @@ let openai = null;
 function getOpenAI() {
     if (!openai) {
         openai = new openai_1.default({
-            apiKey: process.env.OPENAI_API_KEY,
+            REDACTED_SECRET_Possible_password_env
         });
     }
     return openai;

@@ -38,8 +38,8 @@ if [ ! -f ".env.local" ]; then
     echo "⚠️  .env.local not found"
     echo "Create .env.local with your API keys:"
     echo ""
-    echo "NEXT_PUBLIC_FIREBASE_API_KEY=your_key"
-    echo "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_domain"
+    echo "NEXT_PUBLIC_FIREBASE_REDACTED_SECRET_Possible_password_env"
+    echo "REDACTED_SECRET_Generic_long_secret=your_domain"
     echo "... (see SETUP.md for all vars)"
     echo ""
     exit 1

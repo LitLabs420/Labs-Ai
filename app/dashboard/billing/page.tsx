@@ -44,7 +44,7 @@ export default function BillingPage() {
           method: 'POST',
           body: JSON.stringify({
             email: user.email,
-            priceId: selectedTier === 'pro' ? process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO : process.env.NEXT_PUBLIC_STRIPE_PRICE_ENTERPRISE,
+            priceId: selectedTier === 'pro' ? process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO : process.env.REDACTED_SECRET_Generic_long_secret,
           }),
         });
         const data = (await response.json()) as { url?: string };

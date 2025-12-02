@@ -100,11 +100,11 @@ Add to `.env.local` (in functions and frontend):
 
 ```env
 # OpenAI API
-OPENAI_API_KEY=sk_...
+OPENAI_REDACTED_SECRET_Possible_password_env
 
 # Stripe (Live Mode)
 STRIPE_SECRET_KEY=REDACTED_STRIPE_SECRET
-STRIPE_WEBHOOK_SECRET=whsec_...
+STRIPE_WEBHOOK_REDACTED_SECRET_Possible_password_env
 
 # Stripe Price IDs (create these in Stripe dashboard)
 STRIPE_PRICE_GROWTH=price_...    # Growth plan (monthly $39)
@@ -275,7 +275,7 @@ User sees completion screen: "You're all set! 🚀"
 4. **Create Stripe Webhook**
    - Endpoint: Cloud Function URL
    - Events: `checkout.session.completed`, `invoice.payment_failed`
-   - Secret: Save to environment variables
+   - REDACTED_SECRET_Possible_password_env to environment variables
 
 5. **Test End-to-End**
    - Go to dashboard

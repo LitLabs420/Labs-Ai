@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const PAYPAL_API = 'https://api-m.paypal.com';
 const CLIENT_ID = process.env.PAYPAL_CLIENT_ID || '';
-const CLIENT_SECRET = process.env.PAYPAL_CLIENT_SECRET || '';
+const CLIENT_REDACTED_SECRET_Possible_password_env || '';
 
 async function getPayPalToken() {
   const auth = Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString('base64');
@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const token = await getPayPalToken();
+    const REDACTED_SECRET_Possible_password_env getPayPalToken();
 
     const orderResponse = await fetch(`${PAYPAL_API}/v2/checkout/orders`, {
       method: 'POST',

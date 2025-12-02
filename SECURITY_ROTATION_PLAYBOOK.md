@@ -14,7 +14,7 @@ General flow (always follow in order):
 - **Communicate**: notify repo owners, infra/ops, security, and downstream teams. Document actions in the incident ticket.
 
 Provider-specific rotation steps
---------------------------------
+REDACTED_SECRET_Generic_long_secret
 
 Stripe
 - Rotate API keys in the Stripe Dashboard (Publishable keys + Secret keys).

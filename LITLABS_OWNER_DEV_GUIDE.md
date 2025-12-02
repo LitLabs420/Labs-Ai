@@ -255,22 +255,22 @@ Expected: Bot flags as scam, explains red flags, provides safe response.
 
 ```env
 # Firebase
-NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_REDACTED_SECRET_Possible_password_env
+REDACTED_SECRET_Generic_long_secret=your-project.firebaseapp.com
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+REDACTED_SECRET_Generic_long_secret=your-project.appspot.com
+REDACTED_SECRET_Generic_long_secret=your_sender_id
 NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 
 # Stripe
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+REDACTED_SECRET_Generic_long_secret=pk_test_...
 STRIPE_SECRET_KEY=sk_test_...
 
 # Google AI
 NEXT_PUBLIC_GOOGLE_AI_KEY=your_google_ai_key
 
 # Resend (Email)
-RESEND_API_KEY=re_your_key
+RESEND_REDACTED_SECRET_Possible_password_env
 
 # App URL
 NEXT_PUBLIC_APP_URL=http://localhost:3000

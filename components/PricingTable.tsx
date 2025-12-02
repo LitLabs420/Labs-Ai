@@ -7,7 +7,7 @@ const plans = [
   {
     name: "Basic",
     price: 49,
-    priceIdEnv: "NEXT_PUBLIC_STRIPE_BASIC_PRICE_ID",
+    priceIdEnv: "REDACTED_SECRET_Generic_long_secret",
     description: "Perfect to start",
     bullets: [
       "Daily posts & captions",
@@ -36,7 +36,7 @@ const plans = [
   {
     name: "Deluxe",
     price: 149,
-    priceIdEnv: "NEXT_PUBLIC_STRIPE_DELUXE_PRICE_ID",
+    priceIdEnv: "REDACTED_SECRET_Generic_long_secret",
     description: "For power users",
     bullets: [
       "Everything in Pro",

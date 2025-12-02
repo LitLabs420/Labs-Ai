@@ -2,7 +2,7 @@
 
 ## 🟢 LIVE SITE
 ```
-https://litlabs-3sb9edb1i-larry-bols-projects.vercel.app
+https://REDACTED_SECRET_Generic_long_secret.vercel.app
 ```
 **Status:** OPERATIONAL ✅
 
@@ -40,7 +40,7 @@ npm run build 2>&1 | tail -20
 
 ### Admin (Founder)
 - Email: `dyingbreed243@gmail.com`
-- Password: Use Firebase Auth reset
+- REDACTED_SECRET_Possible_password_env Firebase Auth reset
 - Access: Admin panel at `/admin`
 
 ### Test User (Create Your Own)
@@ -70,13 +70,13 @@ All in `.env.local` (do NOT commit):
 
 ```env
 # Firebase
-NEXT_PUBLIC_FIREBASE_API_KEY=...
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=...
+NEXT_PUBLIC_FIREBASE_REDACTED_SECRET_Possible_password_env
+REDACTED_SECRET_Generic_long_secret=...
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=...
 
 # Stripe
 STRIPE_SECRET_KEY=sk_test_...
-NEXT_PUBLIC_STRIPE_BASIC_PRICE_ID=price_...
+REDACTED_SECRET_Generic_long_secret=price_...
 
 # Admin
 NEXT_PUBLIC_ADMIN_EMAIL=dyingbreed243@gmail.com
