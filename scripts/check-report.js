@@ -3,12 +3,21 @@
   const path = './.git/gitleaks-report.json';
   try {
     const fs = await import('fs');
-    if (!fs.existsSync(path)) {
+      const candidates = [
+        './.git/gitleaks-report.json',
+        './gitleaks-report.json',
+        './gitleaks-report/gitleaks-report.json',
+      ];
+      let found = null;
+      for (const p of candidates) {
+        if (fs.existsSync(p)) { found = p; break; }
+      }
+      if (!found) {
       console.error('gitleaks-report.json not found — failing CI');
       process.exit(1);
     }
-    const rpt = JSON.parse(fs.readFileSync(path, 'utf8'));
-    const count = rpt.findings_count || (Array.isArray(rpt.findings) ? rpt.findings.length : 0);
+      const rpt = JSON.parse(fs.readFileSync(found, 'utf8'));
+      const count = rpt.findings_count ?? (Array.isArray(rpt.findings) ? rpt.findings.length : 0);
     console.log('gitleaks findings_count=', count);
     const threshold = parseInt(process.env.GITLEAKS_FAIL_THRESHOLD || '0', 10);
     if (count > threshold) {
