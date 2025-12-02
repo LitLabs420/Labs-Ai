@@ -2,7 +2,7 @@
 let Sentry: any = null;
 try {
   // lazy require so builds without @sentry/* still succeed
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
+   
   Sentry = require('@sentry/node');
 } catch (e) {
   Sentry = null;
