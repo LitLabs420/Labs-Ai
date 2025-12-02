@@ -14,19 +14,19 @@ interface UserData {
   email: string;
   displayName: string | null;
   photoURL: string | null;
-  createdAt: any;
+  createdAt: Date | string | number | null;
   tier: "free" | "pro" | "enterprise";
   subscription: {
     plan: string;
     status: "active" | "inactive" | "suspended";
-    createdAt: any;
-    endsAt: any;
+    createdAt: Date | string | number | null;
+    endsAt: Date | string | number | null;
   };
   stripeCustomerId: string | null;
   postsGenerated: number;
   dmsHandled: number;
   clientsBooked: number;
-  lastActivityAt: any;
+  lastActivityAt: Date | string | number | null;
   role: "user" | "admin";
 }
 
