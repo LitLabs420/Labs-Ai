@@ -38,14 +38,21 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Run Gitleaks (binary)
+      - name: Setup Go (required for gitleaks build fallback)
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.25.4'
+
+      - name: Run Gitleaks (binary or build)
         run: |
           set -e
           echo "Downloading gitleaks binary and running scan"
-          # Try the official repo first, then fall back to the legacy repo name if needed
+          # Try pinned release URLs first (avoid 'latest' HTML redirect), then fall back to latest
           ARCHIVE_URLS=(
-            "https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks-linux-amd64"
+            "https://github.com/zricethezav/gitleaks/releases/download/v8.30.0/gitleaks-linux-amd64"
+            "https://github.com/gitleaks/gitleaks/releases/download/v8.30.0/gitleaks-linux-amd64"
             "https://github.com/zricethezav/gitleaks/releases/latest/download/gitleaks-linux-amd64"
+            "https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks-linux-amd64"
           )
           downloaded=0
           for url in "${ARCHIVE_URLS[@]}"; do
@@ -66,10 +73,14 @@ jobs:
           if [ "$downloaded" -ne 1 ]; then
             echo "Failed to download a usable gitleaks binary from known URLs; will attempt to build via Go"
             if command -v go >/dev/null 2>&1; then
-              echo "Go is installed; attempting 'go install github.com/gitleaks/gitleaks/v8@latest'"
-              GOFLAGS="" GO111MODULE=on go install github.com/gitleaks/gitleaks/v8@latest || true
               GOPATH=$(go env GOPATH 2>/dev/null || echo "$HOME/go")
               GITLEAKS_BIN="$GOPATH/bin/gitleaks"
+              echo "Attempting 'go install' using known module paths"
+              # Try module path declared by upstream (zricethezav) first, then the canonical path
+              GOFLAGS="" GO111MODULE=on go install github.com/zricethezav/gitleaks/v8@v8.30.0 || true
+              if [ ! -x "$GITLEAKS_BIN" ]; then
+                GOFLAGS="" GO111MODULE=on go install github.com/gitleaks/gitleaks/v8@v8.30.0 || true
+              fi
               if [ -x "$GITLEAKS_BIN" ]; then
                 echo "Running built gitleaks at $GITLEAKS_BIN"
                 "$GITLEAKS_BIN" detect --source . --redact --report-format json --report-path gitleaks-report.json || true
@@ -85,11 +96,6 @@ jobs:
             chmod +x gitleaks
             ./gitleaks detect --source . --redact --report-format json --report-path gitleaks-report.json || true
           fi
-
-      - name: Setup Go (fallback for gitleaks build)
-        uses: actions/setup-go@v4
-        with:
-          go-version: '1.21'
 
       - name: Upload gitleaks report
         uses: actions/upload-artifact@v4
