@@ -1,9 +1,9 @@
 // lib/firebase.ts
 "use client";
 
-import { initializeApp, getApps } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { initializeApp, getApps, FirebaseApp } from "firebase/app";
+import { getAuth, Auth } from "firebase/auth";
+import { getFirestore, Firestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyDh7to-ioQOrlwIuvrmmNV1O9sY-eSD5LM",
@@ -14,15 +14,15 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:612847421952:web:d66d4ba0666e7f5116e6e5",
 };
 
-let app: any = null;
-let authInstance: any = null;
-let dbInstance: any = null;
+let app: FirebaseApp | null = null;
+let authInstance: Auth | null = null;
+let dbInstance: Firestore | null = null;
 
 // Initialize Firebase synchronously if in browser
 if (typeof window !== "undefined") {
   try {
     const apps = getApps();
-    app = apps.length > 0 ? apps[0] : initializeApp(firebaseConfig);
+    app = apps.length > 0 ? (apps[0] as FirebaseApp) : initializeApp(firebaseConfig);
     authInstance = getAuth(app);
     dbInstance = getFirestore(app);
     
@@ -34,7 +34,7 @@ if (typeof window !== "undefined") {
 }
 
 // Export instances (will be ready immediately on client)
-export const auth = authInstance;
-export const db = dbInstance;
+export const auth = authInstance as Auth | null;
+export const db = dbInstance as Firestore | null;
 export { app };
 
