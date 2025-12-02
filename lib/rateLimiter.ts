@@ -39,15 +39,18 @@ const DEFAULT_DEMO_RATE_LIMIT = parseInt(process.env.DEMO_RATE_LIMIT || '20', 10
 const WINDOW_MS = DEFAULT_WINDOW_SEC * 1000;
 const MAX_PER_WINDOW = DEFAULT_DEMO_RATE_LIMIT;
 
-export async function checkRateLimit(ip: string): Promise<{ ok: boolean; retryAfter?: number }> {
+export async function checkRateLimit(ip: string): Promise<{ ok: boolean; retryAfter?: number; remaining?: number }> {
   await initLimiterIfNeeded();
   if (redisLimiter) {
     try {
-      await redisLimiter.consume(ip);
-      return { ok: true };
+      const res = await redisLimiter.consume(ip);
+      // rate-limiter-flexible returns remainingPoints
+      const remaining = typeof res.remainingPoints === 'number' ? res.remainingPoints : undefined;
+      return { ok: true, remaining };
     } catch (rejRes) {
       const sec = Math.ceil(rejRes.msBeforeNext / 1000) || 1;
-      return { ok: false, retryAfter: sec };
+      const remaining = typeof rejRes.remainingPoints === 'number' ? rejRes.remainingPoints : undefined;
+      return { ok: false, retryAfter: sec, remaining };
     }
   }
 
@@ -60,12 +63,12 @@ export async function checkRateLimit(ip: string): Promise<{ ok: boolean; retryAf
   }
 
   if (entry.count >= MAX_PER_WINDOW) {
-    return { ok: false, retryAfter: Math.ceil((entry.start + WINDOW_MS - now) / 1000) };
+    return { ok: false, retryAfter: Math.ceil((entry.start + WINDOW_MS - now) / 1000), remaining: 0 };
   }
 
   entry.count++;
   inMemoryMap.set(ip, entry);
-  return { ok: true };
+  return { ok: true, remaining: Math.max(0, MAX_PER_WINDOW - entry.count) };
 }
 
 export default { checkRateLimit };
