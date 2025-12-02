@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateContent } from "@/lib/ai";
+import rateLimiter from '@/lib/rateLimiter';
 
 export async function POST(req: NextRequest) {
   try {
@@ -20,6 +21,14 @@ export async function POST(req: NextRequest) {
     }
 
     // Generate content using Google Gemini
+    // Rate limit per-IP/token
+    const forwarded = req.headers.get("x-forwarded-for") || "";
+    const ip = forwarded.split(",")[0]?.trim() || req.headers.get("x-real-ip") || "unknown";
+    const rl = await rateLimiter.checkRateLimit(ip);
+    if (!rl.ok) {
+      return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429, headers: { 'Retry-After': String(rl.retryAfter || 60) } });
+    }
+
     const result = await generateContent({
       niche,
       contentType,
@@ -27,7 +36,9 @@ export async function POST(req: NextRequest) {
       tone: tone || "casual",
     });
 
-    return NextResponse.json(result);
+    const res = NextResponse.json(result);
+    if (typeof rl.remaining === 'number') res.headers.set('X-RateLimit-Remaining', String(rl.remaining));
+    return res;
   } catch (error) {
     console.error("Content generation error:", error);
     return NextResponse.json(
