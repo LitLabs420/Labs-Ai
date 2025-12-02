@@ -26,12 +26,10 @@ function PricingCard({
     setError("");
 
     try {
-      const checkoutUrl = await callCreateCheckoutSession(stripeplan);
-      trackEvent("pricing_upgrade_initiated", { tier: stripeplan });
-      window.location.href = checkoutUrl;
     } catch (err: any) {
-      setError(err.message || "Failed to start checkout");
-      console.error(err);
+      const msg = err instanceof Error ? err.message : String(err);
+      setError(msg || "Failed to start checkout");
+      console.error(msg);
     } finally {
       setLoading(false);
     }

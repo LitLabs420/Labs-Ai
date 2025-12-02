@@ -248,7 +248,7 @@ function TextArea({
 
 /* STEP CONTENTS */
 
-function StepBasics({ formData, onChange }: { formData: any; onChange: (field: string, val: string) => void }) {
+function StepBasics({ formData, onChange }: { formData: Record<string, unknown>; onChange: (field: string, val: string) => void }) {
   return (
     <section className="grid gap-4 lg:grid-cols-2">
       <Card>
@@ -296,7 +296,7 @@ function StepBasics({ formData, onChange }: { formData: any; onChange: (field: s
   );
 }
 
-function StepClients({ formData, onChange }: { formData: any; onChange: (field: string, val: string) => void }) {
+function StepClients({ formData, onChange }: { formData: Record<string, unknown>; onChange: (field: string, val: string) => void }) {
   return (
     <section className="grid gap-4 lg:grid-cols-2">
       <Card>
@@ -345,7 +345,7 @@ function StepClients({ formData, onChange }: { formData: any; onChange: (field: 
   );
 }
 
-function StepSchedule({ formData, onChange }: { formData: any; onChange: (field: string, val: string) => void }) {
+function StepSchedule({ formData, onChange }: { formData: Record<string, unknown>; onChange: (field: string, val: string) => void }) {
   return (
     <section className="grid gap-4 lg:grid-cols-2">
       <Card>
