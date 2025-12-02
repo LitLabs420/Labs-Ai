@@ -10,17 +10,19 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
+    "@sentry/node": "^10.27.0",
     "@stripe/react-stripe-js": "^5.4.1",
     "clsx": "^2.1.1",
     "firebase": "^12.6.0",
     "lucide-react": "^0.555.0",
+    "node-fetch": "^2.7.0",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "resend": "^6.5.2",
     "stripe": "^20.0.0"
   },
   "optionalDependencies": {
-    "ioredis": "^5.3.2",
+    "ioredis": "^5.8.2",
     "rate-limiter-flexible": "^2.4.6"
   },
   "devDependencies": {
