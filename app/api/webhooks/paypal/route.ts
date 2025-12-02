@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/firebase';
 import { collection, addDoc, query, where, getDocs, doc, updateDoc } from 'firebase/firestore';
+import { info, warn, error } from '@/lib/serverLogger';
 
 /**
  * PAYPAL WEBHOOK HANDLER
@@ -16,7 +17,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { event_type, resource } = body;
 
-    console.log(`[PayPal Webhook] Event: ${event_type}`);
+    info(`[PayPal Webhook] Event: ${event_type}`);
 
     switch (event_type) {
       case 'BILLING.SUBSCRIPTION.CREATED': {
@@ -24,7 +25,7 @@ export async function POST(request: NextRequest) {
         const customerEmail = payer?.email_address;
 
         if (!customId || !customerEmail) {
-          console.warn('Missing custom_id or payer email');
+          warn('Missing custom_id or payer email');
           return NextResponse.json({ received: true });
         }
 
@@ -33,7 +34,7 @@ export async function POST(request: NextRequest) {
         const usersSnap = await getDocs(usersQuery);
 
         if (usersSnap.empty) {
-          console.warn(`User not found: ${customerEmail}`);
+          warn(`User not found: ${customerEmail}`);
           return NextResponse.json({ received: true });
         }
 
@@ -53,7 +54,7 @@ export async function POST(request: NextRequest) {
           },
         });
 
-        console.log(`✅ PayPal: ${customerEmail} subscribed to ${tier}`);
+        info(`✅ PayPal: ${customerEmail} subscribed to ${tier}`);
         break;
       }
 
@@ -97,7 +98,7 @@ export async function POST(request: NextRequest) {
             type: 'subscription_payment',
           });
 
-          console.log(`✅ PayPal: Payment received from ${customerEmail} for ${tier}`);
+          info(`✅ PayPal: Payment received from ${customerEmail} for ${tier}`);
         }
         break;
       }
@@ -125,7 +126,7 @@ export async function POST(request: NextRequest) {
               },
             });
 
-            console.warn(`⚠️ PayPal: ${payer?.email_address} cancelled subscription`);
+            warn(`⚠️ PayPal: ${payer?.email_address} cancelled subscription`);
           } else {
             await updateDoc(doc(db, 'users', userDoc.id), {
               subscription: {
@@ -166,7 +167,7 @@ export async function POST(request: NextRequest) {
               type: 'refund',
             });
 
-            console.log(`✅ PayPal: Refund processed for ${payer?.email_address}`);
+            info(`✅ PayPal: Refund processed for ${payer?.email_address}`);
           }
         }
         break;
@@ -174,8 +175,8 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ received: true }, { status: 200 });
-  } catch (error) {
-    console.error('PayPal webhook error:', error);
+    } catch (err) {
+    error('PayPal webhook error:', err);
     return NextResponse.json({ error: 'Webhook processing failed' }, { status: 500 });
   }
 }

@@ -2,6 +2,7 @@
 // GET /api/analytics/bigquery
 
 import { NextResponse } from 'next/server';
+import { info, error } from '@/lib/serverLogger';
 
 export async function GET(request) {
   try {
@@ -48,7 +49,7 @@ export async function GET(request) {
     });
 
   } catch (error) {
-    console.error('Analytics API error:', error);
+    error('Analytics API error:', error);
     return NextResponse.json(
       { error: error.message },
       { status: 500 }
@@ -65,15 +66,15 @@ export async function POST(request) {
       case 'log-event':
       case 'log-automation':
       case 'log-metrics':
-        console.log(`[Analytics] ${action} processed`);
+        info(`[Analytics] ${action} processed`);
         break;
 
       case 'sync-stripe':
-        console.log('[Analytics] Stripe sync triggered');
+        info('[Analytics] Stripe sync triggered');
         return NextResponse.json({ success: true });
 
       case 'backup':
-        console.log('[Analytics] Backup started');
+        info('[Analytics] Backup started');
         return NextResponse.json({ success: true, backupFile: 'backup_' + Date.now() });
 
       default:
