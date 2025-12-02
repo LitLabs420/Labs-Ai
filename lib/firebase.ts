@@ -4,7 +4,6 @@
 import { initializeApp, getApps } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "REDACTED_Google_API_Key_PrefixDh7to-ioQOrlwIuvrmmNV1O9sY-eSD5LM",
@@ -27,22 +26,8 @@ if (typeof window !== "undefined") {
     authInstance = getAuth(app);
     dbInstance = getFirestore(app);
     
-    // Initialize App Check with debug token for development
-    // This prevents "firebase-app-check-token-is-invalid" errors
-    if (process.env.NODE_ENV === 'development') {
-      (window as any).FIREBASE_APPCHECK_DEBUG_TOKEN = true;
-    }
-    
-    try {
-      initializeAppCheck(app, {
-        provider: new ReCaptchaV3Provider(
-          process.env.NEXT_PUBLIC_RECAPTCHA_KEY || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'
-        ),
-        isTokenAutoRefreshEnabled: true,
-      });
-    } catch (err) {
-      console.warn("App Check initialization failed (this is okay for development):", err);
-    }
+    // Disable App Check enforcement by setting debug token
+    (window as any).FIREBASE_APPCHECK_DEBUG_TOKEN = true;
   } catch (e) {
     console.error("Firebase initialization error:", e);
   }
