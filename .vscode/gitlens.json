@@ -1,0 +1,30 @@
+{
+  "gitlens.hovers.currentLine.enabled": true,
+  "gitlens.hovers.annotations.enabled": true,
+  "gitlens.blame.heatmap.enabled": true,
+  "gitlens.codeLens.enabled": true,
+  "gitlens.codeLens.scopes": [
+    "document",
+    "containers",
+    "blocks"
+  ],
+  "gitlens.statusBar.enabled": true,
+  "gitlens.statusBar.command": "gitlens.showCommitSearch",
+  "gitlens.currentLine.enabled": true,
+  "gitlens.decorations.enabled": true,
+  "gitlens.lineHistory.enabled": true,
+  "gitlens.gitCodeLens.scopes": [
+    "document",
+    "containers"
+  ],
+  "gitlens.showWhatsNewAfterUpgrades": true,
+  "gitlens.blame.ignoreWhitespace": false,
+  "gitlens.graph.enabled": true,
+  "gitlens.graph.scrollMarkerEnabled": true,
+  "gitlens.advanced.messages": {
+    "suppressCommitNotFoundWarning": false
+  },
+  "gitlens.showGitCommand": true,
+  "gitlens.fileHistoryShowAllBranches": false,
+  "gitlens.fileHistoryShowOnlyFollowingRenames": true
+}
