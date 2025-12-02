@@ -1,4 +1,3 @@
-// @ts-nocheck
 // Lightweight Sentry wrapper. Initializes only when SENTRY_DSN is present.
 type SentryLike = {
   init?: (opts: { dsn?: string; tracesSampleRate?: number }) => void;
