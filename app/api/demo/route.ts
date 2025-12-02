@@ -1,10 +1,5 @@
 import { NextResponse } from "next/server";
-
-// Very small in-memory rate limiter for demo purposes.
-// Note: in serverless environments this is per-instance and not global.
-const RATE_LIMIT_WINDOW = 60_000; // 1 minute
-const MAX_PER_WINDOW = 5;
-const ipMap = new Map<string, { count: number; start: number }>();
+import rateLimiter from '../../../lib/rateLimiter';
 
 export async function POST(req: Request) {
   try {
@@ -23,16 +18,10 @@ export async function POST(req: Request) {
     const forwarded = req.headers.get("x-forwarded-for") || "";
     const ip = forwarded.split(",")[0]?.trim() || req.headers.get("x-real-ip") || "unknown";
 
-    const now = Date.now();
-    const entry = ipMap.get(ip);
-    if (!entry || now - entry.start > RATE_LIMIT_WINDOW) {
-      ipMap.set(ip, { count: 1, start: now });
-    } else {
-      if (entry.count >= MAX_PER_WINDOW) {
-        return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
-      }
-      entry.count++;
-      ipMap.set(ip, entry);
+    // Use Redis-backed limiter if available, otherwise in-memory fallback inside the limiter.
+    const rl = await rateLimiter.checkRateLimit(ip);
+    if (!rl.ok) {
+      return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429, headers: { "Retry-After": String(rl.retryAfter || 60) } });
     }
 
     const body = await req.json().catch(() => ({}));
