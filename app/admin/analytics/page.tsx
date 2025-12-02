@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import DashboardLayout from '@/components/DashboardLayout';
 import { auth, db } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
-import { collection, query, where, onSnapshot, getDocs, orderBy, limit } from 'firebase/firestore';
+import { collection, query, onSnapshot, orderBy, limit } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { trackEvent } from '@/lib/analytics';
 
@@ -22,13 +22,30 @@ type AnalyticsData = {
   churnRate: number;
   avgRevenuePerUser: number;
   recentSignups: number;
-  recentTransactions: any[];
+  recentTransactions: Transaction[];
   userTierBreakdown: {
     free: number;
     pro: number;
     enterprise: number;
   };
 };
+
+type Transaction = {
+  id: string;
+  createdAt?: { toDate?: () => Date } | string | number | null;
+  amount?: number;
+  email?: string;
+  tier?: string;
+  status?: string;
+};
+
+function formatDate(value?: Transaction['createdAt']) {
+  if (!value) return "";
+  if (typeof value === "object" && value !== null && "toDate" in value && typeof (value as { toDate?: unknown }).toDate === "function") {
+    return (value as { toDate: () => Date }).toDate().toLocaleDateString();
+  }
+  return new Date(value as string | number | Date).toLocaleDateString();
+}
 
 export default function AdminAnalyticsPage() {
   const router = useRouter();
@@ -268,7 +285,7 @@ export default function AdminAnalyticsPage() {
                   analytics.recentTransactions.map((txn) => (
                     <tr key={txn.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
                       <td className="px-4 py-3 text-white/80 text-sm">
-                        {new Date(txn.createdAt?.toDate?.() || txn.createdAt).toLocaleDateString()}
+                        {formatDate(txn.createdAt)}
                       </td>
                       <td className="px-4 py-3 text-white/80 text-sm">{txn.email || 'Unknown'}</td>
                       <td className="px-4 py-3 text-green-400 font-semibold">

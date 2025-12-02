@@ -8,6 +8,18 @@ const ipMap = new Map<string, { count: number; start: number }>();
 
 export async function POST(req: Request) {
   try {
+    // Gate demo: require explicit enable via env or a secret demo token header.
+    // To enable publicly set `NEXT_PUBLIC_ENABLE_DEMO=true` in your deployment.
+    // For limited access, set a server env `DEMO_TOKEN` and provide it in
+    // the request header `x-demo-token`.
+    const demoEnabled = process.env.NEXT_PUBLIC_ENABLE_DEMO === "true";
+    const demoToken = process.env.DEMO_TOKEN;
+    const reqToken = req.headers.get("x-demo-token");
+
+    if (!demoEnabled && (!demoToken || reqToken !== demoToken)) {
+      return NextResponse.json({ error: "Demo is disabled" }, { status: 403 });
+    }
+
     const forwarded = req.headers.get("x-forwarded-for") || "";
     const ip = forwarded.split(",")[0]?.trim() || req.headers.get("x-real-ip") || "unknown";
 
