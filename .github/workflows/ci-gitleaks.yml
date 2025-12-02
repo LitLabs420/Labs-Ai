@@ -64,12 +64,32 @@ jobs:
             fi
           done
           if [ "$downloaded" -ne 1 ]; then
-            echo "Failed to download a usable gitleaks binary from known URLs" >&2
-            # don't fail the workflow; simply skip producing an artifact so CI doesn't block
-            exit 0
+            echo "Failed to download a usable gitleaks binary from known URLs; will attempt to build via Go"
+            if command -v go >/dev/null 2>&1; then
+              echo "Go is installed; attempting 'go install github.com/gitleaks/gitleaks/v8@latest'"
+              GOFLAGS="" GO111MODULE=on go install github.com/gitleaks/gitleaks/v8@latest || true
+              GOPATH=$(go env GOPATH 2>/dev/null || echo "$HOME/go")
+              GITLEAKS_BIN="$GOPATH/bin/gitleaks"
+              if [ -x "$GITLEAKS_BIN" ]; then
+                echo "Running built gitleaks at $GITLEAKS_BIN"
+                "$GITLEAKS_BIN" detect --source . --redact --report-format json --report-path gitleaks-report.json || true
+              else
+                echo "gitleaks build failed or binary not found; skipping scan" >&2
+                exit 0
+              fi
+            else
+              echo "Go not available; skipping gitleaks scan" >&2
+              exit 0
+            fi
+          else
+            chmod +x gitleaks
+            ./gitleaks detect --source . --redact --report-format json --report-path gitleaks-report.json || true
           fi
-          chmod +x gitleaks
-          ./gitleaks detect --source . --redact --report-format json --report-path gitleaks-report.json || true
+
+      - name: Setup Go (fallback for gitleaks build)
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
 
       - name: Upload gitleaks report
         uses: actions/upload-artifact@v4
