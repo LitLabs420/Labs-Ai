@@ -58,8 +58,10 @@ export async function callGenerateOnboardingResponse(
   step: string,
   userInput: string,
   businessProfile?: Record<string, unknown>
-) {
+): Promise<{ step: string; message: string; } | null> {
   const fn = httpsCallable(functions, "generateOnboardingResponse");
   const res = (await fn({ step, userInput, businessProfile })) as { data?: unknown };
-  return res.data;
+  const data = (res.data || {}) as { step?: string; message?: string };
+  if (!data.step || !data.message) return null;
+  return { step: data.step, message: data.message };
 }
