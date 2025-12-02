@@ -1,30 +1,28 @@
 import React from "react";
-import Link from "next/link";
 
 export default function Home() {
-  // Force cache bust: new design deployed
-  const timestamp = new Date().getTime();
-  
   return (
     <main className="min-h-screen bg-slate-950 text-slate-50">
-      <div className="mx-auto max-w-6xl px-4 py-8 md:py-12 space-y-16">
-        {/* Top nav */}
+      <div className="mx-auto max-w-6xl px-4 py-8 md:py-10 space-y-16">
+        {/* NAVBAR */}
         <header className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-2xl bg-slate-800 flex items-center justify-center text-xs font-bold tracking-tight">
+            <div className="h-9 w-9 rounded-2xl bg-slate-900 border border-emerald-500/50 flex items-center justify-center text-xs font-bold tracking-tight">
               LL
             </div>
             <div>
-              <p className="text-sm font-semibold tracking-tight">LitLabs AI</p>
+              <p className="text-sm font-semibold tracking-tight">
+                LitLabs OS
+              </p>
               <p className="text-xs text-slate-400">
-                Turn hustle into automatic income.
+                Money-making AI for beauty + service bosses.
               </p>
             </div>
           </div>
 
-          <nav className="hidden md:flex items-center gap-6 text-sm text-slate-300">
-            <a href="#home" className="hover:text-white">
-              Home
+          <nav className="hidden md:flex items-center gap-6 text-xs text-slate-300">
+            <a href="#features" className="hover:text-white">
+              Features
             </a>
             <a href="#pricing" className="hover:text-white">
               Pricing
@@ -34,106 +32,144 @@ export default function Home() {
             </a>
           </nav>
 
-          <Link href="/dashboard" className="rounded-full border border-slate-700 px-4 py-1.5 text-xs font-medium hover:bg-slate-800">
-            Dashboard Login
-          </Link>
+          <div className="flex items-center gap-3">
+            <button className="hidden md:inline-flex rounded-full border border-slate-700 px-4 py-1.5 text-[11px] hover:bg-slate-900">
+              Login
+            </button>
+            <button className="rounded-full bg-emerald-500 px-4 py-1.5 text-[11px] font-semibold text-slate-950 hover:bg-emerald-400">
+              Open Dashboard
+            </button>
+          </div>
         </header>
 
-        {/* Hero + chatbot */}
-        <section
-          id="home"
-          className="grid gap-10 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] items-center"
-        >
-          {/* Left side text */}
+        {/* HERO + CHAT PREVIEW */}
+        <section className="grid gap-10 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] items-center">
+          {/* LEFT SIDE: COPY */}
           <div className="space-y-6">
             <span className="inline-flex items-center rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 text-[11px] font-medium text-emerald-300">
-              💸 LitLabs OS · Money-making AI for service businesses
+              🔥 LitLabs OS is live – stop guessing, start stacking.
             </span>
 
             <h1 className="text-4xl md:text-5xl font-semibold tracking-tight leading-tight">
-              Your <span className="text-emerald-400">24/7 money bot</span> that
-              books clients, answers DMs & chases payments while you live life.
+              Your AI{" "}
+              <span className="text-emerald-400">command center</span> that
+              books clients, replies to DMs & catches fraud while you live life.
             </h1>
 
             <p className="max-w-xl text-sm md:text-base text-slate-300">
-              LitLabs AI plugs into your website and funnels, responds to every
-              lead, pushes people to book, and keeps an eye out for fraud and
-              weird logins — without you touching a thing.
+              LitLabs OS builds daily content, writes DMs that actually close,
+              generates promos for slow days, and watches logins + payments from
+              one clean dashboard. No tech brain, no problem.
             </p>
 
             <div className="flex flex-wrap gap-3">
-              <Link href="/dashboard" className="rounded-xl bg-emerald-500 px-5 py-2 text-sm font-semibold text-slate-950 hover:bg-emerald-400">
-                Get started free
-              </Link>
+              <button className="rounded-xl bg-emerald-500 px-5 py-2 text-sm font-semibold text-slate-950 hover:bg-emerald-400">
+                Activate LitLabs →
+              </button>
               <button className="rounded-xl border border-slate-700 px-5 py-2 text-sm text-slate-100 hover:bg-slate-900">
                 Watch 2-min demo
               </button>
             </div>
 
-            <ul className="grid gap-3 text-xs text-slate-300 md:grid-cols-2">
-              <li>✅ Auto-DMs, follow ups & promos</li>
-              <li>✅ Stripe + Firebase ready backend</li>
-              <li>✅ Fraud & login activity dashboard</li>
-              <li>✅ Templates for barbers, lash techs, nail techs & more</li>
+            <ul className="grid gap-2 text-xs text-slate-300 md:grid-cols-2">
+              <li>✅ Daily content engine for IG/TikTok</li>
+              <li>✅ DM sales flows that sound human</li>
+              <li>✅ Promo generator for slow days</li>
+              <li>✅ Fraud guard + login watch</li>
             </ul>
           </div>
 
-          {/* Right side fake chat window */}
-          <div className="rounded-3xl border border-slate-800 bg-slate-900/70 p-4 shadow-xl shadow-emerald-500/15">
+          {/* RIGHT SIDE: FAKE CHAT / DASHBOARD */}
+          <div className="rounded-3xl border border-slate-800 bg-slate-900/70 p-4 shadow-xl shadow-emerald-500/20">
             <p className="mb-2 text-xs font-medium text-slate-400">
-              Live LitLabs AI preview
+              Live LitLabs OS preview
             </p>
 
-            <div className="h-[340px] overflow-hidden rounded-2xl border border-slate-800 bg-slate-950/70">
+            <div className="h-[320px] overflow-hidden rounded-2xl border border-slate-800 bg-slate-950/80">
               <div className="flex h-full flex-col">
-                {/* Chat header */}
-                <div className="border-b border-slate-800 px-4 py-3 text-xs text-slate-400 flex items-center justify-between">
-                  <span>Chat with your money bot</span>
+                {/* header */}
+                <div className="border-b border-slate-800 px-4 py-3 text-xs text-slate-300 flex items-center justify-between">
+                  <span>Beauty Boss Control Panel</span>
                   <span className="text-[10px] text-emerald-300">
-                    ● Online
+                    ● AI Online
                   </span>
                 </div>
 
-                {/* Chat body */}
-                <div className="flex-1 space-y-3 overflow-y-auto px-4 py-3 text-xs">
-                  <div className="max-w-[80%] rounded-2xl bg-slate-800 px-3 py-2">
-                    <p className="text-[11px] text-slate-200">
-                      Yo, I&apos;m LitLabs OS. Tell me what you do and I&apos;ll
-                      build a game plan that actually makes you money.
-                    </p>
+                {/* body */}
+                <div className="flex-1 grid grid-cols-[1.4fr_1fr]">
+                  {/* chat */}
+                  <div className="border-r border-slate-800 px-3 py-3 space-y-2 text-[11px] overflow-y-auto">
+                    <div className="text-[10px] text-slate-400 mb-1">
+                      Chat feed
+                    </div>
+
+                    <div className="max-w-[90%] rounded-2xl bg-slate-800 px-3 py-2">
+                      <p className="text-slate-200">
+                        Yo, I&apos;m LitLabs. Tell me what you do and I&apos;ll
+                        build a money plan around it.
+                      </p>
+                    </div>
+
+                    <div className="ml-auto max-w-[90%] rounded-2xl bg-emerald-500 px-3 py-2">
+                      <p className="text-slate-950">
+                        I&apos;m a lash tech. I want more high-ticket clients,
+                        not cheap walk-ins.
+                      </p>
+                    </div>
+
+                    <div className="max-w-[90%] rounded-2xl bg-slate-800 px-3 py-2">
+                      <p className="text-slate-200">
+                        Bet. I&apos;ll write your posts, promos, and DMs, then
+                        push your best leads to book this week.
+                      </p>
+                    </div>
+
+                    <div className="max-w-[90%] rounded-2xl bg-slate-800 px-3 py-2">
+                      <p className="text-slate-200">
+                        I&apos;ll also flag weird logins + payments so you
+                        don&apos;t get played.
+                      </p>
+                    </div>
                   </div>
 
-                  <div className="ml-auto max-w-[80%] rounded-2xl bg-emerald-500 px-3 py-2">
-                    <p className="text-[11px] text-slate-950">
-                      I do hair & lashes. I want more high-ticket clients, not
-                      cheap walk-ins.
-                    </p>
-                  </div>
-
-                  <div className="max-w-[80%] rounded-2xl bg-slate-800 px-3 py-2">
-                    <p className="text-[11px] text-slate-200">
-                      Bet. I&apos;ll write your posts, your DMs, and promos,
-                      then track who&apos;s ready to book this week.
-                    </p>
-                  </div>
-
-                  <div className="max-w-[80%] rounded-2xl bg-slate-800 px-3 py-2">
-                    <p className="text-[11px] text-slate-200">
-                      I&apos;ll also watch logins, invoices & weird payments so
-                      you stay protected while the bag stacks.
-                    </p>
+                  {/* stats */}
+                  <div className="px-3 py-3 space-y-3 border-l border-slate-900/80 bg-slate-950">
+                    <div className="text-[10px] text-slate-400">
+                      Today&apos;s Numbers
+                    </div>
+                    <div className="rounded-xl bg-slate-900 border border-slate-800 px-3 py-2">
+                      <p className="text-[10px] text-slate-400">Leads</p>
+                      <p className="text-lg font-semibold">23</p>
+                      <p className="text-[10px] text-emerald-300">
+                        +9 vs yesterday
+                      </p>
+                    </div>
+                    <div className="rounded-xl bg-slate-900 border border-slate-800 px-3 py-2">
+                      <p className="text-[10px] text-slate-400">Bookings</p>
+                      <p className="text-lg font-semibold">11</p>
+                      <p className="text-[10px] text-emerald-300">
+                        48% conversion
+                      </p>
+                    </div>
+                    <div className="rounded-xl bg-red-950/50 border border-red-500/40 px-3 py-2">
+                      <p className="text-[10px] text-red-300">Security</p>
+                      <p className="text-xs text-red-100">
+                        1 login from new device · 0 failed payments · 0 blocked
+                        cards
+                      </p>
+                    </div>
                   </div>
                 </div>
 
-                {/* Chat input */}
+                {/* input */}
                 <div className="border-t border-slate-800 px-3 py-2">
                   <div className="flex items-center gap-2 rounded-xl bg-slate-900 px-2">
                     <input
                       className="h-8 flex-1 bg-transparent text-[11px] text-slate-100 outline-none placeholder:text-slate-500"
-                      placeholder="Type what you want LitLabs to build or fix..."
+                      placeholder="Type what you want LitLabs to build or fix today..."
                     />
                     <button className="rounded-lg bg-emerald-500 px-3 py-1 text-[11px] font-semibold text-slate-950">
-                      Send
+                      Make me money
                     </button>
                   </div>
                 </div>
@@ -141,112 +177,210 @@ export default function Home() {
             </div>
 
             <p className="mt-3 text-[11px] text-slate-500">
-              This is just the preview. In your real dashboard, you control the
-              brain, flows, security rules and money.
+              In the real app, this connects to your leads, bookings, and fraud
+              logs inside your private dashboard.
             </p>
           </div>
         </section>
 
-        {/* Pricing */}
-        <section id="pricing" className="space-y-4">
-          <h2 className="text-2xl font-semibold tracking-tight">Pricing</h2>
+        {/* FEATURES */}
+        <section id="features" className="space-y-4">
+          <h2 className="text-2xl font-semibold tracking-tight">
+            Everything you need to dominate.
+          </h2>
           <p className="text-sm text-slate-300">
-            Start free while you wire everything up. Only upgrade when LitLabs
-            actually makes you money.
+            6 core superpowers so you don&apos;t need 10 different apps.
+          </p>
+
+          <div className="grid gap-4 md:grid-cols-3 text-sm">
+            <FeatureCard
+              title="Daily Content Engine"
+              body="Generate scroll-stopping posts, captions, and hashtags in 1 click so you stay visible without burning out."
+            />
+            <FeatureCard
+              title="DM Sales Machine"
+              body="Turn &quot;Hey, how much?&quot; messages into booked appointments with ready-made sales scripts."
+            />
+            <FeatureCard
+              title="Promo Generator"
+              body="Create limited-time offers for slow days: bring-a-friend deals, flash sales, bundles and more."
+            />
+            <FeatureCard
+              title="Fraud Guard"
+              body="Watch logins, invoices, and payments. Get safe replies to scammers before they touch your money."
+            />
+            <FeatureCard
+              title="Brand Voice"
+              body="Train LitLabs to sound like you: tone, phrases, slang, and boundaries you won&apos;t cross."
+            />
+            <FeatureCard
+              title="Live Dashboard"
+              body="See leads, bookings, revenue and alerts from one screen instead of chasing screenshots and DMs."
+            />
+          </div>
+        </section>
+
+        {/* PRICING */}
+        <section id="pricing" className="space-y-4">
+          <h2 className="text-2xl font-semibold tracking-tight">
+            Simple plans. Real leverage.
+          </h2>
+          <p className="text-sm text-slate-300">
+            Start when you&apos;re ready. Upgrade only when LitLabs is
+            obviously paying for itself.
           </p>
 
           <div className="grid gap-4 md:grid-cols-3">
-            {/* Starter */}
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 space-y-3">
-              <p className="text-xs font-semibold text-slate-300">Starter</p>
-              <p className="text-2xl font-semibold">$0</p>
-              <p className="text-xs text-slate-400">
-                Build the bot, test flows, no pressure.
-              </p>
-              <ul className="space-y-2 text-xs text-slate-300">
-                <li>• 1 chatbot brain</li>
-                <li>• Up to 100 chats / month</li>
-                <li>• Basic email support</li>
-              </ul>
-            </div>
-
-            {/* Pro */}
-            <div className="rounded-2xl border border-emerald-500 bg-slate-900/80 p-4 space-y-3 shadow-lg shadow-emerald-500/30">
-              <p className="text-xs font-semibold text-emerald-300">Pro</p>
-              <p className="text-2xl font-semibold">$49 / month</p>
-              <p className="text-xs text-slate-200">
-                For serious hustlers who want LitLabs handling clients daily.
-              </p>
-              <ul className="space-y-2 text-xs text-slate-200">
-                <li>• 3 chatbot brains (site, IG, SMS)</li>
-                <li>• Up to 3k chats / month</li>
-                <li>• Stripe/Firebase integration guides</li>
-                <li>• Priority support</li>
-              </ul>
-            </div>
-
-            {/* God Mode */}
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 space-y-3">
-              <p className="text-xs font-semibold text-slate-300">God Mode</p>
-              <p className="text-2xl font-semibold">Let&apos;s talk</p>
-              <p className="text-xs text-slate-400">
-                Custom flows, deeper security, bigger volume. Built around your
-                world.
-              </p>
-              <ul className="space-y-2 text-xs text-slate-300">
-                <li>• Unlimited bots & channels</li>
-                <li>• Custom fraud rules & dashboards</li>
-                <li>• White-label options</li>
-              </ul>
-            </div>
+            <PricingCard
+              label="Starter"
+              price="$49/mo"
+              highlight={false}
+              items={[
+                "Daily content engine",
+                "DM reply scripts",
+                "Promo generator",
+                "Basic fraud checks",
+                "Email support",
+              ]}
+            />
+            <PricingCard
+              label="⚡ Pro"
+              price="$99/mo"
+              highlight={true}
+              items={[
+                "Everything in Starter",
+                "7-day content packs",
+                "Brand voice training",
+                "Client reactivation flows",
+                "Priority support",
+              ]}
+            />
+            <PricingCard
+              label="Deluxe"
+              price="$199/mo"
+              highlight={false}
+              items={[
+                "Everything in Pro",
+                "Holiday + launch templates",
+                "Growth coaching sessions",
+                "1-on-1 onboarding",
+                "24/7 VIP support",
+              ]}
+            />
           </div>
+
+          <p className="text-xs text-slate-400">
+            ✨ All plans include a 14-day free trial. No contracts. Cancel
+            anytime.
+          </p>
         </section>
 
-        {/* How it works */}
+        {/* HOW IT WORKS */}
         <section id="how-it-works" className="space-y-4">
-          <h2 className="text-2xl font-semibold tracking-tight">How it works</h2>
+          <h2 className="text-2xl font-semibold tracking-tight">
+            How LitLabs OS fits into your life.
+          </h2>
+
           <div className="grid gap-4 md:grid-cols-3 text-xs text-slate-300">
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 space-y-2">
-              <p className="text-sm font-semibold">1. Connect</p>
-              <p>
-                Answer a few questions about your business, services, prices and
-                schedule. LitLabs builds your base brain automatically.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 space-y-2">
-              <p className="text-sm font-semibold">2. Deploy</p>
-              <p>
-                Drop a simple script on your site, socials or funnels. Your bot
-                starts answering people in your voice, 24/7.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 space-y-2">
-              <p className="text-sm font-semibold">3. Optimize</p>
-              <p>
-                Use the dashboard to see convos, bookings, payments and fraud
-                alerts. Tweak the brain, not the code.
-              </p>
-            </div>
+            <StepCard
+              step="1"
+              title="Tell us about your world"
+              body="Your niche, services, prices, city, and dream clients. LitLabs builds your base brain + playbooks from that."
+            />
+            <StepCard
+              step="2"
+              title="Connect your channels"
+              body="Hook up your site, IG, or DMs. Drop 1 script and the bot starts handling leads in your tone."
+            />
+            <StepCard
+              step="3"
+              title="Watch the dashboard"
+              body="See leads, bookings, and alerts in one place. Tweak prompts and offers without touching code."
+            />
           </div>
         </section>
 
-        {/* Footer */}
-        <footer className="border-t border-slate-800 pt-6 text-xs text-slate-500">
+        {/* FOOTER */}
+        <footer className="border-t border-slate-800 pt-6 text-xs text-slate-500 pb-8">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <span>
-              © {new Date().getFullYear()} LitLabs. All rights reserved.
-            </span>
+            <span>© {new Date().getFullYear()} LitLabs Business OS.</span>
             <div className="flex gap-4">
+              <a href="#features" className="hover:text-slate-300">
+                Features
+              </a>
               <a href="#pricing" className="hover:text-slate-300">
                 Pricing
               </a>
-              <a href="#home" className="hover:text-slate-300">
-                Back to top
+              <a href="#how-it-works" className="hover:text-slate-300">
+                How it works
               </a>
             </div>
           </div>
         </footer>
       </div>
     </main>
+  );
+}
+
+type FeatureProps = {
+  title: string;
+  body: string;
+};
+
+function FeatureCard({ title, body }: FeatureProps) {
+  return (
+    <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 space-y-2">
+      <p className="text-sm font-semibold">{title}</p>
+      <p className="text-xs text-slate-300">{body}</p>
+    </div>
+  );
+}
+
+type PricingProps = {
+  label: string;
+  price: string;
+  items: string[];
+  highlight?: boolean;
+};
+
+function PricingCard({ label, price, items, highlight }: PricingProps) {
+  return (
+    <div
+      className={`rounded-2xl p-4 space-y-3 ${
+        highlight
+          ? "border border-emerald-500 bg-slate-900/80 shadow-lg shadow-emerald-500/30"
+          : "border border-slate-800 bg-slate-900/60"
+      }`}
+    >
+      <p
+        className={`text-xs font-semibold ${
+          highlight ? "text-emerald-300" : "text-slate-300"
+        }`}
+      >
+        {label}
+      </p>
+      <p className="text-2xl font-semibold">{price}</p>
+      <ul className="space-y-2 text-xs text-slate-300">
+        {items.map((item) => (
+          <li key={item}>• {item}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+type StepProps = {
+  step: string;
+  title: string;
+  body: string;
+};
+
+function StepCard({ step, title, body }: StepProps) {
+  return (
+    <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 space-y-2">
+      <p className="text-[10px] text-slate-400 mb-1">Step {step}</p>
+      <p className="text-sm font-semibold">{title}</p>
+      <p className="text-xs text-slate-300">{body}</p>
+    </div>
   );
 }
