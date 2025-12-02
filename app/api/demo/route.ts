@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import rateLimiter from '../../../lib/rateLimiter';
+import { verifyRecaptcha } from '@/lib/recaptcha';
+import sentry from '@/lib/sentry';
 
 export async function POST(req: Request) {
   try {
@@ -25,6 +27,12 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json().catch(() => ({}));
+    // If RECAPTCHA_SECRET is set, require a recaptcha token and verify it
+    const recaptchaToken = (body as any)?.recaptchaToken;
+    const rec = await verifyRecaptcha(recaptchaToken);
+    if (!rec.ok) {
+      return NextResponse.json({ error: 'recaptcha failed' }, { status: 403 });
+    }
     const message = typeof body?.message === "string" ? body.message.trim().slice(0, 500) : "";
 
     if (!message || message.length < 3) {
@@ -40,6 +48,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ reply });
   } catch (err) {
+    sentry.captureException(err as unknown);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
