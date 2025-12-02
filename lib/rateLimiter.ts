@@ -11,9 +11,9 @@ async function initLimiterIfNeeded() {
   try {
     // Lazy-require optional dependencies at runtime so the bundler doesn't
     // fail when they aren't installed for local dev.
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+     
     const IORedis = require('ioredis');
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+     
     const RateLimiterFlexible = require('rate-limiter-flexible');
     if (process.env.REDIS_URL) {
       redisClient = new IORedis(process.env.REDIS_URL);
