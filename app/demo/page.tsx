@@ -222,7 +222,7 @@ export default function DemoPage() {
               },
               {
                 q: "Can I cancel anytime?",
-                a: "Yep. No contracts. Cancel anytime. We'll miss you though! 😭",
+                a: "Yep. No contracts. Cancel anytime. We&apos;ll miss you though! 😭",
               },
             ].map((item, i) => (
               <div
