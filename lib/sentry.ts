@@ -24,3 +24,10 @@ export function captureException(err: unknown, context?: Record<string, any>) {
 }
 
 export default { initSentry, captureException };
+
+// Auto-initialize if env is present when this module is imported in server runtime
+try {
+  initSentry();
+} catch (e) {
+  // ignore initialization errors
+}
