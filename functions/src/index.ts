@@ -25,7 +25,7 @@ const STRIPE_PRICE_IDS = {
 
 // ===== MONEY TODAY =====
 export const generateMoneyToday = functions.https.onCall(
-  async (data: any, context) => {
+  async (data: unknown, context) => {
     const uid = context.auth?.uid;
     if (!uid) {
       throw new functions.https.HttpsError(
@@ -39,18 +39,16 @@ export const generateMoneyToday = functions.https.onCall(
       throw new functions.https.HttpsError("not-found", "User not found");
     }
 
-    const userData = userDoc.data() as any;
+    const userData = userDoc.data() as Record<string, any>;
     const plan = (userData.plan as "free" | "growth" | "godmode") || "free";
 
+    const d = (data || {}) as Record<string, any>;
     const req: MoneyTodayRequest = {
-      businessType:
-        data.businessType || userData.businessType || "beauty pro / creator",
-      idealClients:
-        data.idealClients || userData.idealClients || "local high-quality clients",
-      audienceSize: data.audienceSize || userData.audienceSize || "small audience",
-      availabilityToday:
-        data.availabilityToday || userData.availabilityToday || "2 hours",
-      promosRunning: data.promosRunning || userData.promosRunning || "none",
+      businessType: d.businessType || userData.businessType || "beauty pro / creator",
+      idealClients: d.idealClients || userData.idealClients || "local high-quality clients",
+      audienceSize: d.audienceSize || userData.audienceSize || "small audience",
+      availabilityToday: d.availabilityToday || userData.availabilityToday || "2 hours",
+      promosRunning: d.promosRunning || userData.promosRunning || "none",
       plan,
     };
 
@@ -79,13 +77,12 @@ export const generateMoneyToday = functions.https.onCall(
 
 // ===== STRIPE CHECKOUT =====
 export const createCheckoutSession = functions.https.onCall(
-  async (data: any, context) => {
+  async (data: { plan?: string; successUrl?: string; cancelUrl?: string }, context) => {
     const uid = context.auth?.uid;
     if (!uid) {
       throw new functions.https.HttpsError("unauthenticated", "Not signed in");
     }
-
-    const plan = data.plan as "growth" | "godmode";
+    const plan = (data?.plan || "") as "growth" | "godmode";
     if (!plan || !["growth", "godmode"].includes(plan)) {
       throw new functions.https.HttpsError(
         "invalid-argument",
@@ -118,12 +115,10 @@ export const createCheckoutSession = functions.https.onCall(
       return {
         url: session.url,
       };
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Stripe checkout error:", err);
-      throw new functions.https.HttpsError(
-        "internal",
-        err.message || "Failed to create checkout session"
-      );
+      const msg = err instanceof Error ? err.message : String(err);
+      throw new functions.https.HttpsError("internal", msg || "Failed to create checkout session");
     }
   }
 );
@@ -145,9 +140,10 @@ export const handleStripeWebhook = functions.https.onRequest(async (req, res) =>
       sig as string,
       process.env.STRIPE_WEBHOOK_SECRET || ""
     );
-  } catch (err: any) {
-    console.error("Webhook signature verification failed:", err.message);
-    res.status(400).send(`Webhook Error: ${err.message}`);
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error("Webhook signature verification failed:", msg);
+    res.status(400).send(`Webhook Error: ${msg}`);
     return;
   }
 
@@ -181,15 +177,16 @@ export const handleStripeWebhook = functions.https.onRequest(async (req, res) =>
     }
 
     res.json({ received: true });
-  } catch (err: any) {
-    console.error("Webhook processing error:", err);
-    res.status(500).json({ error: err.message });
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error("Webhook processing error:", msg);
+    res.status(500).json({ error: msg });
   }
 });
 
 // ===== ONBOARDING CHATBOT =====
 export const generateOnboardingResponse = functions.https.onCall(
-  async (data: any, context) => {
+  async (data: unknown, context) => {
     const uid = context.auth?.uid;
     if (!uid) {
       throw new functions.https.HttpsError(
@@ -198,7 +195,7 @@ export const generateOnboardingResponse = functions.https.onCall(
       );
     }
 
-    const { step, userInput, businessProfile } = data;
+    const { step, userInput, businessProfile } = (data as Record<string, any>) || {};
 
     // Simple conversation engine - can be expanded
     const systemPrompt = "";
