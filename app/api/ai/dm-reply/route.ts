@@ -1,10 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateDMReply } from "@/lib/ai";
 import rateLimiter from '@/lib/rateLimiter';
+import { verifyRecaptcha } from '@/lib/recaptcha';
+import sentry from '@/lib/sentry';
 
 export async function POST(req: NextRequest) {
   try {
-    const { incomingMessage, userNiche, userContext } = await req.json();
+    const body = await req.json().catch(() => ({}));
+    const { incomingMessage, userNiche, userContext } = body as any;
+
+    // Verify reCAPTCHA token if RECAPTCHA_SECRET is set
+    const recaptchaToken = (body as any)?.recaptchaToken;
+    const rec = await verifyRecaptcha(recaptchaToken);
+    if (!rec.ok) {
+      return NextResponse.json({ error: 'recaptcha failed' }, { status: 403 });
+    }
 
     if (!incomingMessage || !userNiche) {
       return NextResponse.json(
@@ -27,6 +37,7 @@ export async function POST(req: NextRequest) {
     return res;
   } catch (error) {
     console.error("DM reply generation error:", error);
+    sentry.captureException(error as unknown);
     return NextResponse.json(
       { error: "Failed to generate DM reply" },
       { status: 500 }

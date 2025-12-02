@@ -1,10 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateContent } from "@/lib/ai";
 import rateLimiter from '@/lib/rateLimiter';
+import { verifyRecaptcha } from '@/lib/recaptcha';
+import sentry from '@/lib/sentry';
 
 export async function POST(req: NextRequest) {
   try {
-    const { niche, contentType, description, tone } = await req.json();
+    const body = await req.json().catch(() => ({}));
+    const { niche, contentType, description, tone } = body as any;
+
+    // If RECAPTCHA_SECRET is set, verify token included in body
+    const recaptchaToken = (body as any)?.recaptchaToken;
+    const rec = await verifyRecaptcha(recaptchaToken);
+    if (!rec.ok) {
+      return NextResponse.json({ error: 'recaptcha failed' }, { status: 403 });
+    }
 
     // Get auth token from header
     const authHeader = req.headers.get("Authorization");
@@ -41,6 +51,7 @@ export async function POST(req: NextRequest) {
     return res;
   } catch (error) {
     console.error("Content generation error:", error);
+    sentry.captureException(error as unknown);
     return NextResponse.json(
       { error: "Failed to generate content" },
       { status: 500 }
