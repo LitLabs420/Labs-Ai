@@ -27,11 +27,15 @@ export default function LiveDemo() {
       // If reCAPTCHA site key is present, attempt to get a token and include it
       const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY as unknown as string | undefined;
       let recaptchaToken: string | undefined = undefined;
-      if (siteKey && (window as any).grecaptcha && (window as any).grecaptcha.execute) {
-        try {
-          recaptchaToken = await (window as any).grecaptcha.execute(siteKey, { action: 'demo' });
-        } catch (e) {
-          // ignore recaptcha failures here; server will reject if required
+      if (siteKey) {
+        type GrecaptchaWindow = { grecaptcha?: { execute?: (key: string, opts: { action: string }) => Promise<string> } };
+        const w = window as unknown as GrecaptchaWindow;
+        if (w.grecaptcha && w.grecaptcha.execute) {
+          try {
+            recaptchaToken = await w.grecaptcha.execute(siteKey, { action: 'demo' });
+          } catch (e) {
+            // ignore recaptcha failures here; server will reject if required
+          }
         }
       }
 
@@ -70,7 +74,9 @@ export default function LiveDemo() {
     // Dynamically load reCAPTCHA v3 if site key is provided
     const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY as unknown as string | undefined;
     if (!siteKey) return;
-    if ((window as any).grecaptcha) return;
+    type GrecaptchaWindow2 = { grecaptcha?: { execute?: unknown } };
+    const w2 = window as unknown as GrecaptchaWindow2;
+    if (w2.grecaptcha) return;
     const script = document.createElement('script');
     script.src = `https://www.google.com/recaptcha/api.js?render=${siteKey}`;
     script.async = true;
