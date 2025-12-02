@@ -7,10 +7,13 @@ import sentry from '@/lib/sentry';
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
-    const { incomingMessage, userNiche, userContext } = body as any;
+    const parsed = body as Record<string, unknown>;
+    const incomingMessage = parsed.incomingMessage as string | undefined;
+    const userNiche = parsed.userNiche as string | undefined;
+    const userContext = parsed.userContext as string | undefined;
 
     // Verify reCAPTCHA token if RECAPTCHA_SECRET is set
-    const recaptchaToken = (body as any)?.recaptchaToken;
+    const recaptchaToken = parsed.recaptchaToken as string | undefined;
     const rec = await verifyRecaptcha(recaptchaToken);
     if (!rec.ok) {
       return NextResponse.json({ error: 'recaptcha failed' }, { status: 403 });
