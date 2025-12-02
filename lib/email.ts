@@ -1,3 +1,8 @@
+import { info, error } from './serverLogger';
+/**
+ * Email Service
+ * Supports Resend for production, dev-gated logging
+ */
 /**
  * Email Service
  * Supports Resend for production, console logging for development
@@ -35,17 +40,18 @@ async function sendEmail(options: EmailOptions): Promise<void> {
         throw new Error(`Resend API error: ${response.statusText}`);
       }
 
-      console.log(`✅ Email sent to ${to}`);
+        info(`✅ Email sent to ${to}`);
     } catch (error) {
       const err = error as Error;
-      console.error("Failed to send email:", err.message);
+        error("Failed to send email:", err.message);
       throw error;
     }
   } else {
     // Development: Log to console
-    console.log(`📧 [DEV] Email to: ${to}`);
-    console.log(`📧 [DEV] Subject: ${subject}`);
-    console.log(`📧 [DEV] Body: ${html.substring(0, 100)}...`);
+      // Development: Log to structured dev logger
+      info(`📧 [DEV] Email to: ${to}`);
+      info(`📧 [DEV] Subject: ${subject}`);
+      info(`📧 [DEV] Body: ${html.substring(0, 100)}...`);
   }
 }
 

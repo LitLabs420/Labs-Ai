@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/firebase';
 import { collection, addDoc, query, where, getDocs, doc, updateDoc } from 'firebase/firestore';
+import { info, warn, error } from '@/lib/serverLogger';
 
 /**
  * STRIPE WEBHOOK HANDLER
@@ -15,7 +16,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { type, data } = body;
 
-    console.log(`[Stripe Webhook] Event: ${type}`);
+    info(`[Stripe Webhook] Event: ${type}`);
 
     switch (type) {
       case 'checkout.session.completed': {
@@ -23,7 +24,7 @@ export async function POST(request: NextRequest) {
         const { userId, tier } = metadata || {};
 
         if (!userId || !customer_email) {
-          console.warn('Missing userId or email in checkout');
+          warn('Missing userId or email in checkout');
           return NextResponse.json({ received: true });
         }
 
@@ -32,7 +33,7 @@ export async function POST(request: NextRequest) {
         const usersSnap = await getDocs(usersQuery);
 
         if (usersSnap.empty) {
-          console.warn(`User not found: ${customer_email}`);
+          warn(`User not found: ${customer_email}`);
           return NextResponse.json({ received: true });
         }
 
@@ -63,7 +64,7 @@ export async function POST(request: NextRequest) {
           type: 'subscription_upgrade',
         });
 
-        console.log(`✅ Stripe: ${customer_email} upgraded to ${tier}`);
+        info(`✅ Stripe: ${customer_email} upgraded to ${tier}`);
         break;
       }
 
@@ -93,7 +94,7 @@ export async function POST(request: NextRequest) {
             subscription: { plan: tier, status },
           });
 
-          console.log(`✅ Stripe: Subscription updated - ${userDoc.data().email} → ${tier}`);
+          info(`✅ Stripe: Subscription updated - ${userDoc.data().email} → ${tier}`);
         }
         break;
       }
@@ -117,15 +118,15 @@ export async function POST(request: NextRequest) {
             retryable: true,
           });
 
-          console.warn(`⚠️ Stripe: Payment failed for ${customer_email}`);
+          warn(`⚠️ Stripe: Payment failed for ${customer_email}`);
         }
         break;
       }
     }
 
     return NextResponse.json({ received: true }, { status: 200 });
-  } catch (error) {
-    console.error('Stripe webhook error:', error);
+  } catch (err) {
+    error('Stripe webhook error:', err);
     return NextResponse.json({ error: 'Webhook processing failed' }, { status: 500 });
   }
 }
