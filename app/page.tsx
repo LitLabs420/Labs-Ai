@@ -1,5 +1,8 @@
 import React from "react";
 
+// Visible build timestamp to verify live deploy / CDN cache
+const BUILD_TS = new Date().toISOString();
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-slate-950 text-slate-50">
@@ -33,6 +36,10 @@ export default function Home() {
           </nav>
 
           <div className="flex items-center gap-3">
+            <div className="hidden md:inline-flex flex-col text-right text-[11px]">
+              <span className="text-slate-400">Build</span>
+              <span className="text-slate-300 font-mono">{BUILD_TS}</span>
+            </div>
             <button className="hidden md:inline-flex rounded-full border border-slate-700 px-4 py-1.5 text-[11px] hover:bg-slate-900">
               Login
             </button>
