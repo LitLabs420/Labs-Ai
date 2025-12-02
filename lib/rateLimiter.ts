@@ -1,8 +1,14 @@
 // Optional Redis-backed rate limiter. If REDIS_URL is set, uses Redis for global limits.
 // Falls back to in-memory limiter when REDIS_URL is not provided.
 
+type RedisConsumeResponse = { remainingPoints?: number };
+type RedisRejectResponse = { msBeforeNext?: number; remainingPoints?: number };
+type RedisLimiterLike = {
+  consume: (key: string) => Promise<RedisConsumeResponse>;
+};
+
 let redisClient: unknown = null;
-let redisLimiter: unknown = null;
+let redisLimiter: RedisLimiterLike | null = null;
 let initialized = false;
 
 async function initLimiterIfNeeded() {
@@ -11,25 +17,33 @@ async function initLimiterIfNeeded() {
   try {
     // Dynamic import optional dependencies at runtime so the bundler doesn't
     // fail when they aren't installed for local dev.
-    const IORedisMod = await import('ioredis').catch(() => null);
-    const RateLimiterFlexibleMod = await import('rate-limiter-flexible').catch(() => null);
+    const ioredisName = 'ioredis';
+    const rateLimiterFlexibleName = 'rate-limiter-flexible';
+    const IORedisMod = await import(ioredisName).catch(() => null);
+    const RateLimiterFlexibleMod = await import(rateLimiterFlexibleName).catch(() => null);
     if (process.env.REDIS_URL && IORedisMod && RateLimiterFlexibleMod) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const IORedis = (IORedisMod as any).default || IORedisMod;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const RateLimiterFlexible = (RateLimiterFlexibleMod as any).default || RateLimiterFlexibleMod;
-      // @ts-expect-error dynamic import types are not enforced here
-       
-      redisClient = new IORedis(process.env.REDIS_URL);
-      // @ts-expect-error dynamic import shape unknown at runtime
-      const { RateLimiterRedis } = RateLimiterFlexible;
-      // @ts-expect-error dynamic import shape unknown at runtime
-      redisLimiter = new RateLimiterRedis({
-        storeClient: redisClient,
-        points: parseInt(process.env.DEMO_RATE_LIMIT || '20', 10),
-        duration: parseInt(process.env.DEMO_RATE_LIMIT_WINDOW || '60', 10),
-        keyPrefix: 'rl_demo',
-      });
+      // Normalize possible default export shape without using `any`.
+      const IORedisCandidate = (IORedisMod as unknown) as { default?: unknown };
+      const IORedisCtor = (IORedisCandidate.default ?? IORedisMod) as unknown as IORedisConstructor;
+
+      const RateLimiterCandidate = (RateLimiterFlexibleMod as unknown) as { default?: unknown };
+      const RateLimiterFlexible = (RateLimiterCandidate.default ?? RateLimiterFlexibleMod) as unknown;
+
+      // grab the RateLimiterRedis constructor if present
+      const RateLimiterRedisCtor = ((RateLimiterFlexible as unknown) as { RateLimiterRedis?: unknown }).RateLimiterRedis as unknown as RateLimiterRedisConstructor | undefined;
+
+      if (typeof IORedisCtor === 'function' && RateLimiterRedisCtor) {
+        redisClient = new IORedisCtor(process.env.REDIS_URL);
+        redisLimiter = new RateLimiterRedisCtor({
+          storeClient: redisClient,
+          points: parseInt(process.env.DEMO_RATE_LIMIT || '20', 10),
+          duration: parseInt(process.env.DEMO_RATE_LIMIT_WINDOW || '60', 10),
+          keyPrefix: 'rl_demo',
+        });
+      } else {
+        redisClient = null;
+        redisLimiter = null;
+      }
     } else {
       redisClient = null;
       redisLimiter = null;
@@ -53,12 +67,12 @@ export async function checkRateLimit(ip: string): Promise<{ ok: boolean; retryAf
   if (redisLimiter) {
     try {
       const res = await redisLimiter.consume(ip);
-      // rate-limiter-flexible returns remainingPoints
       const remaining = typeof res.remainingPoints === 'number' ? res.remainingPoints : undefined;
       return { ok: true, remaining };
-    } catch (rejRes) {
-      const sec = Math.ceil(rejRes.msBeforeNext / 1000) || 1;
-      const remaining = typeof rejRes.remainingPoints === 'number' ? rejRes.remainingPoints : undefined;
+    } catch (rejResUnknown) {
+      const rej = rejResUnknown as RedisRejectResponse & { msBeforeNext: number };
+      const sec = Math.ceil((rej.msBeforeNext || 1000) / 1000) || 1;
+      const remaining = typeof rej.remainingPoints === 'number' ? rej.remainingPoints : undefined;
       return { ok: false, retryAfter: sec, remaining };
     }
   }
