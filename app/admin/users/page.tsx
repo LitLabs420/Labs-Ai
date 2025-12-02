@@ -64,14 +64,14 @@ export default function AdminUsersPage() {
     });
 
     return () => unsub();
-  }, [router]);
+  }, [router, searchTerm, filterTier, filterStatus]);
 
-  const applyFilters = (
+  function applyFilters(
     usersList: User[],
     search: string,
     tier: string,
     status: string
-  ) => {
+  ) {
     let filtered = usersList;
 
     if (search) {
@@ -87,7 +87,7 @@ export default function AdminUsersPage() {
     }
 
     setFilteredUsers(filtered);
-  };
+  }
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);
@@ -95,12 +95,12 @@ export default function AdminUsersPage() {
   };
 
   const handleTierFilter = (value: string) => {
-    setFilterTier(value as any);
+    setFilterTier(value as 'all' | 'free' | 'pro' | 'enterprise');
     applyFilters(users, searchTerm, value, filterStatus);
   };
 
   const handleStatusFilter = (value: string) => {
-    setFilterStatus(value as any);
+    setFilterStatus(value as 'all' | 'active' | 'suspended');
     applyFilters(users, searchTerm, filterTier, value);
   };
 

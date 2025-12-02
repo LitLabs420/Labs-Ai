@@ -41,22 +41,16 @@ const CHALLENGES: Challenge[] = [
 ];
 
 export function DailyChallengeCard() {
-  const [challenge, setChallenge] = useState<Challenge | null>(null);
-
-  useEffect(() => {
-    const index = new Date().getDate() % CHALLENGES.length;
-    setChallenge(CHALLENGES[index]);
-  }, []);
-
-  if (!challenge) return null;
+  const index = new Date().getDate() % CHALLENGES.length;
+  const [challenge, setChallenge] = useState<Challenge>(CHALLENGES[index]);
 
   return (
     <Card>
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1">
-          <p className="text-xs text-[#ff0080] flex items-center gap-1 mb-1">
-            <Flame size={13} /> Today&apos;s challenge
-          </p>
+            <p className="text-xs text-[#ff0080] flex items-center gap-1 mb-1">
+              <Flame size={13} /> Today&apos;s challenge
+            </p>
           <h2 className="text-sm font-semibold mb-2">{challenge.title}</h2>
           <ul className="text-[11px] text-gray-200 space-y-1 mb-2 list-disc list-inside">
             {challenge.steps.map((s) => (
