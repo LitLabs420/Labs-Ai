@@ -29,7 +29,7 @@ export default function FAQPage() {
       },
       {
         q: "Will it feel like spam to my customers?",
-        a: "No. The bot's replies are personalized and feel natural. Customers often don't even realize it's automated.",
+        a: "No. The bot&apos;s replies are personalized and feel natural. Customers often don&apos;t even realize it&apos;s automated.",
       },
       {
         q: "What if something goes wrong?",
@@ -62,14 +62,14 @@ export default function FAQPage() {
         a: "Yes. 14 days free. No card required. Upgrade anytime if you love it.",
       },
       {
-        q: "What if I don't like it?",
+        q: "What if I don&apos;t like it?",
         a: "30-day money-back guarantee. No questions asked. We want you to succeed, not force you.",
       },
     ],
     technical: [
       {
         q: "How do I connect my Instagram/TikTok?",
-        a: "Through our secure OAuth integration. Click 'Connect,' authorize LitLabs, and you're done. Your login stays private.",
+        a: "Through our secure OAuth integration. Click &apos;Connect,&apos; authorize LitLabs, and you&apos;re done. Your login stays private.",
       },
       {
         q: "Is my data secure?",
@@ -195,7 +195,7 @@ export default function FAQPage() {
           <div className="relative border-2 border-white/20 rounded-2xl bg-gradient-to-b from-slate-950/80 to-black/80 backdrop-blur p-12 space-y-6 text-center">
             <h2 className="text-2xl font-black">Still have questions?</h2>
             <p className="text-white/70 text-lg">
-              We're here to help. Reach out anytime.
+              We&apos;re here to help. Reach out anytime.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <a

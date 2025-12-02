@@ -88,7 +88,7 @@ export default function BillingPage() {
         <div className="rounded-xl border border-white/10 bg-gradient-to-br from-slate-800 to-slate-900 p-6">
           <p className="text-white/60 text-sm mb-2">Current Plan</p>
           <p className="text-3xl font-bold text-white capitalize">{tier}</p>
-          <p className="text-white/70 mt-2">You're on the {tier} plan. Manage your subscription below.</p>
+          <p className="text-white/70 mt-2">You&apos;re on the {tier} plan. Manage your subscription below.</p>
         </div>
 
         {/* Payment Method Selector */}
@@ -263,7 +263,7 @@ export default function BillingPage() {
             </div>
             <div>
               <p className="font-semibold text-white mb-2">Do you offer refunds?</p>
-              <p className="text-white/70">Yes! 30-day money-back guarantee if you're not satisfied. No questions asked.</p>
+              <p className="text-white/70">Yes! 30-day money-back guarantee if you&apos;re not satisfied. No questions asked.</p>
             </div>
           </div>
         </div>
