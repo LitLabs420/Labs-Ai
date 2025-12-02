@@ -1,10 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateMoneyPlay } from "@/lib/ai";
 import rateLimiter from '@/lib/rateLimiter';
+import { verifyRecaptcha } from '@/lib/recaptcha';
+import sentry from '@/lib/sentry';
 
 export async function POST(req: NextRequest) {
   try {
-    const { userNiche, recentBookings, userRevenue } = await req.json();
+    const body = await req.json().catch(() => ({}));
+    const { userNiche, recentBookings, userRevenue } = body as any;
+
+    const recaptchaToken = (body as any)?.recaptchaToken;
+    const rec = await verifyRecaptcha(recaptchaToken);
+    if (!rec.ok) {
+      return NextResponse.json({ error: 'recaptcha failed' }, { status: 403 });
+    }
 
     if (!userNiche) {
       return NextResponse.json(
@@ -31,6 +40,7 @@ export async function POST(req: NextRequest) {
     return res;
   } catch (error) {
     console.error("Money play generation error:", error);
+    sentry.captureException(error as unknown);
     return NextResponse.json(
       { error: "Failed to generate money play" },
       { status: 500 }
