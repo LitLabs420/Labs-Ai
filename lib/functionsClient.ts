@@ -30,34 +30,36 @@ export async function callGenerateMoneyToday(input?: {
   promosRunning?: string;
 }): Promise<MoneyTodayClientResponse> {
   const fn = httpsCallable(functions, "generateMoneyToday");
-  const res: any = await fn(input || {});
+  const res = (await fn(input || {})) as { data?: unknown };
+  const data = (res.data || {}) as {
+    planId?: string;
+    moneyPlan?: { summary?: string; todayPlan?: MoneyTodayActionClient[] };
+  };
+
   return {
-    planId: res.data.planId,
-    summary: res.data.moneyPlan.summary,
-    todayPlan: res.data.moneyPlan.todayPlan,
+    planId: data.planId || "",
+    summary: data.moneyPlan?.summary || "",
+    todayPlan: data.moneyPlan?.todayPlan || [],
   };
 }
 
 export async function callCreateCheckoutSession(plan: "growth" | "godmode") {
   const fn = httpsCallable(functions, "createCheckoutSession");
-  const res: any = await fn({
+  const res = (await fn({
     plan,
     successUrl: `${window.location.origin}/dashboard?upgraded=${plan}`,
     cancelUrl: `${window.location.origin}/pricing`,
-  });
-  return res.data.url;
+  })) as { data?: { url?: string } };
+
+  return res.data?.url || null;
 }
 
 export async function callGenerateOnboardingResponse(
   step: string,
   userInput: string,
-  businessProfile?: any
+  businessProfile?: Record<string, unknown>
 ) {
   const fn = httpsCallable(functions, "generateOnboardingResponse");
-  const res: any = await fn({
-    step,
-    userInput,
-    businessProfile,
-  });
+  const res = (await fn({ step, userInput, businessProfile })) as { data?: unknown };
   return res.data;
 }
