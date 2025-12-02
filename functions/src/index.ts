@@ -12,7 +12,7 @@ let stripe: Stripe | null = null;
 function getStripe(): Stripe {
   if (!stripe) {
     stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-      apiVersion: "2025-11-17.clover" as any,
+      apiVersion: "2025-11-17.clover",
     });
   }
   return stripe;
@@ -39,16 +39,15 @@ export const generateMoneyToday = functions.https.onCall(
       throw new functions.https.HttpsError("not-found", "User not found");
     }
 
-    const userData = userDoc.data() as Record<string, any>;
+    const userData = userDoc.data() as Record<string, unknown>;
     const plan = (userData.plan as "free" | "growth" | "godmode") || "free";
-
-    const d = (data || {}) as Record<string, any>;
+    const d = (data || {}) as Record<string, unknown>;
     const req: MoneyTodayRequest = {
-      businessType: d.businessType || userData.businessType || "beauty pro / creator",
-      idealClients: d.idealClients || userData.idealClients || "local high-quality clients",
-      audienceSize: d.audienceSize || userData.audienceSize || "small audience",
-      availabilityToday: d.availabilityToday || userData.availabilityToday || "2 hours",
-      promosRunning: d.promosRunning || userData.promosRunning || "none",
+      businessType: (d.businessType as string) || (userData.businessType as string) || "beauty pro / creator",
+      idealClients: (d.idealClients as string) || (userData.idealClients as string) || "local high-quality clients",
+      audienceSize: (d.audienceSize as string) || (userData.audienceSize as string) || "small audience",
+      availabilityToday: (d.availabilityToday as string) || (userData.availabilityToday as string) || "2 hours",
+      promosRunning: (d.promosRunning as string) || (userData.promosRunning as string) || "none",
       plan,
     };
 
@@ -195,7 +194,7 @@ export const generateOnboardingResponse = functions.https.onCall(
       );
     }
 
-    const { step, userInput, businessProfile } = (data as Record<string, any>) || {};
+    const { step, userInput, businessProfile } = (data as Record<string, unknown>) || {};
 
     // Simple conversation engine - can be expanded
     const systemPrompt = "";
@@ -238,8 +237,14 @@ export const generateOnboardingResponse = functions.https.onCall(
     }
 
     if (step === "availability") {
-      // Generate personalized summary
-      const summary = `Alright, here's what I'm seeing 👇🏽\n- You're ${businessProfile.businessType}\n- You want more ${businessProfile.idealClients}\n- Struggle: ${businessProfile.struggle}\n- Goal: ${businessProfile.moneyGoal}\n- Energy: ${userInput}\n\nSound about right?`;
+      // Generate personalized summary (safely read unknown shapes)
+      const bp = businessProfile as Record<string, unknown> | undefined;
+      const businessType = (bp?.businessType as string) || 'your business';
+      const idealClients = (bp?.idealClients as string) || 'your ideal clients';
+      const struggle = (bp?.struggle as string) || 'unknown struggle';
+      const moneyGoal = (bp?.moneyGoal as string) || 'your goal';
+
+      const summary = `Alright, here's what I'm seeing 👇🏽\n- You're ${businessType}\n- You want more ${idealClients}\n- Struggle: ${struggle}\n- Goal: ${moneyGoal}\n- Energy: ${userInput}\n\nSound about right?`;
 
       return {
         step: "summary_confirm",

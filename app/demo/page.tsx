@@ -22,7 +22,7 @@ export default function DemoPage() {
       description: "Auto-triggered emails that build relationships",
       trigger: "Customer just upgraded to Pro",
       response:
-        "🎉 Welcome to Pro! Here's your onboarding guide: [link]. Questions? Reply anytime!",
+        "🎉 Welcome to Pro! Here&apos;s your onboarding guide: [link]. Questions? Reply anytime!",
       stats: "68% open rate average",
       color: "from-pink-500 to-purple-500",
     },
@@ -142,7 +142,7 @@ export default function DemoPage() {
           </div>
 
           <div className="space-y-6">
-            <h3 className="text-2xl font-black">Who's Using This</h3>
+            <h3 className="text-2xl font-black">Who&apos;s Using This</h3>
             <ul className="space-y-4">
               {[
                 "💅 Lash technicians (3x more bookings)",
@@ -213,7 +213,7 @@ export default function DemoPage() {
                 a: "No. Takes 15 minutes. We have 1-on-1 onboarding.",
               },
               {
-                q: "Will customers know it's automated?",
+                q: "Will customers know it&apos;s automated?",
                 a: "No. The bot replies feel natural and human. But you can add a signature.",
               },
               {

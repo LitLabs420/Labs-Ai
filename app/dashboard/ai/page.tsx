@@ -6,6 +6,12 @@ import { useAuth } from "@/context/AuthContext";
 
 type ContentType = "instagram_caption" | "tiktok_script" | "email" | "dm_opener" | "money_play";
 
+type MoneyPlay = {
+  offer?: string;
+  script?: string;
+  estimatedLift?: number | string;
+};
+
 export default function AIActionsPage() {
   const { userData } = useAuth();
   const [activeTab, setActiveTab] = useState<"generator" | "dm" | "money">("generator");
@@ -69,7 +75,7 @@ export default function AIActionsPage() {
   };
 
   // MONEY PLAY
-  const [moneyPlay, setMoneyPlay] = useState<Record<string, unknown> | null>(null);
+  const [moneyPlay, setMoneyPlay] = useState<MoneyPlay | null>(null);
 
   const handleGenerateMoneyPlay = async () => {
     setLoading(true);
@@ -85,7 +91,8 @@ export default function AIActionsPage() {
       });
 
       const data = await response.json();
-      setMoneyPlay(data);
+      // cast to MoneyPlay shape — keep defensive defaults in the UI
+      setMoneyPlay(data as MoneyPlay);
     } catch (err) {
       console.error("Money play error:", err);
     } finally {
@@ -148,7 +155,7 @@ export default function AIActionsPage() {
                 <label className="block text-sm font-bold mb-2">Tone</label>
                 <select
                   value={formData.tone}
-                  onChange={(e) => setFormData({ ...formData, tone: e.target.value as any })}
+                  onChange={(e) => setFormData({ ...formData, tone: e.target.value as "casual" | "professional" | "funny" | "urgent" })}
                   className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:border-[#ff006e]"
                 >
                   <option value="casual">Casual</option>
@@ -265,7 +272,7 @@ export default function AIActionsPage() {
             {moneyPlay && (
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="p-6 bg-white/5 border border-white/10 rounded-xl">
-                  <p className="text-sm text-gray-400 mb-2">TODAY'S OFFER</p>
+                  <p className="text-sm text-gray-400 mb-2">TODAY&apos;S OFFER</p>
                   <p className="text-2xl font-black text-[#ff006e] mb-4">{moneyPlay.offer}</p>
                   <button className="w-full px-4 py-2 rounded-lg bg-[#ff006e]/20 text-[#ff006e] font-bold hover:bg-[#ff006e]/30 transition">
                     📋 Copy Offer
