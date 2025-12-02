@@ -42,9 +42,30 @@ jobs:
         run: |
           set -e
           echo "Downloading gitleaks binary and running scan"
-          ARCHIVE_URL="https://github.com/zricethezav/gitleaks/releases/latest/download/gitleaks-linux-amd64"
-          if ! curl -sSL "$ARCHIVE_URL" -o gitleaks; then
-            echo "Failed to download gitleaks binary from $ARCHIVE_URL" >&2
+          # Try the official repo first, then fall back to the legacy repo name if needed
+          ARCHIVE_URLS=(
+            "https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks-linux-amd64"
+            "https://github.com/zricethezav/gitleaks/releases/latest/download/gitleaks-linux-amd64"
+          )
+          downloaded=0
+          for url in "${ARCHIVE_URLS[@]}"; do
+            echo "trying $url"
+            if curl -sSL "$url" -o gitleaks.tmp; then
+              # quick validation: the file should be a binary (not HTML)
+              if head -c 4 gitleaks.tmp | grep -q "\x7fELF\|MZ"; then
+                mv gitleaks.tmp gitleaks
+                downloaded=1
+                break
+              else
+                echo "downloaded file doesn't look like a binary, trying next" >&2
+              fi
+            else
+              echo "curl failed for $url" >&2
+            fi
+          done
+          if [ "$downloaded" -ne 1 ]; then
+            echo "Failed to download a usable gitleaks binary from known URLs" >&2
+            # don't fail the workflow; simply skip producing an artifact so CI doesn't block
             exit 0
           fi
           chmod +x gitleaks
