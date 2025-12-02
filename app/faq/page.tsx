@@ -147,7 +147,7 @@ export default function FAQPage() {
           <h1 className="text-5xl md:text-6xl font-black leading-tight">
             Questions?
             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-400">
-              We've got answers.
+              We&apos;ve got answers.
             </span>
           </h1>
           <p className="text-xl text-white/70 max-w-2xl mx-auto">
