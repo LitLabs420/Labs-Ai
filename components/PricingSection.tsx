@@ -26,7 +26,7 @@ function PricingCard({
     setError("");
 
     try {
-    } catch (err: any) {
+    } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
       setError(msg || "Failed to start checkout");
       console.error(msg);

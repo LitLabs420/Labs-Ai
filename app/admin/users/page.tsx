@@ -16,7 +16,7 @@ type User = {
   displayName: string;
   tier: 'free' | 'pro' | 'enterprise';
   status: 'active' | 'suspended';
-  createdAt: any;
+  createdAt: { toDate?: () => Date } | string | number | null;
   totalPosts: number;
   postsThisMonth: number;
   referralCode: string;
@@ -72,9 +72,9 @@ export default function AdminUsersPage() {
         const usersList: User[] = [];
         snapshot.forEach((doc) => {
           usersList.push({
-            uid: doc.id,
-            ...doc.data(),
-          } as User);
+              uid: doc.id,
+              ...(doc.data() as Record<string, unknown>),
+            } as User);
         });
 
         setUsers(usersList);
@@ -278,7 +278,7 @@ export default function AdminUsersPage() {
                         {user.postsThisMonth || 0} / {user.totalPosts || 0}
                       </td>
                       <td className="px-6 py-4 text-white/60 text-sm">
-                        {new Date(user.createdAt?.toDate?.() || user.createdAt).toLocaleDateString()}
+                        {formatDate(user.createdAt)}
                       </td>
                       <td className="px-6 py-4 text-white/60 text-sm">{user.referralCount || 0}</td>
                       <td className="px-6 py-4">
@@ -333,4 +333,12 @@ export default function AdminUsersPage() {
       </div>
     </DashboardLayout>
   );
+}
+
+function formatDate(value?: { toDate?: () => Date } | string | number | null) {
+  if (!value) return "";
+  if (typeof value === "object" && value !== null && "toDate" in value && typeof (value as { toDate?: unknown }).toDate === "function") {
+    return (value as { toDate: () => Date }).toDate().toLocaleDateString();
+  }
+  return new Date(value as string | number | Date).toLocaleDateString();
 }

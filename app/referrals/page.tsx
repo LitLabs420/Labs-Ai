@@ -24,7 +24,7 @@ export default function ReferralsPage() {
         return;
       }
 
-      setUser(authUser as unknown as any);
+      setUser({ uid: authUser.uid, email: authUser.email });
 
       const code = Buffer.from(`${authUser.uid}:referral`).toString('base64').slice(0, 12);
       setReferralCode(code);
@@ -32,10 +32,10 @@ export default function ReferralsPage() {
 
       const userDoc = await getDoc(doc(db, 'users', authUser.uid));
       if (userDoc.exists()) {
-        const data = userDoc.data();
+        const data = userDoc.data() as Record<string, unknown>;
         setStats({
-          referralCount: data.referralCount || 0,
-          totalBonus: data.totalReferralBonus || 0,
+          referralCount: (data.referralCount as number) || 0,
+          totalBonus: (data.totalReferralBonus as number) || 0,
         });
       }
     });

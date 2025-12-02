@@ -103,7 +103,7 @@ Add to `.env.local` (in functions and frontend):
 OPENAI_API_KEY=sk_...
 
 # Stripe (Live Mode)
-STRIPE_SECRET_KEY=sk_live_...
+STRIPE_SECRET_KEY=REDACTED_STRIPE_SECRET
 STRIPE_WEBHOOK_SECRET=whsec_...
 
 # Stripe Price IDs (create these in Stripe dashboard)
@@ -257,7 +257,7 @@ User sees completion screen: "You're all set! 🚀"
 
 2. **Set Environment Variables**
    ```bash
-   firebase functions:config:set stripe.secret_key="sk_live_..."
+  firebase functions:config:set stripe.secret_key="REDACTED_STRIPE_SECRET"
    firebase functions:config:set stripe.webhook_secret="whsec_..."
    firebase functions:config:set stripe.price_growth="price_..."
    firebase functions:config:set stripe.price_godmode="price_..."

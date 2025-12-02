@@ -7,12 +7,14 @@ export async function trackEvent(
 ) {
   try {
     // GA4 tracking if gtag is available
-    if (typeof window !== 'undefined' && (window as any).gtag) {
+    if (typeof window !== 'undefined') {
       const win = window as unknown as { gtag?: (...args: unknown[]) => void };
-      win.gtag?.('event', eventName, {
-        ...data,
-        timestamp: new Date().toISOString(),
-      });
+      if (typeof win.gtag === 'function') {
+        win.gtag('event', eventName, {
+          ...data,
+          timestamp: new Date().toISOString(),
+        });
+      }
     }
 
     // Also log to Firestore for founder analytics

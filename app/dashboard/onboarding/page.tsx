@@ -7,10 +7,29 @@ import { getFirestore, doc, updateDoc, serverTimestamp } from "firebase/firestor
 import DashboardLayout from "../../../components/DashboardLayout";
 import AuthGate from "../../../components/AuthGate";
 
+type OnboardingForm = {
+  businessName: string;
+  location: string;
+  services: string;
+  vibe: string;
+  brandWords: string;
+  idealClients: string;
+  priceRange: string;
+  dontWantClients: string;
+  platforms: string;
+  contentRules: string;
+  workDays: string;
+  slowDays: string;
+  bookingWindow: string;
+  bookingMethod: string;
+  additionalInfo: string;
+};
+
 function OnboardingInner() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
+
+  const [formData, setFormData] = useState<OnboardingForm>({
     businessName: "",
     location: "",
     services: "",
@@ -34,7 +53,7 @@ function OnboardingInner() {
   const next = () => setStep((s) => Math.min(s + 1, 3));
   const prev = () => setStep((s) => Math.max(s - 1, 1));
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field: keyof OnboardingForm, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -248,7 +267,7 @@ function TextArea({
 
 /* STEP CONTENTS */
 
-function StepBasics({ formData, onChange }: { formData: Record<string, unknown>; onChange: (field: string, val: string) => void }) {
+function StepBasics({ formData, onChange }: { formData: OnboardingForm; onChange: (field: keyof OnboardingForm, val: string) => void }) {
   return (
     <section className="grid gap-4 lg:grid-cols-2">
       <Card>
@@ -296,7 +315,7 @@ function StepBasics({ formData, onChange }: { formData: Record<string, unknown>;
   );
 }
 
-function StepClients({ formData, onChange }: { formData: Record<string, unknown>; onChange: (field: string, val: string) => void }) {
+function StepClients({ formData, onChange }: { formData: OnboardingForm; onChange: (field: keyof OnboardingForm, val: string) => void }) {
   return (
     <section className="grid gap-4 lg:grid-cols-2">
       <Card>
@@ -345,7 +364,7 @@ function StepClients({ formData, onChange }: { formData: Record<string, unknown>
   );
 }
 
-function StepSchedule({ formData, onChange }: { formData: Record<string, unknown>; onChange: (field: string, val: string) => void }) {
+function StepSchedule({ formData, onChange }: { formData: OnboardingForm; onChange: (field: keyof OnboardingForm, val: string) => void }) {
   return (
     <section className="grid gap-4 lg:grid-cols-2">
       <Card>

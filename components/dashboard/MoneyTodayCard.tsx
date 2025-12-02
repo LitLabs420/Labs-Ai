@@ -121,7 +121,7 @@ export function MoneyTodayCard() {
                     {action.assetsNeeded && action.assetsNeeded.length > 0 && (
                       <div>
                         <p className="text-xs font-semibold text-[#40e0d0] uppercase tracking-wide mb-2">
-                          You'll need
+                          You&apos;ll need
                         </p>
                         <div className="flex flex-wrap gap-2">
                           {action.assetsNeeded.map((asset, i) => (

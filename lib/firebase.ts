@@ -12,12 +12,12 @@ declare global {
 }
 
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "REDACTED_Google_API_Key_PrefixDh7to-ioQOrlwIuvrmmNV1O9sY-eSD5LM",
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "studio-4627045237-a2fe9.firebaseapp.com",
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "studio-4627045237-a2fe9",
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "studio-4627045237-a2fe9.firebasestorage.app",
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "612847421952",
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:612847421952:web:d66d4ba0666e7f5116e6e5",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY ?? "",
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN ?? "",
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID ?? "",
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET ?? "",
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID ?? "",
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID ?? "",
 };
 
 let app: FirebaseApp | null = null;
@@ -32,8 +32,15 @@ if (typeof window !== "undefined") {
     authInstance = getAuth(app);
     dbInstance = getFirestore(app);
     
-    // Disable App Check enforcement by setting debug token
-    window.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+    // Only enable App Check debug token when explicitly allowed and not in production.
+    // Set `NEXT_PUBLIC_FIREBASE_APPCHECK_DEBUG_TOKEN=true` in dev env to enable.
+    const allowDebug =
+      process.env.NEXT_PUBLIC_FIREBASE_APPCHECK_DEBUG_TOKEN === "true" &&
+      process.env.NODE_ENV !== "production";
+
+    if (allowDebug) {
+      window.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+    }
   } catch (e) {
     console.error("Firebase initialization error:", e);
   }
