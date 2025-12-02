@@ -94,14 +94,14 @@ export function ChatBotOnboarding() {
       <div className="rounded-lg border border-[#40e0d0]/30 bg-gradient-to-br from-[#0a0a0a] to-[#1a1a1a] p-6 shadow-lg">
         <h3 className="mb-4 text-lg font-bold text-white">🤖 Welcome to LitLabs OS</h3>
         <p className="mb-4 text-sm text-gray-400">
-          Let's set you up. Just answer a few questions so I can understand your business and help
+          Let&apos;s set you up. Just answer a few questions so I can understand your business and help
           you make money faster.
         </p>
         <button
           onClick={handleSendMessage}
           className="w-full rounded-lg bg-gradient-to-r from-[#00d4ff] to-[#40e0d0] py-3 font-semibold text-[#0a0a0a] transition-all hover:shadow-lg hover:shadow-[#40e0d0]/50"
         >
-          Let's Begin →
+          Let&apos;s Begin →
         </button>
       </div>
     );
@@ -168,9 +168,9 @@ export function ChatBotOnboarding() {
         <div className="space-y-4 rounded-lg border border-[#40e0d0]/50 bg-[#0a0a0a] p-4 text-center">
           <div className="text-3xl">🚀</div>
           <div>
-            <h4 className="text-lg font-bold text-white mb-2">You're All Set!</h4>
+            <h4 className="text-lg font-bold text-white mb-2">You&apos;re All Set!</h4>
             <p className="text-sm text-gray-400">
-              I've got your profile saved. Now you're ready to use all the features:
+              I&apos;ve got your profile saved. Now you&apos;re ready to use all the features:
             </p>
             <ul className="mt-3 space-y-1 text-xs text-[#40e0d0]">
               <li>💰 Make Me Money Today</li>

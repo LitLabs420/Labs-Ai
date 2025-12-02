@@ -318,7 +318,7 @@ function StepClients({ formData, onChange }: { formData: any; onChange: (field: 
         <TextArea
           label="Clients you DO NOT want"
           placeholder="Example: last-minute cancellations, no-shows, price shoppers..."
-          helper="LitLabs will avoid calling in people you don't want."
+          helper="LitLabs will avoid calling in people you don&apos;t want."
           value={formData.dontWantClients}
           onChange={(val) => onChange("dontWantClients", val)}
         />
@@ -385,7 +385,7 @@ function StepSchedule({ formData, onChange }: { formData: any; onChange: (field:
         />
         <TextArea
           label="Anything else LitLabs should know?"
-          placeholder="Example: you're balancing a 9–5, family schedule, or limited days."
+          placeholder="Example: you&apos;re balancing a 9–5, family schedule, or limited days."
           value={formData.additionalInfo}
           onChange={(val) => onChange("additionalInfo", val)}
         />
