@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useEffect } from "react";
 
 export default function LiveDemo() {
   const [message, setMessage] = useState("");
@@ -23,10 +24,21 @@ export default function LiveDemo() {
       const headers: Record<string,string> = { "Content-Type": "application/json" };
       if (demoToken && demoToken.length > 0) headers["x-demo-token"] = demoToken;
 
+      // If reCAPTCHA site key is present, attempt to get a token and include it
+      const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY as unknown as string | undefined;
+      let recaptchaToken: string | undefined = undefined;
+      if (siteKey && (window as any).grecaptcha && (window as any).grecaptcha.execute) {
+        try {
+          recaptchaToken = await (window as any).grecaptcha.execute(siteKey, { action: 'demo' });
+        } catch (e) {
+          // ignore recaptcha failures here; server will reject if required
+        }
+      }
+
       const res = await fetch("/api/demo", {
         method: "POST",
         headers,
-        body: JSON.stringify({ message: trimmed }),
+        body: JSON.stringify({ message: trimmed, recaptchaToken }),
       });
       const data = await res.json();
       // Show remaining requests if provided by server (optional)
@@ -53,6 +65,19 @@ export default function LiveDemo() {
       setLoading(false);
     }
   }
+
+  useEffect(() => {
+    // Dynamically load reCAPTCHA v3 if site key is provided
+    const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY as unknown as string | undefined;
+    if (!siteKey) return;
+    if ((window as any).grecaptcha) return;
+    const script = document.createElement('script');
+    script.src = `https://www.google.com/recaptcha/api.js?render=${siteKey}`;
+    script.async = true;
+    script.defer = true;
+    document.head.appendChild(script);
+    return () => { document.head.removeChild(script); };
+  }, []);
 
   return (
     <div className="mt-4 rounded-lg border border-slate-800 bg-slate-900/60 p-4 text-sm">
