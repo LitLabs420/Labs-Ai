@@ -142,7 +142,7 @@ export default function AuthPage() {
             <div className="space-y-6">
               <div className="space-y-2">
                 <h1 className="text-5xl font-black">Join 2,800+ creators scaling their business</h1>
-                <p className="text-lg text-gray-300">Your AI marketing team is ready. Let's go.</p>
+                <p className="text-lg text-gray-300">Your AI marketing team is ready. Let&apos;s go.</p>
               </div>
 
               {/* Benefits */}

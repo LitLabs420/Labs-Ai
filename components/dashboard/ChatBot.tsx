@@ -42,7 +42,7 @@ export function ChatBotOnboarding() {
 
     try {
       // Update profile based on step
-      let updatedProfile = { ...profile };
+      const updatedProfile = { ...profile };
       if (step === "business_type") {
         updatedProfile.businessType = userText;
       } else if (step === "ideal_clients") {
