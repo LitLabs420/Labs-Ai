@@ -201,8 +201,8 @@ export const generateOnboardingResponse = functions.https.onCall(
     const { step, userInput, businessProfile } = data;
 
     // Simple conversation engine - can be expanded
-    let systemPrompt = "";
-    let userPrompt = "";
+    const systemPrompt = "";
+    const userPrompt = "";
 
     if (step === "welcome") {
       return {
