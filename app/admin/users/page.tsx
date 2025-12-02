@@ -33,6 +33,29 @@ export default function AdminUsersPage() {
   const [filterTier, setFilterTier] = useState<'all' | 'free' | 'pro' | 'enterprise'>('all');
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'suspended'>('all');
 
+  function applyFilters(
+    usersList: User[],
+    search: string,
+    tier: string,
+    status: string
+  ) {
+    let filtered = usersList;
+
+    if (search) {
+      filtered = filtered.filter((u) => u.email.toLowerCase().includes(search.toLowerCase()) || u.displayName?.toLowerCase().includes(search.toLowerCase()));
+    }
+
+    if (tier !== 'all') {
+      filtered = filtered.filter((u) => u.tier === tier);
+    }
+
+    if (status !== 'all') {
+      filtered = filtered.filter((u) => u.status === status);
+    }
+
+    setFilteredUsers(filtered);
+  }
+
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (user) => {
       if (!user || user.email !== ADMIN_EMAIL) {
@@ -66,28 +89,7 @@ export default function AdminUsersPage() {
     return () => unsub();
   }, [router, searchTerm, filterTier, filterStatus]);
 
-  function applyFilters(
-    usersList: User[],
-    search: string,
-    tier: string,
-    status: string
-  ) {
-    let filtered = usersList;
-
-    if (search) {
-      filtered = filtered.filter((u) => u.email.toLowerCase().includes(search.toLowerCase()) || u.displayName?.toLowerCase().includes(search.toLowerCase()));
-    }
-
-    if (tier !== 'all') {
-      filtered = filtered.filter((u) => u.tier === tier);
-    }
-
-    if (status !== 'all') {
-      filtered = filtered.filter((u) => u.status === status);
-    }
-
-    setFilteredUsers(filtered);
-  }
+  
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);
