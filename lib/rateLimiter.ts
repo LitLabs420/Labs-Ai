@@ -4,6 +4,7 @@
 // Minimal constructor shapes used for runtime normalization. Kept narrow so
 // TypeScript doesn't require the optional packages to be installed.
 type IORedisConstructor = new (uri: string) => unknown;
+type RedisLimiterLike = { consume: (key: string) => Promise<{ remainingPoints?: number; msBeforeNext?: number; remaining?: number }>; };
 type RateLimiterRedisConstructor = new (opts: { storeClient: unknown; points?: number; duration?: number; keyPrefix?: string }) => RedisLimiterLike;
 
 // Runtime loader function type returned by the runtime-only file.
