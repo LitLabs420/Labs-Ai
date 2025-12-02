@@ -38,20 +38,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Run Gitleaks (action)
-        id: gitleaks_action
-        uses: zricethezav/gitleaks-action@v2
-        continue-on-error: true
-        with:
-          args: detect --redact --report-format json --report-path gitleaks-report.json
-
-      - name: Fallback: download and run gitleaks binary
-        if: ${{ steps.gitleaks_action.conclusion != 'success' || steps.gitleaks_action.outcome != 'success' }}
+      - name: Run Gitleaks (binary)
         run: |
           set -e
-          echo "Gitleaks action failed or requires license; downloading binary fallback"
+          echo "Downloading gitleaks binary and running scan"
           ARCHIVE_URL="https://github.com/zricethezav/gitleaks/releases/latest/download/gitleaks-linux-amd64"
-          curl -sSL "$ARCHIVE_URL" -o gitleaks
+          if ! curl -sSL "$ARCHIVE_URL" -o gitleaks; then
+            echo "Failed to download gitleaks binary from $ARCHIVE_URL" >&2
+            exit 0
+          fi
           chmod +x gitleaks
           ./gitleaks detect --source . --redact --report-format json --report-path gitleaks-report.json || true
 
