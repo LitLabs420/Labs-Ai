@@ -44,3 +44,14 @@ next-env.d.ts
 .env*.local
 .env.local
 
+repo-rewrite*
+repo-filter*
+repo-*
+artifacts*
+found_hashes.txt
+page_local.html
+push-output.txt
+push-clean-mirror.log
+run-*.log
+run-jobs.json
+git-filter-repo
