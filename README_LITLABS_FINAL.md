@@ -65,7 +65,7 @@ https://litlabs-web.vercel.app
 |----------|-----|
 | **Live App** | https://litlabs-web.vercel.app |
 | **Admin Panel** | https://litlabs-web.vercel.app/admin/users |
-| **GitHub** | https://github.com/LiTree89/glamflow-ai |
+| **GitHub** | https://github.com/LiTree89/Labs-Ai |
 | **Vercel Dashboard** | https://vercel.com/dyingbreed243/litlabs-web |
 | **Firebase Console** | https://console.firebase.google.com/project/studio-4627045237-a2fe9 |
 | **Stripe Dashboard** | https://dashboard.stripe.com |

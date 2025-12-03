@@ -1,10 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
+import { aiChatSchema } from "@/lib/validation";
+import { getUserFromRequest } from "@/lib/auth-helper";
 
 const API_KEY = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
 const SYSTEM_PROMPT = process.env.LITLABS_MASTER_SYSTEM_PROMPT || "";
 
 export async function POST(req: NextRequest) {
   try {
+    // Verify authentication
+    const user = await getUserFromRequest(req);
+    if (!user) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
     if (!API_KEY) {
       return NextResponse.json(
         { error: "Missing GOOGLE_GENERATIVE_AI_API_KEY" },
@@ -12,7 +23,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { command, userMessage } = await req.json();
+    // Validate input
+    const body = await req.json();
+    const validation = aiChatSchema.safeParse({ message: body.command || body.userMessage, conversationId: body.conversationId });
+    
+    if (!validation.success) {
+      return NextResponse.json(
+        { error: "Invalid input", details: validation.error.errors },
+        { status: 400 }
+      );
+    }
+
+    const { command, userMessage } = body;
 
     if (!command) {
       return NextResponse.json(

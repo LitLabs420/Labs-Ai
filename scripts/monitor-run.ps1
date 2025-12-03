@@ -9,7 +9,7 @@ if (-not $RunId) {
 
 Write-Host "Monitoring run $RunId..."
 while ($true) {
-    $infoJson = gh run view $RunId --repo LiTree89/glamflow-ai --json status,conclusion 2>$null
+    $infoJson = gh run view $RunId --repo LiTree89/Labs-Ai --json status,conclusion 2>$null
     if (-not $infoJson) { Write-Host "gh returned nothing; retrying in 5s..."; Start-Sleep -Seconds 5; continue }
     $info = $infoJson | ConvertFrom-Json
     Write-Host "status=$($info.status) conclusion=$($info.conclusion)"
@@ -19,5 +19,5 @@ while ($true) {
 
 Write-Host "Run completed: $($info.conclusion)"
 Write-Host "Downloading artifacts to ./artifacts-$RunId"
-gh run download $RunId --repo LiTree89/glamflow-ai -D "./artifacts-$RunId"
+gh run download $RunId --repo LiTree89/Labs-Ai -D "./artifacts-$RunId"
 Write-Host "Download finished."

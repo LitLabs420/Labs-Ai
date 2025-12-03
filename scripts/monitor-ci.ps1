@@ -1,5 +1,5 @@
 $runId = 19862060026
-$repo = 'LiTree89/glamflow-ai'
+$repo = 'LiTree89/Labs-Ai'
 $max = 120
 for ($i=0; $i -lt $max; $i++) {
   $rJson = gh run view $runId --repo $repo --json status,conclusion

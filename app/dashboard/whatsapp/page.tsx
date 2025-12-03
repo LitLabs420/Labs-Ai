@@ -18,8 +18,8 @@ export default function WhatsAppPage() {
   });
   const [autoReplyEnabled, setAutoReplyEnabled] = useState(true);
   const [messages, setMessages] = useState([
-    { from: '+1234567890', body: 'Hey! What time are you open today?', timestamp: new Date(), reply: '📍 I'm open today until 6:00 PM! Want to book?' },
-    { from: '+1987654321', body: 'How much for a haircut?', timestamp: new Date(), reply: '💰 Haircuts are $35! Want to book an appointment?' },
+    { from: '+1234567890', body: 'Hey! What time are you open today?', timestamp: new Date(), reply: 'I\'m open today until 6:00 PM! Want to book?' },
+    { from: '+1987654321', body: 'How much for a haircut?', timestamp: new Date(), reply: 'Haircuts are $35! Want to book an appointment?' },
   ]);
 
   const handleSaveSettings = () => {

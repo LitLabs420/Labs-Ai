@@ -8,7 +8,7 @@ function ts() {
   return `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
 }
 
-const origin = 'https://github.com/LiTree89/glamflow-ai.git';
+const origin = 'https://github.com/LiTree89/Labs-Ai.git';
 const lsremotePath = path.join(process.cwd(), 'lsremote.txt');
 if (!fs.existsSync(lsremotePath)) {
   console.error('lsremote.txt not found in cwd. Run `git ls-remote --heads <origin> > lsremote.txt` first.');

@@ -7,7 +7,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import { trackEvent } from '@/lib/analytics';
 
-const ADMIN_EMAIL = 'dyingbreed243@gmail.com';
+const ADMIN_UID = process.env.NEXT_PUBLIC_ADMIN_UID!;
 
 export default function AdminDashboardPage() {
   const router = useRouter();
@@ -16,8 +16,20 @@ export default function AdminDashboardPage() {
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (user) => {
-      if (!user || user.email !== ADMIN_EMAIL) {
+      if (!user) {
         router.push('/auth');
+        return;
+      }
+
+      // Verify admin status via API route
+      const res = await fetch('/api/verify-admin', {
+        headers: {
+          'Authorization': `Bearer ${await user.getIdToken()}`
+        }
+      });
+
+      if (!res.ok) {
+        router.push('/dashboard');
         return;
       }
 

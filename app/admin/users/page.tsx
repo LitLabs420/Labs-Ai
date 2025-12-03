@@ -8,8 +8,6 @@ import { collection, query, onSnapshot, updateDoc, doc, deleteDoc } from 'fireba
 import { useRouter } from 'next/navigation';
 import { trackEvent } from '@/lib/analytics';
 
-const ADMIN_EMAIL = 'dyingbreed243@gmail.com';
-
 type User = {
   uid: string;
   email: string;
@@ -32,6 +30,33 @@ export default function AdminUsersPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterTier, setFilterTier] = useState<'all' | 'free' | 'pro' | 'enterprise'>('all');
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'suspended'>('all');
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        router.push('/auth');
+        return;
+      }
+
+      // Verify admin status via API route
+      const res = await fetch('/api/verify-admin', {
+        headers: {
+          'Authorization': `Bearer ${await user.getIdToken()}`
+        }
+      });
+
+      if (!res.ok) {
+        router.push('/dashboard');
+        return;
+      }
+
+      setIsAdmin(true);
+      trackEvent('admin_users_view', { uid: user.uid });
+      setLoading(false);
+    });
+
+    return () => unsub();
+  }, [router]);
 
   function applyFilters(
     usersList: User[],

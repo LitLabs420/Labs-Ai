@@ -1,0 +1,158 @@
+version: '3.8'
+
+services:
+  # PostgreSQL for production-ready data storage
+  postgres:
+    image: postgres:16-alpine
+    container_name: labs_ai_studio_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: litlabs
+      POSTGRES_PASSWORD: litlabs_dev_2024
+      POSTGRES_DB: litlabs
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U litlabs"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis for caching and rate limiting
+  redis:
+    image: redis:7-alpine
+    container_name: labs_ai_studio_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # Firebase Emulator Suite (for local Firebase development)
+  firebase:
+    image: andreysenov/firebase-tools:latest
+    container_name: labs_ai_studio_firebase
+    restart: unless-stopped
+    ports:
+      - "4000:4000"   # Emulator UI
+      - "9099:9099"   # Auth
+      - "8080:8080"   # Firestore
+      - "9199:9199"   # Storage
+      - "5001:5001"   # Functions
+    volumes:
+      - ./firebase.json:/home/node/firebase.json:ro
+      - ./firestore.rules:/home/node/firestore.rules:ro
+      - ./firestore.indexes.json:/home/node/firestore.indexes.json:ro
+      - firebase_data:/home/node/.cache
+    command: firebase emulators:start --project litlabs-dev
+    environment:
+      - FIREBASE_TOKEN=${FIREBASE_TOKEN}
+
+  # MongoDB (for bot builder data and marketplace)
+  mongodb:
+    image: mongo:7
+    container_name: labs_ai_studio_mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: litlabs
+      MONGO_INITDB_ROOT_PASSWORD: litlabs_dev_2024
+      MONGO_INITDB_DATABASE: litlabs
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Stripe CLI (for webhook testing)
+  stripe:
+    image: stripe/stripe-cli:latest
+    container_name: labs_ai_studio_stripe
+    restart: unless-stopped
+    command: listen --forward-to host.docker.internal:3000/api/webhooks/stripe --skip-verify
+    environment:
+      STRIPE_API_KEY: ${STRIPE_SECRET_KEY}
+      STRIPE_DEVICE_NAME: litlabs-dev
+    network_mode: host
+
+  # Mailhog (for email testing)
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: labs_ai_studio_mailhog
+    restart: unless-stopped
+    ports:
+      - "1025:1025"   # SMTP
+      - "8025:8025"   # Web UI
+    volumes:
+      - mailhog_data:/data
+
+  # Minio (S3-compatible storage for local development)
+  minio:
+    image: minio/minio:latest
+    container_name: labs_ai_studio_minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: litlabs
+      MINIO_ROOT_PASSWORD: litlabs_dev_2024
+    ports:
+      - "9000:9000"   # API
+      - "9001:9001"   # Console
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Nginx (reverse proxy for local development)
+  nginx:
+    image: nginx:alpine
+    container_name: labs_ai_studio_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - nginx_logs:/var/log/nginx
+    depends_on:
+      - postgres
+      - redis
+      - mongodb
+
+volumes:
+  postgres_data:
+    name: labs_ai_studio_postgres_data
+  redis_data:
+    name: labs_ai_studio_redis_data
+  mongodb_data:
+    name: labs_ai_studio_mongodb_data
+  mongodb_config:
+    name: labs_ai_studio_mongodb_config
+  firebase_data:
+    name: labs_ai_studio_firebase_data
+  mailhog_data:
+    name: labs_ai_studio_mailhog_data
+  minio_data:
+    name: labs_ai_studio_minio_data
+  nginx_logs:
+    name: labs_ai_studio_nginx_logs
+
+networks:
+  default:
+    name: labs_ai_studio_network
+    driver: bridge

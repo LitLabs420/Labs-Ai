@@ -8,8 +8,6 @@ import { collection, query, onSnapshot, orderBy, limit } from 'firebase/firestor
 import { useRouter } from 'next/navigation';
 import { trackEvent } from '@/lib/analytics';
 
-const ADMIN_EMAIL = 'dyingbreed243@gmail.com';
-
 type AnalyticsData = {
   totalUsers: number;
   activeUsersThisMonth: number;

@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/firebase';
 import { collection, addDoc, query, where, getDocs, doc, updateDoc } from 'firebase/firestore';
 import { info, warn, error } from '@/lib/serverLogger';
+import Stripe from 'stripe';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2024-12-18.acacia',
+});
 
 /**
  * STRIPE WEBHOOK HANDLER
@@ -13,7 +18,22 @@ import { info, warn, error } from '@/lib/serverLogger';
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const body = await request.text();
+    const sig = request.headers.get('stripe-signature');
+
+    if (!sig || !process.env.STRIPE_WEBHOOK_SECRET) {
+      error('[Stripe Webhook] Missing signature or webhook secret');
+      return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
+    }
+
+    // Verify webhook signature
+    const event = stripe.webhooks.constructEvent(
+      body,
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET
+    );
+
+    const { type, data } = event;
     const { type, data } = body;
 
     info(`[Stripe Webhook] Event: ${type}`);

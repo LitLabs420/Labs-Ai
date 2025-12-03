@@ -1,0 +1,34 @@
+# Minimal development setup (faster startup)
+version: '3.8'
+
+services:
+  # PostgreSQL only
+  postgres:
+    image: postgres:16-alpine
+    container_name: labs_ai_studio_postgres_dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: litlabs
+      POSTGRES_PASSWORD: litlabs_dev_2024
+      POSTGRES_DB: litlabs
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_dev:/var/lib/postgresql/data
+
+  # Redis only
+  redis:
+    image: redis:7-alpine
+    container_name: labs_ai_studio_redis_dev
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_dev:/data
+    command: redis-server --appendonly yes
+
+volumes:
+  postgres_dev:
+    name: labs_ai_studio_postgres_dev
+  redis_dev:
+    name: labs_ai_studio_redis_dev
