@@ -4,9 +4,8 @@ import { collection, addDoc, query, where, getDocs, doc, updateDoc } from 'fireb
 import { info, warn, error } from '@/lib/serverLogger';
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-12-18.acacia',
-});
+// Initialize Stripe client (use account default API version)
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 /**
  * STRIPE WEBHOOK HANDLER
@@ -34,7 +33,6 @@ export async function POST(request: NextRequest) {
     );
 
     const { type, data } = event;
-    const { type, data } = body;
 
     info(`[Stripe Webhook] Event: ${type}`);
 
