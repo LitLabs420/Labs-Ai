@@ -40,6 +40,12 @@ export const whatsappMessageSchema = z.object({
   timestamp: z.string().datetime(),
 });
 
+// AI chat message
+export const aiChatSchema = z.object({
+  message: z.string().min(1, 'Message is required').max(2000),
+  conversationId: z.string().min(1).max(100).optional(),
+});
+
 export const botBuilderSchema = z.object({
   name: z.string().min(3).max(50),
   description: z.string().min(10).max(500),
@@ -82,7 +88,7 @@ export function safeValidate<T>(schema: z.ZodSchema<T>, data: unknown) {
   if (!result.success) {
     return { 
       success: false, 
-      error: result.error.errors.map(e => e.message).join(', ')
+      error: result.error.issues.map((e: z.ZodIssue) => e.message).join(', ')
     };
   }
   return { success: true, data: result.data };

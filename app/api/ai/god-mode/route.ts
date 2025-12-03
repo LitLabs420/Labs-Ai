@@ -4,7 +4,7 @@ import { incrementUsage, canPerformAction } from '@/lib/usage-tracker';
 import { getUserFromRequest } from '@/lib/auth-helper';
 import { Guardian } from '@/lib/guardian-bot';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 export const maxDuration = 60;
 
 export async function POST(request: NextRequest) {

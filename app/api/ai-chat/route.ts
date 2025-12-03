@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { aiChatSchema } from "@/lib/validation";
 import { getUserFromRequest } from "@/lib/auth-helper";
 
+export const runtime = 'nodejs';
+
 const API_KEY = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
 const SYSTEM_PROMPT = process.env.LITLABS_MASTER_SYSTEM_PROMPT || "";
 

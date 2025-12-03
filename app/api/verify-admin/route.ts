@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getUserFromRequest } from '@/lib/auth-helper';
 
+export const runtime = 'nodejs';
+
 const ADMIN_UID = process.env.ADMIN_UID;
 
 /**

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { generateMusicRecommendations, analyzeMusicVibe, getTikTokSafeTracks, getTrendingMusic, hasMusicSubscription } from '@/lib/music-generator';
 import { getUserFromRequest } from '@/lib/auth-helper';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 export async function POST(request: NextRequest) {
   try {

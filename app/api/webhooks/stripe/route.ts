@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/firebase';
 import { collection, addDoc, query, where, getDocs, doc, updateDoc } from 'firebase/firestore';
 import { info, warn, error } from '@/lib/serverLogger';
+export const runtime = 'nodejs';
 import Stripe from 'stripe';
 
 // Initialize Stripe client (use account default API version)
