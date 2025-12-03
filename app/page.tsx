@@ -45,12 +45,12 @@ export default function Home() {
               <span className="text-slate-400">Build</span>
               <span className="text-slate-300 font-mono">{BUILD_TS}</span>
             </div>
-            <button className="hidden md:inline-flex rounded-full border border-slate-700 px-4 py-1.5 text-[11px] hover:bg-slate-900 hover:border-emerald-500/50">
+            <a href="/auth" className="hidden md:inline-flex rounded-full border border-slate-700 px-4 py-1.5 text-[11px] hover:bg-slate-900 hover:border-emerald-500/50 transition-all">
               Login
-            </button>
-            <button className="rounded-full bg-emerald-500 px-4 py-1.5 text-[11px] font-semibold text-slate-950 hover:bg-emerald-400 hover:shadow-lg hover:shadow-emerald-500/50">
+            </a>
+            <a href="/dashboard" className="rounded-full bg-emerald-500 px-4 py-1.5 text-[11px] font-semibold text-slate-950 hover:bg-emerald-400 hover:shadow-lg hover:shadow-emerald-500/50 transition-all">
               Open Dashboard
-            </button>
+            </a>
           </div>
         </header>
 
@@ -75,12 +75,12 @@ export default function Home() {
             </p>
 
             <div className="flex flex-wrap gap-3">
-              <button className="rounded-xl bg-emerald-500 px-5 py-2 text-sm font-semibold text-slate-950 hover:bg-emerald-400 hover:shadow-xl hover:shadow-emerald-500/50 hover:scale-105 transition-all">
+              <a href="/dashboard/billing" className="inline-block rounded-xl bg-emerald-500 px-5 py-2 text-sm font-semibold text-slate-950 hover:bg-emerald-400 hover:shadow-xl hover:shadow-emerald-500/50 hover:scale-105 transition-all">
                 Activate LitLabs →
-              </button>
-              <button className="rounded-xl border border-slate-700 px-5 py-2 text-sm text-slate-100 hover:bg-slate-900 hover:border-emerald-500/50 transition-all">
+              </a>
+              <a href="#how-it-works" className="inline-block rounded-xl border border-slate-700 px-5 py-2 text-sm text-slate-100 hover:bg-slate-900 hover:border-emerald-500/50 transition-all">
                 Watch 2-min demo
-              </button>
+              </a>
             </div>
 
             <LiveDemo />
@@ -179,10 +179,12 @@ export default function Home() {
                 <div className="border-t border-slate-800 px-3 py-2">
                   <div className="flex items-center gap-2 rounded-xl bg-slate-900 px-2">
                     <input
+                      type="text"
+                      aria-label="Chat input"
                       className="h-8 flex-1 bg-transparent text-[11px] text-slate-100 outline-none placeholder:text-slate-500"
                       placeholder="Type what you want LitLabs to build or fix today..."
                     />
-                    <button className="rounded-lg bg-emerald-500 px-3 py-1 text-[11px] font-semibold text-slate-950">
+                    <button type="button" className="rounded-lg bg-emerald-500 px-3 py-1 text-[11px] font-semibold text-slate-950">
                       Make me money
                     </button>
                   </div>

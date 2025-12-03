@@ -26,6 +26,33 @@ function PricingCard({
     setError("");
 
     try {
+      trackEvent("pricing_click", { tier: stripeplan });
+      
+      // Map tier to actual price ID env var
+      let priceIdEnv = "";
+      if (stripeplan === "growth" && plan.includes("Starter")) {
+        priceIdEnv = "NEXT_PUBLIC_STRIPE_PRICE_STARTER";
+      } else if (stripeplan === "godmode" && plan.includes("Pro")) {
+        priceIdEnv = "NEXT_PUBLIC_STRIPE_PRICE_PRO";
+      } else if (plan.includes("Deluxe")) {
+        priceIdEnv = "NEXT_PUBLIC_STRIPE_PRICE_ENTERPRISE";
+      } else if (plan.includes("Freemium")) {
+        priceIdEnv = "NEXT_PUBLIC_STRIPE_PRICE_FREEMIUM";
+      }
+
+      // Create checkout session
+      const res = await fetch("/api/create-checkout-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ priceIdEnv }),
+      });
+
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        setError(data.error || "Failed to create checkout session");
+      }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
       setError(msg || "Failed to start checkout");
