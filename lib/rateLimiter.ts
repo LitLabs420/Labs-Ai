@@ -1,24 +1,34 @@
 // Optional Redis-backed rate limiter. If REDIS_URL is set, uses Redis for global limits.
 // Falls back to in-memory limiter when REDIS_URL is not provided.
 
-// Minimal constructor shapes used for runtime normalization. Kept narrow so
-// TypeScript doesn't require the optional packages to be installed.
-type IORedisConstructor = new (uri: string) => unknown;
-type RedisLimiterLike = { consume: (key: string) => Promise<{ remainingPoints?: number; msBeforeNext?: number; remaining?: number }>; };
-type RateLimiterRedisConstructor = new (opts: { storeClient: unknown; points?: number; duration?: number; keyPrefix?: string }) => RedisLimiterLike;
+let redisClient: any = null;
+let redisLimiter: any = null;
+let initialized = false;
 
-// Runtime loader function type returned by the runtime-only file.
-type RuntimeConsumeResult = { ok: true; remaining?: number } | { ok: false; retryAfter?: number; remaining?: number };
-
-let runtimeConsume: ((ip: string) => Promise<RuntimeConsumeResult>) | null = null;
-
-async function ensureRuntimeLoader() {
-  if (runtimeConsume) return;
+async function initLimiterIfNeeded() {
+  if (initialized) return;
+  initialized = true;
   try {
-    const runtime = await import('./rateLimiter.runtime');
-    runtimeConsume = runtime?.runtimeConsume ?? null;
+    // Lazy-require optional dependencies at runtime so the bundler doesn't
+    // fail when they aren't installed for local dev.
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const IORedis = require('ioredis');
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const RateLimiterFlexible = require('rate-limiter-flexible');
+    if (process.env.REDIS_URL) {
+      redisClient = new IORedis(process.env.REDIS_URL);
+      const { RateLimiterRedis } = RateLimiterFlexible;
+      redisLimiter = new RateLimiterRedis({
+        storeClient: redisClient,
+        points: parseInt(process.env.DEMO_RATE_LIMIT || '20', 10),
+        duration: parseInt(process.env.DEMO_RATE_LIMIT_WINDOW || '60', 10),
+        keyPrefix: 'rl_demo',
+      });
+    }
   } catch (e) {
-    runtimeConsume = null;
+    // optional deps not present — fall back to in-memory limiter
+    redisClient = null;
+    redisLimiter = null;
   }
 }
 
@@ -29,16 +39,15 @@ const DEFAULT_DEMO_RATE_LIMIT = parseInt(process.env.DEMO_RATE_LIMIT || '20', 10
 const WINDOW_MS = DEFAULT_WINDOW_SEC * 1000;
 const MAX_PER_WINDOW = DEFAULT_DEMO_RATE_LIMIT;
 
-export async function checkRateLimit(ip: string) {
-  await ensureRuntimeLoader();
-
-  if (runtimeConsume) {
+export async function checkRateLimit(ip: string): Promise<{ ok: boolean; retryAfter?: number }> {
+  await initLimiterIfNeeded();
+  if (redisLimiter) {
     try {
-      const res = await runtimeConsume(ip);
-      if (res.ok === true) return { ok: true, remaining: res.remaining };
-      return { ok: false, retryAfter: res.retryAfter };
-    } catch (e) {
-      // fall through to in-memory fallback
+      await redisLimiter.consume(ip);
+      return { ok: true };
+    } catch (rejRes) {
+      const sec = Math.ceil(rejRes.msBeforeNext / 1000) || 1;
+      return { ok: false, retryAfter: sec };
     }
   }
 
@@ -51,12 +60,13 @@ export async function checkRateLimit(ip: string) {
   }
 
   if (entry.count >= MAX_PER_WINDOW) {
-    return { ok: false, retryAfter: Math.ceil((entry.start + WINDOW_MS - now) / 1000), remaining: 0 };
+    return { ok: false, retryAfter: Math.ceil((entry.start + WINDOW_MS - now) / 1000) };
   }
 
+  // increment and persist the new count for this window
   entry.count++;
   inMemoryMap.set(ip, entry);
-  return { ok: true, remaining: Math.max(0, MAX_PER_WINDOW - entry.count) };
+  return { ok: true };
 }
 
 export default { checkRateLimit };

@@ -49,7 +49,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ reply });
   } catch (err) {
-    sentry.captureException(err as unknown);
+    try { sentry.captureException(err as unknown); } catch (_) { /* best-effort */ }
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
