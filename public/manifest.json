@@ -1,0 +1,9 @@
+{
+  "name": "LitLabs - AI Content Studio",
+  "short_name": "LitLabs",
+  "description": "AI-powered content creation for beauty & grooming businesses",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#020617",
+  "theme_color": "#10b981"
+}

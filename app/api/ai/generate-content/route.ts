@@ -3,11 +3,31 @@ import { generateContent, GenerateContentRequest } from "@/lib/ai";
 import rateLimiter from '@/lib/rateLimiter';
 import { verifyRecaptcha } from '@/lib/recaptcha';
 import sentry from '@/lib/sentry';
+import { canPerformAction, incrementUsage } from '@/lib/usage-tracker';
+import { getSmartContext, enhancePromptWithContext, trackContentUsage } from '@/lib/smart-context';
+import { Guardian } from '@/lib/guardian-bot';
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
     const parsed = body as Record<string, unknown>;
+    const uid = parsed.uid as string | undefined;
+    
+    // Check usage limits if user is authenticated
+    if (uid) {
+      const check = await canPerformAction(uid, 'aiGenerations');
+      if (!check.allowed) {
+        return NextResponse.json(
+          { 
+            error: check.reason,
+            limit: check.limit,
+            current: check.current,
+            upgradeRequired: true
+          },
+          { status: 403 }
+        );
+      }
+    }
     const description = parsed.description as string | undefined;
 
     // Validate niche/contentType/tone against allowed values
@@ -30,12 +50,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'recaptcha failed' }, { status: 403 });
     }
 
-    // Get auth token from header
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
     // Validate input
     if (!niche || !contentType || !description) {
       return NextResponse.json(
@@ -53,12 +67,47 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429, headers: { 'Retry-After': String(rl.retryAfter || 60) } });
     }
 
+    // GUARDIAN: Analyze for suspicious activity
+    if (uid) {
+      const guardian = Guardian.getInstance();
+      const securityCheck = await guardian.analyzeUserBehavior(uid, 'content_generation', {
+        niche,
+        contentType,
+        description,
+        ip,
+      });
+
+      if (!securityCheck.safe && securityCheck.threat) {
+        console.warn('🛡️ GUARDIAN blocked request:', securityCheck.threat);
+        return NextResponse.json(
+          { error: "Security check failed. Please contact support if you believe this is an error." },
+          { status: 403 }
+        );
+      }
+    }
+
+    // Get smart context and enhance prompt
+    let enhancedDescription = description;
+    if (uid) {
+      const context = await getSmartContext(uid);
+      if (context) {
+        enhancedDescription = enhancePromptWithContext(description, context);
+        console.log('📝 Enhanced prompt with smart context for user:', uid);
+      }
+    }
+
     const result = await generateContent({
       niche,
       contentType,
-      description,
+      description: enhancedDescription,
       tone: tone || "casual",
     });
+
+    // Increment usage counter and track content usage after successful generation
+    if (uid) {
+      await incrementUsage(uid, 'aiGenerations');
+      await trackContentUsage(uid, description);
+    }
 
     const res = NextResponse.json(result);
     if (typeof rl.remaining === 'number') res.headers.set('X-RateLimit-Remaining', String(rl.remaining));

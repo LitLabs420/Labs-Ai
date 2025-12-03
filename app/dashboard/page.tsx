@@ -145,32 +145,32 @@ export default function DashboardPage() {
 
         {/* FEATURE CARDS */}
         <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-          <div className='group relative rounded-xl border border-white/10 bg-gradient-to-br from-slate-800 to-slate-900 overflow-hidden hover:border-pink-500/50 transition p-8'>
-            <div className='h-12 w-12 rounded-lg bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center text-xl mb-4'>✨</div>
-            <h3 className='text-xl font-bold text-white mb-2'>Daily Post Generator</h3>
-            <p className='text-white/70 mb-6'>AI creates engaging posts in 30 seconds</p>
+          <div onClick={() => router.push('/dashboard/ai')} className='group relative rounded-xl border border-white/10 bg-gradient-to-br from-slate-800 to-slate-900 overflow-hidden hover:border-pink-500/50 transition p-8 cursor-pointer'>
+            <div className='h-12 w-12 rounded-lg bg-gradient-to-br from-pink-500 to-purple-500 flex items-center justify-center text-xl mb-4'>🧠</div>
+            <h3 className='text-xl font-bold text-white mb-2'>GOD MODE AI</h3>
+            <p className='text-white/70 mb-6'>Ultra-intelligent content creation & research</p>
             <button className='px-4 py-2 rounded-lg bg-pink-500/20 hover:bg-pink-500/30 text-pink-300 text-sm font-semibold transition'>Try Now →</button>
           </div>
 
-          <div className='group relative rounded-xl border border-white/10 bg-gradient-to-br from-slate-800 to-slate-900 overflow-hidden hover:border-sky-500/50 transition p-8'>
-            <div className='h-12 w-12 rounded-lg bg-gradient-to-br from-sky-500 to-cyan-500 flex items-center justify-center text-xl mb-4'>💬</div>
-            <h3 className='text-xl font-bold text-white mb-2'>Smart DM Replies</h3>
-            <p className='text-white/70 mb-6'>Professional responses instantly</p>
-            <button className='px-4 py-2 rounded-lg bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 text-sm font-semibold transition'>Try Now →</button>
+          <div onClick={() => router.push('/dashboard/marketplace')} className='group relative rounded-xl border border-white/10 bg-gradient-to-br from-slate-800 to-slate-900 overflow-hidden hover:border-blue-500/50 transition p-8 cursor-pointer'>
+            <div className='h-12 w-12 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-xl mb-4'>🛍️</div>
+            <h3 className='text-xl font-bold text-white mb-2'>Template Marketplace</h3>
+            <p className='text-white/70 mb-6'>Buy & sell proven templates, earn passive income</p>
+            <button className='px-4 py-2 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 text-sm font-semibold transition'>Browse →</button>
           </div>
 
-          <div className='group relative rounded-xl border border-white/10 bg-gradient-to-br from-slate-800 to-slate-900 overflow-hidden hover:border-red-500/50 transition p-8'>
-            <div className='h-12 w-12 rounded-lg bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-xl mb-4'>🛡️</div>
-            <h3 className='text-xl font-bold text-white mb-2'>Fraud Detection</h3>
-            <p className='text-white/70 mb-6'>AI flags suspicious messages</p>
-            <button className='px-4 py-2 rounded-lg bg-red-500/20 hover:bg-red-500/30 text-red-300 text-sm font-semibold transition'>Try Now →</button>
+          <div onClick={() => router.push('/dashboard/analytics')} className='group relative rounded-xl border border-white/10 bg-gradient-to-br from-slate-800 to-slate-900 overflow-hidden hover:border-purple-500/50 transition p-8 cursor-pointer'>
+            <div className='h-12 w-12 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-xl mb-4'>📊</div>
+            <h3 className='text-xl font-bold text-white mb-2'>Analytics Dashboard</h3>
+            <p className='text-white/70 mb-6'>Predict viral content with AI-powered insights</p>
+            <button className='px-4 py-2 rounded-lg bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 text-sm font-semibold transition'>View Stats →</button>
           </div>
 
-          <div className='group relative rounded-xl border border-white/10 bg-gradient-to-br from-slate-800 to-slate-900 overflow-hidden hover:border-emerald-500/50 transition p-8'>
-            <div className='h-12 w-12 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-xl mb-4'>📈</div>
-            <h3 className='text-xl font-bold text-white mb-2'>Real-Time Analytics</h3>
-            <p className='text-white/70 mb-6'>Track everything in real-time</p>
-            <button className='px-4 py-2 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-sm font-semibold transition'>View Stats →</button>
+          <div onClick={() => router.push('/dashboard/ai')} className='group relative rounded-xl border border-white/10 bg-gradient-to-br from-slate-800 to-slate-900 overflow-hidden hover:border-emerald-500/50 transition p-8 cursor-pointer'>
+            <div className='h-12 w-12 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-xl mb-4'>🎬</div>
+            <h3 className='text-xl font-bold text-white mb-2'>Video Script Generator</h3>
+            <p className='text-white/70 mb-6'>Scene-by-scene viral scripts for TikTok & IG</p>
+            <button className='px-4 py-2 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-sm font-semibold transition'>Create Script →</button>
           </div>
         </div>
 

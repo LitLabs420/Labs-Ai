@@ -3,11 +3,30 @@ import { generateMoneyPlay } from "@/lib/ai";
 import rateLimiter from '@/lib/rateLimiter';
 import { verifyRecaptcha } from '@/lib/recaptcha';
 import sentry from '@/lib/sentry';
+import { canPerformAction, incrementUsage } from '@/lib/usage-tracker';
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
     const parsed = body as Record<string, unknown>;
+    const uid = parsed.uid as string | undefined;
+    
+    // Check usage limits
+    if (uid) {
+      const check = await canPerformAction(uid, 'moneyPlays');
+      if (!check.allowed) {
+        return NextResponse.json(
+          { 
+            error: check.reason,
+            limit: check.limit,
+            current: check.current,
+            upgradeRequired: true
+          },
+          { status: 403 }
+        );
+      }
+    }
+    
     const userNiche = parsed.userNiche as string | undefined;
     const recentBookings = typeof parsed.recentBookings === 'number' ? parsed.recentBookings : Number(parsed.recentBookings) || 0;
     const userRevenue = typeof parsed.userRevenue === 'number' ? parsed.userRevenue : Number(parsed.userRevenue) || 0;
@@ -37,6 +56,11 @@ export async function POST(req: NextRequest) {
       recentBookings || 0,
       userRevenue || 0
     );
+
+    // Increment usage after successful generation
+    if (uid) {
+      await incrementUsage(uid, 'moneyPlays');
+    }
 
     const res = NextResponse.json(moneyPlay);
     if (typeof rl.remaining === 'number') res.headers.set('X-RateLimit-Remaining', String(rl.remaining));

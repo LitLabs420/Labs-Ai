@@ -3,11 +3,30 @@ import { generateDMReply } from "@/lib/ai";
 import rateLimiter from '@/lib/rateLimiter';
 import { verifyRecaptcha } from '@/lib/recaptcha';
 import sentry from '@/lib/sentry';
+import { canPerformAction, incrementUsage } from '@/lib/usage-tracker';
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
     const parsed = body as Record<string, unknown>;
+    const uid = parsed.uid as string | undefined;
+    
+    // Check usage limits
+    if (uid) {
+      const check = await canPerformAction(uid, 'dmReplies');
+      if (!check.allowed) {
+        return NextResponse.json(
+          { 
+            error: check.reason,
+            limit: check.limit,
+            current: check.current,
+            upgradeRequired: true
+          },
+          { status: 403 }
+        );
+      }
+    }
+    
     const incomingMessage = parsed.incomingMessage as string | undefined;
     const userNiche = parsed.userNiche as string | undefined;
     const userContext = parsed.userContext as string | undefined;
@@ -34,6 +53,11 @@ export async function POST(req: NextRequest) {
     }
 
     const reply = await generateDMReply(incomingMessage, userNiche, userContext || "");
+
+    // Increment usage after successful generation
+    if (uid) {
+      await incrementUsage(uid, 'dmReplies');
+    }
 
     const res = NextResponse.json({ reply });
     if (typeof rl.remaining === 'number') res.headers.set('X-RateLimit-Remaining', String(rl.remaining));

@@ -5,46 +5,97 @@ import { useRouter } from "next/navigation";
 
 const plans = [
   {
-    name: "Basic",
-    price: 49,
-    priceIdEnv: "NEXT_PUBLIC_STRIPE_BASIC_PRICE_ID",
+    name: "Starter",
+    price: 9.99,
+    priceIdEnv: "NEXT_PUBLIC_STRIPE_PRICE_STARTER",
     description: "Perfect to start",
+    emoji: "🚀",
+    tier: "starter",
     bullets: [
-      "Daily posts & captions",
-      "Hashtags pack",
-      "DM booking scripts",
-      "Slow-day promos",
-      "Fraud detection",
+      "50 AI generations/month",
+      "20 DM replies/month",
+      "5 money plays/month",
+      "10 AI images/month",
+      "All templates",
+      "No watermark",
       "Email support",
     ],
   },
   {
-    name: "Pro",
-    price: 99,
-    priceIdEnv: "NEXT_PUBLIC_STRIPE_PRO_PRICE_ID",
-    description: "Most popular",
+    name: "Creator",
+    price: 29,
+    priceIdEnv: "NEXT_PUBLIC_STRIPE_PRICE_CREATOR",
+    description: "For serious creators",
+    emoji: "🎨",
+    tier: "creator",
     featured: true,
     bullets: [
-      "Everything in Basic",
-      "7-day content packs",
-      "Custom tone & brand",
-      "Monthly growth plan",
-      "Client reactivation flows",
+      "500 AI generations/month",
+      "100 DM replies/month",
+      "Unlimited money plays",
+      "50 AI images/month",
+      "Smart context (AI remembers you)",
+      "Template library",
+      "Analytics dashboard",
+      "Basic scheduling",
       "Priority support",
     ],
   },
   {
-    name: "Deluxe",
+    name: "Pro",
+    price: 59,
+    priceIdEnv: "NEXT_PUBLIC_STRIPE_PRICE_PRO",
+    description: "Unlimited everything",
+    emoji: "💎",
+    tier: "pro",
+    bullets: [
+      "UNLIMITED AI generations",
+      "UNLIMITED DM replies",
+      "UNLIMITED money plays",
+      "UNLIMITED AI images",
+      "Advanced analytics",
+      "Smart scheduling",
+      "Multi-platform export",
+      "Voice input",
+      "Custom templates",
+      "Priority support",
+    ],
+  },
+  {
+    name: "Agency",
     price: 149,
-    priceIdEnv: "NEXT_PUBLIC_STRIPE_DELUXE_PRICE_ID",
-    description: "For power users",
+    priceIdEnv: "NEXT_PUBLIC_STRIPE_PRICE_AGENCY",
+    description: "For teams & agencies",
+    emoji: "🏢",
+    tier: "agency",
     bullets: [
       "Everything in Pro",
-      "Holiday promo packs",
-      "Daily schedule filler",
-      "Weekly audit ideas",
-      "Broadcast script packs",
-      "1-on-1 onboarding",
+      "5 team accounts",
+      "White-label branding",
+      "Client management",
+      "API access",
+      "Dedicated account manager",
+      "Custom integrations",
+      "Advanced security",
+    ],
+  },
+  {
+    name: "Education",
+    price: 41.58,
+    yearly: 499,
+    priceIdEnv: "NEXT_PUBLIC_STRIPE_PRICE_EDUCATION",
+    description: "For schools & programs",
+    emoji: "🎓",
+    tier: "education",
+    bullets: [
+      "50 student accounts",
+      "Teacher dashboard",
+      "Content moderation",
+      "Assignment templates",
+      "Progress tracking",
+      "Bulk management",
+      "Training included",
+      "Education discount",
     ],
   },
 ];
@@ -88,10 +139,11 @@ export default function PricingTable() {
   return (
     <section id="pricing" className="space-y-12">
       <div className="text-center space-y-4">
-        <h2 className="text-4xl font-bold">Simple, Transparent Pricing</h2>
-        <p className="text-gray-400 max-w-2xl mx-auto">
-          Cancel anytime. No contracts. All plans include unlimited access to
-          your LitLabs AI.
+        <h2 className="text-5xl font-black bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent">
+          Pricing That Makes Sense
+        </h2>
+        <p className="text-gray-400 max-w-2xl mx-auto text-lg">
+          Start with $9.99/month impulse buy. Scale as you grow. Cancel anytime, no contracts.
         </p>
       </div>
 
@@ -101,37 +153,43 @@ export default function PricingTable() {
         </div>
       )}
 
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-4 max-w-7xl mx-auto">
         {plans.map((plan) => (
           <div
             key={plan.name}
-            className={`rounded-lg p-6 flex flex-col justify-between transition ${
+            className={`rounded-2xl p-6 flex flex-col justify-between transition-all hover:scale-105 ${
               plan.featured
-                ? "border-2 border-pink-500 bg-gray-900 scale-105"
-                : "border border-gray-700 bg-gray-950"
+                ? "border-2 border-pink-500 bg-gradient-to-br from-pink-500/10 via-purple-500/10 to-blue-500/10 shadow-2xl relative"
+                : "border border-white/10 bg-white/5"
             }`}
           >
             {plan.featured && (
-              <div className="text-center mb-4">
-                <span className="inline-block bg-pink-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
-                  Most Popular
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                <span className="inline-block bg-gradient-to-r from-pink-500 to-purple-500 text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg">
+                  🔥 MOST POPULAR
                 </span>
               </div>
             )}
 
             <div>
-              <h3 className="text-2xl font-bold mb-1">{plan.name}</h3>
+              <div className="text-5xl mb-3">{plan.emoji}</div>
+              <h3 className="text-2xl font-black mb-1">{plan.name}</h3>
               <p className="text-sm text-gray-400 mb-4">{plan.description}</p>
 
               <div className="mb-6">
-                <span className="text-4xl font-bold">${plan.price}</span>
+                <span className="text-4xl font-black">${plan.price}</span>
                 <span className="text-gray-400 ml-2">/month</span>
+                {plan.yearly && (
+                  <div className="text-xs text-green-400 mt-1">
+                    ${plan.yearly}/year (save 17%)
+                  </div>
+                )}
               </div>
 
-              <ul className="space-y-3 mb-8">
+              <ul className="space-y-2 mb-6">
                 {plan.bullets.map((bullet) => (
-                  <li key={bullet} className="flex items-start gap-3 text-sm">
-                    <span className="text-pink-500 mt-1">✓</span>
+                  <li key={bullet} className="flex items-start gap-2 text-sm">
+                    <span className="text-pink-400 mt-0.5 flex-shrink-0">✓</span>
                     <span className="text-gray-300">{bullet}</span>
                   </li>
                 ))}
@@ -141,16 +199,27 @@ export default function PricingTable() {
             <button
               onClick={() => handleSelectPlan(plan)}
               disabled={loading === plan.name}
-              className={`w-full px-4 py-3 rounded font-semibold text-sm transition ${
+              className={`w-full px-4 py-3 rounded-lg font-bold text-sm transition ${
                 plan.featured
-                  ? "bg-pink-500 hover:bg-pink-600 text-white"
-                  : "bg-gray-800 hover:bg-gray-700 text-white border border-gray-700"
+                  ? "bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white shadow-lg"
+                  : "bg-white/10 hover:bg-white/20 text-white border border-white/20"
               } ${loading === plan.name ? "opacity-50 cursor-not-allowed" : ""}`}
             >
-              {loading === plan.name ? "Loading..." : `Start ${plan.name}`}
+              {loading === plan.name ? "Loading..." : `Get ${plan.name}`}
             </button>
           </div>
         ))}
+      </div>
+
+      <div className="text-center pt-8 space-y-4">
+        <p className="text-gray-400 text-sm">
+          💳 All plans include 7-day free trial • 💯 30-day money-back guarantee • 🔒 Cancel anytime
+        </p>
+        <div className="flex justify-center gap-8 text-xs text-gray-500">
+          <span>✓ No hidden fees</span>
+          <span>✓ Instant access</span>
+          <span>✓ Secure checkout</span>
+        </div>
       </div>
     </section>
   );

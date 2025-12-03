@@ -20,7 +20,7 @@ export interface GenerateContentResponse {
 export async function generateContent(
   request: GenerateContentRequest
 ): Promise<GenerateContentResponse> {
-  const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
   const systemPrompt = `You are an expert social media and marketing copywriter for beauty professionals. 
 You specialize in ${request.niche} businesses and create content that drives engagement and bookings.
@@ -102,7 +102,7 @@ export async function generateDMReply(
   userNiche: string,
   userContext: string
 ): Promise<string> {
-  const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
   const systemPrompt = `You are a booking-focused DM reply bot for a ${userNiche} business.
 Your job is to:
@@ -147,7 +147,7 @@ export async function generateMoneyPlay(
   script: string;
   estimatedLift: number;
 }> {
-  const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
   const result = await model.generateContent({
     contents: [

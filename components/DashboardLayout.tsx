@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
 import LitLabsAssistant from "./LitLabsAssistant";
+import SupportChat from "./SupportChat";
 import { auth } from "@/lib/firebase";
 
 const navItems = [
@@ -142,6 +143,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
       {/* Floating LitLabs AI Assistant */}
       <LitLabsAssistant />
+      
+      {/* SPARK Support Chat */}
+      <SupportChat />
     </div>
   );
 }

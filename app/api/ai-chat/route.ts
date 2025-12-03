@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const API_KEY = process.env.GOOGLE_AI_STUDIO_API_KEY;
+const API_KEY = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
 const SYSTEM_PROMPT = process.env.LITLABS_MASTER_SYSTEM_PROMPT || "";
 
 export async function POST(req: NextRequest) {
   try {
     if (!API_KEY) {
       return NextResponse.json(
-        { error: "Missing GOOGLE_AI_STUDIO_API_KEY" },
+        { error: "Missing GOOGLE_GENERATIVE_AI_API_KEY" },
         { status: 500 }
       );
     }

@@ -13,9 +13,9 @@ export default function Home() {
     <main className="min-h-screen bg-slate-950 text-slate-50">
       <div className="mx-auto max-w-6xl px-4 py-8 md:py-10 space-y-16">
         {/* NAVBAR */}
-        <header className="flex items-center justify-between gap-4">
+        <header className="flex items-center justify-between gap-4 animate-fade-in">
           <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-2xl bg-slate-900 border border-emerald-500/50 flex items-center justify-center text-xs font-bold tracking-tight">
+            <div className="h-9 w-9 rounded-2xl bg-slate-900 border border-emerald-500/50 flex items-center justify-center text-xs font-bold tracking-tight animate-glow">
               LL
             </div>
             <div>
@@ -29,13 +29,13 @@ export default function Home() {
           </div>
 
           <nav className="hidden md:flex items-center gap-6 text-xs text-slate-300">
-            <a href="#features" className="hover:text-white">
+            <a href="#features" className="hover:text-emerald-400 transition-colors">
               Features
             </a>
-            <a href="#pricing" className="hover:text-white">
+            <a href="#pricing" className="hover:text-emerald-400 transition-colors">
               Pricing
             </a>
-            <a href="#how-it-works" className="hover:text-white">
+            <a href="#how-it-works" className="hover:text-emerald-400 transition-colors">
               How it works
             </a>
           </nav>
@@ -45,10 +45,10 @@ export default function Home() {
               <span className="text-slate-400">Build</span>
               <span className="text-slate-300 font-mono">{BUILD_TS}</span>
             </div>
-            <button className="hidden md:inline-flex rounded-full border border-slate-700 px-4 py-1.5 text-[11px] hover:bg-slate-900">
+            <button className="hidden md:inline-flex rounded-full border border-slate-700 px-4 py-1.5 text-[11px] hover:bg-slate-900 hover:border-emerald-500/50">
               Login
             </button>
-            <button className="rounded-full bg-emerald-500 px-4 py-1.5 text-[11px] font-semibold text-slate-950 hover:bg-emerald-400">
+            <button className="rounded-full bg-emerald-500 px-4 py-1.5 text-[11px] font-semibold text-slate-950 hover:bg-emerald-400 hover:shadow-lg hover:shadow-emerald-500/50">
               Open Dashboard
             </button>
           </div>
@@ -57,14 +57,14 @@ export default function Home() {
         {/* HERO + CHAT PREVIEW */}
         <section className="grid gap-10 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] items-center">
           {/* LEFT SIDE: COPY */}
-          <div className="space-y-6">
-            <span className="inline-flex items-center rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 text-[11px] font-medium text-emerald-300">
+          <div className="space-y-6 animate-slide-in">
+            <span className="inline-flex items-center rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 text-[11px] font-medium text-emerald-300 animate-float">
               🔥 LitLabs OS is live – stop guessing, start stacking.
             </span>
 
             <h1 className="text-4xl md:text-5xl font-semibold tracking-tight leading-tight">
               Your AI{" "}
-              <span className="text-emerald-400">command center</span> that
+              <span className="gradient-text">command center</span> that
               books clients, replies to DMs & catches fraud while you live life.
             </h1>
 
@@ -75,10 +75,10 @@ export default function Home() {
             </p>
 
             <div className="flex flex-wrap gap-3">
-              <button className="rounded-xl bg-emerald-500 px-5 py-2 text-sm font-semibold text-slate-950 hover:bg-emerald-400">
+              <button className="rounded-xl bg-emerald-500 px-5 py-2 text-sm font-semibold text-slate-950 hover:bg-emerald-400 hover:shadow-xl hover:shadow-emerald-500/50 hover:scale-105 transition-all">
                 Activate LitLabs →
               </button>
-              <button className="rounded-xl border border-slate-700 px-5 py-2 text-sm text-slate-100 hover:bg-slate-900">
+              <button className="rounded-xl border border-slate-700 px-5 py-2 text-sm text-slate-100 hover:bg-slate-900 hover:border-emerald-500/50 transition-all">
                 Watch 2-min demo
               </button>
             </div>
@@ -86,15 +86,15 @@ export default function Home() {
             <LiveDemo />
 
             <ul className="grid gap-2 text-xs text-slate-300 md:grid-cols-2">
-              <li>✅ Daily content engine for IG/TikTok</li>
-              <li>✅ DM sales flows that sound human</li>
-              <li>✅ Promo generator for slow days</li>
-              <li>✅ Fraud guard + login watch</li>
+              <li className="flex items-center gap-2 hover:text-emerald-400 transition-colors">✅ Daily content engine for IG/TikTok</li>
+              <li className="flex items-center gap-2 hover:text-emerald-400 transition-colors">✅ DM sales flows that sound human</li>
+              <li className="flex items-center gap-2 hover:text-emerald-400 transition-colors">✅ Promo generator for slow days</li>
+              <li className="flex items-center gap-2 hover:text-emerald-400 transition-colors">✅ Fraud guard + login watch</li>
             </ul>
           </div>
 
           {/* RIGHT SIDE: FAKE CHAT / DASHBOARD */}
-          <div className="rounded-3xl border border-slate-800 bg-slate-900/70 p-4 shadow-xl shadow-emerald-500/20">
+          <div className="rounded-3xl border border-slate-800 bg-slate-900/70 p-4 shadow-xl shadow-emerald-500/20 glass animate-slide-in hover:shadow-emerald-500/40 transition-all">
             <p className="mb-2 text-xs font-medium text-slate-400">
               Live LitLabs OS preview
             </p>
@@ -343,8 +343,8 @@ type FeatureProps = {
 
 function FeatureCard({ title, body }: FeatureProps) {
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 space-y-2">
-      <p className="text-sm font-semibold">{title}</p>
+    <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 space-y-2 hover:border-emerald-500/50 hover:bg-slate-900/80 hover:shadow-lg hover:shadow-emerald-500/20 hover:scale-105 transition-all duration-300 cursor-pointer">
+      <p className="text-sm font-semibold text-slate-100">{title}</p>
       <p className="text-xs text-slate-300">{body}</p>
     </div>
   );
@@ -360,10 +360,10 @@ type PricingProps = {
 function PricingCard({ label, price, items, highlight }: PricingProps) {
   return (
     <div
-      className={`rounded-2xl p-4 space-y-3 ${
+      className={`rounded-2xl p-4 space-y-3 transition-all duration-300 hover:scale-105 cursor-pointer ${
         highlight
-          ? "border border-emerald-500 bg-slate-900/80 shadow-lg shadow-emerald-500/30"
-          : "border border-slate-800 bg-slate-900/60"
+          ? "border border-emerald-500 bg-slate-900/80 shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:shadow-emerald-500/50 animate-glow"
+          : "border border-slate-800 bg-slate-900/60 hover:border-emerald-500/50 hover:shadow-lg hover:shadow-emerald-500/20"
       }`}
     >
       <p
@@ -376,7 +376,7 @@ function PricingCard({ label, price, items, highlight }: PricingProps) {
       <p className="text-2xl font-semibold">{price}</p>
       <ul className="space-y-2 text-xs text-slate-300">
         {items.map((item) => (
-          <li key={item}>• {item}</li>
+          <li key={item} className="hover:text-emerald-400 transition-colors">• {item}</li>
         ))}
       </ul>
     </div>
@@ -391,9 +391,9 @@ type StepProps = {
 
 function StepCard({ step, title, body }: StepProps) {
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 space-y-2">
-      <p className="text-[10px] text-slate-400 mb-1">Step {step}</p>
-      <p className="text-sm font-semibold">{title}</p>
+    <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 space-y-2 hover:border-emerald-500/50 hover:bg-slate-900/80 hover:shadow-lg hover:shadow-emerald-500/20 hover:scale-105 transition-all duration-300 cursor-pointer group">
+      <p className="text-[10px] text-slate-400 mb-1 group-hover:text-emerald-400 transition-colors">Step {step}</p>
+      <p className="text-sm font-semibold group-hover:text-emerald-300 transition-colors">{title}</p>
       <p className="text-xs text-slate-300">{body}</p>
     </div>
   );
