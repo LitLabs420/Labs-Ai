@@ -1,5 +1,40 @@
 # Security Rotation Actions
 
+This document provides a prioritized checklist and concrete commands (dry-run) to rotate credentials across providers after a secrets exposure.
+
+Important: do NOT paste long-lived secrets into this repo. Use local environment variables or a secure secrets vault.
+
+1) Prepare
+- Inventory affected services and secrets (GitHub, Vercel, Stripe, SendGrid, OpenAI, Firebase/GCP).
+- Ensure at least one admin account can access each provider console.
+- Keep the encrypted backup `C:\Users\dying\secret-backups\20251202-222228.zip.enc` until rotation is verified.
+
+2) Generate new credentials (dry-run first)
+- Use `pwsh .\scripts\rotate-credentials.ps1` to view exact commands and the recommended sequence.
+
+3) Update running systems
+- Update server envs and CI/CD secrets (GitHub Actions, Vercel Env) with new values before revoking old ones.
+- Use `scripts/set-gh-secrets.ps1` to batch-set GitHub secrets from a JSON file.
+
+4) Revoke old credentials
+- After confirming new keys work in staging and production, revoke old keys via provider console or CLI.
+
+5) Verify
+- Run end-to-end checks for critical app flows (auth, payments, mail, OpenAI requests).
+- Confirm CI builds and deploys succeed with the new secrets.
+
+6) Finalize backup disposition
+- Option A (recommended): Upload the encrypted backup to your vault and rotate the encryption password there.
+- Option B: Securely delete local encrypted backup using `pwsh .\scripts\secure-delete.ps1 -Path 'C:\Users\dying\secret-backups\20251202-222228.zip.enc'`
+
+Notes and examples
+- GitHub CLI: `gh secret set NAME --body '<new-secret>' --repo owner/repo`
+- GCP (gcloud): create/delete keys with `gcloud iam service-accounts keys create|delete`
+- Stripe: create restricted key in Dashboard and update server envs.
+
+If you want me to perform any of these steps, explicitly provide the provider tokens and confirm which actions I should run.
+# Security Rotation Actions
+
 This playbook lists immediate, high-priority rotation steps for credentials that may have been exposed. Follow these steps, update timestamps and ticket IDs, and notify stakeholders after completion.
 
 IMPORTANT: Some actions require owner-level access (GCP/Firebase). Do not delete old keys until new keys are fully deployed and validated.
