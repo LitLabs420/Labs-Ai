@@ -39,8 +39,12 @@ API Routes (5):
   /api/referrals/[referralCode]
 ```
 
-### Firebase Configuration
-- ✅ **API Key:** `REDACTED_FIREBASE_API_KEY`
+-### Firebase Configuration
+- ✅ **API Key:** Redacted (`REDACTED_FIREBASE_API_KEY`)
+- ✅ **Project ID:** studio-4627045237-a2fe9
+- ✅ **Auth Domain:** studio-4627045237-a2fe9.firebaseapp.com
+- ✅ **App ID:** 1:612847421952:web:d66d4ba0666e7f5116e6e5
+- ✅ **Firestore:** Connected and real-time
 - ✅ **Project ID:** studio-4627045237-a2fe9
 - ✅ **Auth Domain:** studio-4627045237-a2fe9.firebaseapp.com
 - ✅ **App ID:** 1:612847421952:web:d66d4ba0666e7f5116e6e5

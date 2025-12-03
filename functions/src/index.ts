@@ -2,6 +2,7 @@ import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import Stripe from "stripe";
 import { generateMoneyTodayLLM, MoneyTodayRequest } from "./llm";
+import { info, error } from "../../lib/serverLogger";
 
 // Initialize
 admin.initializeApp();
@@ -162,15 +163,15 @@ export const handleStripeWebhook = functions.https.onRequest(async (req, res) =>
           if (priceId === STRIPE_PRICE_IDS.growth) planToSet = "growth";
           if (priceId === STRIPE_PRICE_IDS.godmode) planToSet = "godmode";
 
-          if (planToSet) {
-            await db.collection("users").doc(uid).update({
-              plan: planToSet,
-              stripeSubscriptionId: subscriptionId,
-              upgradeDate: admin.firestore.FieldValue.serverTimestamp(),
-            });
+              if (planToSet) {
+                await db.collection("users").doc(uid).update({
+                  plan: planToSet,
+                  stripeSubscriptionId: subscriptionId,
+                  upgradeDate: admin.firestore.FieldValue.serverTimestamp(),
+                });
 
-            console.log(`User ${uid} upgraded to plan: ${planToSet}`);
-          }
+                info(`User ${uid} upgraded to plan: ${planToSet}`);
+              }
         }
       }
     }
@@ -178,7 +179,7 @@ export const handleStripeWebhook = functions.https.onRequest(async (req, res) =>
     res.json({ received: true });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
-    console.error("Webhook processing error:", msg);
+    error("Webhook processing error:", err);
     res.status(500).json({ error: msg });
   }
 });
