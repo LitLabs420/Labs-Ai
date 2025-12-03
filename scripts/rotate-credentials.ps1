@@ -30,7 +30,7 @@ Write-Section "Rotation Script - Dry Run"
 Write-Host "This script prints rotation commands for multiple providers."
 Write-Host "It will NOT run any commands unless you pass -Execute and have set the required env vars." -ForegroundColor Yellow
 
-function Require-Env([string]$name){
+function Test-Env([string]$name){
   try {
     $item = Get-Item -Path "Env:$name" -ErrorAction SilentlyContinue
     if (-not $item) { Write-Host "Missing env var: $name" -ForegroundColor Red; return $false }
@@ -76,8 +76,8 @@ Write-Host "# vercel env add VARIABLE_NAME production <value>"
 if ($Execute) {
     Write-Section "EXECUTION: validating environment"
     $ok = $true
-    $ok = $ok -and (Require-Env 'GITHUB_TOKEN')
-    $ok = $ok -and (Require-Env 'GCLOUD_PROJECT')
+    $ok = $ok -and (Test-Env 'GITHUB_TOKEN')
+    $ok = $ok -and (Test-Env 'GCLOUD_PROJECT')
     if (-not $ok) { Write-Host "Missing required environment variables. Aborting execution." -ForegroundColor Red; exit 2 }
 
     Write-Section "EXECUTION: running selected actions"
