@@ -1,7 +1,7 @@
 // app/billing/page.tsx
 "use client";
 
-import AuthGate from "@/components/AuthGate";
+import { AuthGate } from "@/components/AuthGate";
 import DashboardLayout from "@/components/DashboardLayout";
 
 export default function BillingPage() {

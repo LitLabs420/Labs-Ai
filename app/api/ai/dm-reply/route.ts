@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
     return res;
   } catch (error) {
     console.error("DM reply generation error:", error);
-    sentry.captureException(error as unknown);
+    sentry.captureError(error);
     return NextResponse.json(
       { error: "Failed to generate DM reply" },
       { status: 500 }

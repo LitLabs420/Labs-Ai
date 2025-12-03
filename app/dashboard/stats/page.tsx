@@ -1,7 +1,7 @@
 "use client";
 
 import DashboardLayout from "../../../components/DashboardLayout";
-import AuthGate from "../../../components/AuthGate";
+import { AuthGate } from "../../../components/AuthGate";
 
 function StatsInner() {
   return (

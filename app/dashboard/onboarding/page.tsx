@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { getAuth } from "firebase/auth";
 import { getFirestore, doc, updateDoc, serverTimestamp } from "firebase/firestore";
 import DashboardLayout from "../../../components/DashboardLayout";
-import AuthGate from "../../../components/AuthGate";
+import { AuthGate } from "../../../components/AuthGate";
 
 type OnboardingForm = {
   businessName: string;

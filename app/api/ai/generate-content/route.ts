@@ -118,7 +118,7 @@ export async function POST(req: NextRequest) {
     return res;
   } catch (error) {
     console.error("Content generation error:", error);
-    sentry.captureException(error as unknown);
+    sentry.captureError(error);
     return NextResponse.json(
       { error: "Failed to generate content" },
       { status: 500 }

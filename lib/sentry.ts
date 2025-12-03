@@ -1,38 +1,50 @@
-// Lightweight Sentry wrapper. Initializes only when SENTRY_DSN is present.
-type SentryLike = {
-  init?: (opts: { dsn?: string; tracesSampleRate?: number }) => void;
-  captureException?: (err: unknown, opts?: unknown) => void;
-};
+import * as Sentry from '@sentry/node';
 
-let SentryModule: SentryLike | null = null;
-
-// Attempt a background dynamic import and initialization if SENTRY_DSN is present.
-(async function tryInit() {
-  if (!process.env.SENTRY_DSN) return;
-  try {
-    const mod = await import('@sentry/node');
-    // Normalize to our Sentry-like shape without `any` casts
-    const maybe = (mod as unknown) as SentryLike;
-    SentryModule = maybe;
-    if (typeof maybe.init === 'function') {
-      maybe.init({ dsn: process.env.SENTRY_DSN, tracesSampleRate: 0.1 });
-    }
-  } catch (e) {
-    SentryModule = null;
-  }
-})();
+let sentryInitialized = false;
 
 export function initSentry() {
-  // No-op when module isn't available; the background init will occur if DSN is present.
-}
-
-export function captureException(err: unknown, context?: Record<string, unknown>) {
-  try {
-    if (!SentryModule || typeof SentryModule.captureException !== 'function') return;
-    SentryModule.captureException?.(err, { extra: context } as unknown);
-  } catch (e) {
-    // noop
+  if (sentryInitialized) return;
+  
+  const dsn = process.env.SENTRY_DSN;
+  if (!dsn) {
+    console.log('Sentry DSN not configured, error tracking disabled');
+    return;
   }
+
+  Sentry.init({
+    dsn,
+    environment: process.env.NODE_ENV || 'development',
+    tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
+    integrations: [
+      Sentry.httpIntegration(),
+    ],
+    beforeSend(event) {
+      // Filter out sensitive data
+      if (event.request?.headers) {
+        delete event.request.headers['authorization'];
+        delete event.request.headers['cookie'];
+      }
+      return event;
+    },
+  });
+
+  sentryInitialized = true;
+  console.log('✅ Sentry error tracking initialized');
 }
 
-export default { initSentry, captureException };
+export function captureError(error: Error | unknown, context?: Record<string, any>) {
+  if (!sentryInitialized) return;
+  
+  Sentry.captureException(error, {
+    extra: context,
+  });
+}
+
+export function captureMessage(message: string, level: 'info' | 'warning' | 'error' = 'info') {
+  if (!sentryInitialized) return;
+  
+  Sentry.captureMessage(message, level);
+}
+
+export default { initSentry, captureError, captureMessage };
+export { Sentry };

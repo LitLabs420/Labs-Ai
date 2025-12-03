@@ -11,7 +11,7 @@ import {
 } from "firebase/auth";
 import LitLabsAssistant from "./LitLabsAssistant";
 
-export default function AuthGate({
+export function AuthGate({
   children,
 }: {
   children: React.ReactNode;

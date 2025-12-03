@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
     return res;
   } catch (error) {
     console.error("Money play generation error:", error);
-    sentry.captureException(error as unknown);
+    sentry.captureError(error);
     return NextResponse.json(
       { error: "Failed to generate money play" },
       { status: 500 }
