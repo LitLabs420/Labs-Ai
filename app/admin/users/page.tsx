@@ -191,8 +191,10 @@ export default function AdminUsersPage() {
 
             {/* Tier Filter */}
             <div>
-              <label className="block text-white/60 text-sm font-medium mb-2">Tier</label>
+              <label htmlFor="filter-tier" className="block text-white/60 text-sm font-medium mb-2">Tier</label>
               <select
+                id="filter-tier"
+                aria-label="Filter users by tier"
                 value={filterTier}
                 onChange={(e) => handleTierFilter(e.target.value)}
                 className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:border-blue-500"
@@ -206,8 +208,10 @@ export default function AdminUsersPage() {
 
             {/* Status Filter */}
             <div>
-              <label className="block text-white/60 text-sm font-medium mb-2">Status</label>
+              <label htmlFor="filter-status" className="block text-white/60 text-sm font-medium mb-2">Status</label>
               <select
+                id="filter-status"
+                aria-label="Filter users by status"
                 value={filterStatus}
                 onChange={(e) => handleStatusFilter(e.target.value)}
                 className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:border-blue-500"
