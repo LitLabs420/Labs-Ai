@@ -24,3 +24,22 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* TEMP DEBUG: unblock pointer events for interactive testing
+   - Forces core app containers to accept pointer events
+   - Makes full-screen fixed overlays (common modal/backdrop classes) non-intercepting
+   Remove this block once the root cause is identified. */
+html, body, #__next, main {
+  pointer-events: auto !important;
+}
+
+/* Typical Tailwind classes for full-screen backdrops/modals — allow clicks through them while debugging */
+.fixed.inset-0, .fixed.inset-0.z-50, .fixed.inset-0.z-40, .fixed.inset-0.-z-10 {
+  pointer-events: none !important;
+}
+
+/* Keep floating widgets (chat button / activity) interactive */
+.fixed.bottom-4.right-4, .fixed.bottom-24.right-4 {
+  pointer-events: auto !important;
+}
+

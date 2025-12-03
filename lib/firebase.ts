@@ -20,6 +20,12 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID ?? "",
 };
 
+// Minimal client-side config validation to avoid confusing runtime errors
+const requiredClientFields = ["apiKey", "projectId", "appId"] as const;
+function missingConfigFields(cfg: typeof firebaseConfig) {
+  return requiredClientFields.filter((k) => !cfg[k]);
+}
+
 let app: FirebaseApp | null = null;
 let authInstance: Auth | null = null;
 let dbInstance: Firestore | null = null;
@@ -27,19 +33,29 @@ let dbInstance: Firestore | null = null;
 // Initialize Firebase synchronously if in browser
 if (typeof window !== "undefined") {
   try {
-    const apps = getApps();
-    app = apps.length > 0 ? (apps[0] as FirebaseApp) : initializeApp(firebaseConfig);
-    authInstance = getAuth(app);
-    dbInstance = getFirestore(app);
-    
-    // Only enable App Check debug token when explicitly allowed and not in production.
-    // Set `NEXT_PUBLIC_FIREBASE_APPCHECK_DEBUG_TOKEN=true` in dev env to enable.
-    const allowDebug =
-      process.env.NEXT_PUBLIC_FIREBASE_APPCHECK_DEBUG_TOKEN === "true" &&
-      process.env.NODE_ENV !== "production";
+    const missing = missingConfigFields(firebaseConfig);
+    if (missing.length > 0) {
+      // Log a helpful message rather than calling initializeApp with an invalid config
+      console.error(
+        "Missing Firebase client config:",
+        missing,
+        "\nSet the following env vars in your .env.local (for local dev) and in your hosting provider: NEXT_PUBLIC_FIREBASE_API_KEY, NEXT_PUBLIC_FIREBASE_PROJECT_ID, NEXT_PUBLIC_FIREBASE_APP_ID"
+      );
+    } else {
+      const apps = getApps();
+      app = apps.length > 0 ? (apps[0] as FirebaseApp) : initializeApp(firebaseConfig);
+      authInstance = getAuth(app);
+      dbInstance = getFirestore(app);
 
-    if (allowDebug) {
-      window.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+      // Only enable App Check debug token when explicitly allowed and not in production.
+      // Set `NEXT_PUBLIC_FIREBASE_APPCHECK_DEBUG_TOKEN=true` in dev env to enable.
+      const allowDebug =
+        process.env.NEXT_PUBLIC_FIREBASE_APPCHECK_DEBUG_TOKEN === "true" &&
+        process.env.NODE_ENV !== "production";
+
+      if (allowDebug) {
+        window.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+      }
     }
   } catch (e) {
     console.error("Firebase initialization error:", e);

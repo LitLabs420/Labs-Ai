@@ -49,6 +49,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // If Firebase isn't configured on the client, avoid calling SDK methods
+    if (!auth || !db) {
+      setLoading(false);
+      setError("Firebase not configured on client. Set NEXT_PUBLIC_FIREBASE_* env vars to enable auth.");
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       try {
         if (firebaseUser) {
