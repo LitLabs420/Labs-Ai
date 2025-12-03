@@ -1,18 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { initializeApp, getApps } from "firebase/app";
-import { getFirestore, collection, getDocs, updateDoc, doc } from "firebase/firestore";
+import { getAdminDb } from "@/lib/firebase-admin";
 
-const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-};
-
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
-const db = getFirestore(app);
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 type UserRecord = {
   uid: string;
@@ -27,7 +17,11 @@ type UserRecord = {
 // GET - List all users
 export async function GET() {
   try {
-    const usersSnap = await getDocs(collection(db, "users"));
+    const dbRef = getAdminDb();
+    if (!dbRef) {
+      return NextResponse.json({ error: 'Firestore Admin not initialized' }, { status: 500 });
+    }
+    const usersSnap = await dbRef.collection("users").get();
     const users: UserRecord[] = [];
 
     usersSnap.forEach((docSnap) => {
@@ -59,10 +53,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const userRef = doc(db, "users", uid);
+    const dbRef = getAdminDb();
+    if (!dbRef) {
+      return NextResponse.json({ error: 'Firestore Admin not initialized' }, { status: 500 });
+    }
 
     if (action === "ban") {
-      await updateDoc(userRef, {
+      await dbRef.collection("users").doc(uid).update({
         status: "suspended",
         bannedReason: reason || "Admin action",
         bannedAt: new Date().toISOString(),
@@ -74,7 +71,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (action === "unban") {
-      await updateDoc(userRef, {
+      await dbRef.collection("users").doc(uid).update({
         status: "active",
         bannedReason: null,
         bannedAt: null,
@@ -92,7 +89,7 @@ export async function POST(req: NextRequest) {
           { status: 400 }
         );
       }
-      await updateDoc(userRef, {
+      await dbRef.collection("users").doc(uid).update({
         tier,
         tierUpdatedAt: new Date().toISOString(),
       });

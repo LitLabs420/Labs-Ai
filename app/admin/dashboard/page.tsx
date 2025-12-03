@@ -15,7 +15,13 @@ export default function AdminDashboardPage() {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, async (user) => {
+    const authInstance = auth;
+    if (!authInstance) {
+      router.push('/auth');
+      return;
+    }
+
+    const unsub = onAuthStateChanged(authInstance, async (user) => {
       if (!user) {
         router.push('/auth');
         return;

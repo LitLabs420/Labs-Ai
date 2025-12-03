@@ -70,7 +70,9 @@ function getTodayString(): string {
  * Get user's tier from Firestore
  */
 export async function getUserTier(uid: string): Promise<UserTier> {
-  const userRef = doc(db, 'users', uid);
+  if (!db) throw new Error('Database not initialized');
+  const dbRef = db;
+  const userRef = doc(dbRef, 'users', uid);
   const userSnap = await getDoc(userRef);
   
   if (!userSnap.exists()) {
@@ -85,8 +87,10 @@ export async function getUserTier(uid: string): Promise<UserTier> {
  * Get user's usage for today
  */
 export async function getDailyUsage(uid: string): Promise<DailyUsage> {
+  if (!db) throw new Error('Database not initialized');
+  const dbRef = db;
   const today = getTodayString();
-  const usageRef = doc(db, 'users', uid, 'usage', today);
+  const usageRef = doc(dbRef, 'users', uid, 'usage', today);
   const usageSnap = await getDoc(usageRef);
   
   if (!usageSnap.exists()) {
@@ -145,8 +149,10 @@ export async function incrementUsage(
   uid: string,
   actionType: keyof UsageLimits
 ): Promise<void> {
+  if (!db) throw new Error('Database not initialized');
+  const dbRef = db;
   const today = getTodayString();
-  const usageRef = doc(db, 'users', uid, 'usage', today);
+  const usageRef = doc(dbRef, 'users', uid, 'usage', today);
   
   // Use Firestore increment to handle concurrency
   await updateDoc(usageRef, {

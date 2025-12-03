@@ -27,10 +27,12 @@ export default function AuthPage() {
     setLoading(true);
 
     try {
+      const authInstance = auth;
+      if (!authInstance) throw new Error('Auth not initialized');
       if (mode === 'login') {
-        await signInWithEmailAndPassword(auth, email, password);
+        await signInWithEmailAndPassword(authInstance, email, password);
       } else {
-        await createUserWithEmailAndPassword(auth, email, password);
+        await createUserWithEmailAndPassword(authInstance, email, password);
       }
       router.push('/dashboard');
     } catch (err) {
@@ -46,7 +48,9 @@ export default function AuthPage() {
     setLoading(true);
     try {
       const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
+      const authInstance = auth;
+      if (!authInstance) throw new Error('Auth not initialized');
+      const result = await signInWithPopup(authInstance, provider);
       if (result.user) {
         router.push('/dashboard');
       }
@@ -64,7 +68,9 @@ export default function AuthPage() {
       const provider = new OAuthProvider('apple.com');
       provider.addScope('email');
       provider.addScope('name');
-      const result = await signInWithPopup(auth, provider);
+      const authInstance = auth;
+      if (!authInstance) throw new Error('Auth not initialized');
+      const result = await signInWithPopup(authInstance, provider);
       if (result.user) {
         router.push('/dashboard');
       }
@@ -82,7 +88,9 @@ export default function AuthPage() {
       const provider = new OAuthProvider('microsoft.com');
       provider.addScope('email');
       provider.addScope('profile');
-      const result = await signInWithPopup(auth, provider);
+      const authInstance = auth;
+      if (!authInstance) throw new Error('Auth not initialized');
+      const result = await signInWithPopup(authInstance, provider);
       if (result.user) {
         router.push('/dashboard');
       }
@@ -99,7 +107,9 @@ export default function AuthPage() {
     try {
       const provider = new GithubAuthProvider();
       provider.addScope('user:email');
-      const result = await signInWithPopup(auth, provider);
+      const authInstance = auth;
+      if (!authInstance) throw new Error('Auth not initialized');
+      const result = await signInWithPopup(authInstance, provider);
       if (result.user) {
         router.push('/dashboard');
       }

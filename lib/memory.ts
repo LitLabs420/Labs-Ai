@@ -25,6 +25,8 @@ export interface UserMemory {
 }
 
 export async function initializeUserMemory(userId: string, niche: string): Promise<UserMemory> {
+  if (!db) throw new Error('Firebase not initialized');
+  
   const memoryRef = doc(db, "userMemory", userId);
   const existingMemory = await getDoc(memoryRef);
 
@@ -63,6 +65,8 @@ export async function updateUserMemory(
   userId: string,
   updates: Partial<UserMemory>
 ): Promise<void> {
+  if (!db) return;
+  
   const memoryRef = doc(db, "userMemory", userId);
   await updateDoc(memoryRef, {
     ...updates,
@@ -75,6 +79,8 @@ export async function recordContentPerformance(
   content: string,
   engagementRate: number
 ): Promise<void> {
+  if (!db) return;
+  
   const memoryRef = doc(db, "userMemory", userId);
   const memory = await getDoc(memoryRef);
 
@@ -99,6 +105,8 @@ export async function learnFromUserFeedback(
   feedback: "good" | "bad" | "perfect",
   content: string
 ): Promise<void> {
+  if (!db) return;
+  
   const memoryRef = doc(db, "userMemory", userId);
   const memory = await getDoc(memoryRef);
 
@@ -123,6 +131,8 @@ export async function learnFromUserFeedback(
 }
 
 export async function getUserMemory(userId: string): Promise<UserMemory | null> {
+  if (!db) return null;
+  
   const memoryRef = doc(db, "userMemory", userId);
   const docSnap = await getDoc(memoryRef);
   return docSnap.exists() ? (docSnap.data() as UserMemory) : null;

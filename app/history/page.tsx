@@ -43,25 +43,24 @@ export default function HistoryPage() {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    if (!auth) {
+    if (!auth || !db) {
       setLoading(false);
       return;
     }
 
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    const authInstance = auth;
+    const dbInstance = db;
+
+    const unsubscribe = onAuthStateChanged(authInstance, async (user) => {
       if (!user) {
         router.push("/");
         return;
       }
 
       try {
-        if (!db) {
-          setLoading(false);
-          return;
-        }
         // Query Firestore for user's content history
         const q = query(
-          collection(db, "users", user.uid, "contents"),
+          collection(dbInstance, "users", user.uid, "contents"),
           orderBy("createdAt", "desc")
         );
 
@@ -86,7 +85,7 @@ export default function HistoryPage() {
   }, [router]);
 
   const handleDelete = async (contentId: string) => {
-    if (!auth.currentUser) return;
+    if (!auth?.currentUser || !db) return;
 
     try {
       await deleteDoc(

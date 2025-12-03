@@ -59,6 +59,10 @@ export function ChatBotOnboarding() {
       // Call Cloud Function
       const response = await callGenerateOnboardingResponse(step, userText, updatedProfile);
 
+      if (!response) {
+        throw new Error('No response from server');
+      }
+
       // Add bot response
       setMessages((prev) => [...prev, { role: "bot", text: response.message }]);
 

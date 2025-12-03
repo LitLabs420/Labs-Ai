@@ -41,6 +41,8 @@ export interface TemplatePurchase {
  * List a template for sale
  */
 export async function listTemplate(template: Omit<Template, 'id' | 'createdAt' | 'salesCount' | 'rating' | 'reviewCount' | 'approved'>): Promise<string> {
+  if (!db) throw new Error('Firebase not initialized');
+
   const templateData = {
     ...template,
     commission: 0.30, // 30% commission
@@ -66,6 +68,8 @@ export async function getMarketplaceTemplates(
     minRating?: number;
   }
 ): Promise<Template[]> {
+  if (!db) return [];
+  
   try {
     let q = query(
       collection(db, 'marketplace_templates'),
@@ -108,6 +112,8 @@ export async function purchaseTemplate(
   buyerId: string,
   templateId: string
 ): Promise<{ success: boolean; template?: Template; error?: string }> {
+  if (!db) return { success: false, error: 'Firebase not initialized' };
+  
   try {
     // Get template
     const templateRef = doc(db, 'marketplace_templates', templateId);
@@ -174,6 +180,8 @@ export async function purchaseTemplate(
  * Get user's purchased templates
  */
 export async function getPurchasedTemplates(userId: string): Promise<Template[]> {
+  if (!db) return [];
+  
   try {
     const purchasesSnap = await getDocs(
       query(
@@ -218,6 +226,8 @@ export async function getSellerEarnings(sellerId: string): Promise<{
   totalSales: number;
   pendingEarnings: number;
 }> {
+  if (!db) return { totalEarnings: 0, totalSales: 0, pendingEarnings: 0 };
+  
   try {
     const salesSnap = await getDocs(
       query(

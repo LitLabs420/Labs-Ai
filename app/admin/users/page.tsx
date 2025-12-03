@@ -32,7 +32,13 @@ export default function AdminUsersPage() {
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'suspended'>('all');
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, async (user) => {
+    const authInstance = auth;
+    if (!authInstance) {
+      router.push('/auth');
+      return;
+    }
+
+    const unsub = onAuthStateChanged(authInstance, async (user) => {
       if (!user) {
         router.push('/auth');
         return;
@@ -82,8 +88,15 @@ export default function AdminUsersPage() {
   }
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, async (user) => {
-      if (!user || user.email !== ADMIN_EMAIL) {
+    const authInstance = auth;
+    const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+    if (!authInstance) {
+      router.push('/auth');
+      return;
+    }
+
+    const unsub = onAuthStateChanged(authInstance, async (user) => {
+      if (!user || (adminEmail && user.email !== adminEmail)) {
         router.push('/auth');
         return;
       }
@@ -92,7 +105,9 @@ export default function AdminUsersPage() {
       trackEvent('admin_users_view', { uid: user.uid });
 
       // Real-time users
-      const usersQuery = query(collection(db, 'users'));
+      const dbInstance = db;
+      if (!dbInstance) return;
+      const usersQuery = query(collection(dbInstance, 'users'));
       const unsubUsers = onSnapshot(usersQuery, (snapshot) => {
         const usersList: User[] = [];
         snapshot.forEach((doc) => {
@@ -133,7 +148,12 @@ export default function AdminUsersPage() {
 
   const upgradeTier = async (uid: string, newTier: 'pro' | 'enterprise') => {
     try {
-      await updateDoc(doc(db, 'users', uid), { tier: newTier });
+      const dbRef = db;
+      if (!dbRef) {
+        console.error('Firestore not initialized');
+        return;
+      }
+      await updateDoc(doc(dbRef, 'users', uid), { tier: newTier });
       trackEvent('admin_upgrade_user', { uid, newTier });
       alert(`✅ User upgraded to ${newTier}`);
     } catch (error) {
@@ -145,7 +165,12 @@ export default function AdminUsersPage() {
   const toggleSuspension = async (uid: string, currentStatus: string) => {
     try {
       const newStatus = currentStatus === 'active' ? 'suspended' : 'active';
-      await updateDoc(doc(db, 'users', uid), { status: newStatus });
+      const dbRef = db;
+      if (!dbRef) {
+        console.error('Firestore not initialized');
+        return;
+      }
+      await updateDoc(doc(dbRef, 'users', uid), { status: newStatus });
       trackEvent('admin_toggle_user_suspension', { uid, newStatus });
       alert(`✅ User ${newStatus}`);
     } catch (error) {
@@ -158,7 +183,12 @@ export default function AdminUsersPage() {
     if (!confirm(`⚠️ Are you sure you want to delete ${email}? This cannot be undone.`)) return;
 
     try {
-      await deleteDoc(doc(db, 'users', uid));
+      const dbRef = db;
+      if (!dbRef) {
+        console.error('Firestore not initialized');
+        return;
+      }
+      await deleteDoc(doc(dbRef, 'users', uid));
       trackEvent('admin_delete_user', { uid });
       alert(`✅ User deleted`);
     } catch (error) {

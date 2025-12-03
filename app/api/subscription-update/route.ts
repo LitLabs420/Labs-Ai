@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/firebase';
-import { doc, updateDoc, collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { getAdminDb } from '@/lib/firebase-admin';
 import { info, error } from '@/lib/serverLogger';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 /**
  * SUBSCRIPTION MANAGER
@@ -19,21 +21,26 @@ export async function POST(request: NextRequest) {
     }
 
     // Update user tier
-    const userRef = doc(db, 'users', userId);
-    await updateDoc(userRef, {
-      tier,
-      subscription: {
-        plan: tier,
-        status: 'active',
-        startDate: new Date().toISOString(),
-        autoRenew: true,
-      },
-      lastUpgradeDate: new Date().toISOString(),
-    });
+    const dbRef = getAdminDb();
+    if (!dbRef) {
+      return NextResponse.json({ error: 'Firestore Admin not initialized' }, { status: 500 });
+    }
+    await dbRef
+      .collection('users')
+      .doc(userId)
+      .update({
+        tier,
+        subscription: {
+          plan: tier,
+          status: 'active',
+          startDate: new Date().toISOString(),
+          autoRenew: true,
+        },
+        lastUpgradeDate: new Date().toISOString(),
+      });
 
     // Record transaction
-    const txnRef = collection(db, 'transactions');
-    await addDoc(txnRef, {
+    await dbRef.collection('transactions').add({
       userId,
       email,
       tier,
@@ -41,17 +48,16 @@ export async function POST(request: NextRequest) {
       paymentMethod,
       transactionId,
       status: status || 'completed',
-      createdAt: serverTimestamp(),
+      createdAt: new Date(),
       type: 'subscription_upgrade',
     });
 
     // Log activity
-    const activityRef = collection(db, 'activity_log');
-    await addDoc(activityRef, {
+    await dbRef.collection('activity_log').add({
       userId,
       action: `upgraded_to_${tier}`,
       details: { paymentMethod, amount },
-      timestamp: serverTimestamp(),
+      timestamp: new Date(),
     });
 
     info(`✅ Subscription updated: ${email} → ${tier}`);

@@ -3,7 +3,10 @@ import { generateDMReply } from "@/lib/ai";
 import rateLimiter from '@/lib/rateLimiter';
 import { verifyRecaptcha } from '@/lib/recaptcha';
 import sentry from '@/lib/sentry';
-import { canPerformAction, incrementUsage } from '@/lib/usage-tracker';
+import { canPerformActionServer, incrementUsageServer } from '@/lib/firebase-server';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,7 +16,7 @@ export async function POST(req: NextRequest) {
     
     // Check usage limits
     if (uid) {
-      const check = await canPerformAction(uid, 'dmReplies');
+      const check = await canPerformActionServer(uid, 'dmReplies');
       if (!check.allowed) {
         return NextResponse.json(
           { 
@@ -56,7 +59,7 @@ export async function POST(req: NextRequest) {
 
     // Increment usage after successful generation
     if (uid) {
-      await incrementUsage(uid, 'dmReplies');
+      await incrementUsageServer(uid, 'dmReplies');
     }
 
     const res = NextResponse.json({ reply });

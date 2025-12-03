@@ -36,16 +36,24 @@ function DashboardProfileInner() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    const unsub = auth.onAuthStateChanged(async (currentUser) => {
+    if (!auth || !db) {
+      setLoading(false);
+      return;
+    }
+
+    const authInstance = auth;
+    const dbInstance = db;
+
+    const unsub = authInstance.onAuthStateChanged(async (currentUser) => {
       if (!currentUser) {
         setLoading(false);
         return;
       }
 
-      setUser(currentUser);
+      setUser({ uid: currentUser.uid, email: currentUser.email ?? undefined });
 
       try {
-        const userRef = doc(db, "users", currentUser.uid);
+        const userRef = doc(dbInstance, "users", currentUser.uid);
         const snap = await getDoc(userRef);
 
         if (snap.exists()) {
@@ -72,7 +80,7 @@ function DashboardProfileInner() {
   }, []);
 
   const handleSave = async () => {
-    if (!user) return;
+    if (!user || !db) return;
 
     setSaving(true);
     try {

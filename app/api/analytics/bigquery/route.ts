@@ -1,10 +1,10 @@
 // API endpoint for analytics
 // GET /api/analytics/bigquery
 
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { info, error } from '@/lib/serverLogger';
 
-export async function GET(request) {
+export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const metric = searchParams.get('metric');
@@ -48,16 +48,17 @@ export async function GET(request) {
       timestamp: new Date().toISOString()
     });
 
-  } catch (error) {
-    error('Analytics API error:', error);
+  } catch (err) {
+    error('Analytics API error:', err as unknown);
+    const message = err instanceof Error ? err.message : 'Internal Server Error';
     return NextResponse.json(
-      { error: error.message },
+      { error: message },
       { status: 500 }
     );
   }
 }
 
-export async function POST(request) {
+export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { action } = body;
@@ -90,10 +91,11 @@ export async function POST(request) {
       timestamp: new Date().toISOString()
     });
 
-  } catch (error) {
-    console.error('Analytics POST error:', error);
+  } catch (err) {
+    console.error('Analytics POST error:', err);
+    const message = err instanceof Error ? err.message : 'Internal Server Error';
     return NextResponse.json(
-      { error: error.message },
+      { error: message },
       { status: 500 }
     );
   }

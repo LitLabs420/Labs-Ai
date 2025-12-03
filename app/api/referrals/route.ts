@@ -1,18 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { getAdminDb } from '@/lib/firebase-admin';
 
-const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 
 export async function GET(request: NextRequest) {
@@ -27,21 +17,25 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const referralDoc = await getDoc(doc(db, 'referrals', referralCode));
+    const dbRef = getAdminDb();
+    if (!dbRef) {
+      return NextResponse.json({ error: 'Firestore Admin not initialized' }, { status: 500 });
+    }
+    const referralDoc = await dbRef.collection('referrals').doc(referralCode).get();
 
-    if (!referralDoc.exists()) {
+    if (!referralDoc.exists) {
       return NextResponse.json(
         { error: 'Invalid referral code' },
         { status: 404 }
       );
     }
 
-    const data = referralDoc.data();
+    const data = referralDoc.data() as any;
     return NextResponse.json({
-      referrerName: data.referrerName,
-      referrerBusiness: data.referrerBusiness,
-      tier: data.tier || 'free',
-      bonus: data.bonus || 10,
+      referrerName: data?.referrerName,
+      referrerBusiness: data?.referrerBusiness,
+      tier: data?.tier || 'free',
+      bonus: data?.bonus || 10,
     });
   } catch (error) {
     console.error('Referral lookup error:', error);
@@ -63,28 +57,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const referrerDoc = await getDoc(doc(db, 'users', referrerUid));
+    const dbRef = getAdminDb();
+    if (!dbRef) {
+      return NextResponse.json({ error: 'Firestore Admin not initialized' }, { status: 500 });
+    }
+    const referrerDoc = await dbRef.collection('users').doc(referrerUid).get();
 
-    if (!referrerDoc.exists()) {
+    if (!referrerDoc.exists) {
       return NextResponse.json(
         { error: 'Referrer not found' },
         { status: 404 }
       );
     }
 
-    const referrerData = referrerDoc.data();
+    const referrerData = referrerDoc.data() as any;
 
-    await updateDoc(doc(db, 'users', uid), {
+    await dbRef.collection('users').doc(uid).update({
       referredBy: referrerUid,
       referredAt: new Date(),
     });
 
-    await updateDoc(doc(db, 'users', referrerUid), {
+    await dbRef.collection('users').doc(referrerUid).update({
       referralCount: (referrerData.referralCount || 0) + 1,
       totalReferralBonus: (referrerData.totalReferralBonus || 0) + 10,
     });
 
-    await setDoc(doc(collection(db, 'activity_log')), {
+    await dbRef.collection('activity_log').add({
       type: 'signup',
       userName: `New user from ${referrerData.displayName}`,
       businessName: referrerData.businessName,

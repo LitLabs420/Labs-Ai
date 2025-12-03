@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getUserFromRequest } from '@/lib/auth-helper';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 const ADMIN_UID = process.env.ADMIN_UID;
 

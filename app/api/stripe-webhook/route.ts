@@ -1,14 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { getStripe } from "@/lib/stripe";
-import { db } from "@/lib/firebase";
-import { doc, updateDoc, Timestamp } from "firebase/firestore";
+import { getAdminDb } from "@/lib/firebase-admin";
 import {
   sendUpgradeConfirmationEmail,
   sendPaymentFailedEmail,
   sendCancellationConfirmationEmail,
 } from "@/lib/email";
 
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
 export async function POST(req: NextRequest) {
@@ -67,24 +68,27 @@ export async function POST(req: NextRequest) {
             const amount = subscription.items.data[0].price.unit_amount || 0;
 
             // Update Firestore with subscription details
-            const userRef = doc(db!, "users", userId);
+            const dbRef = getAdminDb();
+            if (!dbRef) {
+              console.error('Firestore Admin not initialized');
+              return;
+            }
             const subData = subscription as unknown as Record<string, number>;
-            await updateDoc(userRef, {
-              tier,
-              subscription: {
-                id: subscriptionId,
-                status: subscription.status,
-                priceId,
-                currentPeriodStart: Timestamp.fromDate(
-                  new Date(subData.current_period_start * 1000)
-                ),
-                currentPeriodEnd: Timestamp.fromDate(
-                  new Date(subData.current_period_end * 1000)
-                ),
-                createdAt: Timestamp.now(),
-              },
-              updatedAt: Timestamp.now(),
-            });
+            await dbRef
+              .collection('users')
+              .doc(userId)
+              .update({
+                tier,
+                subscription: {
+                  id: subscriptionId,
+                  status: subscription.status,
+                  priceId,
+                  currentPeriodStart: new Date(subData.current_period_start * 1000),
+                  currentPeriodEnd: new Date(subData.current_period_end * 1000),
+                  createdAt: new Date(),
+                },
+                updatedAt: new Date(),
+              });
 
             // Send confirmation email
             if (userEmail) {

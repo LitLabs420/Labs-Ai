@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/firebase';
-import { collection, addDoc, serverTimestamp, query, where, getDocs } from 'firebase/firestore';
+import { getAdminDb } from '@/lib/firebase-admin';
 import { Resend } from 'resend';
 import { info, error } from '@/lib/serverLogger';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 interface EmailTemplate {
   type: 'welcome' | 'tutorial' | 'incentive';
@@ -247,9 +249,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Get user name
-    const usersQuery = query(collection(db, 'users'), where('email', '==', email));
-    const usersSnap = await getDocs(usersQuery);
-    const userName = usersSnap.empty ? 'there' : usersSnap.docs[0].data().displayName || 'there';
+    const dbRef = getAdminDb();
+    if (!dbRef) {
+      return NextResponse.json({ error: 'Firestore Admin not initialized' }, { status: 500 });
+    }
+    const usersSnap = await dbRef.collection('users').where('email', '==', email).get();
+    const userName = usersSnap.empty ? 'there' : (usersSnap.docs[0].data() as any).displayName || 'there';
 
     // Send email
     const response = await resend.emails.send({
@@ -265,12 +270,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Log to Firestore
-    await addDoc(collection(db, 'email_sequences'), {
+    await dbRef.collection('email_sequences').add({
       userId,
       email,
       type,
       templateId: response.data?.id || 'unknown',
-      sentAt: serverTimestamp(),
+      sentAt: new Date(),
       status: 'sent',
       openedAt: null,
       clickedAt: null,

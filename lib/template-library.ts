@@ -36,7 +36,9 @@ export async function saveToLibrary(
     title?: string;
   }
 ): Promise<string> {
-  const contentRef = collection(db, 'users', userId, 'savedContent');
+  if (!db) throw new Error('Database not initialized');
+  const dbRef = db;
+  const contentRef = collection(dbRef, 'users', userId, 'savedContent');
   
   const newContent: Omit<SavedContent, 'id'> = {
     userId,
@@ -68,7 +70,9 @@ export async function getSavedContent(
     search?: string;
   }
 ): Promise<SavedContent[]> {
-  const contentRef = collection(db, 'users', userId, 'savedContent');
+  if (!db) throw new Error('Database not initialized');
+  const dbRef = db;
+  const contentRef = collection(dbRef, 'users', userId, 'savedContent');
   
   let q = query(contentRef, orderBy('createdAt', 'desc'));
   
@@ -108,7 +112,9 @@ export async function getSavedContentById(
   userId: string,
   contentId: string
 ): Promise<SavedContent | null> {
-  const docRef = doc(db, 'users', userId, 'savedContent', contentId);
+  if (!db) throw new Error('Database not initialized');
+  const dbRef = db;
+  const docRef = doc(dbRef, 'users', userId, 'savedContent', contentId);
   const docSnap = await getDoc(docRef);
   
   if (!docSnap.exists()) {
@@ -131,7 +137,9 @@ export async function deleteSavedContent(
   userId: string,
   contentId: string
 ): Promise<void> {
-  const docRef = doc(db, 'users', userId, 'savedContent', contentId);
+  if (!db) throw new Error('Database not initialized');
+  const dbRef = db;
+  const docRef = doc(dbRef, 'users', userId, 'savedContent', contentId);
   await deleteDoc(docRef);
 }
 
@@ -142,7 +150,9 @@ export async function useTemplate(
   userId: string,
   contentId: string
 ): Promise<void> {
-  const docRef = doc(db, 'users', userId, 'savedContent', contentId);
+  if (!db) throw new Error('Database not initialized');
+  const dbRef = db;
+  const docRef = doc(dbRef, 'users', userId, 'savedContent', contentId);
   const docSnap = await getDoc(docRef);
   
   if (!docSnap.exists()) {

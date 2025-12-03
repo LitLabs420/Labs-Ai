@@ -7,7 +7,9 @@ export async function checkPostLimit(userId: string): Promise<{
   limit: number;
   tier: string;
 }> {
-  const userDoc = await getDoc(doc(db, 'users', userId));
+  if (!db) throw new Error('Database not initialized');
+  const dbRef = db;
+  const userDoc = await getDoc(doc(dbRef, 'users', userId));
   if (!userDoc.exists()) {
     throw new Error('User not found');
   }
@@ -31,7 +33,9 @@ export async function checkPostLimit(userId: string): Promise<{
 }
 
 export async function recordPost(userId: string) {
-  const userDoc = await getDoc(doc(db, 'users', userId));
+  if (!db) throw new Error('Database not initialized');
+  const dbRef = db;
+  const userDoc = await getDoc(doc(dbRef, 'users', userId));
   if (!userDoc.exists()) return;
 
   const today = new Date().toDateString();
@@ -39,7 +43,7 @@ export async function recordPost(userId: string) {
   const lastPostDate = data.lastPostDate || '';
   const postsToday = lastPostDate === today ? (data.postsToday || 0) + 1 : 1;
 
-  await updateDoc(doc(db, 'users', userId), {
+  await updateDoc(doc(dbRef, 'users', userId), {
     lastPostDate: today,
     postsToday,
     totalPostsAllTime: (data.totalPostsAllTime || 0) + 1,

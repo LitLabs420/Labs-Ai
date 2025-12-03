@@ -16,14 +16,22 @@ export default function BillingPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, async (authUser) => {
+    if (!auth || !db) {
+      router.push('/auth');
+      return;
+    }
+    
+    const authInstance = auth;
+    const dbInstance = db;
+    
+    const unsub = onAuthStateChanged(authInstance, async (authUser) => {
       if (!authUser) {
         router.push('/auth');
         return;
       }
 
-      setUser(authUser);
-      const userDoc = await getDoc(doc(db, 'users', authUser.uid));
+      setUser({ uid: authUser.uid, email: authUser.email ?? undefined });
+      const userDoc = await getDoc(doc(dbInstance, 'users', authUser.uid));
       if (userDoc.exists()) {
         setTier(userDoc.data().tier || 'free');
       }

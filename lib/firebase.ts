@@ -30,18 +30,12 @@ let app: FirebaseApp | null = null;
 let authInstance: Auth | null = null;
 let dbInstance: Firestore | null = null;
 
-// Initialize Firebase synchronously if in browser
+// Only initialize if we're actually in a browser context (not build time)
+// and have valid configuration
 if (typeof window !== "undefined") {
-  try {
-    const missing = missingConfigFields(firebaseConfig);
-    if (missing.length > 0) {
-      // Log a helpful message rather than calling initializeApp with an invalid config
-      console.error(
-        "Missing Firebase client config:",
-        missing,
-        "\nSet the following env vars in your .env.local (for local dev) and in your hosting provider: NEXT_PUBLIC_FIREBASE_API_KEY, NEXT_PUBLIC_FIREBASE_PROJECT_ID, NEXT_PUBLIC_FIREBASE_APP_ID"
-      );
-    } else {
+  const missing = missingConfigFields(firebaseConfig);
+  if (missing.length === 0) {
+    try {
       const apps = getApps();
       app = apps.length > 0 ? (apps[0] as FirebaseApp) : initializeApp(firebaseConfig);
       authInstance = getAuth(app);
@@ -56,13 +50,16 @@ if (typeof window !== "undefined") {
       if (allowDebug) {
         window.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
       }
+    } catch (e) {
+      // Silently fail during build - don't log to avoid noise in build output
+      if (process.env.NODE_ENV === "development") {
+        console.warn("Firebase client init skipped:", e);
+      }
     }
-  } catch (e) {
-    console.error("Firebase initialization error:", e);
   }
 }
 
-// Export instances (will be ready immediately on client)
+// Export instances (will be null during SSR/build, ready on client)
 export const auth = authInstance as Auth | null;
 export const db = dbInstance as Firestore | null;
 export { app };

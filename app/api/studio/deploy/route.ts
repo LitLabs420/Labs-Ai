@@ -3,6 +3,7 @@ import { getUserFromRequest } from '@/lib/auth-helper';
 import { deployBot, testBot, publishToMarketplace, createBot, validateBotCode, cloneBot } from '@/lib/bot-builder';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
   try {

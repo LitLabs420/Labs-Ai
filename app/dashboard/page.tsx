@@ -34,15 +34,18 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!auth) {
-      console.warn("Auth not initialized, delaying redirect");
+    if (!auth || !db) {
+      console.warn("Auth/DB not initialized, delaying redirect");
       const timer = setTimeout(() => {
         router.push('/auth');
       }, 500);
       return () => clearTimeout(timer);
     }
 
-    const unsub = onAuthStateChanged(auth, async (user) => {
+    const authInstance = auth;
+    const dbInstance = db;
+
+    const unsub = onAuthStateChanged(authInstance, async (user) => {
       if (!user) {
         console.warn("No user, redirecting to auth");
         router.push('/auth');
@@ -53,7 +56,7 @@ export default function DashboardPage() {
       setDisplayName(user.displayName || user.email?.split('@')[0] || 'Creator');
       trackEvent('dashboard_view', { uid: user.uid });
 
-      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      const userDoc = await getDoc(doc(dbInstance, 'users', user.uid));
       if (userDoc.exists()) {
         const data = userDoc.data() as Partial<Stats>;
         setStats({

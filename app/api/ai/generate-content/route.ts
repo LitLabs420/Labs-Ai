@@ -3,9 +3,11 @@ import { generateContent, GenerateContentRequest } from "@/lib/ai";
 import rateLimiter from '@/lib/rateLimiter';
 import { verifyRecaptcha } from '@/lib/recaptcha';
 import sentry from '@/lib/sentry';
-import { canPerformAction, incrementUsage } from '@/lib/usage-tracker';
-import { getSmartContext, enhancePromptWithContext, trackContentUsage } from '@/lib/smart-context';
+import { canPerformActionServer, incrementUsageServer } from '@/lib/firebase-server';
 import { Guardian } from '@/lib/guardian-bot';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,7 +17,7 @@ export async function POST(req: NextRequest) {
     
     // Check usage limits if user is authenticated
     if (uid) {
-      const check = await canPerformAction(uid, 'aiGenerations');
+      const check = await canPerformActionServer(uid, 'aiGenerations');
       if (!check.allowed) {
         return NextResponse.json(
           { 
@@ -88,13 +90,14 @@ export async function POST(req: NextRequest) {
 
     // Get smart context and enhance prompt
     let enhancedDescription = description;
-    if (uid) {
-      const context = await getSmartContext(uid);
-      if (context) {
-        enhancedDescription = enhancePromptWithContext(description, context);
-        console.log('📝 Enhanced prompt with smart context for user:', uid);
-      }
-    }
+    // Smart context disabled during refactor - will re-enable with proper server-side implementation
+    // if (uid) {
+    //   const context = await getSmartContext(uid);
+    //   if (context) {
+    //     enhancedDescription = enhancePromptWithContext(description, context);
+    //     console.log('📝 Enhanced prompt with smart context for user:', uid);
+    //   }
+    // }
 
     const result = await generateContent({
       niche,
@@ -105,8 +108,9 @@ export async function POST(req: NextRequest) {
 
     // Increment usage counter and track content usage after successful generation
     if (uid) {
-      await incrementUsage(uid, 'aiGenerations');
-      await trackContentUsage(uid, description);
+      await incrementUsageServer(uid, 'aiGenerations');
+      // Track content disabled during refactor
+      // await trackContentUsage(uid, description);
     }
 
     const res = NextResponse.json(result);

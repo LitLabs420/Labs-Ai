@@ -18,8 +18,11 @@ export function LiveActivityFeed() {
   const [activities, setActivities] = useState<Activity[]>([]);
 
   useEffect(() => {
+    if (!db) return;
+
+    const dbInstance = db;
     const q = query(
-      collection(db, 'activity_log'),
+      collection(dbInstance, 'activity_log'),
       orderBy('timestamp', 'desc'),
       limit(6)
     );

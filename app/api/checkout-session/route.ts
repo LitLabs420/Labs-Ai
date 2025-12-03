@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createCheckoutSession, createStripeCustomer, STRIPE_PRODUCTS } from "@/lib/stripe";
-import { db } from "@/lib/firebase";
-import { doc, updateDoc } from "firebase/firestore";
+import { getAdminDb } from "@/lib/firebase-admin";
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {
@@ -30,7 +32,11 @@ export async function POST(req: NextRequest) {
       stripeCustomerId = customer.id;
 
       // Store in Firestore
-      await updateDoc(doc(db, "users", userId), {
+      const dbRef = getAdminDb();
+      if (!dbRef) {
+        throw new Error("Firestore Admin not initialized");
+      }
+      await dbRef.collection("users").doc(userId).update({
         stripeCustomerId,
       });
     } catch (err) {

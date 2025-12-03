@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/firebase';
-import { collection, addDoc, query, where, getDocs, doc, updateDoc } from 'firebase/firestore';
 import { info, warn, error } from '@/lib/serverLogger';
+import { getAdminDb } from '@/lib/firebase-admin';
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 import Stripe from 'stripe';
 
 // Initialize Stripe client (use account default API version)
@@ -48,8 +48,15 @@ export async function POST(request: NextRequest) {
         }
 
         // Find user
-        const usersQuery = query(collection(db, 'users'), where('email', '==', customer_email));
-        const usersSnap = await getDocs(usersQuery);
+        const dbRef = getAdminDb();
+        if (!dbRef) {
+          warn('Firestore Admin not initialized');
+          return NextResponse.json({ received: true });
+        }
+        const usersSnap = await dbRef
+          .collection('users')
+          .where('email', '==', customer_email)
+          .get();
 
         if (usersSnap.empty) {
           warn(`User not found: ${customer_email}`);
@@ -57,27 +64,29 @@ export async function POST(request: NextRequest) {
         }
 
         const userDoc = usersSnap.docs[0];
-        const userRef = doc(db, 'users', userDoc.id);
 
         // Update subscription
-        await updateDoc(userRef, {
-          tier: tier || 'pro',
-          subscription: {
-            plan: tier || 'pro',
-            status: 'active',
-            startDate: new Date().toISOString(),
-            autoRenew: true,
-          },
-        });
+        await dbRef
+          .collection('users')
+          .doc(userDoc.id)
+          .update({
+            tier: tier || 'pro',
+            subscription: {
+              plan: tier || 'pro',
+              status: 'active',
+              startDate: new Date().toISOString(),
+              autoRenew: true,
+            },
+          });
 
         // Log transaction
-        await addDoc(collection(db, 'transactions'), {
+        await dbRef.collection('transactions').add({
           userId: userDoc.id,
           email: customer_email,
           tier: tier || 'pro',
           amount: (amount_total || 0) / 100, // Convert cents to dollars
           paymentMethod: 'stripe',
-          transactionId: data.object.id,
+          transactionId: (data.object as any).id,
           status: 'completed',
           createdAt: new Date(),
           type: 'subscription_upgrade',
@@ -100,18 +109,25 @@ export async function POST(request: NextRequest) {
         const tier = tierMap[planId] || 'free';
 
         // Find user by Stripe customer ID
-        const usersQuery = query(
-          collection(db, 'users'),
-          where('stripeCustomerId', '==', customer)
-        );
-        const usersSnap = await getDocs(usersQuery);
+        const dbRef = getAdminDb();
+        if (!dbRef) {
+          warn('Firestore Admin not initialized');
+          return NextResponse.json({ received: true });
+        }
+        const usersSnap = await dbRef
+          .collection('users')
+          .where('stripeCustomerId', '==', customer)
+          .get();
 
         if (!usersSnap.empty) {
           const userDoc = usersSnap.docs[0];
-          await updateDoc(doc(db, 'users', userDoc.id), {
-            tier,
-            subscription: { plan: tier, status },
-          });
+          await dbRef
+            .collection('users')
+            .doc(userDoc.id)
+            .update({
+              tier,
+              subscription: { plan: tier, status },
+            });
 
           info(`✅ Stripe: Subscription updated - ${userDoc.data().email} → ${tier}`);
         }
@@ -121,14 +137,21 @@ export async function POST(request: NextRequest) {
       case 'invoice.payment_failed': {
         const { customer_email } = data.object;
 
-        const usersQuery = query(collection(db, 'users'), where('email', '==', customer_email));
-        const usersSnap = await getDocs(usersQuery);
+        const dbRefInvoice = getAdminDb();
+        if (!dbRefInvoice) {
+          warn('Firestore Admin not initialized');
+          return NextResponse.json({ received: true });
+        }
+        const usersSnap = await dbRefInvoice
+          .collection('users')
+          .where('email', '==', customer_email)
+          .get();
 
         if (!usersSnap.empty) {
           const userDoc = usersSnap.docs[0];
 
           // Log failed payment
-          await addDoc(collection(db, 'transactions'), {
+          await dbRefInvoice.collection('transactions').add({
             userId: userDoc.id,
             email: customer_email,
             status: 'failed',

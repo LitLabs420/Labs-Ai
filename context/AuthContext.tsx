@@ -56,13 +56,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+    const authInstance = auth;
+    const dbInstance = db;
+
+    const unsubscribe = onAuthStateChanged(authInstance, async (firebaseUser) => {
       try {
         if (firebaseUser) {
           setUser(firebaseUser);
 
           // Fetch user data from Firestore
-          const userDocRef = doc(db, "users", firebaseUser.uid);
+          const userDocRef = doc(dbInstance, "users", firebaseUser.uid);
           const userDocSnap = await getDoc(userDocRef);
 
           if (userDocSnap.exists()) {
@@ -111,6 +114,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signOut = async () => {
+    if (!auth) return;
     try {
       await firebaseSignOut(auth);
       setUser(null);
@@ -122,7 +126,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const updateUserData = async (data: Partial<UserData>) => {
-    if (!user) throw new Error("No user logged in");
+    if (!user || !db) throw new Error("No user logged in or db unavailable");
 
     try {
       const userDocRef = doc(db, "users", user.uid);

@@ -21,12 +21,14 @@ export async function trackEvent(
     }
 
     // Also log to Firestore for founder analytics
-    await addDoc(collection(db, 'analytics_events'), {
-      eventName,
-      ...data,
-      timestamp: Date.now(),
-      userAgent: typeof window !== 'undefined' ? navigator.userAgent : 'server',
-    });
+    if (db) {
+      await addDoc(collection(db, 'analytics_events'), {
+        eventName,
+        ...data,
+        timestamp: Date.now(),
+        userAgent: typeof window !== 'undefined' ? navigator.userAgent : 'server',
+      });
+    }
   } catch (error) {
     console.error('Analytics tracking error:', error);
   }
@@ -83,6 +85,10 @@ export async function getAnalyticsSummary(userId: string, days: number = 30): Pr
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - days);
 
+  if (!db) {
+    return getEmptyAnalyticsSummary();
+  }
+
   try {
     const metricsQuery = query(
       collection(db, 'post_metrics'),
@@ -132,19 +138,23 @@ export async function getAnalyticsSummary(userId: string, days: number = 30): Pr
     };
   } catch (error) {
     console.error('Analytics error:', error);
-    return {
-      totalPosts: 0,
-      totalViews: 0,
-      totalEngagement: 0,
-      avgEngagementRate: 0,
-      bestPerformingPost: null,
-      topPlatform: 'instagram',
-      growthRate: 0,
-      predictions: [],
-      recommendations: ['Connect your social accounts to see analytics'],
-      competitorInsights: [],
-    };
+    return getEmptyAnalyticsSummary();
   }
+}
+
+function getEmptyAnalyticsSummary(): AnalyticsSummary {
+  return {
+    totalPosts: 0,
+    totalViews: 0,
+    totalEngagement: 0,
+    avgEngagementRate: 0,
+    bestPerformingPost: null,
+    topPlatform: 'instagram',
+    growthRate: 0,
+    predictions: [],
+    recommendations: ['Connect your social accounts to see analytics'],
+    competitorInsights: [],
+  };
 }
 
 async function predictViralContent(posts: PostMetrics[]): Promise<ViralPrediction[]> {

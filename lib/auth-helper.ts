@@ -1,8 +1,14 @@
 import { NextRequest } from 'next/server';
-import { adminAuth } from './firebase-admin';
+import { getAdminAuth } from './firebase-admin';
 
 export async function getUserFromRequest(request: NextRequest) {
   try {
+    const auth = getAdminAuth();
+    if (!auth) {
+      console.error('Firebase Admin not initialized');
+      return null;
+    }
+    
     // Get token from Authorization header
     const authHeader = request.headers.get('authorization');
     if (!authHeader?.startsWith('Bearer ')) {
@@ -15,7 +21,7 @@ export async function getUserFromRequest(request: NextRequest) {
     }
 
     // Verify token with Firebase Admin
-    const decodedToken = await adminAuth.verifyIdToken(token);
+    const decodedToken = await auth.verifyIdToken(token);
     
     return {
       uid: decodedToken.uid,

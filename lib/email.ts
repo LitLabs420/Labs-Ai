@@ -41,10 +41,10 @@ async function sendEmail(options: EmailOptions): Promise<void> {
       }
 
         info(`✅ Email sent to ${to}`);
-    } catch (error) {
-      const err = error as Error;
-        error("Failed to send email:", err.message);
-      throw error;
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : 'Unknown error';
+      error("Failed to send email:", errorMsg);
+      throw err;
     }
   } else {
     // Development: Log to console

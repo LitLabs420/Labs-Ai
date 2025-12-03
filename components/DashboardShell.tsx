@@ -33,7 +33,7 @@ export default function DashboardShell() {
         setAiResponse(content);
 
         // Save to Firestore if user is logged in
-        if (auth.currentUser) {
+        if (auth?.currentUser && db) {
           try {
             await addDoc(
               collection(db, "users", auth.currentUser.uid, "contents"),

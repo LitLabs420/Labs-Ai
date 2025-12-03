@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/firebase';
-import { collection, addDoc, query, where, getDocs, doc, updateDoc } from 'firebase/firestore';
+import { getAdminDb } from '@/lib/firebase-admin';
 import { info, warn, error } from '@/lib/serverLogger';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 /**
  * PAYPAL WEBHOOK HANDLER
@@ -30,8 +32,15 @@ export async function POST(request: NextRequest) {
         }
 
         // Find user
-        const usersQuery = query(collection(db, 'users'), where('email', '==', customerEmail));
-        const usersSnap = await getDocs(usersQuery);
+        const dbRef = getAdminDb();
+        if (!dbRef) {
+          warn('Firestore Admin not initialized');
+          return NextResponse.json({ received: true });
+        }
+        const usersSnap = await dbRef
+          .collection('users')
+          .where('email', '==', customerEmail)
+          .get();
 
         if (usersSnap.empty) {
           warn(`User not found: ${customerEmail}`);
@@ -43,16 +52,19 @@ export async function POST(request: NextRequest) {
         // Parse custom_id: "user_id:tier"
         const [, tier] = customId.split(':');
 
-        await updateDoc(doc(db, 'users', userDoc.id), {
-          tier: tier || 'pro',
-          paypalSubscriptionId: subscriptionId,
-          subscription: {
-            plan: tier || 'pro',
-            status: 'active',
-            startDate: new Date().toISOString(),
-            provider: 'paypal',
-          },
-        });
+        await dbRef
+          .collection('users')
+          .doc(userDoc.id)
+          .update({
+            tier: tier || 'pro',
+            paypalSubscriptionId: subscriptionId,
+            subscription: {
+              plan: tier || 'pro',
+              status: 'active',
+              startDate: new Date().toISOString(),
+              provider: 'paypal',
+            },
+          });
 
         info(`✅ PayPal: ${customerEmail} subscribed to ${tier}`);
         break;
@@ -70,11 +82,15 @@ export async function POST(request: NextRequest) {
         }
 
         // Find user by PayPal subscription ID
-        const usersQuery = query(
-          collection(db, 'users'),
-          where('paypalSubscriptionId', '==', subscriptionId)
-        );
-        const usersSnap = await getDocs(usersQuery);
+        const dbRef = getAdminDb();
+        if (!dbRef) {
+          warn('Firestore Admin not initialized');
+          return NextResponse.json({ received: true });
+        }
+        const usersSnap = await dbRef
+          .collection('users')
+          .where('paypalSubscriptionId', '==', subscriptionId)
+          .get();
 
         if (!usersSnap.empty) {
           const userDoc = usersSnap.docs[0];
@@ -86,7 +102,7 @@ export async function POST(request: NextRequest) {
           const tier = tierMap[amount?.value || ''] || userDoc.data().tier;
 
           // Log transaction
-          await addDoc(collection(db, 'transactions'), {
+          await dbRef.collection('transactions').add({
             userId: userDoc.id,
             email: customerEmail,
             tier,
@@ -107,32 +123,42 @@ export async function POST(request: NextRequest) {
         const { id: subscriptionId, status, payer } = resource;
 
         // Find user by PayPal subscription ID
-        const usersQuery = query(
-          collection(db, 'users'),
-          where('paypalSubscriptionId', '==', subscriptionId)
-        );
-        const usersSnap = await getDocs(usersQuery);
+        const dbRef = getAdminDb();
+        if (!dbRef) {
+          warn('Firestore Admin not initialized');
+          return NextResponse.json({ received: true });
+        }
+        const usersSnap = await dbRef
+          .collection('users')
+          .where('paypalSubscriptionId', '==', subscriptionId)
+          .get();
 
         if (!usersSnap.empty) {
           const userDoc = usersSnap.docs[0];
 
           // Handle cancellation
           if (status === 'CANCELLED') {
-            await updateDoc(doc(db, 'users', userDoc.id), {
-              tier: 'free',
-              subscription: {
-                plan: 'free',
-                status: 'cancelled',
-              },
-            });
+            await dbRef
+              .collection('users')
+              .doc(userDoc.id)
+              .update({
+                tier: 'free',
+                subscription: {
+                  plan: 'free',
+                  status: 'cancelled',
+                },
+              });
 
             warn(`⚠️ PayPal: ${payer?.email_address} cancelled subscription`);
           } else {
-            await updateDoc(doc(db, 'users', userDoc.id), {
-              subscription: {
-                status,
-              },
-            });
+            await dbRef
+              .collection('users')
+              .doc(userDoc.id)
+              .update({
+                subscription: {
+                  status,
+                },
+              });
 
             console.log(`✅ PayPal: Subscription updated - ${payer?.email_address} → ${status}`);
           }
@@ -146,17 +172,21 @@ export async function POST(request: NextRequest) {
         const subscriptionId = related_ids?.subscription_id;
 
         if (subscriptionId) {
-          const usersQuery = query(
-            collection(db, 'users'),
-            where('paypalSubscriptionId', '==', subscriptionId)
-          );
-          const usersSnap = await getDocs(usersQuery);
+          const dbRef = getAdminDb();
+          if (!dbRef) {
+            warn('Firestore Admin not initialized');
+            return NextResponse.json({ received: true });
+          }
+          const usersSnap = await dbRef
+            .collection('users')
+            .where('paypalSubscriptionId', '==', subscriptionId)
+            .get();
 
           if (!usersSnap.empty) {
             const userDoc = usersSnap.docs[0];
 
             // Log refund
-            await addDoc(collection(db, 'transactions'), {
+            await dbRef.collection('transactions').add({
               userId: userDoc.id,
               email: payer?.email_address,
               amount: -parseFloat(amount?.value || '0'),

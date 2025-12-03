@@ -18,19 +18,27 @@ export default function ReferralsPage() {
   });
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
+    if (!auth || !db) {
+      router.push('/auth');
+      return;
+    }
+
+    const authInstance = auth;
+    const dbInstance = db;
+
+    const unsubscribe = onAuthStateChanged(authInstance, async (authUser) => {
       if (!authUser) {
         router.push('/auth');
         return;
       }
 
-      setUser({ uid: authUser.uid, email: authUser.email });
+      setUser({ uid: authUser.uid, email: authUser.email ?? undefined });
 
       const code = Buffer.from(`${authUser.uid}:referral`).toString('base64').slice(0, 12);
       setReferralCode(code);
       setReferralLink(`${window.location.origin}?ref=${code}`);
 
-      const userDoc = await getDoc(doc(db, 'users', authUser.uid));
+      const userDoc = await getDoc(doc(dbInstance, 'users', authUser.uid));
       if (userDoc.exists()) {
         const data = userDoc.data() as Record<string, unknown>;
         setStats({

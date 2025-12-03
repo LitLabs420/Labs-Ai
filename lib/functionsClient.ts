@@ -3,7 +3,7 @@
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { app } from "./firebase";
 
-const functions = getFunctions(app, "us-central1");
+const functions = app ? getFunctions(app, "us-central1") : null;
 
 export interface MoneyTodayActionClient {
   title: string;
@@ -29,6 +29,7 @@ export async function callGenerateMoneyToday(input?: {
   availabilityToday?: string;
   promosRunning?: string;
 }): Promise<MoneyTodayClientResponse> {
+  if (!functions) throw new Error('Firebase Functions not initialized');
   const fn = httpsCallable(functions, "generateMoneyToday");
   const res = (await fn(input || {})) as { data?: unknown };
   const data = (res.data || {}) as {
@@ -44,6 +45,7 @@ export async function callGenerateMoneyToday(input?: {
 }
 
 export async function callCreateCheckoutSession(plan: "growth" | "godmode") {
+  if (!functions) throw new Error('Firebase Functions not initialized');
   const fn = httpsCallable(functions, "createCheckoutSession");
   const res = (await fn({
     plan,
@@ -58,7 +60,8 @@ export async function callGenerateOnboardingResponse(
   step: string,
   userInput: string,
   businessProfile?: Record<string, unknown>
-): Promise<{ step: string; message: string; } | null> {
+): Promise<{ message: string; step: string } | null> {
+  if (!functions) return null;
   const fn = httpsCallable(functions, "generateOnboardingResponse");
   const res = (await fn({ step, userInput, businessProfile })) as { data?: unknown };
   const data = (res.data || {}) as { step?: string; message?: string };

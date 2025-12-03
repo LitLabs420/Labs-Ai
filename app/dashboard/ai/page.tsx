@@ -53,7 +53,17 @@ export default function AIActionsPage() {
   // Load usage stats on mount
   useEffect(() => {
     if (user?.uid) {
-      getUsageStats(user.uid).then(setUsageStats);
+      getUsageStats(user.uid).then((stats) => {
+        // Normalize tier to expected union type
+        const tier = (stats.tier === 'starter' ? 'free' : stats.tier) as 'free' | 'pro' | 'enterprise';
+        setUsageStats({
+          today: stats.today,
+          thisMonth: stats.thisMonth,
+          allTime: stats.allTime,
+          tier,
+          limits: stats.limits,
+        });
+      });
     }
   }, [user]);
 
@@ -86,7 +96,16 @@ export default function AIActionsPage() {
         setGenerated(data.content);
         // Refresh usage stats
         if (user?.uid) {
-          getUsageStats(user.uid).then(setUsageStats);
+          getUsageStats(user.uid).then((stats) => {
+            const tier = (stats.tier === 'starter' ? 'free' : stats.tier) as 'free' | 'pro' | 'enterprise';
+            setUsageStats({
+              today: stats.today,
+              thisMonth: stats.thisMonth,
+              allTime: stats.allTime,
+              tier,
+              limits: stats.limits,
+            });
+          });
         }
       }
     } catch (err) {
@@ -123,7 +142,13 @@ export default function AIActionsPage() {
       } else {
         setDmReply(data.reply);
         if (user?.uid) {
-          getUsageStats(user.uid).then(setUsageStats);
+          getUsageStats(user.uid).then((stats) => {
+            const normalized = {
+              ...stats,
+              tier: (stats.tier === 'starter' ? 'free' : stats.tier) as 'free' | 'pro' | 'enterprise',
+            };
+            setUsageStats(normalized);
+          });
         }
       }
     } catch (err) {
@@ -159,7 +184,13 @@ export default function AIActionsPage() {
       } else {
         setMoneyPlay(data as MoneyPlay);
         if (user?.uid) {
-          getUsageStats(user.uid).then(setUsageStats);
+          getUsageStats(user.uid).then((stats) => {
+            const normalized = {
+              ...stats,
+              tier: (stats.tier === 'starter' ? 'free' : stats.tier) as 'free' | 'pro' | 'enterprise',
+            };
+            setUsageStats(normalized);
+          });
         }
       }
     } catch (err) {
@@ -194,7 +225,13 @@ export default function AIActionsPage() {
       } else {
         setGeneratedImage(data);
         if (user?.uid) {
-          getUsageStats(user.uid).then(setUsageStats);
+          getUsageStats(user.uid).then((stats) => {
+            const normalized = {
+              ...stats,
+              tier: (stats.tier === 'starter' ? 'free' : stats.tier) as 'free' | 'pro' | 'enterprise',
+            };
+            setUsageStats(normalized);
+          });
         }
       }
     } catch (err) {

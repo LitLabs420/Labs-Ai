@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateVideoScript, generateHookVariations, analyzeVideoPerformance } from '@/lib/video-generator';
 import { getUserFromRequest } from '@/lib/auth-helper';
-import { incrementUsage, canPerformAction } from '@/lib/usage-tracker';
+import { incrementUsageServer, canPerformActionServer } from '@/lib/firebase-server';
 import { Guardian } from '@/lib/guardian-bot';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
 export async function POST(request: NextRequest) {
@@ -37,7 +38,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check usage limits
-    const usageCheck = await canPerformAction(user.uid, 'aiGenerations');
+    const usageCheck = await canPerformActionServer(user.uid, 'aiGenerations');
     if (!usageCheck.allowed) {
       return NextResponse.json(
         { error: usageCheck.reason, upgradeRequired: true },
@@ -68,7 +69,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Increment usage after successful generation
-    await incrementUsage(user.uid, 'aiGenerations');
+    await incrementUsageServer(user.uid, 'aiGenerations');
 
     return NextResponse.json({ success: true, result });
   } catch (error: any) {

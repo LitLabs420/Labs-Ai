@@ -24,7 +24,13 @@ export default function AuthGate({
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (u) => {
+    if (!auth) {
+      setLoading(false);
+      return;
+    }
+
+    const authInstance = auth;
+    const unsub = onAuthStateChanged(authInstance, (u) => {
       setUser(u);
       setLoading(false);
     });
@@ -33,6 +39,7 @@ export default function AuthGate({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!auth) return;
     setError("");
     try {
       if (mode === "login") {
@@ -49,6 +56,7 @@ export default function AuthGate({
   };
 
   const handleLogout = async () => {
+    if (!auth) return;
     await signOut(auth);
   };
 

@@ -21,12 +21,20 @@ function OnboardingInner() {
   });
 
   useEffect(() => {
-    const unsub = auth.onAuthStateChanged(async (user) => {
+    if (!auth || !db) {
+      setLoading(false);
+      return;
+    }
+
+    const authInstance = auth;
+    const dbInstance = db;
+
+    const unsub = authInstance.onAuthStateChanged(async (user) => {
       if (!user) {
         setLoading(false);
         return;
       }
-      const ref = doc(db, "users", user.uid);
+      const ref = doc(dbInstance, "users", user.uid);
       const snap = await getDoc(ref);
       if (snap.exists()) {
         const data = snap.data();
@@ -51,8 +59,8 @@ function OnboardingInner() {
   };
 
   const handleSave = async () => {
+    if (!auth?.currentUser || !db) return;
     const user = auth.currentUser;
-    if (!user) return;
     setSaving(true);
     try {
       const ref = doc(db, "users", user.uid);

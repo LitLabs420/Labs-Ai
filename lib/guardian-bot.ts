@@ -1,8 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { getFirestore, collection, addDoc, query, where, getDocs, Timestamp } from 'firebase/firestore';
+import { getAdminDb } from './firebase-admin';
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY || '');
-const db = getFirestore();
 
 export interface SecurityThreat {
   type: 'rate_limit_abuse' | 'fraud' | 'spam' | 'suspicious_activity' | 'api_abuse';
@@ -207,17 +206,36 @@ Be smart but not paranoid. False positives hurt legitimate users.`;
   async generateWeeklyReport(): Promise<SecurityReport> {
     const weekAgo = new Date();
     weekAgo.setDate(weekAgo.getDate() - 7);
+    const db = getAdminDb();
+    if (!db) {
+      return {
+        period: 'Last 7 days',
+        threats: [],
+        blockedUsers: 0,
+        totalIncidents: 0,
+        recommendations: ['Configure Firebase Admin credentials to enable security reporting.'],
+      };
+    }
 
-    const threatsQuery = query(
-      collection(db, 'security_threats'),
-      where('timestamp', '>=', Timestamp.fromDate(weekAgo))
-    );
+    const snapshot = await db
+      .collection('security_threats')
+      .where('timestamp', '>=', weekAgo)
+      .get();
 
-    const snapshot = await getDocs(threatsQuery);
-    const threats: SecurityThreat[] = snapshot.docs.map(doc => ({
-      ...doc.data(),
-      timestamp: doc.data().timestamp.toDate(),
-    } as SecurityThreat));
+    const threats: SecurityThreat[] = snapshot.docs.map((doc) => {
+      const data = doc.data() as any;
+      const ts = data.timestamp;
+      const asDate = ts?.toDate ? ts.toDate() : (ts as Date);
+      return {
+        type: data.type,
+        severity: data.severity,
+        userId: data.userId,
+        ip: data.ip,
+        details: data.details,
+        timestamp: asDate || new Date(),
+        autoBlocked: !!data.autoBlocked,
+      } as SecurityThreat;
+    });
 
     const blockedUsers = threats.filter(t => t.autoBlocked).length;
 
@@ -256,9 +274,11 @@ Provide specific, actionable recommendations to improve security. Return as JSON
    */
   private async logThreat(threat: SecurityThreat): Promise<void> {
     try {
-      await addDoc(collection(db, 'security_threats'), {
+      const db = getAdminDb();
+      if (!db) return;
+      await db.collection('security_threats').add({
         ...threat,
-        timestamp: Timestamp.fromDate(threat.timestamp),
+        timestamp: threat.timestamp,
       });
     } catch (error) {
       console.error('Failed to log threat:', error);
@@ -270,12 +290,14 @@ Provide specific, actionable recommendations to improve security. Return as JSON
    */
   private async blockUser(userId: string, threat: SecurityThreat): Promise<void> {
     try {
-      await addDoc(collection(db, 'blocked_users'), {
+      const db = getAdminDb();
+      if (!db) return;
+      await db.collection('blocked_users').add({
         userId,
         reason: threat.details,
         type: threat.type,
         severity: threat.severity,
-        blockedAt: Timestamp.now(),
+        blockedAt: new Date(),
         autoBlocked: true,
       });
 
@@ -294,14 +316,15 @@ Provide specific, actionable recommendations to improve security. Return as JSON
       const fiveMinAgo = new Date();
       fiveMinAgo.setMinutes(fiveMinAgo.getMinutes() - 5);
 
-      const activityQuery = query(
-        collection(db, 'user_activity'),
-        where('userId', '==', userId),
-        where('timestamp', '>=', Timestamp.fromDate(fiveMinAgo))
-      );
+      const db = getAdminDb();
+      if (!db) return [];
 
-      const snapshot = await getDocs(activityQuery);
-      return snapshot.docs.map(doc => doc.data());
+      const snapshot = await db
+        .collection('user_activity')
+        .where('userId', '==', userId)
+        .where('timestamp', '>=', fiveMinAgo)
+        .get();
+      return snapshot.docs.map((doc) => doc.data());
     } catch {
       return [];
     }
@@ -319,14 +342,15 @@ Provide specific, actionable recommendations to improve security. Return as JSON
       const thirtyDaysAgo = new Date();
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-      const paymentsQuery = query(
-        collection(db, 'payments'),
-        where('userId', '==', userId),
-        where('createdAt', '>=', Timestamp.fromDate(thirtyDaysAgo))
-      );
+      const db = getAdminDb();
+      if (!db) return { totalPayments: 0, failedCount: 0, subscriptionChanges: 0 };
 
-      const snapshot = await getDocs(paymentsQuery);
-      const payments = snapshot.docs.map(doc => doc.data());
+      const snapshot = await db
+        .collection('payments')
+        .where('userId', '==', userId)
+        .where('createdAt', '>=', thirtyDaysAgo)
+        .get();
+      const payments = snapshot.docs.map((doc) => doc.data() as any);
 
       return {
         totalPayments: payments.length,

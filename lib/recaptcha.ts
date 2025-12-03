@@ -1,5 +1,3 @@
-import fetch from 'node-fetch';
-
 export async function verifyRecaptcha(token?: string): Promise<{ ok: boolean; score?: number; error?: string }> {
   if (!process.env.RECAPTCHA_SECRET) return { ok: true };
   if (!token) return { ok: false, error: 'missing-recaptcha-token' };

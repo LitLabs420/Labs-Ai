@@ -66,8 +66,16 @@ export default function AdminAnalyticsPage() {
   });
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, async (user) => {
-      if (!user || user.email !== ADMIN_EMAIL) {
+    const authInstance = auth;
+    const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+
+    if (!authInstance) {
+      router.push('/auth');
+      return;
+    }
+
+    const unsub = onAuthStateChanged(authInstance, async (user) => {
+      if (!user || (adminEmail && user.email !== adminEmail)) {
         router.push('/auth');
         return;
       }
@@ -76,7 +84,12 @@ export default function AdminAnalyticsPage() {
       trackEvent('admin_analytics_view', { uid: user.uid });
 
       // Real-time user analytics
-      const usersQuery = query(collection(db, 'users'));
+      const dbInstance = db;
+      if (!dbInstance) {
+        setLoading(false);
+        return;
+      }
+      const usersQuery = query(collection(dbInstance, 'users'));
       const unsubUsers = onSnapshot(usersQuery, (snapshot) => {
         let freeCount = 0,
           proCount = 0,
@@ -117,7 +130,7 @@ export default function AdminAnalyticsPage() {
       });
 
       // Real-time transactions
-      const txnQuery = query(collection(db, 'transactions'), orderBy('createdAt', 'desc'), limit(10));
+      const txnQuery = query(collection(dbInstance, 'transactions'), orderBy('createdAt', 'desc'), limit(10));
       const unsubTxn = onSnapshot(txnQuery, (snapshot) => {
         const recentTxn = snapshot.docs.map((doc) => ({
           id: doc.id,

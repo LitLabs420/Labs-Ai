@@ -3,6 +3,7 @@ import { aiChatSchema } from "@/lib/validation";
 import { getUserFromRequest } from "@/lib/auth-helper";
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 const API_KEY = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
 const SYSTEM_PROMPT = process.env.LITLABS_MASTER_SYSTEM_PROMPT || "";
@@ -31,7 +32,7 @@ export async function POST(req: NextRequest) {
     
     if (!validation.success) {
       return NextResponse.json(
-        { error: "Invalid input", details: validation.error.errors },
+        { error: "Invalid input", details: validation.error.issues },
         { status: 400 }
       );
     }

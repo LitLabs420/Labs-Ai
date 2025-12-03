@@ -55,6 +55,8 @@ export interface SmartContext {
  * Get complete smart context for a user
  */
 export async function getSmartContext(uid: string): Promise<SmartContext | null> {
+  if (!db) return null;
+  
   try {
     const userRef = doc(db, 'users', uid);
     const userSnap = await getDoc(userRef);
@@ -94,6 +96,8 @@ export async function updateAIPreferences(
   uid: string,
   preferences: Partial<AIPreferences>
 ): Promise<void> {
+  if (!db) return;
+  
   const userRef = doc(db, 'users', uid);
   await updateDoc(userRef, {
     aiPreferences: preferences,
@@ -125,6 +129,7 @@ export async function learnFromEdit(
     learnings.push('User prefers more line breaks for readability');
   }
   
+  if (!db) return;
   const userRef = doc(db, 'users', uid);
   await updateDoc(userRef, {
     'aiHistory.recentEdits': [
@@ -144,7 +149,7 @@ export async function trackContentUsage(
   engagement?: number
 ): Promise<void> {
   const context = await getSmartContext(uid);
-  if (!context) return;
+  if (!context || !db) return;
   
   // Update most used prompts
   const prompts = context.history.mostUsedPrompts || [];
@@ -221,6 +226,8 @@ export function enhancePromptWithContext(
  * Get AI memory summary for profile page
  */
 export async function getAIMemorySummary(uid: string): Promise<string[]> {
+  if (!db) return [];
+  
   const context = await getSmartContext(uid);
   if (!context) return ['No AI memory yet'];
   

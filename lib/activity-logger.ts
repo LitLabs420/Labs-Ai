@@ -6,6 +6,8 @@ export async function logActivity(type: 'signup' | 'upgrade' | 'created_content'
   businessName?: string;
   tier?: string;
 }) {
+  if (!db) return;
+  
   try {
     await addDoc(collection(db, 'activity_log'), {
       type,

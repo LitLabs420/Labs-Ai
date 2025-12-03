@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { canPerformAction, incrementUsage } from '@/lib/usage-tracker';
+import { canPerformActionServer, incrementUsageServer } from '@/lib/firebase-server';
 import { Guardian } from '@/lib/guardian-bot';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
@@ -18,7 +21,7 @@ export async function POST(req: NextRequest) {
 
     // Check usage limits
     if (uid) {
-      const check = await canPerformAction(uid, 'imageGenerations');
+      const check = await canPerformActionServer(uid, 'imageGenerations');
       if (!check.allowed) {
         return NextResponse.json(
           {
@@ -93,7 +96,7 @@ export async function POST(req: NextRequest) {
 
     // Increment usage after successful generation
     if (uid) {
-      await incrementUsage(uid, 'imageGenerations');
+      await incrementUsageServer(uid, 'imageGenerations');
     }
 
     return NextResponse.json({
