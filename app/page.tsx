@@ -61,6 +61,9 @@ export default function Home() {
             <a href="/dashboard" className="rounded-full bg-emerald-500 px-4 py-1.5 text-[11px] font-semibold text-slate-950 hover:bg-emerald-400 hover:shadow-lg hover:shadow-emerald-500/50 transition-all">
               Open Dashboard
             </a>
+            <a href="/earn" className="rounded-full border border-emerald-500/50 px-4 py-1.5 text-[11px] font-semibold text-emerald-400 hover:bg-emerald-500/10 transition-all">
+              Start Earning
+            </a>
           </div>
         </header>
 

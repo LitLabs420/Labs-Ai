@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { generateDMReply } from "@/lib/ai";
 import rateLimiter from '@/lib/rateLimiter';
 import { verifyRecaptcha } from '@/lib/recaptcha';
-import sentry from '@/lib/sentry';
+import { captureError } from '@/lib/sentry';
 import { canPerformActionServer, incrementUsageServer } from '@/lib/firebase-server';
 
 export const runtime = 'nodejs';
@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
     return res;
   } catch (error) {
     console.error("DM reply generation error:", error);
-    sentry.captureError(error);
+    captureError(error as Error);
     return NextResponse.json(
       { error: "Failed to generate DM reply" },
       { status: 500 }

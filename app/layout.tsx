@@ -78,3 +78,4 @@ export default function RootLayout({
     </html>
   );
 }
+// Sentry init already handled at module top in server runtime

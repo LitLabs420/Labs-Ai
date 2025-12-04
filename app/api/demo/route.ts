@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import rateLimiter from '../../../lib/rateLimiter';
 import { verifyRecaptcha } from '@/lib/recaptcha';
-import sentry from '@/lib/sentry';
+import { captureError } from '@/lib/sentry';
 
 export async function POST(req: Request) {
   try {
@@ -49,7 +49,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ reply });
   } catch (err) {
-    try { sentry.captureError(err); } catch (_) { /* best-effort */ }
+    try { captureError(err as Error); } catch (_) { /* best-effort */ }
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

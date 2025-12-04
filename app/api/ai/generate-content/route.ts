@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { generateContent, GenerateContentRequest } from "@/lib/ai";
 import rateLimiter from '@/lib/rateLimiter';
 import { verifyRecaptcha } from '@/lib/recaptcha';
-import sentry from '@/lib/sentry';
+import { captureError } from '@/lib/sentry';
 import { canPerformActionServer, incrementUsageServer } from '@/lib/firebase-server';
 import { Guardian } from '@/lib/guardian-bot';
 
@@ -118,7 +118,7 @@ export async function POST(req: NextRequest) {
     return res;
   } catch (error) {
     console.error("Content generation error:", error);
-    sentry.captureError(error);
+    captureError(error as Error);
     return NextResponse.json(
       { error: "Failed to generate content" },
       { status: 500 }

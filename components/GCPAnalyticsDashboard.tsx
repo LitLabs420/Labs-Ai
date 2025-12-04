@@ -1,6 +1,6 @@
 // Google Cloud Analytics Dashboard Component
 'use client';
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 import { useEffect, useState } from 'react';
 

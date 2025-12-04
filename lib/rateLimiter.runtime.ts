@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // @ts-nocheck
 // Runtime-only optional imports for Redis-backed rate limiter.
 // This file intentionally disables TypeScript checks and some ESLint rules
