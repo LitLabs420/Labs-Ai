@@ -1,5 +1,6 @@
 import React from "react";
 import LiveDemo from "../components/LiveDemo";
+import LiveActivityFeed from "../components/LiveActivityFeed";
 
 // Force the app router to render this page server-side on every request
 // This bypasses Vercel edge HTML caching so we can validate the live change immediately
@@ -34,6 +35,15 @@ export default function Home() {
             </a>
             <a href="#pricing" className="hover:text-emerald-400 transition-colors">
               Pricing
+                        <a href="/marketplace" className="hover:text-emerald-400 transition-colors">
+                          Marketplace
+                        </a>
+                        <a href="/earn" className="hover:text-emerald-400 transition-colors">
+                          Earn
+                        </a>
+                        <a href="/leaderboard" className="hover:text-emerald-400 transition-colors">
+                          Leaderboard
+                        </a>
             </a>
             <a href="#how-it-works" className="hover:text-emerald-400 transition-colors">
               How it works
@@ -198,6 +208,19 @@ export default function Home() {
             </p>
           </div>
         </section>
+        {/* LIVE ACTIVITY FEED */}
+        <section className="space-y-4">
+          <div className="text-center space-y-2">
+            <h2 className="text-2xl font-semibold tracking-tight">
+              See what's happening right now
+            </h2>
+            <p className="text-sm text-slate-400">
+              Real creators making moves on LitLabs OS
+            </p>
+          </div>
+          <LiveActivityFeed />
+        </section>
+
 
         {/* FEATURES */}
         <section id="features" className="space-y-4">
@@ -289,6 +312,87 @@ export default function Home() {
             ✨ All plans include a 14-day free trial. No contracts. Cancel
             anytime.
           </p>
+        </section>
+
+        {/* SOCIAL PROOF STATS */}
+        <section className="rounded-3xl border border-emerald-500/50 bg-gradient-to-br from-emerald-900/20 via-purple-900/20 to-pink-900/20 p-8 text-center space-y-6">
+          <h2 className="text-2xl font-semibold tracking-tight">
+            Join Thousands of Creators Earning Daily
+          </h2>
+          <div className="grid gap-6 md:grid-cols-4 text-center">
+            <div className="space-y-1 hover:scale-110 transition-transform">
+              <p className="text-4xl font-bold text-emerald-400">12,450+</p>
+              <p className="text-xs text-slate-400">Active Creators</p>
+            </div>
+            <div className="space-y-1 hover:scale-110 transition-transform">
+              <p className="text-4xl font-bold text-purple-400">$2.4M+</p>
+              <p className="text-xs text-slate-400">Earned This Month</p>
+            </div>
+            <div className="space-y-1 hover:scale-110 transition-transform">
+              <p className="text-4xl font-bold text-cyan-400">890K+</p>
+              <p className="text-xs text-slate-400">Content Generated</p>
+            </div>
+            <div className="space-y-1 hover:scale-110 transition-transform">
+              <p className="text-4xl font-bold text-pink-400">4.9★</p>
+              <p className="text-xs text-slate-400">Average Rating</p>
+            </div>
+          </div>
+          <div className="flex flex-wrap justify-center gap-3 pt-4">
+            <a href="/leaderboard" className="text-xs text-emerald-400 hover:text-emerald-300 underline">
+              View Leaderboard →
+            </a>
+            <a href="/earn" className="text-xs text-purple-400 hover:text-purple-300 underline">
+              Start Earning →
+            </a>
+          </div>
+        </section>
+
+        {/* TESTIMONIALS */}
+        <section className="space-y-4">
+          <h2 className="text-2xl font-semibold tracking-tight text-center">
+            Real Results from Real Creators
+          </h2>
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 space-y-3 hover:border-emerald-500/50 transition-all">
+              <div className="flex items-center gap-2">
+                <div className="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center text-xl">👑</div>
+                <div>
+                  <p className="text-sm font-semibold">Sarah Chen</p>
+                  <p className="text-xs text-slate-400">Nail Tech, LA</p>
+                </div>
+              </div>
+              <p className="text-sm text-slate-300">
+                "Went from 2 clients/day to fully booked in 3 weeks. The DM bot handles everything while I focus on art."
+              </p>
+              <p className="text-xs text-emerald-400 font-semibold">+$4,200/month</p>
+            </div>
+            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 space-y-3 hover:border-purple-500/50 transition-all">
+              <div className="flex items-center gap-2">
+                <div className="w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center text-xl">💈</div>
+                <div>
+                  <p className="text-sm font-semibold">Marcus Johnson</p>
+                  <p className="text-xs text-slate-400">Barber, Atlanta</p>
+                </div>
+              </div>
+              <p className="text-sm text-slate-300">
+                "The content engine saved me 10 hours/week. Now I just post and stack bread. Game changer."
+              </p>
+              <p className="text-xs text-purple-400 font-semibold">+$6,890/month</p>
+            </div>
+            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 space-y-3 hover:border-cyan-500/50 transition-all">
+              <div className="flex items-center gap-2">
+                <div className="w-10 h-10 rounded-full bg-cyan-500 flex items-center justify-center text-xl">✨</div>
+                <div>
+                  <p className="text-sm font-semibold">Priya Patel</p>
+                  <p className="text-xs text-slate-400">Lash Artist, Miami</p>
+                </div>
+              </div>
+              <p className="text-sm text-slate-300">
+                "My station page brings in referrals on autopilot. I'm making money in my sleep now."
+              </p>
+              <p className="text-xs text-cyan-400 font-semibold">+$8,350/month</p>
+            </div>
+          </div>
         </section>
 
         {/* HOW IT WORKS */}

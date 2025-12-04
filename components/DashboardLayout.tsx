@@ -11,6 +11,7 @@ const navItems = [
   { href: "/dashboard", label: "Home", icon: "🏠" },
   { href: "/dashboard/onboarding", label: "Onboarding", icon: "🧩" },
   { href: "/dashboard/profile", label: "Profile", icon: "👤" },
+    { href: "/dashboard/station", label: "My Station", icon: "🎯" },
   { href: "/dashboard/billing", label: "Billing", icon: "💳" },
   { href: "/dashboard/stats", label: "Stats", icon: "📊" },
 ];

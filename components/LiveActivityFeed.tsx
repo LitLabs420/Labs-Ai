@@ -89,3 +89,5 @@ export function LiveActivityFeed() {
     </div>
   );
 }
+
+export default LiveActivityFeed;
