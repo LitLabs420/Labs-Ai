@@ -44,14 +44,14 @@ export function validateInput<T>(schema: z.ZodSchema<T>, data: unknown): T {
     return schema.parse(data);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new ValidationError(error.errors);
+      throw new ValidationError(error.issues);
     }
     throw error;
   }
 }
 
 export class ValidationError extends Error {
-  constructor(public errors: z.ZodError['errors']) {
+  constructor(public errors: z.ZodIssue[]) {
     super('Validation failed');
     this.name = 'ValidationError';
   }

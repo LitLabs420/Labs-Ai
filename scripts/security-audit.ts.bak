@@ -9,32 +9,34 @@ import fs from 'fs';
 import path from 'path';
 import { execSync } from 'child_process';
 
-const CHECKS = {
+const CHECKS: Record<string, string> = {
   PASSED: '✓',
   FAILED: '✗',
   WARNING: '⚠',
 };
 
-const results = [];
+type AuditResult = { check: string; status: string; message: string };
+const results: AuditResult[] = [];
 
-function log(check, status, message) {
+function log(check: string, status: string, message: string): void {
   results.push({ check, status, message });
-  console.log(`${CHECKS[status]} ${check}: ${message}`);
+  console.log(${CHECKS[status]} : );
 }
 
-function runCheck(name, fn) {
+function runCheck(name: string, fn: () => void): void {
   try {
-    console.log(`\n🔍 ${name}`);
+    console.log(\n🔍 );
     fn();
   } catch (error) {
-    log(name, 'FAILED', error.message);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    log(name, 'FAILED', errorMsg);
   }
 }
 
 // Check 1: No .env file in git
 runCheck('Check: .env not in version control', () => {
   try {
-    execSync('git ls-files | grep -E "^\\.env$"', { stdio: 'pipe' });
+    execSync('git ls-files | grep -E "^\\.env\$"', { stdio: 'pipe' });
     log('ENV_IN_GIT', 'FAILED', '.env file found in git');
   } catch {
     log('ENV_IN_GIT', 'PASSED', '.env is properly ignored');
@@ -47,7 +49,7 @@ runCheck('Check: npm dependencies secure', () => {
   try {
     const audit = JSON.parse(output);
     if (audit.metadata?.vulnerabilities?.total > 0) {
-      log('NPM_AUDIT', 'FAILED', `${audit.metadata.vulnerabilities.total} vulnerabilities found`);
+      log('NPM_AUDIT', 'FAILED', \ vulnerabilities found);
     } else {
       log('NPM_AUDIT', 'PASSED', 'No vulnerabilities found');
     }
@@ -65,7 +67,7 @@ runCheck('Check: Security headers configured', () => {
   }
 
   const content = fs.readFileSync(configPath, 'utf8');
-  const hasHeaders = content.includes('X-Content-Type-Options') && 
+  const hasHeaders = content.includes('X-Content-Type-Options') &&
                      content.includes('X-Frame-Options') &&
                      content.includes('Strict-Transport-Security');
 
@@ -86,7 +88,7 @@ runCheck('Check: Security middleware installed', () => {
 
   const missing = files.filter(f => !fs.existsSync(path.join(process.cwd(), f)));
   if (missing.length > 0) {
-    log('MIDDLEWARE', 'WARNING', `Missing files: ${missing.join(', ')}`);
+    log('MIDDLEWARE', 'WARNING', Missing files: \);
   } else {
     log('MIDDLEWARE', 'PASSED', 'All security middleware present');
   }
@@ -119,19 +121,19 @@ const passed = results.filter(r => r.status === 'PASSED').length;
 const failed = results.filter(r => r.status === 'FAILED').length;
 const warnings = results.filter(r => r.status === 'WARNING').length;
 
-console.log(`\n✓ Passed: ${passed}`);
-console.log(`✗ Failed: ${failed}`);
-console.log(`⚠ Warnings: ${warnings}`);
+console.log(\nPassed: \);
+console.log(Failed: \);
+console.log(Warnings: \);
 
 if (failed > 0) {
-  console.log('\n🚨 Security audit FAILED - please fix the issues above');
+  console.log('\nSecurity audit FAILED - please fix the issues above');
   process.exit(1);
 }
 
 if (warnings > 0) {
-  console.log('\n⚠️  Security audit passed with warnings');
+  console.log('\nSecurity audit passed with warnings');
   process.exit(0);
 }
 
-console.log('\n✅ Security audit PASSED');
+console.log('\nSecurity audit PASSED');
 process.exit(0);
