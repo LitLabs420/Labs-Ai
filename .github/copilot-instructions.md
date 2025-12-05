@@ -16,6 +16,72 @@ LitLabs (Labs-Ai) is a Next.js-based AI-powered platform for content creators, b
 - **Analytics**: Vercel Analytics
 - **Deployment**: Vercel
 
+## Project Directory Structure
+
+```
+Labs-Ai/
+├── .github/                    # GitHub configuration
+│   ├── copilot-instructions.md # Copilot instructions (this file)
+│   ├── agents/                 # Custom agent definitions
+│   └── workflows/              # GitHub Actions workflows
+├── app/                        # Next.js App Router pages
+│   ├── api/                    # API routes
+│   ├── auth/                   # Authentication pages
+│   ├── billing/                # Billing and subscription pages
+│   ├── dashboard/              # Dashboard pages
+│   └── [other routes]/         # Other application routes
+├── components/                 # React components
+│   ├── ui/                     # Reusable UI components
+│   └── dashboard/              # Dashboard-specific components
+├── context/                    # React Context providers
+├── lib/                        # Utility functions and integrations
+│   ├── firebase*.ts            # Firebase client/admin/server
+│   ├── stripe.ts               # Stripe integration
+│   ├── ai.ts                   # AI generation
+│   ├── guardian-bot.ts         # Security analysis
+│   ├── rateLimiter.ts          # Rate limiting
+│   └── [other utils]           # Other utilities
+├── types/                      # TypeScript type definitions
+├── public/                     # Static assets
+├── scripts/                    # Build and deployment scripts
+└── android-app/                # Android application (separate)
+```
+
+## Getting Started
+
+### Prerequisites
+- Node.js 18+ and npm
+- Firebase project with Firestore, Authentication enabled
+- Stripe account for payments
+- Google AI API key for content generation
+
+### Local Development Setup
+1. Clone the repository
+2. Copy `.env.example` to `.env.local`
+3. Fill in required environment variables (see `ENVIRONMENT_SETUP.md`)
+4. Run `npm install` to install dependencies
+5. Run `npm run dev` to start the development server
+6. Open http://localhost:3000 in your browser
+
+## Git Workflow
+
+### Branch Naming Conventions
+- **Features**: `feature/<description>` or `feat/<description>`
+- **Bug fixes**: `fix/<description>` or `bugfix/<description>`
+- **Hotfixes**: `hotfix/<description>`
+- **Refactoring**: `refactor/<description>`
+- **Documentation**: `docs/<description>`
+- **Copilot work**: `copilot/<description>` (for Copilot agent branches)
+
+### Pull Request Process
+1. Create a branch following the naming convention above
+2. Make your changes with clear, focused commits
+3. Run `npm run lint` to check for linting errors
+4. Run `npm run build` to ensure the project builds successfully
+5. Open a PR with a clear description of changes
+6. Address review feedback if any
+7. Merge after approval (requires maintainer review)
+
 ## Coding Standards
 
 ### TypeScript
@@ -167,6 +233,14 @@ npm run lint         # Run ESLint
 - **Firebase setup**: Requires Firebase project configuration
 - **Stripe setup**: Requires Stripe API keys for billing features
 
+### Code Quality Expectations
+- **All code must build**: Run `npm run build` and fix any errors before committing
+- **Lint-free code**: Run `npm run lint` and address all warnings
+- **Type safety**: Fix all TypeScript errors, no `@ts-ignore` without justification
+- **Manual testing**: Test your changes in the browser before submitting
+- **Security review**: Ensure all security practices are followed
+- **Documentation**: Update relevant docs if you change functionality
+
 ## Key Areas Requiring Extra Attention
 
 ### 1. Rate Limiting (`lib/rateLimiter.ts`)
@@ -290,6 +364,31 @@ When assigned tasks:
 4. **Test thoroughly**: Manual testing is required (no automated tests yet)
 5. **Update documentation**: Keep documentation in sync with code changes
 6. **Respect the architecture**: Follow the established patterns and conventions
+
+## GitHub Copilot Agent Guidelines
+
+When working on tasks via GitHub Copilot:
+
+### Issue Assignment
+- Issues can be assigned to `@copilot` on GitHub.com
+- Copilot creates a branch (prefixed with `copilot/`) and opens a PR
+- Review Copilot's PRs like any peer developer's work
+
+### Best Results with Copilot
+- **Well-scoped issues**: Provide clear descriptions, acceptance criteria, and specific file/feature references
+- **Iterative feedback**: Comment on PRs with `@copilot` mentions for refinements
+- **Start small**: Begin with bug fixes, documentation, or refactoring tasks
+- **Security first**: All security practices in this document apply to Copilot-generated code
+
+### CI/CD Integration
+- All Copilot PRs run through standard CI/CD workflows
+- Build and lint checks must pass before merge
+- Human approval required for all automated workflows
+
+### Custom Agents
+- Custom agents can be defined in `.github/agents/` directory
+- Use `.agent.md` extension for agent definitions
+- Agents provide specialized guidance for specific tasks or domains
 
 ## Questions or Clarifications?
 
