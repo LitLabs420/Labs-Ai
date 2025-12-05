@@ -20,7 +20,11 @@ export default defineConfig([
     },
     rules: {
       // Keep rules light; catch obvious issues
-      "@typescript-eslint/no-unused-vars": "warn",
+      "@typescript-eslint/no-unused-vars": ["warn", { 
+        "argsIgnorePattern": "^_", 
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }],
       "no-undef": "off", // TS handles types
     },
   },

@@ -5,7 +5,7 @@ import DashboardLayout from '@/components/DashboardLayout';
 import { useAuth } from '@/context/AuthContext';
 
 export default function WhatsAppPage() {
-  const { user } = useAuth();
+  const { user: _user } = useAuth();
   const [phoneNumber, setPhoneNumber] = useState('');
   const [businessHours, setBusinessHours] = useState({
     monday: { open: '09:00', close: '18:00', closed: false },
@@ -17,7 +17,7 @@ export default function WhatsAppPage() {
     sunday: { open: '09:00', close: '18:00', closed: true },
   });
   const [autoReplyEnabled, setAutoReplyEnabled] = useState(true);
-  const [messages, setMessages] = useState([
+  const [messages, _setMessages] = useState([
     { from: '+1234567890', body: 'Hey! What time are you open today?', timestamp: new Date(), reply: 'I\'m open today until 6:00 PM! Want to book?' },
     { from: '+1987654321', body: 'How much for a haircut?', timestamp: new Date(), reply: 'Haircuts are $35! Want to book an appointment?' },
   ]);

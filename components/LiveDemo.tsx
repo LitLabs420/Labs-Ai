@@ -33,7 +33,7 @@ export default function LiveDemo() {
         if (w.grecaptcha && w.grecaptcha.execute) {
           try {
             recaptchaToken = await w.grecaptcha.execute(siteKey, { action: 'demo' });
-          } catch (e) {
+          } catch (_e) {
             // ignore recaptcha failures here; server will reject if required
           }
         }
@@ -63,7 +63,7 @@ export default function LiveDemo() {
       } else {
         setReply(data.reply);
       }
-    } catch (err) {
+    } catch (_err) {
       setError("Network error");
     } finally {
       setLoading(false);

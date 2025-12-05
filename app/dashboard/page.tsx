@@ -24,7 +24,7 @@ type Stats = {
 
 export default function DashboardPage() {
   const router = useRouter();
-  const [displayName, setDisplayName] = useState('');
+  const [_displayName, setDisplayName] = useState('');
   const [stats, setStats] = useState<Stats>({
     postsThisMonth: 0,
     totalClients: 0,

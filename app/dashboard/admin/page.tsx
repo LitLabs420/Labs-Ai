@@ -7,8 +7,8 @@ import Link from "next/link";
 
 export default function AdminPanel() {
   const { isAdmin, loading } = useAuth();
-  const router = useRouter();
-  const [mounted] = useState(true);
+  const _router = useRouter();
+  const [_mounted] = useState(true);
 
   if (loading) {
     return (

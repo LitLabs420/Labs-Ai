@@ -26,7 +26,7 @@ export function MoneyTodayCard() {
     }
   };
 
-  const copyToClipboard = (text: string, type: string) => {
+  const copyToClipboard = (text: string, _type: string) => {
     navigator.clipboard.writeText(text);
     // Brief success feedback
     const el = document.activeElement as HTMLElement;

@@ -5,8 +5,17 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 import Stripe from 'stripe';
 
-// Initialize Stripe client (use account default API version)
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+// Lazy initialize Stripe client (use account default API version)
+let stripe: Stripe | null = null;
+function getStripe(): Stripe {
+  if (!stripe) {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error('STRIPE_SECRET_KEY is not set');
+    }
+    stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+  }
+  return stripe;
+}
 
 /**
  * STRIPE WEBHOOK HANDLER
@@ -27,7 +36,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify webhook signature
-    const event = stripe.webhooks.constructEvent(
+    const event = getStripe().webhooks.constructEvent(
       body,
       sig,
       process.env.STRIPE_WEBHOOK_SECRET

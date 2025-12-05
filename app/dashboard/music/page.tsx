@@ -19,7 +19,7 @@ interface MusicTrack {
 }
 
 export default function MusicPage() {
-  const { user } = useAuth();
+  const { user: _user } = useAuth();
   const [activeTab, setActiveTab] = useState<'recommend' | 'trending' | 'library'>('recommend');
   const [isLoading, setIsLoading] = useState(false);
   const [recommendations, setRecommendations] = useState<MusicTrack[]>([]);

@@ -146,7 +146,7 @@ async function handleHoursRequest(message: WhatsAppMessage): Promise<WhatsAppRes
  */
 async function handlePricingRequest(
   message: WhatsAppMessage,
-  userId: string
+  _userId: string
 ): Promise<WhatsAppResponse> {
   // TODO: Fetch actual pricing from Firestore user settings
   const defaultPricing = [
@@ -296,8 +296,8 @@ export async function sendWhatsAppMessage(
  * Verify WhatsApp webhook signature
  */
 export function verifyWhatsAppWebhook(
-  payload: string,
-  signature: string
+  _payload: string,
+  _signature: string
 ): boolean {
   const WEBHOOK_SECRET = process.env.WHATSAPP_WEBHOOK_SECRET;
   
@@ -343,7 +343,7 @@ export function parseWhatsAppWebhook(body: any): WhatsAppMessage | null {
 /**
  * Check if user has WhatsApp add-on subscription
  */
-export async function hasWhatsAppSubscription(userId: string): Promise<boolean> {
+export async function hasWhatsAppSubscription(_userId: string): Promise<boolean> {
   // TODO: Check user's subscription in Firestore
   // For now, return true for testing
   return true;

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { handleWhatsAppMessage, sendWhatsAppMessage, verifyWhatsAppWebhook, parseWhatsAppWebhook } from '@/lib/whatsapp-bot';
+import { handleWhatsAppMessage, sendWhatsAppMessage, parseWhatsAppWebhook } from '@/lib/whatsapp-bot';
 
 export async function GET(request: NextRequest) {
   // WhatsApp webhook verification
@@ -23,8 +23,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     
     // Verify webhook signature (optional but recommended)
-    const signature = request.headers.get('x-hub-signature-256') || '';
-    const payload = JSON.stringify(body);
+    const _signature = request.headers.get('x-hub-signature-256') || '';
+    const _payload = JSON.stringify(body);
     
     // Parse incoming message
     const message = parseWhatsAppWebhook(body);

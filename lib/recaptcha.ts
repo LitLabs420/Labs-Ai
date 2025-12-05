@@ -11,7 +11,7 @@ export async function verifyRecaptcha(token?: string): Promise<{ ok: boolean; sc
     const data = await res.json();
     if (!data.success) return { ok: false, error: 'recaptcha-failed' };
     return { ok: true, score: data.score };
-  } catch (e) {
+  } catch (_e) {
     return { ok: false, error: 'recaptcha-error' };
   }
 }

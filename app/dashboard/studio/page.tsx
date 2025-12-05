@@ -6,7 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { getBotTemplates } from '@/lib/bot-builder';
 
 export default function StudioPage() {
-  const { user } = useAuth();
+  const { user: _user } = useAuth();
   const [activeTab, setActiveTab] = useState<'builder' | 'code' | 'test' | 'deploy'>('builder');
   const [botName, setBotName] = useState('');
   const [botDescription, setBotDescription] = useState('');
