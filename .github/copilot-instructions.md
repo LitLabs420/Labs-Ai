@@ -1,5 +1,11 @@
 # GitHub Copilot Instructions for LitLabs AI
 
+> **Purpose**: This file provides comprehensive guidelines for GitHub Copilot coding agents and developers contributing to the LitLabs AI project. It covers development standards, security requirements, architectural patterns, and workflow conventions.
+>
+> **For Contributors**: If you're a human developer, also see [CONTRIBUTING.md](../CONTRIBUTING.md) for contribution guidelines.
+>
+> **For Copilot**: These instructions apply to all code you generate. Follow them strictly to maintain code quality, security, and consistency.
+
 ## Project Overview
 
 LitLabs (Labs-Ai) is a Next.js-based AI-powered platform for content creators, beauty professionals, and small businesses to generate content, manage clients, and monetize their services. The platform integrates with Firebase, Stripe, Google AI, and various third-party services.

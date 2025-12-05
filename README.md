@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LitLabs AI
 
-## Getting Started
+LitLabs AI is an AI-powered platform for content creators, beauty professionals, and small businesses to generate content, manage clients, and monetize their services.
 
-First, run the development server:
+This is a [Next.js](https://nextjs.org) project built with TypeScript, Firebase, Stripe, and Google Generative AI.
+
+## Quick Start
 
 ```bash
+# Install dependencies
+npm install
+
+# Copy environment variables
+cp .env.example .env.local
+# Fill in your environment variables (see ENVIRONMENT_SETUP.md)
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Documentation
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **[README_LITLABS.md](README_LITLABS.md)** - Detailed project documentation
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Contribution guidelines
+- **[.github/copilot-instructions.md](.github/copilot-instructions.md)** - Comprehensive development guidelines
+- **[ENVIRONMENT_SETUP.md](ENVIRONMENT_SETUP.md)** - Environment setup guide
+- **[SECURITY.md](SECURITY.md)** - Security policies
+- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Common issues and solutions
 
-## Learn More
+## Development
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run start        # Start production server
+npm run lint         # Run ESLint
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Tech Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Framework**: Next.js 16+ (App Router)
+- **Language**: TypeScript 5.9.3
+- **Styling**: Tailwind CSS 4
+- **Backend**: Firebase (Firestore, Authentication)
+- **AI**: Google Generative AI
+- **Payments**: Stripe
+- **Deployment**: Vercel
 
-## Deploy on Vercel
+## Contributing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+We welcome contributions! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+For detailed development standards and patterns, see [.github/copilot-instructions.md](.github/copilot-instructions.md).
+
+## Working with GitHub Copilot
+
+This repository is configured to work with GitHub Copilot coding agents:
+
+- Assign issues to `@copilot` on GitHub.com
+- Copilot will automatically create a branch and open a PR
+- See [.github/copilot-instructions.md](.github/copilot-instructions.md) for detailed guidelines
+
+## License
+
+See LICENSE file for details.
