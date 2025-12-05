@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { action, botId, config, code, query, templateId } = body;
+    const { action, botId, config, code, templateId } = body;
 
     switch (action) {
       case 'create':
