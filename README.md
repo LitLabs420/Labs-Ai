@@ -12,11 +12,12 @@ npm install
 
 # Copy environment variables
 cp .env.example .env.local
-# Fill in your environment variables (see ENVIRONMENT_SETUP.md)
 
 # Run development server
 npm run dev
 ```
+
+**Note**: Fill in your environment variables in `.env.local`. See [ENVIRONMENT_SETUP.md](ENVIRONMENT_SETUP.md) for details.
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
