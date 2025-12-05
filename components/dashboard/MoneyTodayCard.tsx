@@ -26,7 +26,7 @@ export function MoneyTodayCard() {
     }
   };
 
-  const copyToClipboard = (text: string, type: string) => {
+  const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
     // Brief success feedback
     const el = document.activeElement as HTMLElement;
@@ -149,7 +149,7 @@ export function MoneyTodayCard() {
                           </p>
                           <button
                             onClick={() =>
-                              copyToClipboard(action.scripts.postCaption, "caption")
+                              copyToClipboard(action.scripts.postCaption)
                             }
                             className="absolute top-2 right-2 rounded bg-[#00d4ff]/10 px-2 py-1 text-xs text-[#00d4ff] opacity-0 transition-opacity group-hover:opacity-100"
                           >
@@ -169,7 +169,7 @@ export function MoneyTodayCard() {
                           </p>
                           <button
                             onClick={() =>
-                              copyToClipboard(action.scripts.dmText, "dm")
+                              copyToClipboard(action.scripts.dmText)
                             }
                             className="absolute top-2 right-2 rounded bg-[#00d4ff]/10 px-2 py-1 text-xs text-[#00d4ff] opacity-0 transition-opacity group-hover:opacity-100"
                           >
@@ -189,7 +189,7 @@ export function MoneyTodayCard() {
                           </p>
                           <button
                             onClick={() =>
-                              copyToClipboard(action.scripts.storyScript, "story")
+                              copyToClipboard(action.scripts.storyScript)
                             }
                             className="absolute top-2 right-2 rounded bg-[#00d4ff]/10 px-2 py-1 text-xs text-[#00d4ff] opacity-0 transition-opacity group-hover:opacity-100"
                           >

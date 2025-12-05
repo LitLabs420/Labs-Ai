@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { generateContent, GenerateContentRequest } from "@/lib/ai";
+import { generateContent } from "@/lib/ai";
 import rateLimiter from '@/lib/rateLimiter';
 import { verifyRecaptcha } from '@/lib/recaptcha';
 import { captureError } from '@/lib/sentry';

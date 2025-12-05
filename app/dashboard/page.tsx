@@ -24,7 +24,6 @@ type Stats = {
 
 export default function DashboardPage() {
   const router = useRouter();
-  const [displayName, setDisplayName] = useState('');
   const [stats, setStats] = useState<Stats>({
     postsThisMonth: 0,
     totalClients: 0,
@@ -53,7 +52,6 @@ export default function DashboardPage() {
       }
 
       console.log("User authenticated:", user.email);
-      setDisplayName(user.displayName || user.email?.split('@')[0] || 'Creator');
       trackEvent('dashboard_view', { uid: user.uid });
 
       const userDoc = await getDoc(doc(dbInstance, 'users', user.uid));

@@ -295,9 +295,7 @@ export async function searchSpotifyTracks(
 /**
  * Get trending music for a platform
  */
-export async function getTrendingMusic(
-  platform: 'tiktok' | 'instagram' | 'youtube'
-): Promise<TikTokSafeTrack[]> {
+export async function getTrendingMusic(): Promise<TikTokSafeTrack[]> {
   // Return trending tracks from our library
   const tracks = [...TIKTOK_SAFE_LIBRARY];
   
@@ -347,7 +345,7 @@ function getFallbackRecommendations(params: MusicSearchParams): MusicRecommendat
 /**
  * Check if user has music add-on subscription
  */
-export async function hasMusicSubscription(userId: string): Promise<boolean> {
+export async function hasMusicSubscription(): Promise<boolean> {
   // TODO: Check user's subscription in Firestore
   // For now, return true for testing
   return true;

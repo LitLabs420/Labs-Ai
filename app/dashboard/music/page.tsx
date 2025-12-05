@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import DashboardLayout from '@/components/DashboardLayout';
-import { useAuth } from '@/context/AuthContext';
 
 interface MusicTrack {
   trackName: string;
@@ -19,7 +18,6 @@ interface MusicTrack {
 }
 
 export default function MusicPage() {
-  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<'recommend' | 'trending' | 'library'>('recommend');
   const [isLoading, setIsLoading] = useState(false);
   const [recommendations, setRecommendations] = useState<MusicTrack[]>([]);

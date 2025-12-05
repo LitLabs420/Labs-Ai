@@ -6,7 +6,6 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import DashboardLayout from '@/components/DashboardLayout';
-import Link from 'next/link';
 
 export default function BillingPage() {
   const router = useRouter();
