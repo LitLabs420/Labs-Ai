@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAdminDb } from "@/lib/firebase-admin";
+import { requireAdmin } from "@/lib/auth-helper";
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -14,8 +15,14 @@ type UserRecord = {
   [key: string]: string | undefined;
 };
 
-// GET - List all users
-export async function GET() {
+// GET - List all users (Admin only)
+export async function GET(req: NextRequest) {
+  // Require admin authentication
+  const adminUser = await requireAdmin(req);
+  if (adminUser instanceof Response) {
+    return adminUser; // Return unauthorized/forbidden response
+  }
+
   try {
     const dbRef = getAdminDb();
     if (!dbRef) {
@@ -41,8 +48,14 @@ export async function GET() {
   }
 }
 
-// POST - Update user (ban, tier, etc)
+// POST - Update user (ban, tier, etc) (Admin only)
 export async function POST(req: NextRequest) {
+  // Require admin authentication
+  const adminUser = await requireAdmin(req);
+  if (adminUser instanceof Response) {
+    return adminUser; // Return unauthorized/forbidden response
+  }
+
   try {
     const { uid, action, tier, reason } = await req.json();
 
