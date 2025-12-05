@@ -236,7 +236,7 @@ const templates: Record<string, EmailTemplate> = {
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId, email, type, delay } = await request.json();
+    const { userId, email, type } = await request.json();
 
     if (!userId || !email) {
       return NextResponse.json({ error: 'Missing userId or email' }, { status: 400 });

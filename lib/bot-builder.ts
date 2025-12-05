@@ -177,7 +177,7 @@ export async function deployBot(
 /**
  * Test bot with sample query
  */
-export async function testBot(botId: string, query: string): Promise<string> {
+export async function testBot(): Promise<string> {
   // TODO: Load bot config and call AI model
   
   const sampleResponses = [
@@ -202,7 +202,7 @@ export async function publishToMarketplace(botId: string): Promise<boolean> {
 /**
  * Get bot analytics
  */
-export async function getBotAnalytics(botId: string): Promise<BotConfig['analytics']> {
+export async function getBotAnalytics(): Promise<BotConfig['analytics']> {
   // TODO: Fetch from Firestore
   return {
     totalConversations: 245,

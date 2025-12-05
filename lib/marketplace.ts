@@ -144,7 +144,7 @@ export async function purchaseTemplate(
 
     // Calculate earnings
     const sellerEarnings = Math.floor(template.price * (1 - template.commission));
-    const platformFee = template.price - sellerEarnings;
+    template.price - sellerEarnings;
 
     // Create purchase record
     const purchase: Omit<TemplatePurchase, 'id'> = {

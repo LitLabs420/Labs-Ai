@@ -56,7 +56,7 @@ export async function handleWhatsAppMessage(
 
   // Check for pricing
   if (lowerBody.includes('price') || lowerBody.includes('cost') || lowerBody.includes('how much')) {
-    return handlePricingRequest(message, userId);
+    return handlePricingRequest(message);
   }
 
   // Use SPARK bot for general inquiries
@@ -145,8 +145,7 @@ async function handleHoursRequest(message: WhatsAppMessage): Promise<WhatsAppRes
  * Handle pricing requests
  */
 async function handlePricingRequest(
-  message: WhatsAppMessage,
-  userId: string
+  message: WhatsAppMessage
 ): Promise<WhatsAppResponse> {
   // TODO: Fetch actual pricing from Firestore user settings
   const defaultPricing = [
@@ -295,10 +294,7 @@ export async function sendWhatsAppMessage(
 /**
  * Verify WhatsApp webhook signature
  */
-export function verifyWhatsAppWebhook(
-  payload: string,
-  signature: string
-): boolean {
+export function verifyWhatsAppWebhook(): boolean {
   const WEBHOOK_SECRET = process.env.WHATSAPP_WEBHOOK_SECRET;
   
   if (!WEBHOOK_SECRET) {
@@ -343,7 +339,7 @@ export function parseWhatsAppWebhook(body: any): WhatsAppMessage | null {
 /**
  * Check if user has WhatsApp add-on subscription
  */
-export async function hasWhatsAppSubscription(userId: string): Promise<boolean> {
+export async function hasWhatsAppSubscription(): Promise<boolean> {
   // TODO: Check user's subscription in Firestore
   // For now, return true for testing
   return true;

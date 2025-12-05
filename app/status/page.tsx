@@ -44,7 +44,7 @@ export default function StatusPage() {
             : s
         ));
       }
-    } catch (err) {
+    } catch {
       setServices(prev => prev.map(s => 
         s.name === 'API Health' 
           ? { ...s, status: 'outage', lastChecked: new Date().toISOString() }

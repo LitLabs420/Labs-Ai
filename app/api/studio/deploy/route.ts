@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
 
       case 'test':
         // Test bot with sample query
-        const response = await testBot(botId, query);
+        const response = await testBot();
         return NextResponse.json({ success: true, response });
 
       case 'publish':
