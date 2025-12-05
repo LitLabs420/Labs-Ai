@@ -38,7 +38,7 @@ When reviewing code, check for:
 - ✅ Naming conventions followed:
   - Components: PascalCase
   - Functions: camelCase
-  - Constants: UPPER_SNAKE_CASE (for true constants)
+  - Constants: UPPER_SNAKE_CASE (for compile-time constants like config values, e.g., `MAX_RETRIES`, `API_TIMEOUT`)
   - Files: kebab-case for utilities, PascalCase for components
 - ✅ Named exports for utilities, default exports for pages
 - ✅ Consistent import ordering
