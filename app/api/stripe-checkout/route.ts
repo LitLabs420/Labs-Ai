@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Stripe } from 'stripe';
 import { getUserFromRequest } from '@/lib/auth-helper';
+import { getBaseUrl } from '@/lib/url-helper';
 import { z } from 'zod';
 
 export const runtime = 'nodejs';
@@ -58,7 +59,7 @@ export async function POST(request: NextRequest) {
 
     // Create checkout session
     // SECURITY: Never use client-provided URLs to prevent open redirect attacks
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const baseUrl = getBaseUrl();
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       payment_method_types: ['card'],

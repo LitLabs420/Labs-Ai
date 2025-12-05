@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAdminDb } from '@/lib/firebase-admin';
 import { info, error } from '@/lib/serverLogger';
 import { z } from 'zod';
+import * as crypto from 'crypto';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -55,7 +56,6 @@ export async function POST(request: NextRequest) {
     }
     
     // Timing-safe comparison
-    const crypto = require('crypto');
     if (!crypto.timingSafeEqual(receivedBuffer, expectedBuffer)) {
       error('❌ Unauthorized subscription-update attempt - webhook verification failed');
       return NextResponse.json(
@@ -75,7 +75,8 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    const { userId, email, tier, paymentMethod, transactionId, amount, status } = validation.data;
+    // Use validated data directly
+    const data = validation.data;
 
     // Update user tier
     const dbRef = getAdminDb();
@@ -84,11 +85,11 @@ export async function POST(request: NextRequest) {
     }
     await dbRef
       .collection('users')
-      .doc(userId)
+      .doc(data.userId)
       .update({
-        tier,
+        tier: data.tier,
         subscription: {
-          plan: tier,
+          plan: data.tier,
           status: 'active',
           startDate: new Date().toISOString(),
           autoRenew: true,
@@ -98,32 +99,32 @@ export async function POST(request: NextRequest) {
 
     // Record transaction
     await dbRef.collection('transactions').add({
-      userId,
-      email,
-      tier,
-      amount,
-      paymentMethod,
-      transactionId,
-      status: status || 'completed',
+      userId: data.userId,
+      email: data.email,
+      tier: data.tier,
+      amount: data.amount,
+      paymentMethod: data.paymentMethod,
+      transactionId: data.transactionId,
+      status: data.status || 'completed',
       createdAt: new Date(),
       type: 'subscription_upgrade',
     });
 
     // Log activity
     await dbRef.collection('activity_log').add({
-      userId,
-      action: `upgraded_to_${tier}`,
-      details: { paymentMethod, amount },
+      userId: data.userId,
+      action: `upgraded_to_${data.tier}`,
+      details: { paymentMethod: data.paymentMethod, amount: data.amount },
       timestamp: new Date(),
     });
 
-    info(`✅ Subscription updated: ${email} → ${tier}`);
+    info(`✅ Subscription updated: ${data.email} → ${data.tier}`);
 
     return NextResponse.json(
       {
         success: true,
-        message: `Subscription updated to ${tier}`,
-        user: { userId, email, tier },
+        message: `Subscription updated to ${data.tier}`,
+        user: { userId: data.userId, email: data.email, tier: data.tier },
       },
       { status: 200 }
     );

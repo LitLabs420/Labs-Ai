@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createCheckoutSession, createStripeCustomer, STRIPE_PRODUCTS } from "@/lib/stripe";
 import { getAdminDb } from "@/lib/firebase-admin";
 import { getUserFromRequest } from "@/lib/auth-helper";
+import { getBaseUrl } from "@/lib/url-helper";
 import { z } from "zod";
 
 export const runtime = 'nodejs';
@@ -70,7 +71,7 @@ export async function POST(req: NextRequest) {
 
     // Create checkout session
     // SECURITY: Never use client-provided URLs to prevent open redirect attacks
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const baseUrl = getBaseUrl();
     const trialDays = tier === "pro" ? 14 : undefined;
     const session = await createCheckoutSession(
       stripeCustomerId,

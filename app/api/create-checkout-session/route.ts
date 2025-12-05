@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
 import { getUserFromRequest } from "@/lib/auth-helper";
+import { getBaseUrl } from "@/lib/url-helper";
 import { z } from "zod";
 
 export const runtime = 'nodejs';
@@ -53,7 +54,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const origin = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const origin = getBaseUrl();
     const stripe = getStripe();
 
     const session = await stripe.checkout.sessions.create({
@@ -69,7 +70,7 @@ export async function POST(req: NextRequest) {
       cancel_url: `${origin}/dashboard/billing?canceled=true`,
       billing_address_collection: "auto",
       client_reference_id: user.uid, // Link session to authenticated user
-      customer_email: user.email, // Use authenticated user's email
+      customer_email: user.email || undefined, // Use authenticated user's email with null check
     });
 
     if (!session.url) {
