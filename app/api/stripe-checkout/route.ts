@@ -8,8 +8,6 @@ export const dynamic = 'force-dynamic';
 
 const checkoutSchema = z.object({
   priceId: z.string().min(1),
-  successUrl: z.string().url().optional(),
-  cancelUrl: z.string().url().optional(),
 });
 
 export async function POST(request: NextRequest) {
@@ -46,7 +44,7 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    const { priceId, successUrl, cancelUrl } = validation.data;
+    const { priceId } = validation.data;
     const email = user.email || "";
 
     // Create or get customer
@@ -59,13 +57,15 @@ export async function POST(request: NextRequest) {
     }
 
     // Create checkout session
+    // SECURITY: Never use client-provided URLs to prevent open redirect attacks
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       payment_method_types: ['card'],
       line_items: [{ price: priceId, quantity: 1 }],
       mode: 'subscription',
-      success_url: successUrl || `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/billing?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: cancelUrl || `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/billing`,
+      success_url: `${baseUrl}/dashboard/billing?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${baseUrl}/dashboard/billing`,
       client_reference_id: user.uid, // Link session to authenticated user
     });
 

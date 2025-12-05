@@ -23,17 +23,40 @@ const subscriptionSchema = z.object({
   transactionId: z.string().min(1),
   amount: z.number().positive(),
   status: z.string().default('completed'),
-  webhookSource: z.enum(['stripe', 'paypal']).optional(), // Verified webhook source
 });
 
 export async function POST(request: NextRequest) {
   try {
     // Verify this request comes from a webhook (internal call only)
-    // Check for internal webhook secret header
+    // Check for internal webhook secret header using constant-time comparison
     const webhookSecret = request.headers.get('x-internal-webhook-secret');
     const expectedSecret = process.env.INTERNAL_WEBHOOK_SECRET;
     
-    if (!expectedSecret || webhookSecret !== expectedSecret) {
+    // Use crypto.timingSafeEqual for constant-time comparison to prevent timing attacks
+    if (!expectedSecret || !webhookSecret) {
+      error('❌ Unauthorized subscription-update attempt - missing webhook secret');
+      return NextResponse.json(
+        { error: 'Forbidden - This endpoint is for internal webhook use only' },
+        { status: 403 }
+      );
+    }
+    
+    // Convert to Buffer for timing-safe comparison
+    const receivedBuffer = Buffer.from(webhookSecret);
+    const expectedBuffer = Buffer.from(expectedSecret);
+    
+    // Check lengths match before comparing (prevents timing attack on length)
+    if (receivedBuffer.length !== expectedBuffer.length) {
+      error('❌ Unauthorized subscription-update attempt - invalid webhook secret length');
+      return NextResponse.json(
+        { error: 'Forbidden - This endpoint is for internal webhook use only' },
+        { status: 403 }
+      );
+    }
+    
+    // Timing-safe comparison
+    const crypto = require('crypto');
+    if (!crypto.timingSafeEqual(receivedBuffer, expectedBuffer)) {
       error('❌ Unauthorized subscription-update attempt - webhook verification failed');
       return NextResponse.json(
         { error: 'Forbidden - This endpoint is for internal webhook use only' },

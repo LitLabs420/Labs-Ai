@@ -9,8 +9,6 @@ export const dynamic = 'force-dynamic';
 
 const checkoutSchema = z.object({
   tier: z.enum(["starter", "pro", "enterprise", "creator", "agency", "education"]),
-  successUrl: z.string().url().optional(),
-  cancelUrl: z.string().url().optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -35,7 +33,7 @@ export async function POST(req: NextRequest) {
       );
     }
     
-    const { tier, successUrl, cancelUrl } = validation.data;
+    const { tier } = validation.data;
     const userId = user.uid; // Use authenticated user ID
     const email = user.email || ""; // Use authenticated user email
 
@@ -71,12 +69,14 @@ export async function POST(req: NextRequest) {
     }
 
     // Create checkout session
+    // SECURITY: Never use client-provided URLs to prevent open redirect attacks
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
     const trialDays = tier === "pro" ? 14 : undefined;
     const session = await createCheckoutSession(
       stripeCustomerId,
       product.priceId,
-      successUrl || `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/billing?success=true`,
-      cancelUrl || `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/billing?cancelled=true`,
+      `${baseUrl}/dashboard/billing?success=true`,
+      `${baseUrl}/dashboard/billing?cancelled=true`,
       trialDays
     );
 
