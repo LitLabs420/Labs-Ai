@@ -1,20 +1,43 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createCheckoutSession, createStripeCustomer, STRIPE_PRODUCTS } from "@/lib/stripe";
 import { getAdminDb } from "@/lib/firebase-admin";
+import { getUserFromRequest } from "@/lib/auth-helper";
+import { z } from "zod";
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
+const checkoutSchema = z.object({
+  tier: z.enum(["starter", "pro", "enterprise", "creator", "agency", "education"]),
+  successUrl: z.string().url().optional(),
+  cancelUrl: z.string().url().optional(),
+});
+
 export async function POST(req: NextRequest) {
   try {
-    const { userId, email, tier, successUrl, cancelUrl } = await req.json();
-
-    if (!userId || !email || !tier) {
+    // Authenticate user
+    const user = await getUserFromRequest(req);
+    if (!user) {
       return NextResponse.json(
-        { error: "Missing required fields" },
+        { error: "Unauthorized - Please log in" },
+        { status: 401 }
+      );
+    }
+
+    const body = await req.json();
+    
+    // Validate input
+    const validation = checkoutSchema.safeParse(body);
+    if (!validation.success) {
+      return NextResponse.json(
+        { error: "Invalid input", details: validation.error.issues },
         { status: 400 }
       );
     }
+    
+    const { tier, successUrl, cancelUrl } = validation.data;
+    const userId = user.uid; // Use authenticated user ID
+    const email = user.email || ""; // Use authenticated user email
 
     const product = STRIPE_PRODUCTS[tier as keyof typeof STRIPE_PRODUCTS];
     if (!product) {

@@ -1,24 +1,58 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAdminDb } from '@/lib/firebase-admin';
 import { info, error } from '@/lib/serverLogger';
+import { z } from 'zod';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 /**
- * SUBSCRIPTION MANAGER
+ * SUBSCRIPTION MANAGER - WEBHOOK ONLY
  * Handles payment confirmations and subscription updates
- * Called by webhook processors when payments complete
+ * Called ONLY by verified webhook processors when payments complete
+ * 
+ * SECURITY: This endpoint should ONLY be called by webhooks (Stripe, PayPal)
+ * Direct client calls are FORBIDDEN to prevent unauthorized tier upgrades
  */
+
+const subscriptionSchema = z.object({
+  userId: z.string().min(1),
+  email: z.string().email(),
+  tier: z.enum(['free', 'starter', 'creator', 'pro', 'enterprise', 'agency', 'education']),
+  paymentMethod: z.enum(['stripe', 'paypal']),
+  transactionId: z.string().min(1),
+  amount: z.number().positive(),
+  status: z.string().default('completed'),
+  webhookSource: z.enum(['stripe', 'paypal']).optional(), // Verified webhook source
+});
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { userId, email, tier, paymentMethod, transactionId, amount, status } = body;
-
-    if (!userId || !email || !tier) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    // Verify this request comes from a webhook (internal call only)
+    // Check for internal webhook secret header
+    const webhookSecret = request.headers.get('x-internal-webhook-secret');
+    const expectedSecret = process.env.INTERNAL_WEBHOOK_SECRET;
+    
+    if (!expectedSecret || webhookSecret !== expectedSecret) {
+      error('❌ Unauthorized subscription-update attempt - webhook verification failed');
+      return NextResponse.json(
+        { error: 'Forbidden - This endpoint is for internal webhook use only' },
+        { status: 403 }
+      );
     }
+
+    const body = await request.json();
+    
+    // Validate input
+    const validation = subscriptionSchema.safeParse(body);
+    if (!validation.success) {
+      return NextResponse.json(
+        { error: 'Invalid input', details: validation.error.issues },
+        { status: 400 }
+      );
+    }
+    
+    const { userId, email, tier, paymentMethod, transactionId, amount, status } = validation.data;
 
     // Update user tier
     const dbRef = getAdminDb();
