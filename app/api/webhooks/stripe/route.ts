@@ -1,22 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { info, warn, error } from '@/lib/serverLogger';
 import { getAdminDb } from '@/lib/firebase-admin';
+import { getStripe } from '@/lib/stripe';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
-import Stripe from 'stripe';
-
-// Lazy initialize Stripe client to avoid build-time errors
-let stripe: Stripe | null = null;
-function getStripe(): Stripe {
-  if (!stripe) {
-    const apiKey = process.env.STRIPE_SECRET_KEY;
-    if (!apiKey) {
-      throw new Error('STRIPE_SECRET_KEY is not configured');
-    }
-    stripe = new Stripe(apiKey);
-  }
-  return stripe;
-}
 
 /**
  * STRIPE WEBHOOK HANDLER
