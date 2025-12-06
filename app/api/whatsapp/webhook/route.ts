@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { handleWhatsAppMessage, sendWhatsAppMessage, parseWhatsAppWebhook, verifyWhatsAppWebhook } from '@/lib/whatsapp-bot';
 
-// Configure route to handle raw request body for signature verification
 export const runtime = 'nodejs';
 
 export async function GET(request: NextRequest) {

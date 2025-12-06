@@ -1,4 +1,5 @@
 import { sparkChat, SparkContext } from './spark-bot';
+import crypto from 'crypto';
 
 export interface WhatsAppMessage {
   from: string; // Phone number
@@ -311,9 +312,6 @@ export function verifyWhatsAppWebhook(payload: string, signature: string | null)
   }
 
   try {
-    // Import crypto for HMAC verification
-    const crypto = require('crypto');
-    
     // Create HMAC with SHA256
     const hmac = crypto.createHmac('sha256', WEBHOOK_SECRET);
     const digest = 'sha256=' + hmac.update(payload).digest('hex');
