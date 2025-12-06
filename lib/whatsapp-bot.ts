@@ -292,23 +292,52 @@ export async function sendWhatsAppMessage(
 }
 
 /**
- * Verify WhatsApp webhook signature
+ * Verify WhatsApp webhook signature using HMAC SHA256
+ * @param payload - Raw request body as string
+ * @param signature - X-Hub-Signature-256 header value (e.g., "sha256=...")
+ * @returns boolean indicating if signature is valid
  */
-export function verifyWhatsAppWebhook(): boolean {
+export function verifyWhatsAppWebhook(payload: string, signature: string | null): boolean {
   const WEBHOOK_SECRET = process.env.WHATSAPP_WEBHOOK_SECRET;
   
   if (!WEBHOOK_SECRET) {
-    console.error('WhatsApp webhook secret not configured');
+    console.error('⚠️ WhatsApp webhook secret not configured');
     return false;
   }
 
-  // TODO: Implement HMAC SHA256 signature verification
-  // const crypto = require('crypto');
-  // const hmac = crypto.createHmac('sha256', WEBHOOK_SECRET);
-  // const digest = hmac.update(payload).digest('hex');
-  // return digest === signature;
+  if (!signature) {
+    console.error('⚠️ No signature provided in request');
+    return false;
+  }
 
-  return true; // Temporary for testing
+  try {
+    // Import crypto for HMAC verification
+    const crypto = require('crypto');
+    
+    // Create HMAC with SHA256
+    const hmac = crypto.createHmac('sha256', WEBHOOK_SECRET);
+    const digest = 'sha256=' + hmac.update(payload).digest('hex');
+    
+    // Use timing-safe comparison to prevent timing attacks
+    const expectedBuffer = Buffer.from(digest, 'utf-8');
+    const actualBuffer = Buffer.from(signature, 'utf-8');
+    
+    if (expectedBuffer.length !== actualBuffer.length) {
+      console.error('⚠️ Signature length mismatch');
+      return false;
+    }
+    
+    const isValid = crypto.timingSafeEqual(expectedBuffer, actualBuffer);
+    
+    if (!isValid) {
+      console.error('⚠️ Invalid webhook signature');
+    }
+    
+    return isValid;
+  } catch (error) {
+    console.error('❌ Webhook signature verification error:', error);
+    return false;
+  }
 }
 
 /**
