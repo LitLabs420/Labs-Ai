@@ -6,7 +6,9 @@ export const dynamic = 'force-dynamic';
 import Stripe from 'stripe';
 
 // Initialize Stripe client (use account default API version)
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+const stripe = process.env.STRIPE_SECRET_KEY 
+  ? new Stripe(process.env.STRIPE_SECRET_KEY)
+  : null;
 
 /**
  * STRIPE WEBHOOK HANDLER
@@ -24,6 +26,11 @@ export async function POST(request: NextRequest) {
     if (!sig || !process.env.STRIPE_WEBHOOK_SECRET) {
       error('[Stripe Webhook] Missing signature or webhook secret');
       return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
+    }
+
+    if (!stripe) {
+      error('[Stripe Webhook] Stripe client not initialized');
+      return NextResponse.json({ error: 'Stripe not configured' }, { status: 500 });
     }
 
     // Verify webhook signature

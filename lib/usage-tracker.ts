@@ -1,5 +1,5 @@
 import { db } from './firebase';
-import { doc, getDoc, setDoc, updateDoc, increment, Timestamp } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, increment } from 'firebase/firestore';
 
 export type UserTier = 'free' | 'starter' | 'creator' | 'pro' | 'agency' | 'education';
 
@@ -174,8 +174,8 @@ export async function getUsageStats(uid: string): Promise<{
   const today = await getDailyUsage(uid);
   
   // Get this month's total (sum all days in current month)
-  const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-  const monthEnd = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
+  new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
   
   // TODO: Query Firestore for sum of all usage docs in date range
   // For now, just return today's count

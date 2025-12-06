@@ -122,7 +122,7 @@ export async function getAnalyticsSummary(userId: string, days: number = 30): Pr
 
     const predictions = await predictViralContent(posts);
     const recommendations = await generateRecommendations(posts);
-    const competitorInsights = await analyzeCompetitors(posts);
+    const competitorInsights = await analyzeCompetitors();
 
     return {
       totalPosts: posts.length,
@@ -162,7 +162,7 @@ async function predictViralContent(posts: PostMetrics[]): Promise<ViralPredictio
   const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
   
   try {
-    const topPosts = posts.slice(0, 3);
+    posts.slice(0, 3);
     const prompt = `Analyze these posts and predict viral potential. Return JSON array with score (0-100), confidence (0-1), reasons, and suggestedImprovements for each.`;
     const result = await model.generateContent(prompt);
     const response = result.response.text().replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
@@ -192,7 +192,7 @@ async function generateRecommendations(posts: PostMetrics[]): Promise<string[]> 
   }
 }
 
-async function analyzeCompetitors(posts: PostMetrics[]): Promise<string[]> {
+async function analyzeCompetitors(): Promise<string[]> {
   const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
   
   try {

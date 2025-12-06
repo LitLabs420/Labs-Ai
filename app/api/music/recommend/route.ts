@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user has music subscription
-    const hasSubscription = await hasMusicSubscription(user.uid);
+    const hasSubscription = await hasMusicSubscription();
     if (!hasSubscription) {
       return NextResponse.json(
         {
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
 
       case 'trending':
         // Get trending music for platform
-        result = await getTrendingMusic(params.platform);
+        result = await getTrendingMusic();
         break;
 
       default:

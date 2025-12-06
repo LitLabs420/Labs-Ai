@@ -1,6 +1,6 @@
-# Labs AI Studio
+# LitLabs AI
 
-An all-in-one AI-powered platform for creating, managing, and scaling AI-driven services for various industries.
+LitLabs AI is an AI-powered platform for content creators, beauty professionals, and small businesses to generate content, manage clients, and monetize their services.
 
 ## Features
 
@@ -19,8 +19,6 @@ An all-in-one AI-powered platform for creating, managing, and scaling AI-driven 
 - **AI/ML**: OpenAI API, Google AI, Music generation APIs
 - **Payments**: Stripe, PayPal
 - **Deployment**: Vercel, Docker, Google Play Store (Android app included)
-
-## Getting Started
 
 ### Prerequisites
 

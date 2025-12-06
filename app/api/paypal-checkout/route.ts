@@ -1,8 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getUserFromRequest } from '@/lib/auth-helper';
+import { z } from 'zod';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 const PAYPAL_API = 'https://api-m.paypal.com';
 const CLIENT_ID = process.env.PAYPAL_CLIENT_ID || '';
 const CLIENT_SECRET = process.env.PAYPAL_CLIENT_SECRET || '';
+
+const checkoutSchema = z.object({
+  amount: z.number().positive(),
+  currency: z.string().default('USD'),
+});
 
 async function getPayPalToken() {
   const auth = Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString('base64');
@@ -21,14 +31,28 @@ async function getPayPalToken() {
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, amount, currency = 'USD' } = await request.json();
-
-    if (!email || !amount) {
+    // Authenticate user
+    const user = await getUserFromRequest(request);
+    if (!user) {
       return NextResponse.json(
-        { error: 'Email and amount required' },
+        { error: 'Unauthorized - Please log in' },
+        { status: 401 }
+      );
+    }
+
+    const body = await request.json();
+    
+    // Validate input
+    const validation = checkoutSchema.safeParse(body);
+    if (!validation.success) {
+      return NextResponse.json(
+        { error: 'Invalid input', details: validation.error.issues },
         { status: 400 }
       );
     }
+    
+    const { amount, currency } = validation.data;
+    const email = user.email || "";
 
     const token = await getPayPalToken();
 

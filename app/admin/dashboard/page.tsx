@@ -7,8 +7,6 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import { trackEvent } from '@/lib/analytics';
 
-const ADMIN_UID = process.env.NEXT_PUBLIC_ADMIN_UID!;
-
 export default function AdminDashboardPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);

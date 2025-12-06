@@ -1,11 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 
 export default function EarnPage() {
-  const [referralCode, setReferralCode] = useState("YOUR-CODE");
-  const referralUrl = `https://litlabs-evlla8c7n-larry-bols-projects.vercel.app/auth?ref=${referralCode}`;
 
   return (
     <DashboardLayout>

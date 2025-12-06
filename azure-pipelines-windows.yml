@@ -1,0 +1,62 @@
+trigger:
+  - main
+
+variables:
+  buildConfiguration: 'Release'
+  dotnetVersion: '7.0.x'
+
+stages:
+- stage: Build
+  displayName: Build
+  jobs:
+  - job: Build
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+    - task: UseDotNet@2
+      inputs:
+        packageType: 'sdk'
+        version: $(dotnetVersion)
+
+    - script: dotnet restore
+      displayName: 'dotnet restore'
+
+    - script: dotnet build --configuration $(buildConfiguration) --no-restore
+      displayName: 'dotnet build'
+
+    - script: |
+        dotnet publish -c $(buildConfiguration) -o $(Build.ArtifactStagingDirectory)/publish
+      displayName: 'dotnet publish'
+
+    - task: ArchiveFiles@2
+      inputs:
+        rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/publish'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+        replaceExistingArchive: true
+
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+      artifact: drop
+
+- stage: Deploy
+  displayName: Deploy to Windows App Service
+  dependsOn: Build
+  jobs:
+  - deployment: DeployWeb
+    environment: 'production'
+    pool:
+      vmImage: 'windows-latest'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            artifact: drop
+
+          - task: AzureWebApp@1
+            inputs:
+              azureSubscription: '<azureServiceConnection>'   # Azure Resource Manager service connection name
+              appType: 'webApp'
+              appName: '<appServiceNameWindows>'
+              package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'

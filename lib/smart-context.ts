@@ -1,5 +1,5 @@
 import { db } from './firebase';
-import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 
 export interface UserProfile {
   // Basic info
@@ -145,8 +145,7 @@ export async function learnFromEdit(
  */
 export async function trackContentUsage(
   uid: string,
-  prompt: string,
-  engagement?: number
+  prompt: string
 ): Promise<void> {
   const context = await getSmartContext(uid);
   if (!context || !db) return;

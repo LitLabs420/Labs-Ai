@@ -1,63 +1,88 @@
-# Contributing to Labs AI Studio
+# Contributing to LitLabs AI
 
-We appreciate your interest in contributing to Labs AI Studio! This document provides guidelines and instructions for contributing.
+Thank you for your interest in contributing to LitLabs AI! This document provides guidelines for contributing to the project.
 
 ## Getting Started
 
-1. Fork the repository
-2. Clone your fork locally
-3. Create a new branch for your feature or bug fix
-4. Install dependencies: `npm install`
-5. Run tests: `npm run test`
+1. **Read the documentation**: Familiarize yourself with the project by reading:
+   - [README.md](README.md) - Basic project information
+   - [README_LITLABS.md](README_LITLABS.md) - Detailed LitLabs documentation
+   - [ENVIRONMENT_SETUP.md](ENVIRONMENT_SETUP.md) - Environment setup guide
+   - [.github/copilot-instructions.md](.github/copilot-instructions.md) - Comprehensive development guidelines
 
-## Development Workflow
+2. **Setup your development environment**:
 
-1. **Create a feature branch:** `git checkout -b feature/your-feature-name`
-2. **Make your changes:** Follow our coding standards
-3. **Test your changes:** `npm run test`
-4. **Format code:** `npm run format`
-5. **Lint code:** `npm run lint`
-6. **Commit with a descriptive message:** `git commit -m "Add feature: description"`
-7. **Push to your fork:** `git push origin feature/your-feature-name`
-8. **Create a Pull Request** with a clear description
+   ```bash
+   # Clone the repository
+   git clone https://github.com/LiTree89/Labs-Ai.git
+   cd Labs-Ai
+   
+   # Install dependencies
+   npm install
+   
+   # Copy environment variables
+   cp .env.example .env.local
+   # Fill in your environment variables
+   
+   # Start development server
+   npm run dev
+   ```
 
-## Coding Standards
+## Development Guidelines
 
-- Use TypeScript for all new files
-- Follow the existing code style
-- Add JSDoc comments for public functions
-- Use meaningful variable and function names
-- Write unit tests for new features
+All contributors should follow the comprehensive guidelines in [.github/copilot-instructions.md](.github/copilot-instructions.md), which includes:
 
-## Commit Messages
-
-Use clear and descriptive commit messages:
-
-- `feat: Add new feature`
-- `fix: Resolve bug in module`
-- `docs: Update documentation`
-- `style: Format code`
-- `test: Add unit tests`
-- `chore: Update dependencies`
-
-## Testing
-
-- Write tests for all new features
-- Ensure all tests pass: `npm run test`
-- Maintain test coverage above 80%
 
 ## Pull Request Process
 
-1. Update the README if needed
-2. Update CHANGELOG for notable changes
-3. Ensure all tests pass
-4. Request review from maintainers
-5. Address feedback and make requested changes
+1. **Create a branch** following our naming conventions:
+   - Features: `feature/<description>` or `feat/<description>`
+   - Bug fixes: `fix/<description>` or `bugfix/<description>`
+   - Documentation: `docs/<description>`
+
+2. **Make your changes**:
+   - Follow the coding standards in copilot-instructions.md
+   - Ensure all security requirements are met
+   - Test your changes thoroughly
+
+3. **Before submitting**:
+
+   ```bash
+   npm run lint    # Check for linting errors
+   npm run build   # Ensure project builds successfully
+   ```
+
+4. **Submit your PR**:
+   - Write a clear description of what changes you made and why
+   - Link to any related issues
+   - Wait for review and address any feedback
+
+## Working with GitHub Copilot
+
+This repository is configured to work with GitHub Copilot agents:
+
+
+See [.github/copilot-instructions.md](.github/copilot-instructions.md) for detailed Copilot guidelines.
+
+## Code Review Standards
+
+All PRs go through code review. Reviewers check for:
+
+
+Custom agents are available for automated reviews:
+
+## Security
+
+Security is our top priority. When contributing:
+
+
+Report security vulnerabilities privately via GitHub Security Advisories.
 
 ## Questions?
 
-Feel free to open an issue with the `question` label or contact the maintainers.
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under the MIT License.
+By contributing, you agree that your contributions will be licensed under the same license as the project.
+
+Thank you for contributing to LitLabs AI! 🚀
