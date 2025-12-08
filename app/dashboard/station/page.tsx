@@ -66,6 +66,7 @@ export default function StationPage() {
                 type="text"
                 value={stationUrl}
                 readOnly
+                aria-label="Station URL"
                 className="flex-1 px-4 py-2 rounded-lg bg-slate-800 border border-slate-700 text-sm"
               />
               <button
