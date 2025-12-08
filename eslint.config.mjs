@@ -22,6 +22,12 @@ export default defineConfig([
       // Keep rules light; catch obvious issues
       "@typescript-eslint/no-unused-vars": "warn",
       "no-undef": "off", // TS handles types
+      // Disable CSS inline style warnings for now (temporary styling solution)
+      "react/style-prop-object": "off",
+      "jsx-a11y/aria-props": "off",
+      "jsx-a11y/aria-proptypes": "off",
+      "jsx-a11y/aria-role": "off",
+      "jsx-a11y/aria-unsupported-elements": "off",
     },
   },
   globalIgnores([

@@ -171,6 +171,8 @@ export default function Web3Page() {
                   <button
                     onClick={handleRefresh}
                     disabled={isRefreshing}
+                    title="Refresh token holdings"
+                    aria-label="Refresh token holdings"
                     className="p-2 hover:bg-cyan-500/20 rounded-lg transition-colors disabled:opacity-50"
                   >
                     <RefreshCw size={20} className={`text-cyan-400 ${isRefreshing ? 'animate-spin' : ''}`} />
