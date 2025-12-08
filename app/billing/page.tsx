@@ -5,10 +5,11 @@ import { AuthGate } from "@/components/AuthGate";
 import DashboardLayout from "@/components/DashboardLayout";
 import { DomainManagement } from "@/components/billing/DomainManagement";
 import { PaymentLinksManager } from "@/components/billing/PaymentLinksManager";
+import { BankAccountManagement } from "@/components/billing/BankAccountManagement";
 import { useState } from "react";
 
 export default function BillingPage() {
-  const [activeTab, setActiveTab] = useState<"plans" | "domains" | "links" | "methods">(
+  const [activeTab, setActiveTab] = useState<"plans" | "domains" | "links" | "methods" | "banks">(
     "plans"
   );
 
@@ -65,6 +66,16 @@ export default function BillingPage() {
                 }`}
               >
                 Payment Links
+              </button>
+              <button
+                onClick={() => setActiveTab("banks")}
+                className={`pb-4 px-4 font-semibold transition border-b-2 ${
+                  activeTab === "banks"
+                    ? "border-cyan-500 text-white"
+                    : "border-transparent text-slate-400 hover:text-slate-300"
+                }`}
+              >
+                Bank Accounts
               </button>
             </div>
 
@@ -155,6 +166,8 @@ export default function BillingPage() {
             {activeTab === "domains" && <DomainManagement />}
 
             {activeTab === "links" && <PaymentLinksManager />}
+
+            {activeTab === "banks" && <BankAccountManagement />}
 
             {activeTab === "methods" && (
               <div className="bg-slate-900/50 border border-slate-700 rounded-lg p-6">
