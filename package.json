@@ -55,20 +55,26 @@
     "tailwindcss": "^4",
     "typescript": "5.9.3"
   },
-  "description": "All-in-one AI-powered platform for creating, managing, and scaling AI-driven services.",
+  "description": "Official LitLabs AI - All-in-one AI-powered platform for creating, managing, and scaling AI-driven services.",
   "keywords": [
     "ai",
     "content-generation",
     "bots",
     "automation",
     "saas",
-    "next.js"
+    "next.js",
+    "litlabs",
+    "official"
   ],
   "author": "LiTree Labs",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/LiTree89/Labs-Ai.git"
+    "url": "https://github.com/LiTree89/Labs-Ai.git",
+    "directory": "."
   },
-  "homepage": "https://labs-ai.studio"
+  "homepage": "https://labs-ai.studio",
+  "bugs": {
+    "url": "https://github.com/LiTree89/Labs-Ai/issues"
+  }
 }

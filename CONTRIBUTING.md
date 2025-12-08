@@ -2,6 +2,10 @@
 
 Thank you for your interest in contributing to LitLabs AI! This document provides guidelines for contributing to the project.
 
+> **⚠️ Important**: This is the **official and only** LitLabs AI repository.  
+> **Repository**: https://github.com/LiTree89/Labs-Ai  
+> All contributions must be submitted to this repository.
+
 ## Getting Started
 
 1. **Read the documentation**: Familiarize yourself with the project by reading:

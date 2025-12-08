@@ -1,5 +1,9 @@
 # LitLabs AI
 
+> **📍 Official Repository**: This is the official and only maintained repository for LitLabs AI  
+> **🔗 Repository URL**: https://github.com/LiTree89/Labs-Ai  
+> **⭐ Status**: Active Development | Production Ready
+
 LitLabs AI is an AI-powered platform for content creators, beauty professionals, and small businesses to generate content, manage clients, and monetize their services.
 
 ## Features
@@ -167,11 +171,20 @@ We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for gu
 
 This project adheres to the Contributor Covenant [code of conduct](./CODE_OF_CONDUCT.md).
 
+## Repository Information
+
+**This is the official LitLabs AI repository** - All development, issues, and contributions should be directed here:
+
+- 🏠 **Official Repo**: https://github.com/LiTree89/Labs-Ai
+- 📦 **Package**: labs-ai-studio
+- 🌐 **Website**: https://labs-ai.studio
+
 ## Support
 
 - 📖 [Documentation](./docs)
 - 🐛 [Report a bug](https://github.com/LiTree89/Labs-Ai/issues)
 - 💡 [Request a feature](https://github.com/LiTree89/Labs-Ai/discussions)
+- 💬 [Get help](https://github.com/LiTree89/Labs-Ai/discussions/categories/q-a)
 
 ## License
 
