@@ -3,26 +3,62 @@
 
 import { AuthGate } from "@/components/AuthGate";
 import DashboardLayout from "@/components/DashboardLayout";
+import { DomainManagement } from "@/components/billing/DomainManagement";
+import { useState } from "react";
 
 export default function BillingPage() {
+  const [activeTab, setActiveTab] = useState<"plans" | "domains" | "methods">(
+    "plans"
+  );
+
   return (
     <main>
       <AuthGate>
         <DashboardLayout>
-          <div className="space-y-6 max-w-2xl">
+          <div className="space-y-6 max-w-6xl">
             <div>
-              <h1 className="text-3xl font-bold mb-2">Billing</h1>
+              <h1 className="text-3xl font-bold mb-2">Billing & Payments</h1>
               <p className="text-slate-300">
-                Manage your LitLabs Business OS™ subscription.
+                Manage your subscription, custom domains, and payment methods.
               </p>
             </div>
 
-            <div className="bg-slate-900/50 border border-slate-700 rounded-lg p-6 space-y-4">
-              <p className="text-slate-300">
-                Choose your plan below to get started or upgrade.
-              </p>
+            {/* Tabs */}
+            <div className="flex gap-4 border-b border-slate-700">
+              <button
+                onClick={() => setActiveTab("plans")}
+                className={`pb-4 px-4 font-semibold transition border-b-2 ${
+                  activeTab === "plans"
+                    ? "border-cyan-500 text-white"
+                    : "border-transparent text-slate-400 hover:text-slate-300"
+                }`}
+              >
+                Subscription Plans
+              </button>
+              <button
+                onClick={() => setActiveTab("domains")}
+                className={`pb-4 px-4 font-semibold transition border-b-2 ${
+                  activeTab === "domains"
+                    ? "border-cyan-500 text-white"
+                    : "border-transparent text-slate-400 hover:text-slate-300"
+                }`}
+              >
+                Custom Domains
+              </button>
+              <button
+                onClick={() => setActiveTab("methods")}
+                className={`pb-4 px-4 font-semibold transition border-b-2 ${
+                  activeTab === "methods"
+                    ? "border-cyan-500 text-white"
+                    : "border-transparent text-slate-400 hover:text-slate-300"
+                }`}
+              >
+                Payment Methods
+              </button>
+            </div>
 
-              <div className="space-y-3">
+            {/* Tab Content */}
+            {activeTab === "plans" && (
                 <button
                   onClick={async () => {
                     const res = await fetch("/api/create-checkout-session", {
@@ -103,7 +139,18 @@ export default function BillingPage() {
                   👑 Deluxe Plan ($199/mo) → Upgrade
                 </button>
               </div>
-            </div>
+            )}
+
+            {activeTab === "domains" && <DomainManagement />}
+
+            {activeTab === "methods" && (
+              <div className="bg-slate-900/50 border border-slate-700 rounded-lg p-6">
+                <h2 className="text-xl font-bold mb-4">Payment Methods</h2>
+                <p className="text-slate-400">
+                  Manage your payment methods and billing information.
+                </p>
+              </div>
+            )}
 
             <p className="text-xs text-slate-500">
               — Powered by LitLabs Business OS™ 🔥
