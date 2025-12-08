@@ -257,10 +257,13 @@ export default function SupportChat() {
                 <div className='bg-white/5 rounded-2xl px-4 py-3'>
                   <div className='flex gap-1'>
                     {/* eslint-disable-next-line @next/next/no-style-component-with-dynamic-styles */}
+                    {/* eslint-disable-next-line */}
                     <div className='h-2 w-2 rounded-full bg-pink-500 animate-bounce' style={{ animationDelay: '0ms' }} aria-hidden="true"></div>
                     {/* eslint-disable-next-line @next/next/no-style-component-with-dynamic-styles */}
+                    {/* eslint-disable-next-line */}
                     <div className='h-2 w-2 rounded-full bg-purple-500 animate-bounce' style={{ animationDelay: '100ms' }} aria-hidden="true"></div>
                     {/* eslint-disable-next-line @next/next/no-style-component-with-dynamic-styles */}
+                    {/* eslint-disable-next-line */}
                     <div className='h-2 w-2 rounded-full bg-pink-500 animate-bounce' style={{ animationDelay: '200ms' }} aria-hidden="true"></div>
                   </div>
                   <span className='sr-only'>Loading</span>

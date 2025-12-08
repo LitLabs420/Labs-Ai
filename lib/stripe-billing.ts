@@ -5,7 +5,11 @@ import Stripe from 'stripe';
 import { getAdminDb } from '@/lib/firebase-admin';
 import type { FieldValue } from 'firebase-admin/firestore';
 
-const db = getAdminDb();
+const getDb = () => {
+  const database = getAdminDb();
+  if (!database) throw new Error('Firebase admin database not initialized');
+  return database;
+};
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
   apiVersion: '2025-11-17.clover' as any,
@@ -139,7 +143,7 @@ export async function createSubscription(
   });
 
   // Save to Firestore
-  await db.collection('subscriptions').doc(userId).set(
+  await getDb().collection('subscriptions').doc(userId).set(
     {
       stripeCustomerId: customerId,
       stripeSubscriptionId: subscription.id,
@@ -163,7 +167,7 @@ export async function addAddon(
   addonId: keyof typeof ADDONS
 ): Promise<Stripe.Subscription> {
   const addon = ADDONS[addonId];
-  const subDoc = await db.collection('subscriptions').doc(userId).get();
+  const subDoc = await getDb().collection('subscriptions').doc(userId).get();
 
   if (!subDoc.exists) {
     throw new Error('No subscription found');
@@ -181,8 +185,8 @@ export async function addAddon(
   });
 
   // Update Firestore
-  await db.collection('subscriptions').doc(userId).update({
-    addOns: (await db.collection('subscriptions').doc(userId).get()).data()?.addOns || [],
+  await getDb().collection('subscriptions').doc(userId).update({
+    addOns: (await getDb().collection('subscriptions').doc(userId).get()).data()?.addOns || [],
     [`addons.${addonId}`]: true,
   });
 
@@ -194,7 +198,7 @@ export async function removeAddon(
   userId: string,
   addonId: keyof typeof ADDONS
 ): Promise<void> {
-  const subDoc = await db.collection('subscriptions').doc(userId).get();
+  const subDoc = await getDb().collection('subscriptions').doc(userId).get();
 
   if (!subDoc.exists) {
     throw new Error('No subscription found');
@@ -213,14 +217,14 @@ export async function removeAddon(
   }
 
   // Update Firestore
-  await db.collection('subscriptions').doc(userId).update({
+  await getDb().collection('subscriptions').doc(userId).update({
     [`addons.${addonId}`]: false,
   });
 }
 
 // Get user subscription
 export async function getUserSubscription(userId: string) {
-  const doc = await db.collection('subscriptions').doc(userId).get();
+  const doc = await getDb().collection('subscriptions').doc(userId).get();
 
   if (!doc.exists) {
     return null;
@@ -237,7 +241,7 @@ export async function handleStripeWebhook(event: Stripe.Event): Promise<void> {
       const userId = subscription.metadata?.userId;
 
       if (userId) {
-        await db.collection('subscriptions').doc(userId).update({
+        await getDb().collection('subscriptions').doc(userId).update({
           status: subscription.status,
           currentPeriodStart: new Date((subscription as any).current_period_start * 1000),
           currentPeriodEnd: new Date((subscription as any).current_period_end * 1000),
@@ -253,7 +257,7 @@ export async function handleStripeWebhook(event: Stripe.Event): Promise<void> {
       const userId = subscription.metadata?.userId;
 
       if (userId) {
-        await db.collection('subscriptions').doc(userId).update({
+        await getDb().collection('subscriptions').doc(userId).update({
           status: 'canceled',
           validUntil: new Date(),
           updatedAt: new Date(),
@@ -267,7 +271,7 @@ export async function handleStripeWebhook(event: Stripe.Event): Promise<void> {
       const customerId = invoice.customer as string;
 
       // Find user by customer ID and update billing info
-      const subs = await db
+      const subs = await getDb()
         .collection('subscriptions')
         .where('stripeCustomerId', '==', customerId)
         .get();
@@ -285,7 +289,7 @@ export async function handleStripeWebhook(event: Stripe.Event): Promise<void> {
       const invoice = event.data.object as Stripe.Invoice;
       const customerId = invoice.customer as string;
 
-      const subs = await db
+      const subs = await getDb()
         .collection('subscriptions')
         .where('stripeCustomerId', '==', customerId)
         .get();

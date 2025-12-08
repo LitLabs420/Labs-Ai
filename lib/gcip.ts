@@ -111,11 +111,10 @@ export async function enableMFAPhone(phoneNumber: string): Promise<string> {
 export async function completeMFAVerification(verificationId: string, code: string): Promise<void> {
   const user = getCurrentUser();
   if (!user) throw new Error('No authenticated user');
+  if (!auth) throw new Error('Firebase auth is not initialized');
 
-  const credential = PhoneAuthCredential.credentialFromJSON({
-    verificationId,
-    verificationCode: code,
-  });
+  // Create credential using the proper method
+  const credential = PhoneAuthCredential.credentialFromTemporaryProof(verificationId, code, '0');
   const multiFactorAssertion = PhoneMultiFactorGenerator.assertion(credential);
   
   await multiFactor(user).enroll(multiFactorAssertion, 'My Phone');
@@ -125,6 +124,7 @@ export async function completeMFAVerification(verificationId: string, code: stri
 export async function linkProviderToAccount(providerName: string): Promise<User> {
   const user = getCurrentUser();
   if (!user) throw new Error('No authenticated user');
+  if (!auth) throw new Error('Firebase auth is not initialized');
 
   const provider = providers[providerName];
   if (!provider) throw new Error(`Unknown provider: ${providerName}`);
