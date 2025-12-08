@@ -1,7 +1,7 @@
 // Google Cloud Identity Platform (GCIP) Configuration
 // This file manages auth providers and user sessions
 
-import { getAuth, 
+import { 
   signInWithPopup, 
   signOut, 
   onAuthStateChanged, 
@@ -13,7 +13,6 @@ import { getAuth,
   AuthProvider,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  signInWithPhoneNumber,
   RecaptchaVerifier,
   multiFactor,
   PhoneMultiFactorGenerator,
@@ -21,6 +20,10 @@ import { getAuth,
   PhoneAuthCredential
 } from 'firebase/auth';
 import { auth } from './firebase';
+
+if (!auth) {
+  throw new Error('Firebase auth is not initialized');
+}
 
 // Initialize all OAuth providers
 const googleProvider = new GoogleAuthProvider();
@@ -47,6 +50,7 @@ export const providers: Record<string, AuthProvider> = {
 export async function signInWithProvider(providerName: string): Promise<User> {
   const provider = providers[providerName];
   if (!provider) throw new Error(`Unknown provider: ${providerName}`);
+  if (!auth) throw new Error('Firebase auth is not initialized');
   
   const result = await signInWithPopup(auth, provider);
   return result.user;
@@ -54,39 +58,45 @@ export async function signInWithProvider(providerName: string): Promise<User> {
 
 // Email/Password sign up
 export async function signUpWithEmail(email: string, password: string): Promise<User> {
+  if (!auth) throw new Error('Firebase auth is not initialized');
   const result = await createUserWithEmailAndPassword(auth, email, password);
   return result.user;
 }
 
 // Email/Password sign in
 export async function signInWithEmail(email: string, password: string): Promise<User> {
+  if (!auth) throw new Error('Firebase auth is not initialized');
   const result = await signInWithEmailAndPassword(auth, email, password);
   return result.user;
 }
 
 // Sign out
 export async function signOutUser(): Promise<void> {
+  if (!auth) throw new Error('Firebase auth is not initialized');
   await signOut(auth);
 }
 
 // Monitor auth state changes
 export function onAuthChange(callback: (user: User | null) => void): () => void {
+  if (!auth) throw new Error('Firebase auth is not initialized');
   return onAuthStateChanged(auth, callback);
 }
 
 // Get current user
 export function getCurrentUser(): User | null {
+  if (!auth) throw new Error('Firebase auth is not initialized');
   return auth.currentUser;
 }
 
 // Setup MFA (Multi-Factor Authentication)
 export async function enableMFAPhone(phoneNumber: string): Promise<string> {
+  if (!auth) throw new Error('Firebase auth is not initialized');
   const user = getCurrentUser();
   if (!user) throw new Error('No authenticated user');
 
-  const recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
+  const recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
     size: 'invisible',
-  }, auth);
+  });
 
   const phoneAuthProvider = new PhoneAuthProvider(auth);
   const verificationId = await phoneAuthProvider.verifyPhoneNumber(
@@ -102,7 +112,10 @@ export async function completeMFAVerification(verificationId: string, code: stri
   const user = getCurrentUser();
   if (!user) throw new Error('No authenticated user');
 
-  const credential = PhoneAuthCredential.credential(verificationId, code);
+  const credential = PhoneAuthCredential.credentialFromJSON({
+    verificationId,
+    verificationCode: code,
+  });
   const multiFactorAssertion = PhoneMultiFactorGenerator.assertion(credential);
   
   await multiFactor(user).enroll(multiFactorAssertion, 'My Phone');

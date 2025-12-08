@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Wallet, TrendingUp, Send, Swap2, Eye, EyeOff, Plus, RefreshCw } from 'lucide-react';
+import { Wallet, TrendingUp, Send, ArrowUpRight, Eye, EyeOff, Plus, RefreshCw } from 'lucide-react';
 import DashboardLayout from '@/components/DashboardLayout';
 
 interface TokenBalance {
@@ -204,11 +204,17 @@ export default function Web3Page() {
                         </div>
 
                         <div className="flex gap-2">
-                          <button className="p-2 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/30 rounded-lg transition-colors">
+                          <button 
+                            title="Send"
+                            className="p-2 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/30 rounded-lg transition-colors"
+                          >
                             <Send size={18} className="text-cyan-400" />
                           </button>
-                          <button className="p-2 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/30 rounded-lg transition-colors">
-                            <Swap2 size={18} className="text-purple-400" />
+                          <button 
+                            title="Swap"
+                            className="p-2 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/30 rounded-lg transition-colors"
+                          >
+                            <ArrowUpRight size={18} className="text-purple-400" />
                           </button>
                         </div>
                       </div>
@@ -265,31 +271,10 @@ export default function Web3Page() {
                       placeholder="0.00"
                       className="flex-1 bg-black/50 border border-cyan-500/30 rounded-lg px-4 py-3 text-cyan-300 placeholder-gray-500 focus:outline-none focus:border-cyan-500"
                     />
-                    <select className="bg-black/50 border border-cyan-500/30 rounded-lg px-4 py-3 text-cyan-300 focus:outline-none focus:border-cyan-500">
-                      {tokens.map((t) => (
-                        <option key={t.symbol} value={t.symbol}>
-                          {t.symbol}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                <div className="flex justify-center">
-                  <button className="p-3 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/30 rounded-lg transition-colors">
-                    <Swap2 className="text-cyan-400" size={20} />
-                  </button>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-gray-300 mb-2">To</label>
-                  <div className="flex gap-2">
-                    <input
-                      type="number"
-                      placeholder="0.00"
-                      className="flex-1 bg-black/50 border border-cyan-500/30 rounded-lg px-4 py-3 text-cyan-300 placeholder-gray-500 focus:outline-none focus:border-cyan-500"
-                    />
-                    <select className="bg-black/50 border border-cyan-500/30 rounded-lg px-4 py-3 text-cyan-300 focus:outline-none focus:border-cyan-500">
+                    <select 
+                      title="Select token to swap from"
+                      className="bg-black/50 border border-cyan-500/30 rounded-lg px-4 py-3 text-cyan-300 focus:outline-none focus:border-cyan-500"
+                    >
                       {tokens.map((t) => (
                         <option key={t.symbol} value={t.symbol}>
                           {t.symbol}

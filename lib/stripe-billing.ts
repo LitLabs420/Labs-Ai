@@ -2,11 +2,13 @@
 // Handles tier system, add-ons, and payment processing
 
 import Stripe from 'stripe';
-import { db } from '@/lib/firebase-admin';
-import { FieldValue } from 'firebase-admin/firestore';
+import { getAdminDb } from '@/lib/firebase-admin';
+import type { FieldValue } from 'firebase-admin/firestore';
+
+const db = getAdminDb();
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2024-04-10',
+  apiVersion: '2025-11-17.clover' as any,
 });
 
 // Subscription tiers
@@ -144,9 +146,9 @@ export async function createSubscription(
       coreTier: tierId,
       addOns: [],
       status: subscription.status,
-      currentPeriodStart: new Date(subscription.current_period_start * 1000),
-      currentPeriodEnd: new Date(subscription.current_period_end * 1000),
-      validUntil: new Date(subscription.current_period_end * 1000),
+      currentPeriodStart: new Date((subscription as any).current_period_start * 1000),
+      currentPeriodEnd: new Date((subscription as any).current_period_end * 1000),
+      validUntil: new Date((subscription as any).current_period_end * 1000),
       updatedAt: new Date(),
     },
     { merge: true }
@@ -237,9 +239,9 @@ export async function handleStripeWebhook(event: Stripe.Event): Promise<void> {
       if (userId) {
         await db.collection('subscriptions').doc(userId).update({
           status: subscription.status,
-          currentPeriodStart: new Date(subscription.current_period_start * 1000),
-          currentPeriodEnd: new Date(subscription.current_period_end * 1000),
-          validUntil: new Date(subscription.current_period_end * 1000),
+          currentPeriodStart: new Date((subscription as any).current_period_start * 1000),
+          currentPeriodEnd: new Date((subscription as any).current_period_end * 1000),
+          validUntil: new Date((subscription as any).current_period_end * 1000),
           updatedAt: new Date(),
         });
       }
@@ -270,7 +272,7 @@ export async function handleStripeWebhook(event: Stripe.Event): Promise<void> {
         .where('stripeCustomerId', '==', customerId)
         .get();
 
-      subs.forEach(async (doc) => {
+      subs.forEach(async (doc: any) => {
         await doc.ref.update({
           lastPaymentDate: new Date(),
           paymentStatus: 'succeeded',
@@ -288,11 +290,11 @@ export async function handleStripeWebhook(event: Stripe.Event): Promise<void> {
         .where('stripeCustomerId', '==', customerId)
         .get();
 
-      subs.forEach(async (doc) => {
-        await doc.ref.update({
+      subs.forEach((doc: any) => {
+        doc.ref.update({
           paymentStatus: 'failed',
           paymentFailedDate: new Date(),
-        });
+        }).catch(() => {});
       });
       break;
     }
