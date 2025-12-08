@@ -244,6 +244,7 @@ export default function AnalyticsPage() {
                       {/* Score Bar */}
                       <div className="mb-3">
                         <div className="h-2 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
+                          {/* eslint-disable-next-line @next/next/no-style-component-with-dynamic-styles */}
                           <div
                             className={`h-full transition-all ${
                               pred.score >= 70 ? 'bg-green-600' :
@@ -251,6 +252,11 @@ export default function AnalyticsPage() {
                               'bg-red-600'
                             }`}
                             style={{ width: `${pred.score}%` }}
+                            role="progressbar"
+                            aria-valuenow={pred.score}
+                            aria-valuemin={0}
+                            aria-valuemax={100}
+                            aria-label={`Prediction score: ${pred.score}%`}
                           ></div>
                         </div>
                       </div>

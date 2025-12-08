@@ -179,20 +179,24 @@ export default function GodModePanel() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-2">Duration (seconds)</label>
+                <label htmlFor="duration-input" className="block text-sm font-medium mb-2">Duration (seconds)</label>
                 <input
+                  id="duration-input"
                   type="number"
                   value={duration}
                   onChange={(e) => setDuration(Number(e.target.value))}
                   className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-pink-500"
+                  aria-label="Duration in seconds"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">Platform</label>
+                <label htmlFor="platform-select" className="block text-sm font-medium mb-2">Platform</label>
                 <select
+                  id="platform-select"
                   value={platform}
                   onChange={(e) => setPlatform(e.target.value as any)}
                   className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-pink-500"
+                  aria-label="Select video platform"
                 >
                   <option value="tiktok">TikTok</option>
                   <option value="instagram">Instagram Reel</option>
@@ -201,11 +205,13 @@ export default function GodModePanel() {
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">Style</label>
+              <label htmlFor="style-select" className="block text-sm font-medium mb-2">Style</label>
               <select
+                id="style-select"
                 value={style}
                 onChange={(e) => setStyle(e.target.value as any)}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-pink-500"
+                aria-label="Select content style"
               >
                 <option value="entertaining">Entertaining</option>
                 <option value="educational">Educational</option>
@@ -272,9 +278,15 @@ export default function GodModePanel() {
                   <span className="text-sm font-bold text-purple-600">{Math.round(result.confidence * 100)}%</span>
                 </div>
                 <div className="h-2 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
+                  {/* eslint-disable-next-line @next/next/no-style-component-with-dynamic-styles */}
                   <div
                     className="h-full bg-gradient-to-r from-purple-600 to-pink-600 transition-all duration-500"
                     style={{ width: `${result.confidence * 100}%` }}
+                    role="progressbar"
+                    aria-valuenow={result.confidence * 100}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    aria-label={`Confidence score: ${Math.round(result.confidence * 100)}%`}
                   ></div>
                 </div>
               </div>

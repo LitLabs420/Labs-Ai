@@ -115,10 +115,12 @@ export default function StationPage() {
           <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-6">
             <h2 className="text-xl font-semibold mb-4">Embed Your Station</h2>
             <textarea
+              id="embed-code"
               value={embedCode}
               readOnly
               rows={3}
               className="w-full px-4 py-2 rounded-lg bg-slate-800 border border-slate-700 text-sm font-mono"
+              aria-label="Embed code for station"
             />
             <button
               onClick={() => copyToClipboard(embedCode)}
@@ -158,35 +160,43 @@ export default function StationPage() {
             <h2 className="text-xl font-semibold mb-4">Customize Your Station</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-2">Display Name</label>
+                <label htmlFor="display-name-station" className="block text-sm font-medium mb-2">Display Name</label>
                 <input
+                  id="display-name-station"
                   type="text"
                   placeholder="Your Name or Brand"
                   className="w-full px-4 py-2 rounded-lg bg-slate-800 border border-slate-700"
+                  aria-label="Display name for your station"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">Bio</label>
+                <label htmlFor="bio-station" className="block text-sm font-medium mb-2">Bio</label>
                 <input
+                  id="bio-station"
                   type="text"
                   placeholder="What you do..."
                   className="w-full px-4 py-2 rounded-lg bg-slate-800 border border-slate-700"
+                  aria-label="Your bio description"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">Profile Image</label>
+                <label htmlFor="profile-image-station" className="block text-sm font-medium mb-2">Profile Image</label>
                 <input
+                  id="profile-image-station"
                   type="file"
                   accept="image/*"
                   className="w-full px-4 py-2 rounded-lg bg-slate-800 border border-slate-700"
+                  aria-label="Upload profile image"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">Cover Image</label>
+                <label htmlFor="cover-image-station" className="block text-sm font-medium mb-2">Cover Image</label>
                 <input
+                  id="cover-image-station"
                   type="file"
                   accept="image/*"
                   className="w-full px-4 py-2 rounded-lg bg-slate-800 border border-slate-700"
+                  aria-label="Upload cover image"
                 />
               </div>
             </div>

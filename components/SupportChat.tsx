@@ -256,10 +256,14 @@ export default function SupportChat() {
               <div className='flex justify-start'>
                 <div className='bg-white/5 rounded-2xl px-4 py-3'>
                   <div className='flex gap-1'>
-                    <div className='h-2 w-2 rounded-full bg-pink-500 animate-bounce' style={{ animationDelay: '0s' }}></div>
-                    <div className='h-2 w-2 rounded-full bg-purple-500 animate-bounce' style={{ animationDelay: '0.1s' }}></div>
-                    <div className='h-2 w-2 rounded-full bg-pink-500 animate-bounce' style={{ animationDelay: '0.2s' }}></div>
+                    {/* eslint-disable-next-line @next/next/no-style-component-with-dynamic-styles */}
+                    <div className='h-2 w-2 rounded-full bg-pink-500 animate-bounce' style={{ animationDelay: '0ms' }} aria-hidden="true"></div>
+                    {/* eslint-disable-next-line @next/next/no-style-component-with-dynamic-styles */}
+                    <div className='h-2 w-2 rounded-full bg-purple-500 animate-bounce' style={{ animationDelay: '100ms' }} aria-hidden="true"></div>
+                    {/* eslint-disable-next-line @next/next/no-style-component-with-dynamic-styles */}
+                    <div className='h-2 w-2 rounded-full bg-pink-500 animate-bounce' style={{ animationDelay: '200ms' }} aria-hidden="true"></div>
                   </div>
+                  <span className='sr-only'>Loading</span>
                 </div>
               </div>
             )}

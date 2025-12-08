@@ -151,11 +151,13 @@ module.exports = { handleMessage };`);
                   </div>
 
                   <div>
-                    <label className='block text-sm font-semibold text-white mb-2'>AI Model</label>
+                    <label htmlFor="ai-model-select-studio" className='block text-sm font-semibold text-white mb-2'>AI Model</label>
                     <select
+                      id="ai-model-select-studio"
                       value={model}
                       onChange={(e) => setModel(e.target.value)}
                       className='w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:border-purple-500/50'
+                      aria-label="Select AI model for content generation"
                     >
                       <option value='gemini-1.5-flash'>Gemini 1.5 Flash (Fast)</option>
                       <option value='gemini-1.5-pro'>Gemini 1.5 Pro (Smart)</option>
@@ -176,6 +178,7 @@ module.exports = { handleMessage };`);
                       value={temperature}
                       onChange={(e) => setTemperature(parseFloat(e.target.value))}
                       className='w-full'
+                      aria-label='Temperature control'
                     />
                     <div className='flex justify-between text-xs text-white/50 mt-1'>
                       <span>Precise</span>
@@ -239,11 +242,13 @@ module.exports = { handleMessage };`);
             <h2 className='text-xl font-bold text-white mb-4'>💻 Code Editor</h2>
             
             <textarea
+              id="code-editor"
               value={code}
               onChange={(e) => setCode(e.target.value)}
               rows={20}
               className='w-full px-4 py-3 rounded-lg bg-black/50 border border-white/10 text-green-400 font-mono text-sm focus:outline-none focus:border-purple-500/50 resize-none'
               spellCheck={false}
+              aria-label="Code editor"
             />
 
             <div className='flex gap-3 mt-4'>
