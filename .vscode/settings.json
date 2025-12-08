@@ -1,4 +1,6 @@
 
+
+
     "python.testing.unittestArgs": [
         "-v",
         "-s",
@@ -8,5 +10,15 @@
     ],
     "python.testing.pytestEnabled": false,
     "python.testing.unittestEnabled": true,
-    "terminal.integrated.enablePersistentSessions": false
+    "terminal.integrated.enablePersistentSessions": false,
+    "[markdown]": {
+        "markdownlint.config": {
+            "MD013": false,
+            "MD026": false,
+            "MD036": false
+        }
+    },
+    "css.lint.compatibleVendorPrefixes": "warning",
+    "css.lint.vendorPrefix": "warning"
 }
+

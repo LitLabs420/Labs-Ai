@@ -1,4 +1,4 @@
-# MASTER PROMPT v7 — LITLABS OS (INFINITE UNIVERSE EDITION)
+# MASTER PROMPT v7 - LITLABS OS (INFINITE UNIVERSE EDITION)
 
 **Copy *all* of this text into a new ChatGPT thread.**
 
@@ -9,11 +9,11 @@ It must include EVERYTHING listed below, fully coded, with no omissions.
 
 Your job:
 **Generate the ENTIRE project in Next.js (App Router), TypeScript, Tailwind, Google Cloud Identity, Firestore, Stripe, Azure OpenAI, real-time messaging, crypto, NFTs, media center, social integrations, marketplace, and automation.**
-All code must be 100% complete — no placeholders, no "…" — and fully runnable.
+All code must be 100% complete - no placeholders, no "…" - and fully runnable.
 
 ---
 
-## SECTION 1 — TECHNOLOGY STACK (MANDATORY)
+## SECTION 1 - TECHNOLOGY STACK (MANDATORY)
 
 Use:
 
@@ -41,7 +41,7 @@ Use:
 Output everything:
 
 * Full folder structure
-* All files — pages, components, lib, APIs
+* All files - pages, components, lib, APIs
 * .env.example
 * Deployment instructions
 * UI with animations
@@ -49,13 +49,13 @@ Output everything:
 
 ---
 
-## SECTION 2 — PRODUCT CONCEPT (INFINITE UNIVERSE EDITION)
+## SECTION 2 - PRODUCT CONCEPT (INFINITE UNIVERSE EDITION)
 
 LitLabs OS is a **digital world**, not a website.
 
 It must feel like a **personalized virtual environment** where every user has a custom home base, full control, full extensibility, AI assistants, media centers, crypto engines, communication tools, social connectivity, automation, and marketplace power.
 
-### Users can:
+### Users can
 
 * Watch everything
 * Play everything
@@ -77,11 +77,11 @@ This is a **limitless operating system**.
 
 ---
 
-## SECTION 3 — AUTHENTICATION (MAXED OUT)
+## SECTION 3 - AUTHENTICATION (MAXED OUT)
 
 Use **Google Cloud Identity Platform** with *all available methods enabled*:
 
-### Primary methods:
+### Primary methods
 
 * Google
 * Apple
@@ -97,7 +97,7 @@ Use **Google Cloud Identity Platform** with *all available methods enabled*:
 * Generic OIDC
 * SAML identity providers
 
-### Additional auth:
+### Additional auth
 
 * Email/password
 * Magic link login
@@ -108,7 +108,7 @@ Use **Google Cloud Identity Platform** with *all available methods enabled*:
 * Session revocation
 * Account linking (one user, many providers)
 
-### Auth pages required:
+### Auth pages required
 
 * `/login`
 * `/register`
@@ -121,11 +121,11 @@ Protect all routes under `/dashboard/**`.
 
 ---
 
-## SECTION 4 — THE MAIN OS DASHBOARD (THE HOME BASE)
+## SECTION 4 - THE MAIN OS DASHBOARD (THE HOME BASE)
 
 A fully modular, draggable, resizable, animated OS-style dashboard.
 
-### Must include:
+### Must include
 
 * Add/remove widgets
 * Rearrange widgets
@@ -136,7 +136,7 @@ A fully modular, draggable, resizable, animated OS-style dashboard.
 * Preset themes, skins, holograms
 * Personalized "rooms" or "universes"
 
-### Widgets include:
+### Widgets include
 
 #### AI-based:
 
@@ -195,7 +195,7 @@ A fully modular, draggable, resizable, animated OS-style dashboard.
 
 ---
 
-## SECTION 5 — NAVIGATION SYSTEM (EXTREME SMOOTHNESS)
+## SECTION 5 - NAVIGATION SYSTEM (EXTREME SMOOTHNESS)
 
 Navigation must be:
 
@@ -212,13 +212,13 @@ Navigation must be:
 
 ---
 
-## SECTION 6 — MEDIAHUB (KODI-CLASS MEDIA CENTER)
+## SECTION 6 - MEDIAHUB (KODI-CLASS MEDIA CENTER)
 
 Route: `/dashboard/mediahub`
 
 Must integrate:
 
-### Sources:
+### Sources
 
 * Google Drive
 * Google Photos
@@ -230,7 +230,7 @@ Must integrate:
 * HLS / MP4 direct links
 * User-uploaded media
 
-### Features:
+### Features
 
 * Poster browsing
 * Continue Watching
@@ -246,7 +246,7 @@ Must integrate:
 
 ---
 
-## SECTION 7 — SOCIAL HUB
+## SECTION 7 - SOCIAL HUB
 
 Route: `/dashboard/social-hub`
 
@@ -266,7 +266,7 @@ Features include:
 
 ---
 
-## SECTION 8 — COMMUNICATION SYSTEM
+## SECTION 8 - COMMUNICATION SYSTEM
 
 Route: `/dashboard/messages`
 
@@ -289,19 +289,19 @@ Capabilities:
 
 ---
 
-## SECTION 9 — CRYPTO + WEB3 UNIVERSE
+## SECTION 9 - CRYPTO + WEB3 UNIVERSE
 
 Route: `/dashboard/web3`
 
 Users can:
 
-### Wallets:
+### Wallets
 
 * Connect MetaMask
 * Connect Coinbase Wallet
 * Connect WalletConnect
 
-### Crypto actions:
+### Crypto actions
 
 * View balances
 * Send tokens
@@ -309,7 +309,7 @@ Users can:
 * Track prices
 * Portfolio analytics
 
-### NFTs:
+### NFTs
 
 * View collections
 * Mint NFTs (Polygon/Ethereum)
@@ -319,7 +319,7 @@ Users can:
 
 ---
 
-## SECTION 10 — MARKETPLACE
+## SECTION 10 - MARKETPLACE
 
 Route: `/dashboard/market`
 
@@ -338,7 +338,7 @@ Features:
 
 ---
 
-## SECTION 11 — CACHEGRAM (CONTENT WAR ROOM)
+## SECTION 11 - CACHEGRAM (CONTENT WAR ROOM)
 
 Route: `/dashboard/cachegram`
 
@@ -357,7 +357,7 @@ Features:
 
 ---
 
-## SECTION 12 — AI LAYER
+## SECTION 12 - AI LAYER
 
 Azure OpenAI powers everything:
 
@@ -374,7 +374,7 @@ Azure OpenAI powers everything:
 
 ---
 
-## SECTION 13 — AUTOMATION ENGINE
+## SECTION 13 - AUTOMATION ENGINE
 
 Users can create AI-powered automations:
 
@@ -402,15 +402,15 @@ Automation builder must be a drag-and-drop node editor.
 
 ---
 
-## SECTION 14 — STRIPE BILLING
+## SECTION 14 - STRIPE BILLING
 
-### Core tiers:
+### Core tiers
 
 * Starter
 * Pro
 * GodMode
 
-### Add-ons:
+### Add-ons
 
 * CacheGram Pro
 * Social Booster
@@ -436,7 +436,7 @@ subscriptions: {
 
 ---
 
-## SECTION 15 — OUTPUT REQUIREMENTS
+## SECTION 15 - OUTPUT REQUIREMENTS
 
 Your output **must include everything**:
 
@@ -480,14 +480,14 @@ All code must be valid, runnable, no omissions.
 
 ---
 
-## SECTION 16 — STRICT RULES
+## SECTION 16 - STRICT RULES
 
 * Do NOT summarize.
 * Do NOT omit files.
 * Do NOT use "…" anywhere.
 * All code must be complete, valid, runnable.
 * All features must be implemented.
-* Do not shorten the project — build it in full.
+* Do not shorten the project - build it in full.
 
 ---
 
