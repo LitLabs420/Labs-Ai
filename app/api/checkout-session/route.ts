@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createCheckoutSession, createStripeCustomer, STRIPE_PRODUCTS } from "@/lib/stripe";
+import { createCheckoutSession, createStripeCustomer } from "@/lib/stripe";
+import { STRIPE_PRODUCTS } from "@/lib/stripe-client";
 import { getAdminDb } from "@/lib/firebase-admin";
 import { getUserFromRequest } from "@/lib/auth-helper";
 import { getBaseUrl } from "@/lib/url-helper";
@@ -74,8 +75,10 @@ export async function POST(req: NextRequest) {
     const baseUrl = getBaseUrl();
     const trialDays = tier === "pro" ? 14 : undefined;
     const session = await createCheckoutSession(
-      stripeCustomerId,
+      userId,
+      email,
       product.priceId,
+      tier,
       `${baseUrl}/dashboard/billing?success=true`,
       `${baseUrl}/dashboard/billing?cancelled=true`,
       trialDays

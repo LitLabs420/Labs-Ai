@@ -35,15 +35,15 @@ export default function Home() {
             </a>
             <a href="#pricing" className="hover:text-emerald-400 transition-colors">
               Pricing
-                        <a href="/marketplace" className="hover:text-emerald-400 transition-colors">
-                          Marketplace
-                        </a>
-                        <a href="/earn" className="hover:text-emerald-400 transition-colors">
-                          Earn
-                        </a>
-                        <a href="/leaderboard" className="hover:text-emerald-400 transition-colors">
-                          Leaderboard
-                        </a>
+            </a>
+            <a href="/marketplace" className="hover:text-emerald-400 transition-colors">
+              Marketplace
+            </a>
+            <a href="/earn" className="hover:text-emerald-400 transition-colors">
+              Earn
+            </a>
+            <a href="/leaderboard" className="hover:text-emerald-400 transition-colors">
+              Leaderboard
             </a>
             <a href="#how-it-works" className="hover:text-emerald-400 transition-colors">
               How it works

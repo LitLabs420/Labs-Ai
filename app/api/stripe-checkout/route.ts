@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Stripe } from 'stripe';
 import { getUserFromRequest } from '@/lib/auth-helper';
 import { getBaseUrl } from '@/lib/url-helper';
+import { createCheckoutSession, getTierFromPriceId } from '@/lib/stripe';
+import { STRIPE_PRODUCTS } from '@/lib/stripe-client';
 import { z } from 'zod';
 
 export const runtime = 'nodejs';
@@ -9,6 +10,7 @@ export const dynamic = 'force-dynamic';
 
 const checkoutSchema = z.object({
   priceId: z.string().min(1),
+  tier: z.string().optional(),
 });
 
 export async function POST(request: NextRequest) {
@@ -30,10 +32,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const stripe = new Stripe(stripeKey, {
-      apiVersion: '2025-11-17.clover',
-    });
-
     const body = await request.json();
     
     // Validate input
@@ -45,32 +43,33 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    const { priceId } = validation.data;
+    const { priceId, tier: requestedTier } = validation.data;
     const email = user.email || "";
+    
+    // Determine tier from price ID or request
+    const tier = requestedTier || getTierFromPriceId(priceId);
+    
+    // Get trial days if applicable
+    const product = Object.values(STRIPE_PRODUCTS).find(p => p.priceId === priceId);
+    const trialDays = product?.trialDays;
 
-    // Create or get customer
-    const customers = await stripe.customers.list({ email, limit: 1 });
-    let customerId = customers.data[0]?.id;
-
-    if (!customerId) {
-      const customer = await stripe.customers.create({ email });
-      customerId = customer.id;
-    }
-
-    // Create checkout session
-    // SECURITY: Never use client-provided URLs to prevent open redirect attacks
+    // Create checkout session with full metadata
     const baseUrl = getBaseUrl();
-    const session = await stripe.checkout.sessions.create({
-      customer: customerId,
-      payment_method_types: ['card'],
-      line_items: [{ price: priceId, quantity: 1 }],
-      mode: 'subscription',
-      success_url: `${baseUrl}/dashboard/billing?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${baseUrl}/dashboard/billing`,
-      client_reference_id: user.uid, // Link session to authenticated user
-    });
+    const session = await createCheckoutSession(
+      user.uid,
+      email,
+      priceId,
+      tier,
+      `${baseUrl}/dashboard/billing?session_id={CHECKOUT_SESSION_ID}&success=true`,
+      `${baseUrl}/dashboard/billing?canceled=true`,
+      trialDays
+    );
 
-    return NextResponse.json({ sessionId: session.id, url: session.url });
+    return NextResponse.json({ 
+      sessionId: session.id, 
+      url: session.url,
+      tier,
+    });
   } catch (error) {
     console.error('Stripe checkout error:', error);
     return NextResponse.json(

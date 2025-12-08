@@ -1,36 +1,83 @@
-import rateLimit from 'express-rate-limit';
+import { NextRequest, NextResponse } from 'next/server';
 
-// Strict rate limiter for auth endpoints
-export const authLimiter = rateLimit({
+// Simple in-memory rate limiter for Next.js API routes
+// For production, use the main rateLimiter.ts with Redis backend
+
+interface RateLimitConfig {
+  windowMs: number;
+  max: number;
+  message: string;
+}
+
+const requestCounts = new Map<string, { count: number; resetTime: number }>();
+
+/**
+ * Create a rate limiter middleware for Next.js API routes
+ */
+export function createRateLimiter(config: RateLimitConfig) {
+  return (request: NextRequest): NextResponse | null => {
+    const ip = request.headers.get('x-forwarded-for') || 
+               request.headers.get('x-real-ip') || 
+               'unknown';
+    
+    const key = `${ip}:${request.nextUrl.pathname}`;
+    const now = Date.now();
+    
+    const record = requestCounts.get(key);
+    
+    if (!record || now > record.resetTime) {
+      // New window
+      requestCounts.set(key, {
+        count: 1,
+        resetTime: now + config.windowMs,
+      });
+      return null; // Allow request
+    }
+    
+    if (record.count >= config.max) {
+      // Rate limit exceeded
+      return NextResponse.json(
+        { error: config.message },
+        { 
+          status: 429,
+          headers: {
+            'Retry-After': String(Math.ceil((record.resetTime - now) / 1000)),
+          },
+        }
+      );
+    }
+    
+    // Increment counter
+    record.count++;
+    return null; // Allow request
+  };
+}
+
+// Pre-configured rate limiters
+export const authLimiter = createRateLimiter({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // limit each IP to 5 requests per windowMs
+  max: 5,
   message: 'Too many authentication attempts, please try again later',
-  standardHeaders: true,
-  legacyHeaders: false,
-  skip: (req) => {
-    // Skip rate limiting for health checks
-    return req.path === '/health';
-  },
 });
 
-// Moderate rate limiter for API endpoints
-export const apiLimiter = rateLimit({
+export const apiLimiter = createRateLimiter({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  max: 100,
   message: 'Too many requests, please try again later',
-  standardHeaders: true,
-  legacyHeaders: false,
-  keyGenerator: (req) => {
-    // Use user ID if authenticated, otherwise use IP
-    return (req as any).user?.id || req.ip || 'unknown';
-  },
 });
 
-// Strict rate limiter for critical operations
-export const criticalLimiter = rateLimit({
+export const criticalLimiter = createRateLimiter({
   windowMs: 60 * 60 * 1000, // 1 hour
-  max: 10, // limit each IP to 10 requests per hour
+  max: 10,
   message: 'Too many critical operations, please try again later',
-  standardHeaders: true,
-  legacyHeaders: false,
 });
+
+// Clean up old entries periodically
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, record] of requestCounts.entries()) {
+    if (now > record.resetTime) {
+      requestCounts.delete(key);
+    }
+  }
+}, 60 * 1000); // Clean up every minute

@@ -1,21 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { info, warn, error } from '@/lib/serverLogger';
 import { getAdminDb } from '@/lib/firebase-admin';
-export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic';
+import { getTierFromPriceId, updateUserSubscription } from '@/lib/stripe';
 import Stripe from 'stripe';
 
-// Initialize Stripe client (use account default API version)
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
+// Initialize Stripe client
 const stripe = process.env.STRIPE_SECRET_KEY 
   ? new Stripe(process.env.STRIPE_SECRET_KEY)
   : null;
 
 /**
  * STRIPE WEBHOOK HANDLER
- * Processes Stripe payment events:
- * - checkout.session.completed (payment successful)
- * - customer.subscription.updated (plan changed)
- * - invoice.payment_failed (retry needed)
+ * Processes Stripe payment events and updates user subscriptions in Firebase
  */
 
 export async function POST(request: NextRequest) {
@@ -46,128 +45,223 @@ export async function POST(request: NextRequest) {
 
     switch (type) {
       case 'checkout.session.completed': {
-        const { customer_email, metadata, amount_total } = data.object;
-        const { userId, tier } = metadata || {};
+        const session = data.object as Stripe.Checkout.Session;
+        const { customer, subscription, metadata } = session;
+        const { userId, tier, email } = metadata || {};
 
-        if (!userId || !customer_email) {
-          warn('Missing userId or email in checkout');
+        if (!userId || !email) {
+          warn('[Stripe Webhook] Missing userId or email in checkout session metadata');
           return NextResponse.json({ received: true });
         }
 
-        // Find user
-        const dbRef = getAdminDb();
-        if (!dbRef) {
-          warn('Firestore Admin not initialized');
-          return NextResponse.json({ received: true });
-        }
-        const usersSnap = await dbRef
-          .collection('users')
-          .where('email', '==', customer_email)
-          .get();
-
-        if (usersSnap.empty) {
-          warn(`User not found: ${customer_email}`);
+        if (typeof subscription !== 'string' || typeof customer !== 'string') {
+          warn('[Stripe Webhook] Invalid subscription or customer ID');
           return NextResponse.json({ received: true });
         }
 
-        const userDoc = usersSnap.docs[0];
+        // Get subscription details
+        const subResponse = await stripe.subscriptions.retrieve(subscription);
+        const sub = subResponse as any;
+        const priceId = sub.items?.data?.[0]?.price?.id;
+        const determinedTier = tier || getTierFromPriceId(priceId);
 
-        // Update subscription
-        await dbRef
-          .collection('users')
-          .doc(userDoc.id)
-          .update({
-            tier: tier || 'pro',
-            subscription: {
-              plan: tier || 'pro',
-              status: 'active',
-              startDate: new Date().toISOString(),
-              autoRenew: true,
-            },
-          });
-
-        // Log transaction
-        await dbRef.collection('transactions').add({
-          userId: userDoc.id,
-          email: customer_email,
-          tier: tier || 'pro',
-          amount: (amount_total || 0) / 100, // Convert cents to dollars
-          paymentMethod: 'stripe',
-          transactionId: (data.object as any).id,
-          status: 'completed',
-          createdAt: new Date(),
-          type: 'subscription_upgrade',
+        // Update user subscription in Firebase
+        await updateUserSubscription(userId, {
+          subscriptionId: subscription,
+          customerId: customer,
+          tier: determinedTier,
+          status: sub.status,
+          currentPeriodEnd: sub.current_period_end,
+          cancelAtPeriodEnd: sub.cancel_at_period_end,
         });
 
-        info(`✅ Stripe: ${customer_email} upgraded to ${tier}`);
+        // Log transaction
+        const db = getAdminDb();
+        if (db) {
+          await db.collection('transactions').add({
+            userId,
+            email,
+            tier: determinedTier,
+            amount: (session.amount_total || 0) / 100,
+            paymentMethod: 'stripe',
+            transactionId: session.id,
+            subscriptionId: subscription,
+            status: 'completed',
+            createdAt: new Date(),
+            type: 'subscription_created',
+          });
+        }
+
+        info(`✅ Stripe: ${email} subscribed to ${determinedTier} - Subscription ${subscription}`);
         break;
       }
 
       case 'customer.subscription.updated': {
-        const { customer, items, status } = data.object;
-        const planId = items.data[0]?.plan.id;
+        const subscriptionObj = data.object as any;
+        const { customer, items, status, current_period_end, cancel_at_period_end, metadata, id: subscriptionId } = subscriptionObj;
+        const priceId = items?.data?.[0]?.price?.id;
+        
+        const userId = metadata?.userId;
+        const tier = metadata?.tier || getTierFromPriceId(priceId);
 
-        // Map Stripe price IDs to tiers
-        const tierMap: Record<string, string> = {
-          [process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO || '']: 'pro',
-          [process.env.NEXT_PUBLIC_STRIPE_PRICE_ENTERPRISE || '']: 'enterprise',
-        };
+        if (!userId) {
+          // Try to find user by Stripe customer ID
+          const db = getAdminDb();
+          if (db) {
+            const usersSnap = await db
+              .collection('users')
+              .where('stripeCustomerId', '==', customer)
+              .limit(1)
+              .get();
 
-        const tier = tierMap[planId] || 'free';
+            if (!usersSnap.empty) {
+              const userDoc = usersSnap.docs[0];
+              await updateUserSubscription(userDoc.id, {
+                subscriptionId,
+                customerId: customer as string,
+                tier,
+                status,
+                currentPeriodEnd: current_period_end,
+                cancelAtPeriodEnd: cancel_at_period_end,
+              });
 
-        // Find user by Stripe customer ID
-        const dbRef = getAdminDb();
-        if (!dbRef) {
-          warn('Firestore Admin not initialized');
-          return NextResponse.json({ received: true });
+              info(`✅ Stripe: Subscription updated - ${userDoc.data().email} → ${tier} (${status})`);
+            }
+          }
+        } else {
+          await updateUserSubscription(userId, {
+            subscriptionId,
+            customerId: customer as string,
+            tier,
+            status,
+            currentPeriodEnd: current_period_end,
+            cancelAtPeriodEnd: cancel_at_period_end,
+          });
+
+          info(`✅ Stripe: Subscription updated - User ${userId} → ${tier} (${status})`);
         }
-        const usersSnap = await dbRef
-          .collection('users')
-          .where('stripeCustomerId', '==', customer)
-          .get();
+        break;
+      }
 
-        if (!usersSnap.empty) {
-          const userDoc = usersSnap.docs[0];
-          await dbRef
-            .collection('users')
-            .doc(userDoc.id)
-            .update({
-              tier,
-              subscription: { plan: tier, status },
+      case 'customer.subscription.deleted': {
+        const subscriptionObj = data.object as any;
+        const { customer, metadata } = subscriptionObj;
+        const userId = metadata?.userId;
+
+        // Downgrade user to free tier
+        const db = getAdminDb();
+        if (db) {
+          if (userId) {
+            await db.collection('users').doc(userId).update({
+              tier: 'free',
+              stripeSubscriptionId: null,
+              subscription: {
+                plan: 'free',
+                status: 'canceled',
+                canceledAt: new Date().toISOString(),
+              },
             });
+            info(`✅ Stripe: Subscription canceled - User ${userId} downgraded to free`);
+          } else {
+            // Find by customer ID
+            const usersSnap = await db
+              .collection('users')
+              .where('stripeCustomerId', '==', customer)
+              .limit(1)
+              .get();
 
-          info(`✅ Stripe: Subscription updated - ${userDoc.data().email} → ${tier}`);
+            if (!usersSnap.empty) {
+              const userDoc = usersSnap.docs[0];
+              await db.collection('users').doc(userDoc.id).update({
+                tier: 'free',
+                stripeSubscriptionId: null,
+                subscription: {
+                  plan: 'free',
+                  status: 'canceled',
+                  canceledAt: new Date().toISOString(),
+                },
+              });
+              info(`✅ Stripe: Subscription canceled - ${userDoc.data().email} downgraded to free`);
+            }
+          }
         }
         break;
       }
 
       case 'invoice.payment_failed': {
-        const { customer_email } = data.object;
+        const invoiceObj = data.object as any;
+        const { customer, customer_email, subscription } = invoiceObj;
 
-        const dbRefInvoice = getAdminDb();
-        if (!dbRefInvoice) {
-          warn('Firestore Admin not initialized');
-          return NextResponse.json({ received: true });
+        const db = getAdminDb();
+        if (db) {
+          const usersSnap = await db
+            .collection('users')
+            .where('stripeCustomerId', '==', customer)
+            .limit(1)
+            .get();
+
+          if (!usersSnap.empty) {
+            const userDoc = usersSnap.docs[0];
+
+            // Log failed payment
+            await db.collection('transactions').add({
+              userId: userDoc.id,
+              email: customer_email || userDoc.data().email,
+              status: 'failed',
+              type: 'payment_failed',
+              subscriptionId: subscription,
+              createdAt: new Date(),
+              retryable: true,
+            });
+
+            // Update subscription status
+            await db.collection('users').doc(userDoc.id).update({
+              'subscription.status': 'past_due',
+              'subscription.lastPaymentFailed': new Date().toISOString(),
+            });
+
+            warn(`⚠️ Stripe: Payment failed for ${userDoc.data().email}`);
+          }
         }
-        const usersSnap = await dbRefInvoice
-          .collection('users')
-          .where('email', '==', customer_email)
-          .get();
+        break;
+      }
 
-        if (!usersSnap.empty) {
-          const userDoc = usersSnap.docs[0];
+      case 'invoice.payment_succeeded': {
+        const invoiceObj = data.object as any;
+        const { customer, customer_email, subscription, amount_paid } = invoiceObj;
 
-          // Log failed payment
-          await dbRefInvoice.collection('transactions').add({
-            userId: userDoc.id,
-            email: customer_email,
-            status: 'failed',
-            type: 'payment_failed',
-            createdAt: new Date(),
-            retryable: true,
-          });
+        const db = getAdminDb();
+        if (db) {
+          const usersSnap = await db
+            .collection('users')
+            .where('stripeCustomerId', '==', customer)
+            .limit(1)
+            .get();
 
-          warn(`⚠️ Stripe: Payment failed for ${customer_email}`);
+          if (!usersSnap.empty) {
+            const userDoc = usersSnap.docs[0];
+
+            // Log successful payment
+            await db.collection('transactions').add({
+              userId: userDoc.id,
+              email: customer_email || userDoc.data().email,
+              amount: amount_paid / 100,
+              status: 'completed',
+              type: 'subscription_payment',
+              subscriptionId: subscription,
+              transactionId: invoiceObj.id,
+              paymentMethod: 'stripe',
+              createdAt: new Date(),
+            });
+
+            // Update subscription status to active
+            await db.collection('users').doc(userDoc.id).update({
+              'subscription.status': 'active',
+              'subscription.lastPaymentSuccess': new Date().toISOString(),
+            });
+
+            info(`✅ Stripe: Payment succeeded for ${userDoc.data().email} - $${amount_paid / 100}`);
+          }
         }
         break;
       }

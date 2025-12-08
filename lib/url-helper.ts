@@ -3,11 +3,11 @@
  * Prevents issues with multiple environment variable names
  */
 export function getBaseUrl(): string {
-  // Priority order: NEXT_PUBLIC_APP_URL > NEXT_PUBLIC_BASE_URL > localhost
+  // Priority order: NEXT_PUBLIC_APP_URL > NEXT_PUBLIC_BASE_URL > production URL
   return (
     process.env.NEXT_PUBLIC_APP_URL ||
     process.env.NEXT_PUBLIC_BASE_URL ||
-    "http://localhost:3000"
+    "https://litree-labstudio.com"
   );
 }
 
