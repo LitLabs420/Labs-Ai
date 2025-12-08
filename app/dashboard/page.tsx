@@ -11,6 +11,8 @@ import { useRouter } from 'next/navigation';
 import { FunArcadeBanner } from '@/components/dashboard/FunArcadeBanner';
 import { XPCard } from '@/components/dashboard/XPCard';
 import { DailyChallengeCard } from '@/components/dashboard/DailyChallengeCard';
+import { DraggableGrid } from '@/components/dashboard/DraggableGrid';
+import { XboxGamingWidget } from '@/components/dashboard/XboxGamingWidget';
 
 const MoneyTodayCard = dynamic(() => import('@/components/dashboard/MoneyTodayCard').then(mod => ({ default: mod.MoneyTodayCard })), { ssr: false });
 const ChatBotOnboarding = dynamic(() => import('@/components/dashboard/ChatBot').then(mod => ({ default: mod.ChatBotOnboarding })), { ssr: false });
@@ -30,6 +32,8 @@ export default function DashboardPage() {
     revenue: 0,
     tier: 'free',
   });
+  const [widgets, setWidgets] = useState<any[]>([]);
+  const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -70,6 +74,35 @@ export default function DashboardPage() {
     return () => unsub();
   }, [router]);
 
+  const handleLayoutChange = async (updatedWidgets: any[]) => {
+    setWidgets(updatedWidgets);
+    try {
+      await fetch('/api/layouts', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ widgets: updatedWidgets }),
+      });
+    } catch (error) {
+      console.error('Failed to save layout:', error);
+    }
+  };
+
+  useEffect(() => {
+    const loadLayout = async () => {
+      try {
+        const response = await fetch('/api/layouts');
+        if (response.ok) {
+          const data = await response.json();
+          setWidgets(data.widgets || []);
+        }
+      } catch (error) {
+        console.error('Failed to load layout:', error);
+      }
+    };
+
+    loadLayout();
+  }, []);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
@@ -86,8 +119,40 @@ export default function DashboardPage() {
   return (
     <DashboardLayout>
       <div className='space-y-8'>
-        {/* ARCADE BANNER */}
-        <FunArcadeBanner />
+        {/* DRAGGABLE LAYOUT SYSTEM */}
+        <div className='rounded-xl border border-white/10 bg-gradient-to-br from-slate-800 to-slate-900 p-6'>
+          <div className='flex items-center justify-between mb-4'>
+            <h2 className='text-xl font-bold text-white'>Your Dashboard Layout</h2>
+            <button 
+              onClick={() => setEditMode(!editMode)}
+              className={`px-3 py-1 rounded-lg text-sm font-medium transition ${
+                editMode 
+                  ? 'bg-pink-500 text-white' 
+                  : 'bg-white/10 text-white hover:bg-white/20'
+              }`}
+            >
+              {editMode ? '✓ Done Editing' : '✎ Edit Layout'}
+            </button>
+          </div>
+          {editMode && (
+            <p className='text-sm text-white/60 mb-4'>
+              Drag widgets to reorder them. Click the eye icon to show/hide widgets.
+            </p>
+          )}
+          <DraggableGrid
+            widgets={widgets}
+            editable={editMode}
+            onPositionChange={handleLayoutChange}
+            gridColumns={4}
+            rowHeight={100}
+          >
+            {widgets.map((widget) => (
+              <div key={widget.id} className='rounded-lg bg-white/5 border border-white/10 p-4 h-full overflow-hidden'>
+                <p className='text-sm font-medium text-white/70'>{widget.name}</p>
+              </div>
+            ))}
+          </DraggableGrid>
+        </div>
 
         {/* XP + CHALLENGE SECTION */}
         <div className='grid md:grid-cols-3 gap-4'>
@@ -144,6 +209,40 @@ export default function DashboardPage() {
           </div>
         </div>
 
+        {/* NEW FEATURES SECTION */}
+        <div className='space-y-4'>
+          <h2 className='text-2xl font-bold text-white'>✨ New Features</h2>
+          <div className='grid grid-cols-1 lg:grid-cols-4 gap-4'>
+            {/* Custom Layouts */}
+            <div className='rounded-xl border border-white/10 bg-gradient-to-br from-blue-900/20 to-blue-800/20 p-4 hover:border-blue-500/50 transition cursor-pointer' onClick={() => router.push('/dashboard/layouts')}>
+              <div className='h-10 w-10 rounded-lg bg-blue-500/20 flex items-center justify-center text-lg mb-3'>📐</div>
+              <h3 className='text-lg font-bold text-white mb-1'>Custom Layouts</h3>
+              <p className='text-sm text-white/70'>Drag & drop dashboard</p>
+            </div>
+
+            {/* Azure Cloud */}
+            <div className='rounded-xl border border-white/10 bg-gradient-to-br from-cyan-900/20 to-cyan-800/20 p-4 hover:border-cyan-500/50 transition cursor-pointer' onClick={() => router.push('/dashboard/azure')}>
+              <div className='h-10 w-10 rounded-lg bg-cyan-500/20 flex items-center justify-center text-lg mb-3'>☁️</div>
+              <h3 className='text-lg font-bold text-white mb-1'>Azure Integration</h3>
+              <p className='text-sm text-white/70'>Cloud storage & compute</p>
+            </div>
+
+            {/* Xbox Gaming */}
+            <div className='rounded-xl border border-white/10 bg-gradient-to-br from-green-900/20 to-green-800/20 p-4 hover:border-green-500/50 transition cursor-pointer' onClick={() => router.push('/dashboard/gaming')}>
+              <div className='h-10 w-10 rounded-lg bg-green-500/20 flex items-center justify-center text-lg mb-3'>🎮</div>
+              <h3 className='text-lg font-bold text-white mb-1'>Xbox Cloud Gaming</h3>
+              <p className='text-sm text-white/70'>Game Pass + emulators</p>
+            </div>
+
+            {/* Custom Domains */}
+            <div className='rounded-xl border border-white/10 bg-gradient-to-br from-purple-900/20 to-purple-800/20 p-4 hover:border-purple-500/50 transition cursor-pointer' onClick={() => router.push('/billing')}>
+              <div className='h-10 w-10 rounded-lg bg-purple-500/20 flex items-center justify-center text-lg mb-3'>🌐</div>
+              <h3 className='text-lg font-bold text-white mb-1'>Custom Domains</h3>
+              <p className='text-sm text-white/70'>Payment page domains</p>
+            </div>
+          </div>
+        </div>
+
         {/* FEATURE CARDS */}
         <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
           <div onClick={() => router.push('/dashboard/ai')} className='group relative rounded-xl border border-white/10 bg-gradient-to-br from-slate-800 to-slate-900 overflow-hidden hover:border-pink-500/50 transition p-8 cursor-pointer'>
@@ -173,6 +272,12 @@ export default function DashboardPage() {
             <p className='text-white/70 mb-6'>Scene-by-scene viral scripts for TikTok & IG</p>
             <button className='px-4 py-2 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-sm font-semibold transition'>Create Script →</button>
           </div>
+        </div>
+
+        {/* XBOX CLOUD GAMING SECTION */}
+        <div className='rounded-xl border border-white/10 bg-gradient-to-br from-slate-800 to-slate-900 p-6'>
+          <h2 className='text-2xl font-bold text-white mb-4'>🎮 Xbox Cloud Gaming</h2>
+          <XboxGamingWidget />
         </div>
 
         {/* MONEY TODAY + CHATBOT SECTION */}
