@@ -35,10 +35,16 @@ export default defineConfig([
       "jsx-a11y/click-events-have-key-events": "off",
     },
   },
-  globalIgnores([
-    ".next/**",
-    "out/**",
-    "build/**",
-    "next-env.d.ts",
-  ]),
+  {
+    ignores: [
+      ".next/**",
+      "out/**",
+      "build/**",
+      "next-env.d.ts",
+      "node_modules/**",
+      ".git/**",
+      "dist/**",
+      "coverage/**",
+    ],
+  },
 ]);
