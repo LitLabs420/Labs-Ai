@@ -1,8 +1,15 @@
 import { ElevenLabsClient } from "elevenlabs";
 
-const elevenLabs = new ElevenLabsClient({
-  apiKey: process.env.ELEVENLABS_API_KEY,
-});
+let elevenLabs: ElevenLabsClient | null = null;
+
+function getElevenLabsClient(): ElevenLabsClient {
+  if (!elevenLabs) {
+    elevenLabs = new ElevenLabsClient({
+      apiKey: process.env.ELEVENLABS_API_KEY || "",
+    });
+  }
+  return elevenLabs;
+}
 
 export interface VoiceOptions {
   text: string;
@@ -33,9 +40,10 @@ export async function generateSpeech(
   options: VoiceOptions
 ): Promise<Buffer> {
   try {
+    const client = getElevenLabsClient();
     const voiceId = options.voiceId || PREMIUM_VOICES.FEMALE_PROFESSIONAL;
 
-    const audio = await elevenLabs.generate({
+    const audio = await client.generate({
       voice: voiceId,
       text: options.text,
       model_id: "eleven_turbo_v2",

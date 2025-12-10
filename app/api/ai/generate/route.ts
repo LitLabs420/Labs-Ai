@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   generateCompleteContentKit,
   generateVideoPackage,
-  generateDMSequence,
-  generateProductMarketing,
   batchGenerateContent,
   optimizeContent,
 } from "@/lib/ai-pipeline";
@@ -29,7 +27,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { type, topic, platform = "tiktok", duration = "60s", userId } = body;
+    const { type, topic, platform = "tiktok", duration = "60s" } = body;
 
     if (!type || !topic) {
       return NextResponse.json(
@@ -96,7 +94,7 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
-    const { topics, type = "caption", userId } = body;
+    const { topics, type = "caption" } = body;
 
     if (!Array.isArray(topics) || topics.length === 0) {
       return NextResponse.json(
@@ -141,7 +139,7 @@ export async function PUT(request: NextRequest) {
 export async function PATCH(request: NextRequest) {
   try {
     const body = await request.json();
-    const { content, userId } = body;
+    const { content } = body;
 
     if (!content || typeof content !== "string") {
       return NextResponse.json(
@@ -182,7 +180,7 @@ export async function PATCH(request: NextRequest) {
  * GET /api/ai/status
  * Check AI generation service status
  */
-export async function GET(request: NextRequest) {
+export async function GET() {
   return NextResponse.json({
     status: "operational",
     services: {

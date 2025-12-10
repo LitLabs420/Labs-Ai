@@ -1,8 +1,15 @@
 import Replicate from "replicate";
 
-const replicate = new Replicate({
-  auth: process.env.REPLICATE_API_TOKEN,
-});
+let replicate: Replicate | null = null;
+
+function getReplicateClient(): Replicate {
+  if (!replicate) {
+    replicate = new Replicate({
+      auth: process.env.REPLICATE_API_TOKEN || "",
+    });
+  }
+  return replicate;
+}
 
 export interface ImageGenerationOptions {
   prompt: string;
@@ -23,7 +30,8 @@ export async function generateImage(
   options: ImageGenerationOptions
 ): Promise<string[]> {
   try {
-    const output = (await replicate.run(
+    const client = getReplicateClient();
+    const output = (await client.run(
       "black-forest-labs/flux-pro",
       {
         input: {
@@ -109,7 +117,8 @@ export async function generateVideo(
   prompt: string
 ): Promise<string> {
   try {
-    const output = (await replicate.run(
+    const client = getReplicateClient();
+    const output = (await client.run(
       "genmo/video-01-lite-1.5",
       {
         input: {
@@ -130,7 +139,8 @@ export async function generateVideo(
  */
 export async function upscaleImage(imageUrl: string): Promise<string> {
   try {
-    const output = (await replicate.run("nightmareai/real-esrgan", {
+    const client = getReplicateClient();
+    const output = (await client.run("nightmareai/real-esrgan", {
       input: {
         image: imageUrl,
       },
@@ -143,4 +153,4 @@ export async function upscaleImage(imageUrl: string): Promise<string> {
   }
 }
 
-export default replicate;
+export default getReplicateClient;
