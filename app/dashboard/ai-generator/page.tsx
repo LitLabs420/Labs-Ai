@@ -3,8 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { GradientButton, PremiumButton } from '@/components/ui/premium-button';
-import { PremiumCard, CardLayout } from '@/components/ui/premium-card';
-import { PremiumInput } from '@/components/ui/premium-input';
+import { PremiumCard } from '@/components/ui/premium-card';
 import { SparklesIcon, CheckIcon, ArrowRightIcon } from '@heroicons/react/24/solid';
 import { toast } from 'sonner';
 
@@ -86,7 +85,7 @@ Add your personal touch and watch the magic happen! 🎉
       setGeneratedContent(mockContent);
       setShowOutput(true);
       toast.success('Content generated successfully!');
-    } catch (error) {
+    } catch {
       toast.error('Failed to generate content');
     } finally {
       setGenerating(false);

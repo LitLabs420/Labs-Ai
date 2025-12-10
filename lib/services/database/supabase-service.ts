@@ -348,7 +348,6 @@ export async function updateSubscription(subscriptionId: string, updates: any) {
 // ============================================
 
 export async function trackUsage(userId: string, feature: string, count = 1) {
-  const today = new Date().toISOString().split('T')[0];
   
   const { data: existing } = await supabase
     .from('usage_logs')
@@ -412,7 +411,7 @@ export async function logSecurityEvent(userId: string | null, eventData: any) {
 export async function uploadMedia(userId: string, file: File) {
   const fileName = `${userId}/${Date.now()}-${file.name}`;
   
-  const { data, error } = await supabase.storage
+  const { error } = await supabase.storage
     .from('media')
     .upload(fileName, file);
 

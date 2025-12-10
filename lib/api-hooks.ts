@@ -181,7 +181,7 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const login = useCallback(async (email: string, password: string) => {
+  const login = useCallback(async () => {
     try {
       setLoading(true);
       // TODO: Implement login logic

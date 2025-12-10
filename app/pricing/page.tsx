@@ -8,7 +8,6 @@ import { PremiumCard } from '@/components/ui/premium-card';
 import { TIER_CONFIG } from '@/lib/tier-system';
 import { toast } from 'sonner';
 
-const BILLING_PERIODS = ['monthly', 'yearly'] as const;
 const PAYMENT_METHODS = ['stripe', 'solana', 'ethereum'] as const;
 
 export default function PricingPage() {
@@ -72,6 +71,8 @@ export default function PricingPage() {
           <button
             onClick={() => setBillingPeriod(billingPeriod === 'monthly' ? 'yearly' : 'monthly')}
             className="relative inline-flex h-8 w-14 items-center rounded-full bg-neutral-300 dark:bg-neutral-700 transition-colors"
+            title="Toggle between monthly and yearly billing"
+            aria-label="Toggle between monthly and yearly billing"
           >
             <motion.div
               layout
@@ -125,7 +126,6 @@ export default function PricingPage() {
         >
           {tiers.map((tier, idx) => {
             const isPopular = tier.key === 'pro';
-            const isMostAffordable = tier.key === 'starter';
 
             return (
               <motion.div
