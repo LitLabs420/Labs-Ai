@@ -291,13 +291,5 @@ export type {
 } from "@/lib/replicate";
 
 export default {
-  // Re-export for convenience
-  ContentGenerationRequest,
-  GeneratedContent,
-  PaymentRequest,
-  PaymentResponse,
-  AnalyticsEvent,
-  UserProfile,
-  Subscription,
-  UsageMetrics,
+  // Type exports are re-exported at module level
 };
