@@ -1,5 +1,5 @@
 {
-  "name": "labs-ai-studio",
+  "name": "litreelabstudio",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -70,5 +70,5 @@
     "type": "git",
     "url": "https://github.com/LiTree89/Labs-Ai.git"
   },
-  "homepage": "https://labs-ai.studio"
+  "homepage": "http://localhost:3000"
 }

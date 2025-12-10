@@ -1,6 +1,6 @@
 {
-  "name": "LitLabs",
-  "description": "AI-powered content creation and client management platform",
+  "name": "LitReeLab Studio",
+  "description": "Professional AI-powered content creation and client management platform",
   "version": "1.0.0",
   "main": "server.js",
   "type": "module",
