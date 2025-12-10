@@ -20,12 +20,6 @@ interface SolanaPaymentRequest {
   tier?: string;
 }
 
-interface SolanaPaymentResponse {
-  signature: string;
-  transactionUrl: string;
-  confirmed: boolean;
-}
-
 export const SolanaPayments = {
   /**
    * Create Solana payment transaction
@@ -210,7 +204,7 @@ export async function processPayment(
           return { success: false, message: 'Solana wallet address required' };
         }
 
-        const solTx = await SolanaPayments.createTransaction(
+        await SolanaPayments.createTransaction(
           {
             amount: request.amount,
             walletAddress,
@@ -232,7 +226,7 @@ export async function processPayment(
           return { success: false, message: 'Ethereum wallet address required' };
         }
 
-        const ethPayment = await EthereumPayments.getPaymentDetails({
+        await EthereumPayments.getPaymentDetails({
           amount: request.amount,
           walletAddress,
           userId: request.userId,
