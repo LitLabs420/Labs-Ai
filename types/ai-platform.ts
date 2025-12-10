@@ -283,12 +283,7 @@ export interface UserReview {
 
 export type {
   ClaudeGenerationOptions,
-  VoiceOptions,
 } from "@/lib/claude";
-export type {
-  ReplicateGenerationOptions,
-  ReplicateImageOutput,
-} from "@/lib/replicate";
 
 export default {
   // Type exports are re-exported at module level
