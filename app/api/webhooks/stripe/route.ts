@@ -1,31 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { getFirestore } from 'firebase-admin/firestore';
-import { initializeApp, getApps } from 'firebase-admin/app';
-import { cert } from 'firebase-admin/app';
-
-// Initialize Firebase Admin SDK
-let adminDb: ReturnType<typeof getFirestore>;
-
-try {
-  if (!getApps().length) {
-    initializeApp({
-      credential: cert({
-        projectId: process.env.FIREBASE_PROJECT_ID,
-        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-        privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-      }),
-    });
-  }
-  adminDb = getFirestore();
-} catch (error) {
-  console.error('Firebase initialization error:', error);
-}
 
 // Initialize Stripe with secret key
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2024-11-20',
-});
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
 
 // Webhook secret for signature verification
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || '';
@@ -65,35 +42,35 @@ export async function POST(request: NextRequest) {
     // Handle different event types
     switch (event.type) {
       case 'payment_intent.succeeded':
-        await handlePaymentIntentSucceeded(event.data.object as Stripe.PaymentIntent);
+        handlePaymentIntentSucceeded(event.data.object as Stripe.PaymentIntent);
         break;
 
       case 'payment_intent.payment_failed':
-        await handlePaymentIntentFailed(event.data.object as Stripe.PaymentIntent);
+        handlePaymentIntentFailed(event.data.object as Stripe.PaymentIntent);
         break;
 
       case 'charge.refunded':
-        await handleChargeRefunded(event.data.object as Stripe.Charge);
+        handleChargeRefunded(event.data.object as Stripe.Charge);
         break;
 
       case 'customer.subscription.created':
-        await handleSubscriptionCreated(event.data.object as Stripe.Subscription);
+        handleSubscriptionCreated(event.data.object as Stripe.Subscription);
         break;
 
       case 'customer.subscription.updated':
-        await handleSubscriptionUpdated(event.data.object as Stripe.Subscription);
+        handleSubscriptionUpdated(event.data.object as Stripe.Subscription);
         break;
 
       case 'customer.subscription.deleted':
-        await handleSubscriptionDeleted(event.data.object as Stripe.Subscription);
+        handleSubscriptionDeleted(event.data.object as Stripe.Subscription);
         break;
 
       case 'invoice.payment_succeeded':
-        await handleInvoicePaymentSucceeded(event.data.object as Stripe.Invoice);
+        handleInvoicePaymentSucceeded(event.data.object as Stripe.Invoice);
         break;
 
       case 'invoice.payment_failed':
-        await handleInvoicePaymentFailed(event.data.object as Stripe.Invoice);
+        handleInvoicePaymentFailed(event.data.object as Stripe.Invoice);
         break;
 
       default:
@@ -113,198 +90,64 @@ export async function POST(request: NextRequest) {
 }
 
 // Event handlers
-async function handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent) {
-  try {
-    console.log(`Payment succeeded: ${paymentIntent.id}`);
-    
-    // Update user's payment record in Firestore
-    if (paymentIntent.metadata?.userId && adminDb) {
-      await adminDb
-        .collection('payments')
-        .add({
-          userId: paymentIntent.metadata.userId,
-          stripePaymentIntentId: paymentIntent.id,
-          amount: paymentIntent.amount,
-          currency: paymentIntent.currency,
-          status: 'succeeded',
-          timestamp: new Date(),
-        });
-    }
-  } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Error handling payment succeeded:', errorMessage);
+function handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent) {
+  console.log(`✓ Payment succeeded: ${paymentIntent.id}`);
+  console.log(`  Amount: ${paymentIntent.amount / 100} ${paymentIntent.currency.toUpperCase()}`);
+  if (paymentIntent.metadata?.userId) {
+    console.log(`  User: ${paymentIntent.metadata.userId}`);
   }
+  // TODO: Update user's payment record in your database
 }
 
-async function handlePaymentIntentFailed(paymentIntent: Stripe.PaymentIntent) {
-  try {
-    console.log(`Payment failed: ${paymentIntent.id}`);
-    
-    // Log failed payment
-    if (paymentIntent.metadata?.userId && adminDb) {
-      await adminDb
-        .collection('payments')
-        .add({
-          userId: paymentIntent.metadata.userId,
-          stripePaymentIntentId: paymentIntent.id,
-          amount: paymentIntent.amount,
-          currency: paymentIntent.currency,
-          status: 'failed',
-          error: paymentIntent.last_payment_error?.message,
-          timestamp: new Date(),
-        });
-    }
-  } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Error handling payment failed:', errorMessage);
+function handlePaymentIntentFailed(paymentIntent: Stripe.PaymentIntent) {
+  console.log(`✗ Payment failed: ${paymentIntent.id}`);
+  console.log(`  Amount: ${paymentIntent.amount / 100} ${paymentIntent.currency.toUpperCase()}`);
+  console.log(`  Error: ${paymentIntent.last_payment_error?.message}`);
+  if (paymentIntent.metadata?.userId) {
+    console.log(`  User: ${paymentIntent.metadata.userId}`);
   }
+  // TODO: Log failed payment and notify user
 }
 
-async function handleChargeRefunded(charge: Stripe.Charge) {
-  try {
-    console.log(`Charge refunded: ${charge.id}`);
-    
-    if (adminDb) {
-      await adminDb
-        .collection('refunds')
-        .add({
-          stripeChargeId: charge.id,
-          stripeRefundId: charge.refunded ? charge.id : null,
-          amount: charge.amount_refunded,
-          currency: charge.currency,
-          timestamp: new Date(),
-        });
-    }
-  } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Error handling charge refunded:', errorMessage);
-  }
+function handleChargeRefunded(charge: Stripe.Charge) {
+  console.log(`↩ Charge refunded: ${charge.id}`);
+  console.log(`  Amount refunded: ${charge.amount_refunded / 100} ${charge.currency.toUpperCase()}`);
+  // TODO: Update refund record in your database
 }
 
-async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
-  try {
-    console.log(`Subscription created: ${subscription.id}`);
-    
-    if (subscription.metadata?.userId && adminDb) {
-      const statusMap: Record<Stripe.Subscription.Status, string> = {
-        active: 'active',
-        past_due: 'past_due',
-        unpaid: 'unpaid',
-        canceled: 'canceled',
-        incomplete: 'incomplete',
-        incomplete_expired: 'incomplete_expired',
-        trialing: 'trialing',
-      };
-      
-      await adminDb
-        .collection('subscriptions')
-        .doc(subscription.id)
-        .set({
-          userId: subscription.metadata.userId,
-          stripeSubscriptionId: subscription.id,
-          stripeCustomerId: subscription.customer,
-          status: statusMap[subscription.status] || subscription.status,
-          currentPeriodStart: new Date(subscription.current_period_start * 1000),
-          currentPeriodEnd: new Date(subscription.current_period_end * 1000),
-          createdAt: new Date(),
-        });
-    }
-  } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Error handling subscription created:', errorMessage);
+function handleSubscriptionCreated(subscription: Stripe.Subscription) {
+  console.log(`📅 Subscription created: ${subscription.id}`);
+  console.log(`  Status: ${subscription.status}`);
+  console.log(`  Customer: ${subscription.customer}`);
+  if (subscription.metadata?.userId) {
+    console.log(`  User: ${subscription.metadata.userId}`);
   }
+  // TODO: Save subscription details to your database
 }
 
-async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
-  try {
-    console.log(`Subscription updated: ${subscription.id}`);
-    
-    if (adminDb) {
-      const statusMap: Record<Stripe.Subscription.Status, string> = {
-        active: 'active',
-        past_due: 'past_due',
-        unpaid: 'unpaid',
-        canceled: 'canceled',
-        incomplete: 'incomplete',
-        incomplete_expired: 'incomplete_expired',
-        trialing: 'trialing',
-      };
-      
-      await adminDb
-        .collection('subscriptions')
-        .doc(subscription.id)
-        .update({
-          status: statusMap[subscription.status] || subscription.status,
-          currentPeriodStart: new Date(subscription.current_period_start * 1000),
-          currentPeriodEnd: new Date(subscription.current_period_end * 1000),
-          updatedAt: new Date(),
-        });
-    }
-  } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Error handling subscription updated:', errorMessage);
-  }
+function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
+  console.log(`📅 Subscription updated: ${subscription.id}`);
+  console.log(`  New status: ${subscription.status}`);
+  // TODO: Update subscription record in your database
 }
 
-async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
-  try {
-    console.log(`Subscription deleted: ${subscription.id}`);
-    
-    if (adminDb) {
-      await adminDb
-        .collection('subscriptions')
-        .doc(subscription.id)
-        .update({
-          status: 'canceled',
-          canceledAt: new Date(),
-        });
-    }
-  } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Error handling subscription deleted:', errorMessage);
+function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
+  console.log(`📅 Subscription deleted: ${subscription.id}`);
+  if (subscription.canceled_at) {
+    console.log(`  Canceled at: ${new Date(subscription.canceled_at * 1000).toISOString()}`);
   }
+  // TODO: Mark subscription as canceled in your database
 }
 
-async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
-  try {
-    console.log(`Invoice paid: ${invoice.id}`);
-    
-    if (adminDb) {
-      await adminDb
-        .collection('invoices')
-        .add({
-          stripeInvoiceId: invoice.id,
-          stripeCustomerId: invoice.customer,
-          amount: invoice.amount_paid,
-          currency: invoice.currency,
-          status: 'paid',
-          paidAt: new Date(),
-        });
-    }
-  } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Error handling invoice payment succeeded:', errorMessage);
-  }
+function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
+  console.log(`💰 Invoice paid: ${invoice.id}`);
+  console.log(`  Amount paid: ${invoice.amount_paid / 100} ${invoice.currency?.toUpperCase()}`);
+  console.log(`  Customer: ${invoice.customer}`);
+  // TODO: Update invoice record in your database
 }
 
-async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
-  try {
-    console.log(`Invoice payment failed: ${invoice.id}`);
-    
-    if (adminDb) {
-      await adminDb
-        .collection('invoices')
-        .add({
-          stripeInvoiceId: invoice.id,
-          stripeCustomerId: invoice.customer,
-          amount: invoice.amount_due,
-          currency: invoice.currency,
-          status: 'failed',
-          failedAt: new Date(),
-        });
-    }
-  } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Error handling invoice payment failed:', errorMessage);
-  }
+function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
+  console.log(`💰 Invoice payment failed: ${invoice.id}`);
+  console.log(`  Amount due: ${invoice.amount_due / 100} ${invoice.currency?.toUpperCase()}`);
+  // TODO: Log failed invoice and notify customer
 }
