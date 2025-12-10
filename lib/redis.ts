@@ -163,8 +163,8 @@ export async function getNotifications(
   const client = await getRedisClient();
   const key = `notifications:${userId}`;
 
-  const notifications = await client.zRevRange(key, 0, limit - 1);
-  return notifications.map((n) => JSON.parse(n));
+  const notifications = await client.zRange(key, 0, limit - 1, { REV: true });
+  return notifications.map((n: string) => JSON.parse(n));
 }
 
 /**

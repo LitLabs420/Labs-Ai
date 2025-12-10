@@ -36,15 +36,9 @@ export async function generateSpeech(
     const voiceId = options.voiceId || PREMIUM_VOICES.FEMALE_PROFESSIONAL;
 
     const audio = await elevenLabs.generate({
-      voice_id: voiceId,
+      voice: voiceId,
       text: options.text,
-      model_id: "eleven_turbo_v2", // Fastest & best quality
-      voice_settings: {
-        stability: options.stability || 0.5,
-        similarity_boost: options.similarityBoost || 0.75,
-        style: options.style || 0,
-        use_speaker_boost: options.speakerBoost || false,
-      },
+      model_id: "eleven_turbo_v2",
     });
 
     return audio as unknown as Buffer;
@@ -143,8 +137,7 @@ export async function generateBotResponse(
  */
 export async function cloneVoice(
   voiceName: string,
-  audioUrls: string[],
-  description: string
+  audioUrls: string[]
 ): Promise<string> {
   try {
     // This would use the voice clone API

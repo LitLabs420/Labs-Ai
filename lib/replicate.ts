@@ -23,7 +23,7 @@ export async function generateImage(
   options: ImageGenerationOptions
 ): Promise<string[]> {
   try {
-    const output = await replicate.run(
+    const output = (await replicate.run(
       "black-forest-labs/flux-pro",
       {
         input: {
@@ -37,9 +37,9 @@ export async function generateImage(
           num_outputs: options.numOutputs || 1,
         },
       }
-    );
+    )) as unknown[];
 
-    return Array.isArray(output) ? output : [output as string];
+    return Array.isArray(output) ? output.map((o) => String(o)) : [String(output)];
   } catch (error) {
     console.error("Image generation error:", error);
     throw error;
@@ -106,18 +106,19 @@ export async function generateSocialPostImage(
  * Generate video using Replicate (text-to-video)
  */
 export async function generateVideo(
-  prompt: string,
-  duration: number = 6 // seconds
+  prompt: string
 ): Promise<string> {
   try {
-    const output = await replicate.run("gen-2", {
-      input: {
-        prompt_template: prompt,
-        duration: duration,
-      },
-    });
+    const output = (await replicate.run(
+      "genmo/video-01-lite-1.5",
+      {
+        input: {
+          prompt: prompt,
+        },
+      }
+    )) as unknown;
 
-    return output as string;
+    return String(output);
   } catch (error) {
     console.error("Video generation error:", error);
     throw error;
@@ -129,13 +130,13 @@ export async function generateVideo(
  */
 export async function upscaleImage(imageUrl: string): Promise<string> {
   try {
-    const output = await replicate.run("nightmareai/real-esrgan", {
+    const output = (await replicate.run("nightmareai/real-esrgan", {
       input: {
         image: imageUrl,
       },
-    });
+    })) as unknown;
 
-    return output as string;
+    return String(output);
   } catch (error) {
     console.error("Image upscale error:", error);
     throw error;

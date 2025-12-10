@@ -4,11 +4,17 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && npm run typecheck && npm run lint",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "lint-fix": "eslint --fix"
+    "lint-fix": "eslint --fix",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio",
+    "redis:start": "redis-server",
+    "analyze": "ANALYZE=true next build",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.2",
@@ -21,6 +27,7 @@
     "@radix-ui/react-dropdown-menu": "^2.1.16",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@sentry/node": "^10.29.0",
+    "@solana/web3.js": "^1.98.4",
     "@stripe/react-stripe-js": "^5.4.1",
     "@supabase/supabase-js": "^2.87.1",
     "@tanstack/react-query": "^5.90.12",
@@ -39,6 +46,7 @@
     "d3": "^7.9.0",
     "date-fns": "^4.1.0",
     "elevenlabs": "^1.59.0",
+    "ethers": "^6.16.0",
     "firebase": "^12.6.0",
     "firebase-admin": "^13.6.0",
     "framer-motion": "^12.23.25",

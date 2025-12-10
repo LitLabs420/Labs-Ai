@@ -1,0 +1,223 @@
+// This file defines the Prisma schema for LitLabs
+// To use: 1) npx prisma generate  2) npx prisma migrate dev
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// User model
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  avatar    String?
+  bio       String?
+  tier      String   @default("free") // free, starter, creator, pro, agency
+  
+  // Social connections
+  tiktokUsername    String?
+  instagramUsername String?
+  youtubeChannel    String?
+  
+  // Metadata
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  generations Generation[]
+  templates   Template[]
+  analytics   Analytics[]
+  subscriptions Subscription[]
+  notifications Notification[]
+  botIntegrations BotIntegration[]
+}
+
+// AI Generation tracking
+model Generation {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  type      String   // "caption", "script", "image", "voice", "video"
+  prompt    String   @db.Text
+  output    String?  @db.Text
+  
+  // Quality metrics
+  quality   Int?     // 1-10 score
+  usageTokens Int?
+  
+  // Social platform
+  platform  String?  // "tiktok", "instagram", "youtube"
+  published Boolean  @default(false)
+  publishedAt DateTime?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([userId])
+  @@index([createdAt])
+}
+
+// Saved templates
+model Template {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  name      String
+  type      String   // "caption", "script", "dm", "image"
+  content   String   @db.Text
+  tags      String[] @default([])
+  
+  // Performance data
+  engagementScore Float?
+  uses      Int      @default(0)
+  
+  isPublic  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([userId])
+  @@index([type])
+}
+
+// Analytics/Performance tracking
+model Analytics {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  date      DateTime
+  
+  // Metrics
+  postsCreated    Int @default(0)
+  postsPublished  Int @default(0)
+  engagementRate  Float?
+  followersGained Int @default(0)
+  views           Int @default(0)
+  likes           Int @default(0)
+  comments        Int @default(0)
+  shares          Int @default(0)
+  
+  // Revenue
+  revenueGenerated Float @default(0)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@unique([userId, date])
+  @@index([userId])
+}
+
+// Subscription management
+model Subscription {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  stripeSubscriptionId String @unique
+  stripeCustomerId     String
+  
+  tier      String   // "free", "starter", "creator", "pro", "agency"
+  status    String   // "active", "canceled", "past_due"
+  
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
+  cancelAtPeriodEnd  Boolean @default(false)
+  canceledAt         DateTime?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([userId])
+  @@index([stripeSubscriptionId])
+}
+
+// Real-time notifications
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  title     String
+  message   String   @db.Text
+  type      String   // "alert", "success", "info", "warning"
+  
+  read      Boolean  @default(false)
+  readAt    DateTime?
+  
+  createdAt DateTime @default(now())
+  
+  @@index([userId])
+  @@index([createdAt])
+}
+
+// Bot integrations
+model BotIntegration {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  platform  String   // "whatsapp", "discord", "telegram"
+  botToken  String   @db.Text
+  
+  name      String
+  description String?
+  
+  isActive  Boolean  @default(true)
+  
+  webhook   String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([userId])
+  @@index([platform])
+}
+
+// Marketplace - listings
+model MarketplaceListing {
+  id        String   @id @default(cuid())
+  
+  title     String
+  description String @db.Text
+  price     Float
+  
+  type      String   // "template", "course", "service", "tool"
+  category  String
+  
+  imageUrl  String?
+  
+  // Performance
+  views     Int      @default(0)
+  purchases Int      @default(0)
+  rating    Float?
+  
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Payment records
+model Payment {
+  id        String   @id @default(cuid())
+  
+  stripePaymentId String @unique
+  
+  amount    Float
+  currency  String   @default("usd")
+  status    String   // "succeeded", "failed", "pending"
+  
+  metadata  String?  @db.Json
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([stripePaymentId])
+  @@index([createdAt])
+}
