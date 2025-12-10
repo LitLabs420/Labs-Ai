@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { captureError } from "@/lib/sentry";
+import { supabase } from "@/lib/supabase";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -139,20 +140,36 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // TODO: Fetch from your analytics database
-    // const events = await db.analytics.findMany({
-    //   where: { userId, ...(eventName && { eventName }) },
-    //   take: Math.min(limit, 1000),
-    //   orderBy: { timestamp: 'desc' },
-    // });
+    // Fetch from analytics database
+    let query = supabase
+      .from('analytics_events')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false })
+      .limit(Math.min(limit, 1000));
+
+    if (eventName) {
+      query = query.eq('event_name', eventName);
+    }
+
+    const { data: events, error: dbError } = await query;
+
+    if (dbError) {
+      console.error('Database error fetching analytics:', dbError);
+      return NextResponse.json({
+        success: false,
+        error: 'Failed to fetch analytics',
+        events: [],
+      }, { status: 500 });
+    }
 
     return NextResponse.json({
       success: true,
       userId,
       eventName: eventName || "all",
       limit,
-      events: [],
-      message: "Connect to your analytics database to retrieve events",
+      events: events || [],
+      total: events?.length || 0,
     });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "Retrieval failed";

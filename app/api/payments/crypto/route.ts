@@ -83,13 +83,57 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Implement verification based on blockchain
-    // This is a placeholder - actual implementation would check on-chain
+    // Verify on-chain transaction based on blockchain
+    let isConfirmed = false;
+    let confirmations = 0;
+    
+    try {
+      if (blockchain === 'ethereum' || blockchain === 'polygon') {
+        // Verify Ethereum/Polygon transaction via Etherscan-like API
+        const apiKey = process.env.ETHERSCAN_API_KEY || '';
+        const baseUrl = blockchain === 'polygon' ? 'https://api.polygonscan.com/api' : 'https://api.etherscan.io/api';
+        const response = await fetch(
+          `${baseUrl}?module=transaction&action=getstatus&txhash=${txHash}&apikey=${apiKey}`
+        );
+        const data = await response.json();
+        isConfirmed = data.status === '1';
+        confirmations = isConfirmed ? 12 : 0; // Assume 12+ confirmations = finalized
+      } else if (blockchain === 'solana') {
+        // Verify Solana transaction via RPC
+        const response = await fetch('https://api.mainnet-beta.solana.com', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            jsonrpc: '2.0',
+            id: 1,
+            method: 'getTransaction',
+            params: [txHash, { encoding: 'json', maxSupportedTransactionVersion: 0 }],
+          }),
+        });
+        const result = await response.json();
+        isConfirmed = result.result !== null && result.result.meta?.err === null;
+        confirmations = isConfirmed ? 32 : 0;
+      } else if (blockchain === 'bitcoin') {
+        // Verify Bitcoin transaction via blockchain.com API
+        const response = await fetch(`https://blockchain.info/rawtx/${txHash}?format=json`);
+        isConfirmed = response.ok;
+        if (isConfirmed) {
+          const data = await response.json();
+          confirmations = data.block_height ? 6 : 0; // 6+ confirmations = standard
+        }
+      }
+    } catch (error) {
+      console.error(`Error verifying ${blockchain} transaction:`, error);
+      isConfirmed = false;
+    }
+
     return NextResponse.json({
-      status: "pending",
+      status: isConfirmed ? "confirmed" : "pending",
       transactionHash: txHash,
       blockchain,
-      message: "Transaction is being confirmed on chain",
+      confirmations,
+      message: isConfirmed ? "Transaction confirmed on chain" : "Transaction is being confirmed on chain",
+      verified: isConfirmed,
     });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "Status check failed";

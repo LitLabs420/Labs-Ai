@@ -13,6 +13,35 @@ interface UseAPIOptions {
 }
 
 /**
+ * Whitelist of allowed API endpoints to prevent SSRF attacks
+ * Only internal API routes (/api/*) and same-origin requests are allowed
+ */
+const ALLOWED_ENDPOINT_PATTERNS = [
+  /^\/api\//,  // Internal API routes only
+  /^https?:\/\/localhost/,  // Local development
+  /^https?:\/\/127\.0\.0\.1/,  // Local development
+];
+
+/**
+ * Validates endpoint URL against whitelist to prevent SSRF attacks
+ */
+function validateEndpoint(endpoint: string): boolean {
+  try {
+    // Relative paths starting with / are allowed
+    if (endpoint.startsWith("/")) {
+      return ALLOWED_ENDPOINT_PATTERNS[0].test(endpoint);
+    }
+
+    // Only allow absolute URLs to whitelisted domains
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const _url = new URL(endpoint, typeof window !== "undefined" ? window.location.origin : "http://localhost");
+    return ALLOWED_ENDPOINT_PATTERNS.some((pattern) => pattern.test(endpoint));
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Hook for making API calls with loading and error states
  */
 export function useAPI<T = unknown>(options?: UseAPIOptions) {
@@ -30,6 +59,15 @@ export function useAPI<T = unknown>(options?: UseAPIOptions) {
       try {
         setLoading(true);
         setError(null);
+
+        // Validate endpoint to prevent SSRF attacks
+        if (!validateEndpoint(endpoint)) {
+          const errorMessage = "Invalid endpoint: only internal API routes are allowed";
+          setError(errorMessage);
+          captureError("SSRF Prevention: Invalid endpoint attempt", { endpoint });
+          options?.onError?.(errorMessage);
+          return null;
+        }
 
         const response = await fetch(endpoint, {
           method,
@@ -181,15 +219,29 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const login = useCallback(async () => {
+  const login = useCallback(async (email: string, password: string) => {
     try {
       setLoading(true);
-      // TODO: Implement login logic
-      // const response = await fetch("/api/auth/login", { ... });
-      // setUser(response.user);
+      setError("");
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Login failed");
+      }
+      
+      const data = await response.json();
+      setUser(data.user);
+      localStorage.setItem("authToken", data.token);
+      return data.user;
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Login failed";
       setError(message);
+      throw err;
     } finally {
       setLoading(false);
     }
@@ -198,8 +250,20 @@ export function useAuth() {
   const logout = useCallback(async () => {
     try {
       setLoading(true);
-      // TODO: Implement logout logic
+      const token = localStorage.getItem("authToken");
+      if (token) {
+        await fetch("/api/auth/logout", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        });
+      }
       setUser(null);
+      localStorage.removeItem("authToken");
+    } catch (err: unknown) {
+      console.error("Logout error:", err);
     } finally {
       setLoading(false);
     }

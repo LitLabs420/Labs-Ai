@@ -2,8 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { supabase } from '@/lib/supabase';
 import { captureError } from '@/lib/sentry';
-import { auditLog } from '@/lib/security-utils';
-import { addSecurityHeaders } from '@/lib/security-middleware';
+import { auditLog, addSecurityHeaders } from '@/lib/security-utils';
 
 // Initialize Stripe with secret key
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
@@ -231,10 +230,8 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
     console.log(`  Canceled at: ${new Date(subscription.canceled_at * 1000).toISOString()}`);
   }
   // Mark subscription as canceled in database
-  const customerId = typeof subscription.customer === 'string' ? subscription.customer : subscription.customer?.id || '';
   cancelSubscription({
     subscriptionId: subscription.id,
-    customerId: customerId,
     canceledAt: new Date(subscription.canceled_at ? subscription.canceled_at * 1000 : Date.now()).toISOString()
   }).catch(error => {
     console.error('Failed to cancel subscription:', error);
@@ -319,20 +316,38 @@ async function logFailedPayment(data: {
     const { error: supabaseError } = await supabase.from('payment_failures').insert({
       stripe_payment_id: data.paymentId,
       user_id: data.userId,
-      amount: Math.round(data.amount * 100),
       error_message: data.error,
-      created_at: data.timestamp,
+      metadata: { amount: data.amount, timestamp: data.timestamp }
     });
 
     if (supabaseError) {
-      captureError('Failed to log payment failure to Supabase', { error: supabaseError });
-      return;
+      console.error('Supabase error logging failed payment:', supabaseError);
+      throw supabaseError;
+    }
+    console.log(`✓ Failed payment logged to Supabase: ${data.paymentId}`);
+    
+    // Send email notification to user about failed payment
+    try {
+      const emailResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/email/send`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to: customer.email,
+          subject: 'Payment Failed - LitLabs',
+          template: 'payment_failed',
+          data: {
+            amount: (event.data.object.amount_due / 100).toFixed(2),
+            invoice_id: event.data.object.id,
+            retry_date: new Date(event.data.object.next_payment_attempt * 1000).toLocaleDateString(),
+          },
+        }),
+      });
+      if (emailResponse.ok) console.log('✓ Failed payment notification email sent');
+    } catch (emailError) {
+      console.error('Failed to send payment failure email:', emailError);
     }
   } catch (error: unknown) {
-    captureError('Error logging failed payment', {
-      error: error instanceof Error ? error.message : String(error),
-      paymentId: data.paymentId,
-    });
+    console.error('Failed to log payment error:', error instanceof Error ? error.message : String(error));
   }
 }
 
@@ -427,7 +442,6 @@ async function updateSubscription(data: {
 
 async function cancelSubscription(data: {
   subscriptionId: string;
-  customerId: string;
   canceledAt: string;
 }): Promise<void> {
   try {
@@ -451,8 +465,7 @@ async function cancelSubscription(data: {
       const customer = await stripe.customers.retrieve(data.customerId);
       const subscription = await stripe.subscriptions.retrieve(data.subscriptionId);
       
-      // Check if customer is a real customer object (not deleted) and has an email
-      if (customer && 'email' in customer && customer.email && !customer.deleted) {
+      if (typeof customer !== 'string' && customer.email) {
         const emailResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/email/send`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -551,7 +564,7 @@ async function logFailedInvoice(data: {
     // Send notification to customer about failed payment
     try {
       const customer = await stripe.customers.retrieve(data.customerId);
-      if (customer && 'email' in customer && customer.email && !customer.deleted) {
+      if (typeof customer !== 'string' && customer.email) {
         const emailResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/email/send`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
