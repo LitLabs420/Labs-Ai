@@ -95,8 +95,18 @@ function handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent) {
   console.log(`  Amount: ${paymentIntent.amount / 100} ${paymentIntent.currency.toUpperCase()}`);
   if (paymentIntent.metadata?.userId) {
     console.log(`  User: ${paymentIntent.metadata.userId}`);
+    // Save payment record using your database (Vercel KV, PostgreSQL, or MongoDB)
+    savePaymentRecord({
+      userId: paymentIntent.metadata.userId,
+      paymentId: paymentIntent.id,
+      amount: paymentIntent.amount / 100,
+      currency: paymentIntent.currency,
+      status: 'succeeded',
+      timestamp: new Date().toISOString()
+    }).catch(error => {
+      console.error('Failed to save payment record:', error);
+    });
   }
-  // TODO: Update user's payment record in your database
 }
 
 function handlePaymentIntentFailed(paymentIntent: Stripe.PaymentIntent) {
@@ -105,14 +115,31 @@ function handlePaymentIntentFailed(paymentIntent: Stripe.PaymentIntent) {
   console.log(`  Error: ${paymentIntent.last_payment_error?.message}`);
   if (paymentIntent.metadata?.userId) {
     console.log(`  User: ${paymentIntent.metadata.userId}`);
+    // Log failed payment and send notification
+    logFailedPayment({
+      userId: paymentIntent.metadata.userId,
+      paymentId: paymentIntent.id,
+      amount: paymentIntent.amount / 100,
+      error: paymentIntent.last_payment_error?.message || 'Unknown error',
+      timestamp: new Date().toISOString()
+    }).catch(error => {
+      console.error('Failed to log payment error:', error);
+    });
   }
-  // TODO: Log failed payment and notify user
 }
 
 function handleChargeRefunded(charge: Stripe.Charge) {
   console.log(`↩ Charge refunded: ${charge.id}`);
   console.log(`  Amount refunded: ${charge.amount_refunded / 100} ${charge.currency.toUpperCase()}`);
-  // TODO: Update refund record in your database
+  // Update refund record in database
+  saveRefundRecord({
+    chargeId: charge.id,
+    amount: charge.amount_refunded / 100,
+    currency: charge.currency,
+    timestamp: new Date().toISOString()
+  }).catch(error => {
+    console.error('Failed to save refund record:', error);
+  });
 }
 
 function handleSubscriptionCreated(subscription: Stripe.Subscription) {
@@ -121,14 +148,31 @@ function handleSubscriptionCreated(subscription: Stripe.Subscription) {
   console.log(`  Customer: ${subscription.customer}`);
   if (subscription.metadata?.userId) {
     console.log(`  User: ${subscription.metadata.userId}`);
+    // Save subscription to database
+    saveSubscription({
+      userId: subscription.metadata.userId,
+      subscriptionId: subscription.id,
+      customerId: subscription.customer as string,
+      status: subscription.status,
+      currentPeriodEnd: new Date(subscription.current_period_end * 1000).toISOString(),
+      timestamp: new Date().toISOString()
+    }).catch(error => {
+      console.error('Failed to save subscription:', error);
+    });
   }
-  // TODO: Save subscription details to your database
 }
 
 function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
   console.log(`📅 Subscription updated: ${subscription.id}`);
   console.log(`  New status: ${subscription.status}`);
-  // TODO: Update subscription record in your database
+  // Update subscription in database
+  updateSubscription({
+    subscriptionId: subscription.id,
+    status: subscription.status,
+    currentPeriodEnd: new Date(subscription.current_period_end * 1000).toISOString()
+  }).catch(error => {
+    console.error('Failed to update subscription:', error);
+  });
 }
 
 function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
@@ -136,7 +180,13 @@ function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
   if (subscription.canceled_at) {
     console.log(`  Canceled at: ${new Date(subscription.canceled_at * 1000).toISOString()}`);
   }
-  // TODO: Mark subscription as canceled in your database
+  // Mark subscription as canceled in database
+  cancelSubscription({
+    subscriptionId: subscription.id,
+    canceledAt: new Date(subscription.canceled_at ? subscription.canceled_at * 1000 : Date.now()).toISOString()
+  }).catch(error => {
+    console.error('Failed to cancel subscription:', error);
+  });
 }
 
 function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {

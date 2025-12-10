@@ -1,11 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Production optimizations
-  swcMinify: true,
-  compress: true,
-  productionBrowserSourceMaps: false,
-  
   // Turbopack for fast builds
   turbopack: {
     root: __dirname,
@@ -41,30 +36,6 @@ const nextConfig: NextConfig = {
         ],
       },
     ];
-  },
-  
-  // API route compression
-  compress: true,
-  
-  // Optimized build output
-  optimizeFonts: true,
-  optimizePackageImports: [
-    "@radix-ui/react-dialog",
-    "@radix-ui/react-dropdown-menu",
-    "@radix-ui/react-tooltip",
-    "lucide-react",
-  ],
-  
-  // Webpack optimization
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.optimization = {
-        ...config.optimization,
-        usedExports: true,
-        sideEffects: false,
-      };
-    }
-    return config;
   },
 };
 
