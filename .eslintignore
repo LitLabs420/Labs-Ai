@@ -1,7 +1,0 @@
-MASTER_PROMPT_v7.md
-*.md
-node_modules
-.next
-out
-build
-dist
