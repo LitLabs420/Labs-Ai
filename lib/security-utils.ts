@@ -25,6 +25,7 @@ export function secureRoute(
   } = {}
 ) {
   const {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     requireAuth: _requireAuth = false,
     maxPayloadMB = 10,
     sanitizeBody = true,

@@ -99,7 +99,10 @@ export async function analyzeFacialFeatures(imageUrl: string): Promise<FacialAna
 /**
  * Estimate age from facial features
  */
-function estimateAge(_faceAnnotation: any): number {
+function estimateAge(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _faceAnnotation: any
+): number {
   // Simplified age estimation based on face landmarks
   // In production, use ML model for better accuracy
   return Math.floor(Math.random() * 50) + 18; // Placeholder
@@ -108,7 +111,10 @@ function estimateAge(_faceAnnotation: any): number {
 /**
  * Estimate gender from facial features
  */
-function estimateGender(_faceAnnotation: any): string {
+function estimateGender(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _faceAnnotation: any
+): string {
   // Simplified gender estimation
   // In production, use ML model
   return Math.random() > 0.5 ? "male" : "female"; // Placeholder
@@ -278,6 +284,7 @@ export function isWithinBedtime(bedtimeStart: string, bedtimeEnd: string): boole
  * Get location for a user (with permission)
  */
 export async function getUserLocation(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _userId: string
 ): Promise<{ latitude: number; longitude: number } | null> {
   try {
@@ -297,7 +304,9 @@ export async function getUserLocation(
  * Log user activity for monitoring
  */
 export async function logActivity(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _userId: string,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _activity: {
     type: "app_open" | "content_viewed" | "search" | "message" | "call";
     target: string;

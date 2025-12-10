@@ -210,10 +210,10 @@ export function isCurrentlyBedtime(bedtimeStart: string, bedtimeEnd: string): bo
 /**
  * Check if content is age appropriate
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function isContentAgeAppropriate(
   contentRating: "G" | "PG" | "PG-13" | "R" | "NC-17",
   ageLimit: number,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _contentFilters: ParentalControlSettings["contentFilters"]
 ): boolean {
   const ratingAgeMap = {
