@@ -20,7 +20,7 @@ export function ScrollProgress() {
 
   return (
     <div className="fixed top-0 left-0 w-full h-1 bg-slate-900 z-50">
-    {/* eslint-disable-next-line */}
+    { }
       <div 
         className="h-full bg-gradient-to-r from-emerald-500 via-cyan-500 to-emerald-500 transition-all duration-150 shadow-lg shadow-emerald-500/50"
         // eslint-disable-next-line @next/next/no-style-component-with-dynamic-styles, jsx-a11y/aria-props

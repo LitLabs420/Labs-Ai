@@ -185,7 +185,7 @@ export default function MediaHubPage() {
                       </p>
                       <div className="flex items-center gap-3 mt-3">
                         <div className="flex-1 max-w-xs bg-gray-700 h-1 rounded-full overflow-hidden">
-                          {/* eslint-disable-next-line */}
+                          { }
                           <div
                             className="bg-gradient-to-r from-cyan-500 to-purple-500 h-full"
                             style={{ width: `${item.progress}%` }}
