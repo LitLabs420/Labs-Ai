@@ -105,7 +105,7 @@ export default function SpeechPage() {
 
     recognizer.onresult = (event: any) => {
       const text = Array.from(event.results)
-        .map((r) => r[0].transcript)
+        .map((r: any) => r[0].transcript)
         .join(" ");
       setTranscript(text);
     };

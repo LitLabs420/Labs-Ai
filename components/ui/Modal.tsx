@@ -2,7 +2,7 @@
 
 import React, { HTMLAttributes, ReactNode, useEffect } from 'react';
 
-interface ModalProps extends HTMLAttributes<HTMLDivElement> {
+export interface ModalProps extends HTMLAttributes<HTMLDivElement> {
   isOpen: boolean;
   onClose: () => void;
   title?: string;

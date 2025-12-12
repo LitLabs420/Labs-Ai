@@ -3,7 +3,7 @@
 import React, { HTMLAttributes, ReactNode } from 'react';
 // import { useTheme } from '@/context/ThemeContext';
 
-interface CardProps extends HTMLAttributes<HTMLDivElement> {
+export interface CardProps extends HTMLAttributes<HTMLDivElement> {
   variant?: 'elevated' | 'bordered' | 'flat' | 'glass';
   padding?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   hoverable?: boolean;

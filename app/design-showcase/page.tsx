@@ -76,7 +76,7 @@ export default function DesignShowcase() {
                 label="Password"
                 type="password"
                 placeholder="••••••••"
-                helperText="Minimum 8 characters"
+                
               />
             </div>
           </div>
