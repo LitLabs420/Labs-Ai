@@ -68,7 +68,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Task retrieval error:', error);
-    captureException(error, 'task_retrieval_error');
+    captureError(error, { context: 'api/tasks' });
 
     return NextResponse.json(
       {
@@ -79,3 +79,5 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
+

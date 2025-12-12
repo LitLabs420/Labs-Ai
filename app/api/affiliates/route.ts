@@ -20,9 +20,6 @@ import { collection, query, where, getDocs } from 'firebase/firestore';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic';
-
 /**
  * POST /api/affiliates/register or POST /api/affiliates/referral/track
  * Create affiliate profile or track a new referral
@@ -95,7 +92,7 @@ export async function POST(request: NextRequest) {
 
     // Find affiliate by referral code
     const q = query(
-      collection(db, 'affiliates'),
+      collection(db!, 'affiliates'),
       where('referralCode', '==', affiliateCode)
     );
     const snapshot = await getDocs(q);
@@ -205,5 +202,7 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
+
 
 

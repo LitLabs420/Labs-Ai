@@ -54,6 +54,7 @@
     "eslint-config-next": "^16.0.7",
     "next": "^16.0.7",
     "tailwindcss": "^4",
+    "turbopack": "^0.0.1",
     "typescript": "5.9.3"
   },
   "description": "All-in-one AI-powered platform for creating, managing, and scaling AI-driven services.",
@@ -73,4 +74,3 @@
   },
   "homepage": "https://labs-ai.studio"
 }
-

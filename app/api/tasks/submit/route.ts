@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
     const check = await canPerformActionServer(user.uid, type);
     if (!check.allowed) {
       return NextResponse.json(
-        { error: check.reason, remaining: check.remaining },
+        { error: check.reason },
         { status: 403 }
       );
     }
@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!securityCheck.safe) {
-      captureException(
+      captureError(
         new Error(`Security check failed for user ${user.uid}`),
         'security_check_failed'
       );
@@ -118,7 +118,7 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     console.error('Task submission error:', error);
-    captureException(error, 'task_submission_api_error');
+    captureError(error, 'task_submission_api_error');
 
     return NextResponse.json(
       {
@@ -129,3 +129,4 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
