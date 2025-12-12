@@ -14,6 +14,8 @@ import {
   getAffiliateStats,
   trackReferral,
 } from '@/lib/affiliate-system';
+import { db } from '@/lib/firebase';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -91,8 +93,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Find affiliate by referral code
+    const q = query(
+      collection(db, 'affiliates'),
+      where('referralCode', '==', affiliateCode)
+    );
+    const snapshot = await getDocs(q);
+    
+    if (snapshot.empty) {
+      return NextResponse.json(
+        { error: 'Invalid affiliate code' },
+        { status: 404 }
+      );
+    }
+
+    const affiliateDoc = snapshot.docs[0];
+    const affiliateUserId = affiliateDoc.data().userId;
+
     // Track referral
-    const referral = await trackReferral(userId, affiliateCode, tier);
+    const referral = await trackReferral(affiliateUserId, userId, affiliateCode, tier);
 
     return NextResponse.json({
       success: true,
