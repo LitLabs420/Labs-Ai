@@ -12,10 +12,6 @@ import {
   getTeamMembers,
 } from '@/lib/subscription-manager';
 import {
-  getAffiliateProfile,
-  getAffiliateStats,
-} from '@/lib/affiliate-system';
-import {
   getWhiteLabelConfig,
 } from '@/lib/white-label';
 import {
@@ -42,11 +38,7 @@ export async function GET(request: NextRequest) {
 
     // Get team info
     const teamMembers = await getTeamMembers(user.uid);
-    const activeMembers = teamMembers.filter(m => m.isActive).length;
-
-    // Get affiliate info
-    const affiliateProfile = await getAffiliateProfile(user.uid);
-    const affiliateStats = affiliateProfile ? await getAffiliateStats(user.uid) : null;
+    const activeMembers = teamMembers.filter((m: any) => m.isActive).length;
 
     // Get white-label config
     const whiteLabelConfig = await getWhiteLabelConfig(user.uid);
