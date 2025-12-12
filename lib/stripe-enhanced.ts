@@ -82,13 +82,7 @@ export async function getOrCreateCustomer(
     }
 
     // Create new customer
-    const customer = await stripe.customers.create({
-      email,
-      name,
-      metadata: {
-        firebaseUid: userId,
-      },
-    });
+    // const customer removed - unused
 
     // Save to Firestore
     if (db) {
@@ -364,7 +358,7 @@ export async function getCustomerBillingInfo(
     const stripe = getStripe();
 
     // Get customer
-    // const customer = await stripe.customers.retrieve(customerId);
+    // // const customer removed - unused
 
     // Get subscriptions
     const subscriptions = await stripe.subscriptions.list({

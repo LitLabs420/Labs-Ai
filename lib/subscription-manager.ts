@@ -360,7 +360,7 @@ export async function addTeamMember(
 ): Promise<TeamMember> {
   if (!clientDb) throw new Error('Firebase not initialized');
 
-  // const teamRef = collection(clientDb, 'teams');
+  // // const teamRef removed - unused
   const membersRef = collection(clientDb, 'users', ownerUserId, 'teamMembers');
 
   const member: TeamMember = {

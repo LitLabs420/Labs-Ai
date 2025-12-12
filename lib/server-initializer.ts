@@ -77,9 +77,7 @@ class ServerInitializer {
     ]);
 
     // Determine overall health
-    const services = Object.entries(this.initializationStatus)
-      .filter(([key]) => key !== 'timestamp' && key !== 'allHealthy')
-      .map(([_, status]) => status as any);
+    // const services removed - unused
 
     const criticalServices = ['firebase', 'googleAI', 'stripe'];
     const allCriticalHealthy = criticalServices.every(

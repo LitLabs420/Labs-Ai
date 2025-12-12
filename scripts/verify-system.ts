@@ -16,7 +16,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
+// const __filename removed - unused
 // const __dirname = path.dirname(__filename);
 
 interface VerificationResult {
