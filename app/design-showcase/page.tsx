@@ -71,12 +71,7 @@ export default function DesignShowcase() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <Input
-                placeholder="Enter your password"
-                type="password"
-              />
-                helperText="We'll never share your email"
-              />
+              <Input label="Email" placeholder="Enter your email" type="email" helperText="We'll never share your email" />
               <Input
                 label="Password"
                 type="password"
@@ -171,3 +166,4 @@ export default function DesignShowcase() {
     </main>
   );
 }
+
