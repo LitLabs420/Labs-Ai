@@ -1,0 +1,23 @@
+
+> labs-ai-studio@1.0.0 build
+> next build
+
+   Γû▓ Next.js 16.0.10 (Turbopack)
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+ Γ£ô Compiled successfully in 21.8s
+   Running TypeScript ...
+Failed to compile.
+
+./app/dashboard/mediahub/page.tsx:29:25
+Type error: Cannot find name 'media'.
+
+  27 |   }, []);
+  28 |
+> 29 |   const filteredMedia = media.filter((item) => {
+     |                         ^
+  30 |     const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase());
+  31 |     const matchesType = filterType === 'all' || item.type === filterType;
+  32 |     return matchesSearch && matchesType;
+Next.js build worker exited with code: 1 and signal: null

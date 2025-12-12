@@ -6,8 +6,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getUserFromRequest } from '@/lib/auth-helper';
 import { submitTask } from '@/lib/task-manager';
-import NATSConsumer from '@/lib/nats-consumer';
-const Consumer = NATSConsumer.getInstance();
 import { canPerformActionServer, incrementUsageServer } from '@/lib/firebase-server';
 import { Guardian } from '@/lib/guardian-bot';
 import { captureError } from '@/lib/sentry';
@@ -98,10 +96,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // 6. Publish to NATS for processing
-    try {
-      await Consumer.publishTask(task.id, type, user.uid, payload);
-    // 7. Increment usage
+    // 6. Increment usage
     await incrementUsageServer(user.uid, type);
 
     return NextResponse.json(
@@ -126,5 +121,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
-
