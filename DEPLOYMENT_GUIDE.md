@@ -123,12 +123,14 @@ curl https://your-domain.com/api/health
 ### Key Endpoints to Test
 
 #### 1. Health Check
+
 ```bash
 GET /api/health
 # Should return all services: firebase ✓, googleAI ✓, stripe ✓, etc.
 ```
 
 #### 2. Create Team
+
 ```bash
 POST /api/teams/members/add
 Authorization: Bearer {JWT_TOKEN}
@@ -141,6 +143,7 @@ Content-Type: application/json
 ```
 
 #### 3. Affiliate Registration
+
 ```bash
 POST /api/affiliates/register
 Authorization: Bearer {JWT_TOKEN}
@@ -153,12 +156,14 @@ Content-Type: application/json
 ```
 
 #### 4. Get Monetization Dashboard
+
 ```bash
 GET /api/monetization/dashboard
 Authorization: Bearer {JWT_TOKEN}
 ```
 
 #### 5. Submit Task
+
 ```bash
 POST /api/tasks/submit
 Authorization: Bearer {JWT_TOKEN}
@@ -179,18 +184,21 @@ Content-Type: application/json
 
 ### Deploy NATS Server
 
-**Option 1: Docker**
+#### Option 1: Docker
+
 ```bash
 docker run -p 4222:4222 -p 8222:8222 nats:latest -js
 ```
 
-**Option 2: Cloud (NATS Cloud)**
-1. Go to https://www.nats.io/nats-cloud/
+#### Option 2: Cloud (NATS Cloud)
+
+1. Go to [NATS Cloud](https://www.nats.io/nats-cloud/)
 2. Create account
 3. Get connection string
 4. Set `NATS_URL` in `.env.local`
 
-**Option 3: Self-hosted**
+#### Option 3: Self-hosted
+
 ```bash
 # Download and run NATS
 wget https://github.com/nats-io/nats-server/releases/download/v2.10.0/nats-server-v2.10.0-linux-amd64.zip
@@ -199,6 +207,7 @@ unzip nats-server-v2.10.0-linux-amd64.zip
 ```
 
 **Test NATS Connection:**
+
 ```typescript
 import { initializeNATSConsumer } from '@/lib/nats-consumer';
 
@@ -252,6 +261,7 @@ SENTRY_ENVIRONMENT=production
 ### 1. Health Checks
 
 Setup endpoint monitoring:
+
 ```bash
 # Vercel Cron (optional)
 # runs every hour
@@ -261,6 +271,7 @@ GET /api/health
 ### 2. Stripe Webhook Logs
 
 Monitor in Stripe Dashboard:
+
 - Developers > Webhooks > Endpoint Details
 - View logs and retry failed webhooks
 
@@ -277,6 +288,7 @@ NEXT_DEBUG=* npm run dev
 ### 4. Error Tracking
 
 In Sentry:
+
 - Issues > Errors
 - Performance > Transactions
 - Release health
@@ -301,30 +313,35 @@ In Sentry:
 ## Troubleshooting
 
 ### Stripe Checkout Fails
+
 1. Check price IDs match `.env.local`
 2. Verify API keys are active
 3. Check webhook endpoint configured
 4. Look at Stripe Dashboard > Events
 
 ### Affiliate Payouts Don't Work
+
 1. Verify Stripe Connect account
 2. Check payout method configured
 3. Ensure minimum threshold ($100) met
 4. Check bank account verified in Stripe
 
 ### Team Members Can't Access
+
 1. Verify subscription tier allows team
 2. Check member role permissions
 3. Verify email invitation sent
 4. Check Firestore rules allow access
 
 ### NATS Consumer Not Processing
+
 1. Verify NATS server running
 2. Check connection string in `.env.local`
 3. Look at NATS logs
 4. Verify JetStream enabled
 
 ### Analytics Not Recording
+
 1. Verify `trackUserInsights` called
 2. Check Firestore collection exists
 3. Verify user has analytics permission
@@ -337,11 +354,13 @@ In Sentry:
 ### 1. Database Indexes
 
 Firestore automatically creates indexes for:
+
 - `users` collection
 - `affiliates` collection
 - `referrals` collection
 
 Add custom indexes if needed:
+
 ```firestore
 collection: users
   index: tier, createdAt DESC
@@ -353,6 +372,7 @@ collection: referrals
 ### 2. Caching
 
 Implement Redis caching:
+
 ```typescript
 // Cache subscription data for 1 hour
 const cachedSub = await redis.get(`sub:${userId}`);
@@ -365,6 +385,7 @@ if (!cachedSub) {
 ### 3. CDN Configuration
 
 Configure Vercel Edge Caching:
+
 ```javascript
 // next.config.ts
 const headers = async () => [
@@ -382,21 +403,25 @@ const headers = async () => [
 ## Scaling Considerations
 
 ### 1. Database Growth
+
 - Implement data archiving after 1 year
 - Use Firestore partitioning for large collections
 - Monitor database size
 
 ### 2. API Traffic
+
 - Enable API key rate limiting
 - Use Vercel Functions for horizontal scaling
 - Setup load balancing
 
 ### 3. Task Processing
+
 - Scale NATS consumers horizontally
 - Implement job queues for heavy tasks
 - Use background processing
 
 ### 4. Analytics Storage
+
 - Archive old analytics data
 - Use BigQuery for historical analysis
 - Implement data cleanup policies
@@ -442,9 +467,9 @@ const headers = async () => [
 
 ## Support Contacts
 
-- **Stripe Support:** https://support.stripe.com
-- **Firebase Support:** https://firebase.google.com/support
-- **NATS Community:** https://nats.io/community
+- **Stripe Support:** [https://support.stripe.com](https://support.stripe.com)
+- **Firebase Support:** [https://firebase.google.com/support](https://firebase.google.com/support)
+- **NATS Community:** [https://nats.io/community](https://nats.io/community)
 - **GitHub Issues:** Create issue in LitLabs repository
 
 ---
