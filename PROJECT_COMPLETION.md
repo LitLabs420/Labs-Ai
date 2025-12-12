@@ -332,7 +332,9 @@ graph TD
 ### File Structure
 
 ```
+```bash
 /app
+```
   /api
   /dashboard
 /components

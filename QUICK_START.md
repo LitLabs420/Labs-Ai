@@ -227,4 +227,35 @@ For more help, see `TROUBLESHOOTING.md`.
 
 ---
 
-Good luck!
+## 4. Project Structure
+
+```
+Labs-Ai/
+├── app/                # Next.js App Router
+├── components/         # React components
+├── lib/                # Core logic, utilities, and integrations
+├── public/             # Static assets
+├── styles/             # Global styles
+└── ...                 # Other configuration files
+```
+
+---
+
+## 5. Key Integrations
+
+- **Firebase**: Authentication, Firestore, Functions
+- **Stripe**: Payments and subscriptions
+- **Google AI**: Content generation
+- **Sentry**: Error monitoring
+
+---
+
+## 6. Next Steps
+
+- **Explore the dashboard**: Log in and navigate to `/dashboard`.
+- **Review the code**: Familiarize yourself with the structure in `app/` and `lib/`.
+- **Check the documentation**: Read `DOCUMENTATION_INDEX.md` for a full list of docs.
+
+---
+
+Thank you for getting started with LitLabs AI!
