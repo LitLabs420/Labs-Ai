@@ -5,11 +5,19 @@ const nextConfig: NextConfig = {
     root: __dirname,
   },
   webpack: (config, { isServer }) => {
-    // Fix Firebase module resolution for SSR
+    // Fix Firebase module resolution for SSR by treating as externals
     if (isServer) {
-      config.externals.push('firebase/firestore');
-      config.externals.push('firebase/functions');
-      config.externals.push('firebase/auth');
+      if (!config.externals) {
+        config.externals = [];
+      }
+      const externals = Array.isArray(config.externals) ? config.externals : [config.externals];
+      config.externals = [
+        ...externals,
+        'firebase/firestore',
+        'firebase/functions',
+        'firebase/auth',
+        'firebase/app',
+      ];
     }
     return config;
   },
