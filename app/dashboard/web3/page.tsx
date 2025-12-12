@@ -20,6 +20,15 @@ interface WalletAccount {
   nftCount: number;
 }
 
+interface Token {
+  symbol: string;
+  name: string;
+  balance: number;
+  usdValue: number;
+  change24h: number;
+  image: string;
+}
+
 
 
 
@@ -29,15 +38,17 @@ export default function Web3Page() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState<'portfolio' | 'swap' | 'nfts'>('portfolio');
   const [isMounted, setIsMounted] = useState(false);
+  const [tokens, setTokens] = useState<Token[]>([]);
 
   useEffect(() => {
     setIsMounted(true);
+    // TODO: Load tokens from Web3 provider
   }, []);
 
-  const totalBalance = tokens.reduce((sum, token) => sum + token.usdValue, 0);
-  const change24h = (
-    tokens.reduce((sum, token) => sum + (token.usdValue * token.change24h) / 100, 0) / totalBalance
-  ) * 100;
+  const totalBalance = tokens.length > 0 ? tokens.reduce((sum, token) => sum + token.usdValue, 0) : 0;
+  const change24h = totalBalance > 0
+    ? (tokens.reduce((sum, token) => sum + (token.usdValue * token.change24h) / 100, 0) / totalBalance) * 100
+    : 0;
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
