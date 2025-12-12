@@ -18,6 +18,9 @@ import {
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 /**
  * POST /api/affiliates/register or POST /api/affiliates/referral/track
  * Create affiliate profile or track a new referral
