@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
         { context: 'security_check_failed' }
       );
       return NextResponse.json(
-        { error: 'Security check failed', reason: securityCheck.reason },
+        { error: 'Security check failed', reason: securityCheck.threat?.details || 'Unknown threat' },
         { status: 403 }
       );
     }
@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     console.error('Task submission error:', error);
-    captureError(error, 'task_submission_api_error');
+    captureError(error, { context: 'task_submission_api_error' });
 
     return NextResponse.json(
       {
