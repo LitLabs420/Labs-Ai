@@ -21,6 +21,7 @@ LitLabs AI is now equipped with a **complete, production-ready monetization infr
 ### Core Modules
 
 #### 1. **Configuration System** (`lib/config.ts`)
+
 Centralized configuration validation for all API keys and services.
 
 ```typescript
@@ -32,6 +33,7 @@ if (isAPIConfigured('stripe')) {
 ```
 
 **Validated Keys:**
+
 - Google Generative AI
 - OpenAI (GPT-4, ChatGPT)
 - Stripe (publishable, secret, webhook)
@@ -41,6 +43,7 @@ if (isAPIConfigured('stripe')) {
 #### 2. **Subscription Management** (`lib/subscription-manager.ts`)
 
 **Features:**
+
 - 6 subscription tiers with feature control
 - Per-tier limits (AI generations, DM replies, images, videos, etc.)
 - Team member management with role-based access
@@ -61,18 +64,20 @@ await addTeamMember(ownerId, 'team@example.com', 'admin');
 ```
 
 **Tier Details:**
-| Tier | Users | Price | AI Generations | Features |
-|------|-------|-------|---|---|
-| Free | 1 | $0 | 5/day | Basic |
-| Starter | 1 | $19 | 50/day | Advanced |
-| Creator | 3 | $49 | 500/day | Team |
-| Pro | 10 | $99 | Unlimited | API + White-label |
-| Agency | 50 | $299 | Unlimited | Full white-label |
-| Education | 100 | $0 | Unlimited | Classroom tools |
+
+| Tier      | Users | Price  | AI Generations | Features          |
+|-----------|-------|--------|----------------|-------------------|
+| Free      | 1     | $0     | 5/day          | Basic             |
+| Starter   | 1     | $19    | 50/day         | Advanced          |
+| Creator   | 3     | $49    | 500/day        | Team              |
+| Pro       | 10    | $99    | Unlimited      | API + White-label |
+| Agency    | 50    | $299   | Unlimited      | Full white-label  |
+| Education | 100   | $0     | Unlimited      | Classroom tools   |
 
 #### 3. **Affiliate System** (`lib/affiliate-system.ts`)
 
 **Commission Tiers:**
+
 - Bronze: 15% (0-4 referrals)
 - Silver: 20% (5-24 referrals)
 - Gold: 25% (25-99 referrals)
@@ -95,6 +100,7 @@ const { successful, failed } = await processAffiliatePayouts();
 #### 4. **White-Label System** (`lib/white-label.ts`)
 
 **Customization Options:**
+
 - Custom domain mapping
 - Logo and favicon
 - Brand colors (primary, secondary, accent)
@@ -117,6 +123,7 @@ const css = generateWhiteLabelCSS(config);
 #### 5. **Advanced Analytics** (`lib/advanced-analytics.ts`)
 
 **Insights Tracked:**
+
 - Daily generations count
 - DM replies, money plays, images, videos
 - Token usage and API calls
@@ -142,6 +149,7 @@ const cohort = await getUserCohortAnalysis(startDate, endDate);
 #### 6. **Stripe Integration** (`lib/stripe-enhanced.ts`)
 
 **Features:**
+
 - Customer management
 - Subscription creation/updates
 - Coupon and discount management
@@ -180,6 +188,7 @@ await createCoupon({
 
 **POST** `/api/teams/members/add`
 Add team member with email invitation.
+
 ```json
 {
   "email": "teammate@example.com",
@@ -200,6 +209,7 @@ Update member role.
 
 **POST** `/api/affiliates/register`
 Register as affiliate with payout method.
+
 ```json
 {
   "payoutMethod": "stripe",
@@ -222,12 +232,14 @@ Track new referral (called on signup).
 Get comprehensive analytics report.
 
 Query parameters:
+
 - `reportType`: `insights` | `revenue` | `content` | `comprehensive`
 - `startDate`: ISO date
 - `endDate`: ISO date
 
 **POST** `/api/analytics/cohort`
 Analyze user cohort behavior.
+
 ```json
 {
   "joinDateStart": "2024-01-01",
@@ -242,6 +254,7 @@ Complete monetization overview with subscriptions, team, affiliates, revenue, an
 
 **POST** `/api/monetization/upgrade`
 Initiate tier upgrade.
+
 ```json
 {
   "targetTier": "pro"
@@ -369,30 +382,35 @@ NEXT_PUBLIC_API_URL=https://api.litlabs.ai
 ## Implementation Checklist
 
 ### Phase 1: Configuration & Deployment ✅
+
 - [x] Create lib/config.ts with validation
 - [x] Create lib/server-initializer.ts
 - [x] Enhance health check endpoint
 - [x] Create .env.example with all variables
 
 ### Phase 2: Core Features ✅
+
 - [x] Subscription tiers and limits
 - [x] Team management
 - [x] Task submission workflow
 - [x] NATS consumer
 
 ### Phase 3: Monetization ✅
+
 - [x] Stripe enhanced integration
 - [x] Affiliate system
 - [x] White-label solutions
 - [x] Advanced analytics
 
 ### Phase 4: API Endpoints ✅
+
 - [x] Team management APIs
 - [x] Affiliate APIs
 - [x] Analytics APIs
 - [x] Monetization dashboard
 
 ### Phase 5: Production Ready
+
 - [ ] **Stripe Setup:**
   - Create products for each tier
   - Generate price IDs
@@ -420,18 +438,21 @@ NEXT_PUBLIC_API_URL=https://api.litlabs.ai
 ## Key Features
 
 ### 🎯 Subscription Tiers
+
 - Free, Starter, Creator, Pro, Agency, Education
 - Per-tier feature control and usage limits
 - Trial periods and annual pricing
 - Automatic renewal and billing
 
 ### 👥 Team Collaboration
+
 - Invite team members via email
 - Role-based access (owner, admin, member, viewer)
 - Usage pooling across team
 - Team activity tracking
 
 ### 💰 Affiliate Program
+
 - Self-service affiliate registration
 - Tiered commission structure (15%-30%)
 - Real-time referral tracking
@@ -439,6 +460,7 @@ NEXT_PUBLIC_API_URL=https://api.litlabs.ai
 - Automated monthly payouts
 
 ### 🎨 White-Label
+
 - Custom branding (colors, logo, fonts)
 - Custom domain mapping
 - Client portal creation
@@ -446,6 +468,7 @@ NEXT_PUBLIC_API_URL=https://api.litlabs.ai
 - Feature toggling per customer
 
 ### 📊 Analytics
+
 - Daily usage tracking
 - Content performance metrics
 - Revenue analytics (MRR, churn, LTV)

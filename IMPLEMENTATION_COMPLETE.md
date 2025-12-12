@@ -124,12 +124,14 @@ Education (Free)
 **File:** `lib/affiliate-system.ts`
 
 **Tier System:**
+
 - **Bronze** (0-4 referrals): 15% commission
 - **Silver** (5-24 referrals): 20% commission
 - **Gold** (25-99 referrals): 25% commission
 - **Platinum** (100+ referrals): 30% commission
 
 **Example Economics:**
+
 - 10 Creator tier ($49/mo) referrals = $49 × 10 × 20% = $98/mo
 - 50 Pro tier ($99/mo) referrals = $99 × 50 × 25% = $1,237.50/mo
 
