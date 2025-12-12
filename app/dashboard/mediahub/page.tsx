@@ -15,38 +15,7 @@ interface MediaItem {
   rating: number;
 }
 
-const SAMPLE_MEDIA: MediaItem[] = [
-  {
-    id: '1',
-    title: 'Inception',
-    poster: 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=200&h=300',
-    type: 'movie',
-    progress: 65,
-    duration: 148,
-    source: 'plex',
-    rating: 8.8,
-  },
-  {
-    id: '2',
-    title: 'The Matrix',
-    poster: 'https://images.unsplash.com/photo-1533613220915-609f21a91335?w=200&h=300',
-    type: 'movie',
-    progress: 100,
-    duration: 136,
-    source: 'plex',
-    rating: 8.7,
-  },
-  {
-    id: '3',
-    title: 'Stranger Things',
-    poster: 'https://images.unsplash.com/photo-1598899134739-24c46f58b8c0?w=200&h=300',
-    type: 'series',
-    progress: 45,
-    duration: 45,
-    source: 'jellyfin',
-    rating: 8.9,
-  },
-];
+
 
 export default function MediaHubPage() {
   const [searchTerm, setSearchTerm] = useState('');

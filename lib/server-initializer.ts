@@ -3,11 +3,11 @@
  * Handles all startup tasks, API validation, and service initialization
  */
 
-import { getConfig, Config } from './config';
+import './config';
 import { initializeApp as initializeFirebase } from 'firebase/app';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import OpenAI from 'openai';
-import { captureMessage, captureError } from './sentry';
+import { captureMessage } from './sentry';
 
 /**
  * Service initialization status

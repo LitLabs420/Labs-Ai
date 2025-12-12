@@ -364,7 +364,7 @@ export async function getCustomerBillingInfo(
     const stripe = getStripe();
 
     // Get customer
-    const customer = await stripe.customers.retrieve(customerId);
+    // const customer = await stripe.customers.retrieve(customerId);
 
     // Get subscriptions
     const subscriptions = await stripe.subscriptions.list({

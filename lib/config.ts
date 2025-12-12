@@ -244,7 +244,7 @@ export function reloadConfig(): APIKeyConfig {
  * Check if a specific API is configured
  */
 export function isAPIConfigured(apiName: keyof APIKeyConfig): boolean {
-  const config = getConfig();
+  // const config = getConfig(); // unused
   const apiConfig = config[apiName];
   
   if (typeof apiConfig === 'object' && apiConfig !== null) {
@@ -264,7 +264,7 @@ export function isAPIConfigured(apiName: keyof APIKeyConfig): boolean {
  * Log configuration status
  */
 export function logConfigStatus(): void {
-  const config = getConfig();
+  // const config = getConfig(); // unused
   
   console.log('\n🔍 Configuration Status:');
   console.log('========================\n');

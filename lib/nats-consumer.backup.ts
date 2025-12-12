@@ -10,6 +10,6 @@ import { getConfig } from './config';
 import { captureError, captureMessage } from './sentry';
 
 // NATS types (will be imported if available)
-type NatsConnection = any;
-type Subscription = any;
+// type NatsConnection - unusedany;
+// type Subscription - unusedany;
 

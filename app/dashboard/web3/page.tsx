@@ -20,55 +20,9 @@ interface WalletAccount {
   nftCount: number;
 }
 
-const SAMPLE_TOKENS: TokenBalance[] = [
-  {
-    symbol: "ETH",
-    name: "Ethereum",
-    balance: 2.5,
-    usdValue: 4850,
-    change24h: 5.2,
-    icon: "E",
-  },
-  {
-    symbol: 'BTC',
-    name: 'Bitcoin',
-    balance: 0.15,
-    usdValue: 6000,
-    change24h: -2.1,
-    icon: '₿',
-  },
-  {
-    symbol: 'MATIC',
-    name: 'Polygon',
-    balance: 500,
-    usdValue: 250,
-    change24h: 8.3,
-    icon: '◆',
-  },
-  {
-    symbol: 'USDC',
-    name: 'USD Coin',
-    balance: 1200,
-    usdValue: 1200,
-    change24h: 0,
-    icon: '$',
-  },
-];
 
-const SAMPLE_ACCOUNTS: WalletAccount[] = [
-  {
-    address: '0x1234...5678',
-    network: 'ethereum',
-    balance: 12100,
-    nftCount: 24,
-  },
-  {
-    address: '0x8765...4321',
-    network: 'polygon',
-    balance: 450,
-    nftCount: 8,
-  },
-];
+
+
 
 export default function Web3Page() {
   const [hideBalance, setHideBalance] = useState(false);

@@ -95,7 +95,7 @@ export async function enableMFAPhone(phoneNumber: string): Promise<string> {
     size: 'invisible',
   });
 
-  const phoneAuthProvider = new PhoneAuthProvider(auth);
+  // const phoneAuthProvider = new PhoneAuthProvider(auth);
   const verificationId = await phoneAuthProvider.verifyPhoneNumber(
     phoneNumber,
     recaptchaVerifier
@@ -110,7 +110,7 @@ export async function completeMFAVerification(verificationId: string, code: stri
   if (!user) throw new Error('No authenticated user');
   if (!auth) throw new Error('Firebase auth not initialized');
 
-  const phoneAuthProvider = new PhoneAuthProvider(auth as any);
+  // const phoneAuthProvider = new PhoneAuthProvider(auth as any);
   const credentials = PhoneAuthProvider.credential(verificationId, code);
   const multiFactorAssertion = PhoneMultiFactorGenerator.assertion(credentials);
   

@@ -6,7 +6,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getUserFromRequest } from '@/lib/auth-helper';
 import { submitTask } from '@/lib/task-manager';
-import { Consumer } from '@/lib/nats-consumer';
+import NATSConsumer from '@/lib/nats-consumer';
+const Consumer = NATSConsumer.getInstance();
 import { canPerformActionServer, incrementUsageServer } from '@/lib/firebase-server';
 import { Guardian } from '@/lib/guardian-bot';
 import { captureError } from '@/lib/sentry';

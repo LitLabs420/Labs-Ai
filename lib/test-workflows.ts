@@ -6,15 +6,17 @@
 
 import { describe, it, beforeAll, afterAll, expect } from '@jest/globals';
 import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
-import { getFirestore, collection, getDocs, deleteDoc, query, where } from 'firebase/firestore';
+// signInWithEmailAndPassword import removed - unused
+import 'firebase/auth';
+// getDocs import removed - unused
+import 'firebase/firestore';
 import Stripe from 'stripe';
 
 // Test Configuration
 const TEST_TIMEOUT = 30000;
 const TEST_USER_EMAIL = 'test@litlabs-test.com';
 const TEST_USER_PASSWORD = 'TestPassword123!';
-const TEST_AFFILIATE_EMAIL = 'affiliate@litlabs-test.com';
+// const TEST_AFFILIATE_EMAIL = 'affiliate@litlabs-test.com';
 
 // Initialize services
 let stripe: Stripe;
@@ -85,7 +87,7 @@ describe('Subscription Workflow', () => {
       expect(customer.email).toBe(TEST_USER_EMAIL);
 
       // Store customer ID
-      const usersCollection = collection(db, 'users');
+      // const usersCollection = collection(db, 'users');
       // Would update: await updateDoc(doc(usersCollection, testUserId), { stripeCustomerId: customer.id });
     },
     TEST_TIMEOUT
@@ -729,7 +731,7 @@ describe('Error Handling & Edge Cases', () => {
       });
 
       expect(response.status).toBe(400);
-      const error = await response.json();
+      // const error = await response.json();
       expect(error.error).toBeDefined();
     },
     TEST_TIMEOUT

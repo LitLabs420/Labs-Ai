@@ -1,7 +1,7 @@
 'use client';
 
 import React, { HTMLAttributes, ReactNode } from 'react';
-import { useTheme } from '@/context/ThemeContext';
+// import { useTheme } from '@/context/ThemeContext';
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
   variant?: 'elevated' | 'bordered' | 'flat' | 'glass';

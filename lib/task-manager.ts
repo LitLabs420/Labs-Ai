@@ -6,7 +6,8 @@
 import { db } from './firebase';
 import { collection, addDoc, doc, getDoc, updateDoc, query, where, getDocs, Timestamp } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'crypto';
-import { captureError } from './sentry';
+// captureError import removed - unused
+import './sentry';
 
 export type TaskType = 
   | 'ai_generation'
@@ -352,7 +353,7 @@ async function processDMReply(task: Task): Promise<Record<string, any>> {
  * Process money play task
  */
 async function processMoneyPlay(task: Task): Promise<Record<string, any>> {
-  const { description } = task.payload;
+  // description destructured - unusedtask.payload;
   // Money play generation logic
   return {
     moneyPlay: `Money play generated for: ${description}`,
@@ -377,7 +378,7 @@ async function processImageGeneration(task: Task): Promise<Record<string, any>> 
  * Process automation task
  */
 async function processAutomation(task: Task): Promise<Record<string, any>> {
-  const { automationType, trigger, action } = task.payload;
+  // automation properties - unusedtask.payload;
   // Automation execution logic
   return {
     automationId: `auto_${Date.now()}`,
