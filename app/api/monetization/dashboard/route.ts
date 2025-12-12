@@ -43,6 +43,9 @@ export async function GET(request: NextRequest) {
     // Get white-label config
     const whiteLabelConfig = await getWhiteLabelConfig(user.uid);
 
+    // Initialize affiliate profile as null
+    const affiliateProfile = null;
+
     // Get revenue metrics for current month
     const today = new Date();
     const currentMonth = today.toISOString().slice(0, 7);
