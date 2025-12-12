@@ -90,14 +90,25 @@ You should see the LitLabs AI homepage.
 
 ## ❓ Troubleshooting
 
-**Problem**: `npm install` fails.
-**Solution**: Make sure you have Node.js 18+ installed.
+### Issue: "Firebase is not defined"
 
-**Problem**: App crashes on startup.
-**Solution**: Check that `.env.local` exists and is configured correctly.
+**Solution**: Ensure your Firebase configuration in `.env.local` is correct and that you have run `npm install`.
 
-**Problem**: AI features don't work.
-**Solution**: Ensure your `GOOGLE_GEMINI_API_KEY` is correct in `.env.local`.
+### Issue: "Email signup not working"
+
+**Solution**: Verify that Firebase Authentication is enabled and that your API keys are correct.
+
+### Issue: "Google OAuth not working"
+
+**Solution**: Double-check that your OAuth consent screen is configured in Google Cloud and the redirect URIs are correct.
+
+### Issue: "Stripe button not showing"
+
+**Solution**: Make sure your Stripe public key is set in `.env.local`.
+
+### Issue: "Payment not processing"
+
+**Solution**: Check your Stripe secret key and ensure your account is activated for live payments.
 
 For more help, see `TROUBLESHOOTING.md`.
 
@@ -171,7 +182,7 @@ For more help, see `TROUBLESHOOTING.md`.
 
 ### 6-Tier System
 
-```
+```text
 - Free
 - Starter ($19/mo)
 - Creator ($49/mo)
@@ -227,7 +238,7 @@ For more help, see `TROUBLESHOOTING.md`.
 
 ## 4. Project Structure
 
-```
+```text
 Labs-Ai/
 ├── app/                # Next.js App Router
 ├── components/         # React components
