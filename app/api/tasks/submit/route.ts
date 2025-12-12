@@ -6,10 +6,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getUserFromRequest } from '@/lib/auth-helper';
 import { submitTask } from '@/lib/task-manager';
-import { Consumer } from '@/lib/nats-consumer';
-import { canPerformActionServer, incrementUsageServer } from '@/lib/firebase-server';
+import { canPerformActionServer, incrementUsageServer, getUserDocument } from '@/lib/firebase-server';
 import { Guardian } from '@/lib/guardian-bot';
 import { captureError } from '@/lib/sentry';
+
+// Optional: NATS Consumer for distributed task processing
+let Consumer: any = null;
+try {
+  const module = require('@/lib/nats-consumer');
+  Consumer = module.Consumer;
+} catch (e) {
+  // NATS not available - tasks will be processed locally
+}
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -54,13 +62,13 @@ export async function POST(request: NextRequest) {
     }
 
     // 3. Get user tier and check limits
-    const userDoc = await require('@/lib/firebase-server').getUserDocument(user.uid);
+    const userDoc = await getUserDocument(user.uid);
     const tier = userDoc?.tier || 'free';
 
     const check = await canPerformActionServer(user.uid, type);
     if (!check.allowed) {
       return NextResponse.json(
-        { error: check.reason, remaining: check.remaining },
+        { error: check.reason },
         { status: 403 }
       );
     }
@@ -74,12 +82,12 @@ export async function POST(request: NextRequest) {
     });
 
     if (!securityCheck.safe) {
-      captureException(
+      captureError(
         new Error(`Security check failed for user ${user.uid}`),
-        'security_check_failed'
+        { context: 'security_check_failed' }
       );
       return NextResponse.json(
-        { error: 'Security check failed', reason: securityCheck.reason },
+        { error: 'Security check failed' },
         { status: 403 }
       );
     }
@@ -97,9 +105,11 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // 6. Publish to NATS for processing
+    // 6. Publish to NATS for processing (if available)
     try {
-      await Consumer.publishTask(task.id, type, user.uid, payload);
+      if (Consumer) {
+        await Consumer.publishTask(task.id, type, user.uid, payload);
+      }
     } catch (error) {
       console.warn('NATS publishing failed (will process locally):', error);
     }
@@ -118,7 +128,7 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     console.error('Task submission error:', error);
-    captureException(error, 'task_submission_api_error');
+    captureError(error, { context: 'task_submission_api_error' });
 
     return NextResponse.json(
       {

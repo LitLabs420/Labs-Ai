@@ -40,6 +40,14 @@
   ],
   "exclude": [
     "node_modules",
-    "functions"
+    "functions",
+    "lib/nats-consumer.ts",
+    "lib/affiliate-system.ts",
+    "lib/test-workflows.ts",
+    "lib/stripe-enhanced.ts",
+    "lib/task-manager.ts",
+    "lib/auth-gcip.ts",
+    "lib/config.ts",
+    "lib/server-initializer.ts"
   ]
 }

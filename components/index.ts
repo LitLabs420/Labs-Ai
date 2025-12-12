@@ -1,18 +1,17 @@
 // UI Components Index
-export { Button } from './Button';
-export { Card } from './Card';
-export { Input } from './Input';
-export { Badge } from './Badge';
-export { Modal } from './Modal';
+export { Button } from './ui/Button';
+export { Card } from './ui/Card';
+export { Input } from './ui/Input';
+export { Badge } from './ui/Badge';
+export { Modal } from './ui/Modal';
 
 // Layout Components Index
-export { Header } from '../Header';
-export { Footer } from '../Footer';
-export { RootLayoutClient } from '../RootLayoutClient';
+export { Header } from './Header';
+export { Footer } from './Footer';
 
 // Re-export types
-export type { ButtonProps } from './Button';
-export type { CardProps } from './Card';
-export type { InputProps } from './Input';
-export type { BadgeProps } from './Badge';
-export type { ModalProps } from './Modal';
+export type { ButtonProps } from './ui/Button';
+export type { CardProps } from './ui/Card';
+export type { InputProps } from './ui/Input';
+export type { BadgeProps } from './ui/Badge';
+export type { ModalProps } from './ui/Modal';
