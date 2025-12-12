@@ -431,22 +431,26 @@ const headers = async () => [
 ## Maintenance Schedule
 
 ### Daily
+
 - Monitor error rates in Sentry
 - Check Stripe webhook logs
 - Verify health checks passing
 
 ### Weekly
+
 - Review analytics dashboard
 - Check affiliate payments
 - Update security patches
 
 ### Monthly
+
 - Analyze user cohorts
 - Review API performance
 - Cleanup old data
 - Update documentation
 
 ### Quarterly
+
 - Security audit
 - Capacity planning
 - Cost optimization

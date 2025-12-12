@@ -21,7 +21,7 @@ LitLabs AI is now a **production-ready, fully-monetized SaaS platform** with ent
 
 ## Architecture Overview
 
-```
+```mermaid
 ┌─────────────────────────────────────────────────────────┐
 │                    LitLabs AI Platform                  │
 ├──────────────────────────────────────────────────────────┤
@@ -80,9 +80,10 @@ LitLabs AI is now a **production-ready, fully-monetized SaaS platform** with ent
 ## Feature Breakdown
 
 ### 1. Subscription System
+
 **File:** `lib/subscription-manager.ts`
 
-```
+```typescript
 Free Tier
 ├─ 1 user
 ├─ 1GB storage
@@ -121,6 +122,7 @@ Education (Free)
 ```
 
 ### 2. Affiliate Program
+
 **File:** `lib/affiliate-system.ts`
 
 **Tier System:**
@@ -136,463 +138,187 @@ Education (Free)
 - 50 Pro tier ($99/mo) referrals = $99 × 50 × 25% = $1,237.50/mo
 
 ### 3. White-Label Solutions
-**File:** `lib/white-label.ts`
 
-**Features:**
+**File:** `lib/white-label.ts`
+**Status:** Implemented
+
 - Custom domain mapping
-- Logo and branding colors
-- Custom CSS injection
-- Client portal creation
-- Feature toggles per customer
-- Theme CSS generation
+- Custom branding (logo, colors)
+- Reseller API for programmatic access
 
 **Use Cases:**
+
 - Agencies selling white-labeled platform
-- Resellers offering branded solution
-- Enterprise deployment
+- Businesses integrating AI into their own products
 
 ### 4. Team Collaboration
-**Features:**
+
+**File:** `lib/teams.ts`
+**Status:** Implemented
+
 - Invite team members via email
-- Role-based access (Owner, Admin, Member, Viewer)
-- Usage pooling across team
-- Activity tracking
-- Granular permissions per role
+- Role-based access control (Admin, Member)
+- Shared workspace for content and templates
 
 ### 5. Analytics & Reporting
-**File:** `lib/advanced-analytics.ts`
 
-**Tracked Metrics:**
+**File:** `lib/analytics.ts`
+**Status:** Implemented
+
+- Dashboard with key metrics
 - Daily AI generations count
-- Content engagement & performance
-- User retention rates
-- Revenue (MRR, LTV)
-- Cohort analysis
-- Churn prediction
+- Top-performing content templates
 
----
+## III. Technical Implementation
 
-## Database Schema
+### Core Framework
 
-### Core Collections
+- **Next.js 14 (App Router):** Provides a robust foundation for server-side rendering, client-side navigation, and API routes.
+- **TypeScript:** Ensures type safety and improves code quality.
+- **Tailwind CSS:** For rapid, utility-first styling.
 
-```firestore
-users/
-  {userId}/
-    tier: 'creator'
-    subscription: {
-      id: 'sub_xxxxx'
-      status: 'active'
-      currentPeriodEnd: timestamp
-      cancelAtPeriodEnd: false
-    }
-    teamMembers: 3
-    storageUsed: 25
-    isAffiliate: true
-    affiliateCode: 'JOHN123'
+### Backend & Database
 
-affiliates/
-  {userId}/
-    referralCode: 'JOHN123'
-    referralLink: 'https://litlabs.ai/invite/JOHN123'
-    commissionRate: 0.25
-    tier: 'gold'
-    totalEarnings: 2500.00
-    monthlyEarnings: 250.00
-    payoutMethod: 'stripe'
-    payoutDetails:
-      stripeConnectId: 'acct_xxxxx'
+- **Firebase:**
+  - **Firestore:** NoSQL database for user data, content, and subscriptions.
+  - **Authentication:** Manages user sign-up, login, and session management.
+  - **Firebase Functions:** Serverless functions for backend logic (e.g., Stripe webhooks).
+- **Stripe:**
+  - **Stripe Checkout:** Secure payment processing.
+  - **Stripe Billing:** Manages recurring subscriptions and invoices.
+  - **Stripe Webhooks:** Handles subscription events (e.g., `invoice.paid`).
 
-referrals/
-  {referralId}/
-    affiliateUserId: '{userId}'
-    referredUserId: '{newUserId}'
-    status: 'qualified'
-    commission: 49.00
-    subscriptionValue: 245.00
-    referredAt: timestamp
-    qualifiedAt: timestamp
-    paidAt: timestamp
+### AI & Content Generation
 
-whiteLabelConfigs/
-  {userId}/
-    companyName: 'Acme Corp'
-    customDomain: 'acme.litlabs.ai'
-    primaryColor: '#1a202c'
-    secondaryColor: '#ffffff'
-    logo: 'https://...'
-    features:
-      customBranding: true
-      whiteLabel: true
-      clientPortal: true
+- **Google Generative AI (`@google/generative-ai`):** Powers all AI content generation features.
+- **Custom Prompts:** A library of fine-tuned prompts for different content types (captions, scripts, etc.).
 
-userInsights/
-  {userId}_{date}/
-    generationsCount: 45
-    dmRepliesCount: 12
-    totalTokensUsed: 150000
-    averageResponseTime: 1250
-    errorRate: 0.5
+### Security & Rate Limiting
 
-revenueMetrics/
-  {userId}_{month}/
-    month: '2024-01'
-    totalRevenue: 4900.00
-    subscriptionRevenue: 2450.00
-    affiliateRevenue: 1225.00
-    mrr: 4900.00
-    churnRate: 2.5
-```
+- **Guardian Bot (`lib/guardian-bot.ts`):**
+  - Analyzes user behavior to detect suspicious activity.
+  - Flags or blocks users based on risk score.
+- **Rate Limiter (`lib/rateLimiter.ts`):**
+  - Token bucket algorithm to prevent abuse of API endpoints.
+  - Configurable limits per user tier.
 
----
+## IV. Code Structure & Key Files
 
-## API Endpoints Summary
+### `app/`
+
+- **`(dashboard)/`:** Main application dashboard, requires authentication.
+- **`api/`:** API routes for handling client-server communication.
+  - `api/generate/route.ts`: AI content generation.
+  - `api/stripe/webhook/route.ts`: Stripe webhook handler.
+- **`auth/`:** Authentication pages (login, sign-up).
+
+### `lib/`
+
+- `firebase.ts`: Client-side Firebase initialization.
+- `firebase-admin.ts`: Server-side Firebase Admin SDK.
+- `stripe.ts`: Stripe client and helper functions.
+- `ai.ts`: AI generation logic.
+- `guardian-bot.ts`: Security analysis bot.
+- `rateLimiter.ts`: Rate limiting implementation.
+- `subscription.ts`: Subscription management logic.
+- `usage.ts`: Usage tracking for metered features.
+
+### `components/`
+
+- **`ui/`:** Reusable UI components (buttons, cards, etc.).
+- **`dashboard/`:** Components specific to the main dashboard.
+
+## V. User Interface & Experience
+
+### Onboarding
+
+- Simple sign-up flow with email/password or Google OAuth.
+- Welcome tour highlighting key features.
+
+### Dashboard
+
+- Central hub for accessing all features.
+- At-a-glance view of usage stats and recent activity.
+
+### Content Generation
+
+- Intuitive forms for generating different content types.
+- "Surprise Me" button for random content ideas.
+- Save and organize generated content in a personal library.
+
+### Subscription Management
+
+- Clear pricing tiers and feature comparison.
+- Easy upgrade/downgrade process via Stripe Checkout.
+- View and download invoices from the billing portal.
+
+## VI. Deployment & CI/CD
+
+- **Vercel:**
+  - Continuous deployment from the `main` branch.
+  - Automatic builds, and deployments.
+  - Environment variable management for production secrets.
+- **GitHub Actions:**
+  - Linting and build checks on every pull request.
+
+## VII. Next Steps & Future Roadmap
+
+- **Phase 2 Features:**
+  - **AI-Powered Scheduling:** Automatically schedule social media posts.
+  - **Image Generation:** Create images from text prompts.
+  - **Voice Cloning:** Generate audio content in the user's voice.
+- **Mobile App:**
+  - Develop a native Android app (initial placeholder in `android-app/`).
+- **Expanded Integrations:**
+  - Connect with more social media platforms (LinkedIn, TikTok).
+  - Integrate with email marketing services.
+
+## VIII. API Endpoint Summaries
+
+### User Management
+
+- **`POST /api/auth/signup`**: Creates a new user account.
+- **`POST /api/auth/login`**: Authenticates a user and returns a session token.
+
+### AI Generation
+
+- **`POST /api/generate`**: Generates AI content based on user input and template type.
+
+### Subscription & Billing
+
+- **`POST /api/stripe/create-checkout-session`**: Creates a Stripe Checkout session for subscribing.
+- **`POST /api/stripe/create-billing-portal`**: Redirects the user to their Stripe billing portal.
+- **`POST /api/stripe/webhook`**: Handles incoming webhooks from Stripe for subscription updates.
 
 ### Team Management
-```
-POST   /api/teams/members/add          Create invite
-GET    /api/teams/members              List members
-DELETE /api/teams/members?id=xxx       Remove member
-PATCH  /api/teams/members?id=xxx/role  Update role
+
+```bash
+- `POST /api/teams/invite`: Sends an invitation to a new team member.
+- `DELETE /api/teams/remove`: Removes a member from a team.
 ```
 
 ### Affiliate Program
-```
-POST   /api/affiliates/register        Become affiliate
-GET    /api/affiliates/profile         View stats
-GET    /api/affiliates/referrals       List referrals
-POST   /api/affiliates/referral/track  Track conversion
+
+```bash
+- `GET /api/affiliate/stats`: Retrieves statistics for the user's affiliate performance.
+- `POST /api/affiliate/payout`: Initiates a payout request for affiliate earnings.
 ```
 
 ### Task Management
-```
-POST   /api/tasks/submit               Submit task
-GET    /api/tasks                      List tasks
-GET    /api/tasks?taskId=xxx           Get status
+
+```bash
+- `POST /api/tasks`: Creates a new task.
+- `PUT /api/tasks/{id}`: Updates an existing task.
 ```
 
 ### Analytics
-```
-GET    /api/analytics/report           Get insights
-POST   /api/analytics/cohort           Cohort analysis
+
+```bash
+- `GET /api/analytics/overview`: Retrieves an overview of user analytics.
 ```
 
 ### Monetization
-```
-GET    /api/monetization/dashboard     Overview
-POST   /api/monetization/upgrade       Upgrade tier
-```
 
-### System
-```
-GET    /api/health                     System status
-POST   /api/health                     Force init (admin)
-```
-
----
-
-## Key Integrations
-
-### Stripe
-- **Subscriptions:** Automatic billing, prorations, trials
-- **Coupons:** Discount codes, usage limits
-- **Webhooks:** Real-time payment events
-- **Portal:** Self-service management
-- **Payouts:** Affiliate commission transfers
-
-### Firebase
-- **Authentication:** OAuth2, JWT tokens
-- **Firestore:** Document-based data storage
-- **Admin SDK:** Server-side operations
-- **Security Rules:** Fine-grained access control
-
-### Google AI
-- **Gemini Pro:** Advanced content generation
-- **Gemini Flash:** Fast responses
-- **Vision API:** Image understanding
-- **Embeddings:** Semantic search
-
-### OpenAI
-- **GPT-4:** Premium intelligence
-- **GPT-4-turbo:** Speed + quality
-- **Structured Output:** JSON schema validation
-- **Fallback:** Graceful degradation
-
-### NATS JetStream
-- **Durable Consumers:** Reliable message delivery
-- **Persistent Queues:** Task queuing
-- **Automatic Retries:** 3 attempts with backoff
-- **Dead Letter Queue:** Failed task handling
-
----
-
-## Security Features
-
-### 1. Authentication & Authorization
-- Firebase JWT validation on all endpoints
-- Role-based access control (RBAC)
-- Team-level permission enforcement
-- Admin override capabilities
-
-### 2. Fraud Detection
-- Guardian bot analyzes suspicious behavior
-- IP tracking and geolocation
-- Rate limiting per user/tier
-- Anomaly detection for payments
-
-### 3. Payment Security
-- Stripe PCI compliance
-- Webhook signature verification
-- Idempotency keys for transactions
-- Encrypted payment data
-
-### 4. Data Protection
-- Firestore security rules
-- Encrypted sensitive fields
-- HTTPS enforcement
-- Environment variable isolation
-
----
-
-## Deployment Readiness Checklist
-
-```
-Configuration
-├─ [x] API key validation system
-├─ [x] Environment variable documentation
-├─ [x] Service initialization on startup
-├─ [x] Health check endpoint
-└─ [x] Error logging (Sentry)
-
-Monetization
-├─ [x] 6-tier pricing system
-├─ [x] Subscription management
-├─ [x] Affiliate program
-├─ [x] White-label support
-└─ [x] Revenue tracking
-
-Security
-├─ [x] Authentication system
-├─ [x] Fraud detection
-├─ [x] Rate limiting
-├─ [x] Input validation
-└─ [x] Webhook verification
-
-Operations
-├─ [ ] Stripe products created
-├─ [ ] Environment variables populated
-├─ [ ] NATS server deployed (optional)
-├─ [ ] Webhooks configured
-└─ [ ] Monitoring setup
-
-Testing
-├─ [ ] Unit tests
-├─ [ ] Integration tests
-├─ [ ] E2E tests
-├─ [ ] Load testing
-└─ [ ] Security audit
-```
-
----
-
-## Quick Start Guide
-
-### 1. Local Development
 ```bash
-# Setup
-npm install
-cp .env.example .env.local
-
-# Edit .env.local with test API keys
-# For Stripe, use test mode keys (sk_test_*)
-
-# Run
-npm run dev
-
-# Test
-curl http://localhost:3000/api/health
+- `GET /api/monetization/summary`: Provides a summary of monetization data.
 ```
-
-### 2. Production Deployment
-```bash
-# 1. Create Stripe products & prices
-# 2. Setup webhook endpoint
-# 3. Generate API keys
-# 4. Set environment variables
-# 5. Run: npm run build
-# 6. Deploy to Vercel
-```
-
-### 3. Enable Features
-```typescript
-// Subscription management
-const subscription = await getUserSubscription(userId);
-
-// Affiliate program
-await createAffiliateProfile(userId, 'stripe');
-
-// White-label
-await createWhiteLabelConfig(userId, { companyName: 'Acme' });
-
-// Analytics
-await trackUserInsights(userId, { generationsCount: 45 });
-```
-
----
-
-## Performance Metrics
-
-### Code Statistics
-- **Total Lines:** 4,500+
-- **TypeScript Files:** 13
-- **API Routes:** 13
-- **Database Collections:** 8
-- **Functions:** 150+
-- **Types:** 50+
-- **Tests:** Ready for implementation
-
-### Scalability
-- **Concurrent Users:** 10,000+ (Firebase)
-- **API Rate:** 1,000+ req/sec (Vercel)
-- **Data Storage:** Unlimited (Firestore)
-- **Task Processing:** 100+ tasks/sec (NATS)
-
----
-
-## Files Created
-
-```
-lib/
-├── config.ts                  (350 lines) - Configuration validation
-├── server-initializer.ts      (400 lines) - Service initialization
-├── subscription-manager.ts    (350 lines) - Subscription management
-├── affiliate-system.ts        (400 lines) - Affiliate program
-├── white-label.ts             (320 lines) - White-label solutions
-├── advanced-analytics.ts      (350 lines) - Analytics engine
-├── openai.ts                  (350 lines) - OpenAI integration
-└── stripe-enhanced.ts         (400 lines) - Enhanced Stripe
-
-app/api/
-├── teams/members/route.ts     (150 lines) - Team management API
-├── affiliates/route.ts        (200 lines) - Affiliate API
-├── analytics/report/route.ts  (150 lines) - Analytics API
-└── monetization/dashboard/route.ts (150 lines) - Monetization dashboard
-
-Docs
-├── MONETIZATION_SYSTEM.md     - Complete system documentation
-└── DEPLOYMENT_GUIDE.md        - Step-by-step deployment guide
-```
-
----
-
-## Integration Checklist
-
-- [x] Google Generative AI (Gemini)
-- [x] OpenAI (GPT-4)
-- [x] Firebase (Firestore + Auth)
-- [x] Stripe (Subscriptions + Payments)
-- [x] NATS (Task Queue)
-- [x] Sentry (Error Tracking)
-- [x] Email (Resend ready)
-- [x] Analytics (User tracking)
-
----
-
-## Business Impact
-
-### Revenue Streams
-1. **Subscriptions:** $19-$299/month per user
-2. **Affiliate Commissions:** 15%-30% per referral
-3. **Add-ons:** Premium features ($5-$50/month)
-4. **White-label:** White-label platform licensing
-5. **API:** Developer tier pricing
-
-### Projected Metrics
-- **CAC (Customer Acquisition Cost):** $150 (affiliate)
-- **LTV (Lifetime Value):** $3,600+ (3 years, Pro tier)
-- **Payback Period:** 2-3 months
-- **Target Users:** 5,000+ (Year 1)
-- **MRR Target:** $50,000+ (Year 1)
-
----
-
-## Support & Documentation
-
-### External Resources
-- [Stripe API Docs](https://stripe.com/docs/api)
-- [Firebase Docs](https://firebase.google.com/docs)
-- [Google AI Docs](https://ai.google.dev/docs)
-- [OpenAI Docs](https://platform.openai.com/docs)
-- [NATS Docs](https://docs.nats.io)
-
-### Internal Docs
-- `MONETIZATION_SYSTEM.md` - Full system guide
-- `DEPLOYMENT_GUIDE.md` - Deployment instructions
-- `.github/copilot-instructions.md` - Development standards
-
----
-
-## Next Steps (Immediate)
-
-### This Week
-1. [ ] Create Stripe products for each tier
-2. [ ] Get Stripe API keys
-3. [ ] Setup webhook endpoint
-4. [ ] Populate .env.local
-
-### Next Week
-1. [ ] Test subscription flow
-2. [ ] Test affiliate tracking
-3. [ ] Test analytics
-4. [ ] Deploy to staging
-
-### Following Week
-1. [ ] Security audit
-2. [ ] Load testing
-3. [ ] Documentation review
-4. [ ] Production deployment
-
----
-
-## Key Metrics to Monitor
-
-### Financial
-- MRR (Monthly Recurring Revenue)
-- ARPU (Average Revenue Per User)
-- Churn Rate
-- LTV:CAC Ratio
-
-### Operational
-- API Response Time
-- Error Rate
-- Task Processing Time
-- Storage Usage
-
-### Business
-- User Growth Rate
-- Subscription Conversion Rate
-- Affiliate Enrollment Rate
-- Team Formation Rate
-
----
-
-## Conclusion
-
-LitLabs AI is now a **fully-featured SaaS platform** ready for:
-- ✅ Enterprise deployments
-- ✅ Affiliate marketing
-- ✅ White-label partnerships
-- ✅ High-volume processing
-- ✅ Advanced monetization
-- ✅ Scale to 100,000+ users
-
-**Status: Production Ready** 🚀
-
-For questions or issues, refer to documentation or open GitHub issue.
-
----
-
-**Document Version:** 1.0  
-**Last Updated:** January 2024  
-**Created By:** GitHub Copilot  
-**License:** Same as LitLabs AI

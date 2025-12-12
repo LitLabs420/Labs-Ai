@@ -3,6 +3,7 @@
 ## Common Operations
 
 ### User Subscription
+
 ```typescript
 import { getUserSubscription, getTierDetails } from '@/lib/subscription-manager';
 
@@ -16,6 +17,7 @@ console.log(`Max AI generations: ${tier.limits.aiGenerations}`);
 ```
 
 ### Check Feature Access
+
 ```typescript
 import { hasFeatureAccess, checkUsageLimit } from '@/lib/subscription-manager';
 
@@ -30,6 +32,7 @@ if (!limit.allowed) {
 ```
 
 ### Team Management
+
 ```typescript
 import { addTeamMember, getTeamMembers, removeTeamMember } from '@/lib/subscription-manager';
 
@@ -44,6 +47,7 @@ await removeTeamMember(ownerId, memberId);
 ```
 
 ### Affiliate Operations
+
 ```typescript
 import {
   createAffiliateProfile,
@@ -69,6 +73,7 @@ const result = await processAffiliatePayouts();
 ```
 
 ### White-Label
+
 ```typescript
 import {
   createWhiteLabelConfig,
@@ -91,6 +96,7 @@ const css = generateWhiteLabelCSS(config);
 ```
 
 ### Analytics
+
 ```typescript
 import {
   trackUserInsights,
@@ -113,6 +119,7 @@ const report = await generateComprehensiveReport(userId, startDate, endDate);
 ```
 
 ### Task Management
+
 ```typescript
 import {
   submitTask,
@@ -139,6 +146,7 @@ await cancelTask(taskId);
 ```
 
 ### Stripe
+
 ```typescript
 import {
   getOrCreateCustomer,
@@ -165,6 +173,7 @@ const portal = await getBillingPortalSession(customerId, returnUrl);
 ```
 
 ### OpenAI (Premium)
+
 ```typescript
 import {
   generateWithOpenAI,
@@ -191,6 +200,7 @@ if (isOpenAIAvailable()) {
 ```
 
 ### Google AI (Primary)
+
 ```typescript
 import { generateContent, analyzeContent } from '@/lib/ai';
 
@@ -206,6 +216,7 @@ const analysis = await analyzeContent(userContent, 'quality');
 ```
 
 ### NATS Task Queue
+
 ```typescript
 import { Consumer, initializeNATSConsumer } from '@/lib/nats-consumer';
 
@@ -229,6 +240,7 @@ console.log(`Failed: ${metrics.messagesFailed}`);
 ## API Response Patterns
 
 ### Success Response
+
 ```json
 {
   "success": true,
@@ -238,6 +250,7 @@ console.log(`Failed: ${metrics.messagesFailed}`);
 ```
 
 ### Error Response
+
 ```json
 {
   "error": "Detailed error message",
@@ -247,6 +260,7 @@ console.log(`Failed: ${metrics.messagesFailed}`);
 ```
 
 ### Paginated Response
+
 ```json
 {
   "success": true,
@@ -263,6 +277,7 @@ console.log(`Failed: ${metrics.messagesFailed}`);
 ## Environment Variables
 
 ### Required
+
 ```bash
 GOOGLE_GENERATIVE_AI_API_KEY=  # Google AI
 FIREBASE_PROJECT_ID=            # Firebase
@@ -271,6 +286,7 @@ NEXT_PUBLIC_APP_URL=           # Your domain
 ```
 
 ### Optional
+
 ```bash
 OPENAI_API_KEY=                # OpenAI (optional)
 NATS_URL=                      # NATS server
@@ -285,17 +301,20 @@ INTERNAL_WEBHOOK_SECRET=       # Webhook signing
 ## Database Queries
 
 ### Get User Subscription
+
 ```firestore
 db.collection('users').doc(userId).get()
 ```
 
 ### Get User's Team
+
 ```firestore
 db.collection('users').doc(userId).collection('teamMembers')
   .where('isActive', '==', true).get()
 ```
 
 ### Get Referrals for Affiliate
+
 ```firestore
 db.collection('referrals')
   .where('affiliateUserId', '==', userId)
@@ -305,6 +324,7 @@ db.collection('referrals')
 ```
 
 ### Get Daily Analytics
+
 ```firestore
 db.collection('userInsights')
   .where('userId', '==', userId)
@@ -313,6 +333,7 @@ db.collection('userInsights')
 ```
 
 ### Get Revenue for Month
+
 ```firestore
 db.collection('revenueMetrics')
   .where('userId', '==', userId)
@@ -325,6 +346,7 @@ db.collection('revenueMetrics')
 ## Error Handling
 
 ### Standard Error Handling
+
 ```typescript
 import { captureError } from '@/lib/sentry';
 
@@ -345,6 +367,7 @@ try {
 ```
 
 ### Validation Error
+
 ```typescript
 if (!email || !email.includes('@')) {
   return NextResponse.json(
@@ -355,6 +378,7 @@ if (!email || !email.includes('@')) {
 ```
 
 ### Rate Limiting
+
 ```typescript
 import { rateLimiter } from '@/lib/rateLimiter';
 
@@ -372,6 +396,7 @@ if (!isAllowed) {
 ## Authentication
 
 ### Get User from Request
+
 ```typescript
 import { getUserFromRequest } from '@/lib/firebase-server';
 
@@ -382,6 +407,7 @@ if (!user) {
 ```
 
 ### Check User Permissions
+
 ```typescript
 const subscription = await getUserSubscription(user.uid);
 const tier = getTierDetails(subscription?.tier || 'free');
@@ -396,6 +422,7 @@ if (!tier.features.includes('api_access')) {
 ## Common Patterns
 
 ### Usage Tracking
+
 ```typescript
 import { incrementUsageServer } from '@/lib/firebase-server';
 
@@ -404,6 +431,7 @@ await incrementUsageServer(userId, 'aiGenerations');
 ```
 
 ### Fraud Detection
+
 ```typescript
 import { Guardian } from '@/lib/guardian-bot';
 
@@ -415,6 +443,7 @@ await guardian.analyzeUserBehavior(userId, 'payment_initiated', {
 ```
 
 ### Email Notification
+
 ```typescript
 import { sendEmail } from '@/lib/resend'; // After implementation
 
@@ -431,12 +460,14 @@ await sendEmail({
 ## Monitoring
 
 ### Health Check
+
 ```bash
 # Check all services
 curl http://localhost:3000/api/health
 ```
 
 ### Logs
+
 ```bash
 # View Sentry errors
 # https://sentry.io/organizations/litlabs/issues/
@@ -453,6 +484,7 @@ npm run dev  # Check terminal output
 ## Testing
 
 ### API Test Template
+
 ```typescript
 // Test subscription endpoint
 async function testSubscription() {
@@ -471,37 +503,42 @@ async function testSubscription() {
 
 ## Useful Links
 
-- **Stripe Dashboard:** https://dashboard.stripe.com
-- **Firebase Console:** https://console.firebase.google.com
-- **Sentry Issues:** https://sentry.io/organizations/litlabs
-- **Google Cloud Console:** https://console.cloud.google.com
-- **Vercel Dashboard:** https://vercel.com/dashboard
+- **Stripe Dashboard:** [https://dashboard.stripe.com](https://dashboard.stripe.com)
+- **Firebase Console:** [https://console.firebase.google.com](https://console.firebase.google.com)
+- **Sentry Issues:** [https://sentry.io/organizations/litlabs](https://sentry.io/organizations/litlabs)
+- **Google Cloud Console:** [https://console.cloud.google.com](https://console.cloud.google.com)
+- **Vercel Dashboard:** [https://vercel.com/dashboard](https://vercel.com/dashboard)
 
 ---
 
 ## Common Issues & Solutions
 
 ### "Unauthorized" Error
+
 - Check JWT token is valid
 - Verify user is authenticated
 - Check Authorization header format: `Bearer {token}`
 
 ### "Limit reached" Error
+
 - Check user's subscription tier
 - Verify daily usage hasn't exceeded limit
 - Try again next day (usage resets at UTC midnight)
 
 ### "Stripe error" in checkout
+
 - Verify price ID exists in Stripe
 - Check Stripe keys in environment
 - Verify Stripe is in live mode (not test)
 
 ### "Firebase error" on query
+
 - Check Firestore security rules
 - Verify collection exists
 - Check indexes for complex queries
 
 ### "NATS connection failed"
+
 - Verify NATS server is running
 - Check NATS_URL in .env.local
 - NATS is optional; system degrades gracefully

@@ -505,22 +505,26 @@ NEXT_PUBLIC_API_URL=https://api.litlabs.ai
 ## Support & Troubleshooting
 
 ### Stripe Issues
+
 - **Missing price IDs:** Create products in Stripe Dashboard
 - **Webhook failures:** Verify webhook secret in environment
-- **Checkout errors:** Check API keys format (sk_* and pk_*)
+- **Checkout errors:** Check API keys format (`sk_*` and `pk_*`)
 
 ### Affiliate Issues
+
 - **Referral not tracked:** Verify affiliate is active
 - **Payout failed:** Check Stripe Connect setup
 - **Commission rate wrong:** Check affiliate tier requirements
 
 ### Team Issues
+
 - **Member limit reached:** Upgrade to higher tier
 - **Role update failing:** Verify user is owner
 - **Invitation not sent:** Check email service configuration
 
 ### Analytics Issues
-- **No data appearing:** Verify trackUserInsights is called
+
+- **No data appearing:** Verify `trackUserInsights` is called
 - **Revenue metrics missing:** Check referral completion status
 
 ---
@@ -528,6 +532,7 @@ NEXT_PUBLIC_API_URL=https://api.litlabs.ai
 ## Next Steps
 
 1. **Setup Stripe:**
+
    ```bash
    # Create products in Stripe Dashboard
    # Get price IDs
@@ -535,6 +540,7 @@ NEXT_PUBLIC_API_URL=https://api.litlabs.ai
    ```
 
 2. **Test Checkout Flow:**
+
    ```bash
    npm run dev
    # Visit http://localhost:3000/billing
