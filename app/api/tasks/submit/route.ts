@@ -101,10 +101,6 @@ export async function POST(request: NextRequest) {
     // 6. Publish to NATS for processing
     try {
       await Consumer.publishTask(task.id, type, user.uid, payload);
-    } catch (error) {
-      console.warn('NATS publishing failed (will process locally):', error);
-    }
-
     // 7. Increment usage
     await incrementUsageServer(user.uid, type);
 
@@ -130,6 +126,5 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
 
 
