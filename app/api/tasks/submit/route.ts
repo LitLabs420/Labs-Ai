@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
     if (!securityCheck.safe) {
       captureError(
         new Error(`Security check failed for user ${user.uid}`),
-        'security_check_failed'
+        { context: 'security_check_failed' }
       );
       return NextResponse.json(
         { error: 'Security check failed', reason: securityCheck.reason },
@@ -130,4 +130,6 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+
 
