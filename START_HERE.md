@@ -157,7 +157,7 @@ cp .env.example .env.local
 
 ### 3. Fill in API Keys
 
-```
+```dotenv
 GOOGLE_GEMINI_API_KEY=your_key_here
 STRIPE_SECRET_KEY=your_key_here
 STRIPE_PUBLISHABLE_KEY=your_key_here
@@ -167,10 +167,10 @@ FIREBASE_PRIVATE_KEY=your_key_here
 
 ### 4. Create Stripe Products
 
--   Starter: $19/month (5 seats, 100 AI generations)
--   Creator: $49/month (10 seats, 500 AI generations)
--   Pro: $99/month (25 seats, 2000 AI generations)
--   Agency: $299/month (100 seats, unlimited)
+- Starter: $19/month (5 seats, 100 AI generations)
+- Creator: $49/month (10 seats, 500 AI generations)
+- Pro: $99/month (25 seats, 2000 AI generations)
+- Agency: $299/month (100 seats, unlimited)
 
 Update .env.local with price IDs
 

@@ -68,8 +68,6 @@ npm install
 cp .env.example .env.local
 ```
 
-Open `.env.local` and add any API keys you have.
-
 ### Step 4: Run the App (1 min)
 
 ```bash
