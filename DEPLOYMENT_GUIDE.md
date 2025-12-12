@@ -9,6 +9,7 @@
 3. Create 6 products (Free, Starter, Creator, Pro, Agency, Education)
 
 **Monthly Pricing:**
+
 - Free: $0/month
 - Starter: $19/month
 - Creator: $49/month
@@ -16,8 +17,8 @@
 - Agency: $299/month
 - Education: $0/month
 
-4. For each product, create monthly price
-5. Copy price IDs (price_*) into `.env.local`
+1. For each product, create monthly price
+2. Copy price IDs (price_*) into `.env.local`
 
 ### Step 2: Update Environment Variables
 
