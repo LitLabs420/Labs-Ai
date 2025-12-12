@@ -2,13 +2,13 @@
 
 import React, { InputHTMLAttributes, ReactNode } from 'react';
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
   hint?: string;
   icon?: ReactNode;
   iconPosition?: 'left' | 'right';
-  size?: 'sm' | 'md' | 'lg';
+  inputSize?: 'sm' | 'md' | 'lg';
 }
 
 const sizeClasses = {

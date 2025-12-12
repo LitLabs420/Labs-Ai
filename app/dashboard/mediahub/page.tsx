@@ -21,9 +21,12 @@ export default function MediaHubPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'movie' | 'series' | 'music' | 'photo'>('all');
   const [isMounted, setIsMounted] = useState(false);
+  const [media, setMedia] = useState<MediaItem[]>([]);
 
   useEffect(() => {
     setIsMounted(true);
+    // TODO: Load media from API or Firebase
+    // For now, initialize with empty array
   }, []);
 
   const filteredMedia = media.filter((item) => {

@@ -111,7 +111,7 @@ export const ThemeCustomizationPanel: React.FC = () => {
                         <input
                           type="color"
                           value={
-                            customColors?.[colorKey] ||
+                            (customColors && customColors[colorKey as keyof typeof customColors]) ||
                             currentTheme.colors[
                               colorKey as keyof typeof currentTheme.colors
                             ]

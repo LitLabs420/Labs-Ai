@@ -96,7 +96,10 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // 6. Increment usage
+    // 6. Publish to NATS for processing (disabled - NATS is optional)
+    // Tasks will be processed locally via task-manager
+
+    // 7. Increment usage
     await incrementUsageServer(user.uid, type);
 
     return NextResponse.json(

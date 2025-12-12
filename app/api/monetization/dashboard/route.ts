@@ -43,9 +43,6 @@ export async function GET(request: NextRequest) {
     // Get white-label config
     const whiteLabelConfig = await getWhiteLabelConfig(user.uid);
 
-    // Initialize affiliate profile as null
-    const affiliateProfile = null;
-
     // Get revenue metrics for current month
     const today = new Date();
     const currentMonth = today.toISOString().slice(0, 7);
@@ -61,14 +58,9 @@ export async function GET(request: NextRequest) {
     const currentMonthRevenue = revenueData.find(r => r.month === currentMonth);
     const lastMonthRevenue = revenueData.find(r => r.month === lastMonth);
 
-    const mrrGrowth =
-      lastMonthRevenue && currentMonthRevenue
-        ? (
-            ((currentMonthRevenue.mrr - lastMonthRevenue.mrr) /
-              Math.max(1, lastMonthRevenue.mrr)) *
-            100
-          ).toFixed(1)
-        : '0';
+    const mrrGrowth = lastMonthRevenue && currentMonthRevenue
+      ? `${(((currentMonthRevenue.mrr - lastMonthRevenue.mrr) / Math.max(1, lastMonthRevenue.mrr)) * 100).toFixed(1)}`
+      : '0';
 
     return NextResponse.json({
       success: true,
