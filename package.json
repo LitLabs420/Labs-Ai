@@ -6,8 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --config eslint.config.js",
-    "lint:fix": "eslint . --fix",
+    "lint": "eslint . --config eslint.config.mjs",
+    "lint:fix": "eslint . --fix --config eslint.config.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -73,3 +73,4 @@
   },
   "homepage": "https://labs-ai.studio"
 }
+

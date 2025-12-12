@@ -244,7 +244,7 @@ export default function AnalyticsPage() {
                       {/* Score Bar */}
                       <div className="mb-3">
                         <div className="h-2 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
-                          {/* eslint-disable-next-line @next/next/no-style-component-with-dynamic-styles, jsx-a11y/aria-props */}
+
                           <div
                             className={`h-full transition-all ${
                               pred.score >= 70 ? 'bg-green-600' :
