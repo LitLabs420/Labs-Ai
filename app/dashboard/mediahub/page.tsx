@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Play, Plus, Search, Filter, Clock, Star, Download } from 'lucide-react';
+import { Play, Search, Filter, Clock, Star, Download } from 'lucide-react';
 import DashboardLayout from '@/components/DashboardLayout';
 
 interface MediaItem {
@@ -49,7 +49,6 @@ const SAMPLE_MEDIA: MediaItem[] = [
 ];
 
 export default function MediaHubPage() {
-  const [media, setMedia] = useState<MediaItem[]>(SAMPLE_MEDIA);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'movie' | 'series' | 'music' | 'photo'>('all');
   const [isMounted, setIsMounted] = useState(false);

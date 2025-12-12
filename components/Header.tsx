@@ -1,7 +1,6 @@
 'use client';
 
 import React, { ReactNode, useState } from 'react';
-import { useTheme } from '@/context/ThemeContext';
 import Link from 'next/link';
 
 interface HeaderProps {
@@ -24,7 +23,6 @@ export const Header: React.FC<HeaderProps> = ({
   actions,
   sticky = true,
 }) => {
-  const { currentTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (

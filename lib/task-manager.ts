@@ -6,7 +6,7 @@
 import { db } from './firebase';
 import { collection, addDoc, doc, getDoc, updateDoc, query, where, getDocs, Timestamp } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'crypto';
-import { captureException } from './sentry';
+import { captureError } from './sentry';
 
 export type TaskType = 
   | 'ai_generation'

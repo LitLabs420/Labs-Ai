@@ -28,17 +28,6 @@ export const Hero: React.FC<HeroProps> = ({
 }) => {
   const { currentTheme } = useTheme();
 
-  const backgroundClasses = {
-    gradient: `
-      bg-gradient-to-r from-background via-surface to-background
-      before:absolute before:inset-0 before:bg-gradient-to-r 
-      before:from-primary/5 before:via-transparent before:to-accent/5
-      before:pointer-events-none
-    `,
-    solid: 'bg-background',
-    glass: 'bg-background/50 backdrop-blur-xl border border-border',
-  };
-
   const isImageOnRight = imagePosition === 'right';
   const isImageCenter = imagePosition === 'center';
 

@@ -19,67 +19,86 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 /**
- * POST /api/affiliates/register
- * Create affiliate profile
+ * POST /api/affiliates/register or POST /api/affiliates/referral/track
+ * Create affiliate profile or track a new referral
  */
 export async function POST(request: NextRequest) {
   try {
-    const user = await getUserFromRequest(request);
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
     const body = await request.json();
-    const { payoutMethod, stripeConnectId, paypalEmail } = body;
+    const { payoutMethod, stripeConnectId, paypalEmail, affiliateCode, userId, tier } = body;
 
-    if (!payoutMethod) {
-      return NextResponse.json({ error: 'Payout method is required' }, { status: 400 });
-    }
+    // Route 1: Register as affiliate
+    if (payoutMethod) {
+      const user = await getUserFromRequest(request);
+      if (!user) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      }
 
-    // Check if already an affiliate
-    const existing = await getAffiliateProfile(user.uid);
-    if (existing) {
+      if (!payoutMethod) {
+        return NextResponse.json({ error: 'Payout method is required' }, { status: 400 });
+      }
+
+      // Check if already an affiliate
+      const existing = await getAffiliateProfile(user.uid);
+      if (existing) {
+        return NextResponse.json(
+          { error: 'You are already registered as an affiliate' },
+          { status: 409 }
+        );
+      }
+
+      // Security check
+      const ip = request.headers.get('x-forwarded-for') || 'unknown';
+      const guardian = Guardian.getInstance();
+      await guardian.analyzeUserBehavior(user.uid, 'affiliate_register', {
+        ip,
+        payoutMethod,
+      });
+
+      // Build payout details
+      const payoutDetails: any = {};
+      if (payoutMethod === 'stripe' && stripeConnectId) {
+        payoutDetails.stripeConnectId = stripeConnectId;
+      } else if (payoutMethod === 'paypal' && paypalEmail) {
+        payoutDetails.paypalEmail = paypalEmail;
+      }
+
+      // Create profile
+      const profile = await createAffiliateProfile(user.uid, payoutMethod, payoutDetails);
+
       return NextResponse.json(
-        { error: 'You are already registered as an affiliate' },
-        { status: 409 }
+        {
+          success: true,
+          profile: {
+            referralCode: profile.referralCode,
+            referralLink: profile.referralLink,
+            commissionRate: `${(profile.commissionRate * 100).toFixed(0)}%`,
+            tier: profile.tier,
+          },
+        },
+        { status: 201 }
       );
     }
 
-    // Security check
-    const ip = request.headers.get('x-forwarded-for') || 'unknown';
-    const guardian = Guardian.getInstance();
-    await guardian.analyzeUserBehavior(user.uid, 'affiliate_register', {
-      ip,
-      payoutMethod,
-    });
-
-    // Build payout details
-    const payoutDetails: any = {};
-    if (payoutMethod === 'stripe' && stripeConnectId) {
-      payoutDetails.stripeConnectId = stripeConnectId;
-    } else if (payoutMethod === 'paypal' && paypalEmail) {
-      payoutDetails.paypalEmail = paypalEmail;
+    // Route 2: Track referral (no auth required)
+    if (!affiliateCode || !userId || !tier) {
+      return NextResponse.json(
+        { error: 'Missing required fields: affiliateCode, userId, tier' },
+        { status: 400 }
+      );
     }
 
-    // Create profile
-    const profile = await createAffiliateProfile(user.uid, payoutMethod, payoutDetails);
+    // Track referral
+    const referral = await trackReferral(userId, affiliateCode, tier);
 
-    return NextResponse.json(
-      {
-        success: true,
-        profile: {
-          referralCode: profile.referralCode,
-          referralLink: profile.referralLink,
-          commissionRate: `${(profile.commissionRate * 100).toFixed(0)}%`,
-          tier: profile.tier,
-        },
-      },
-      { status: 201 }
-    );
+    return NextResponse.json({
+      success: true,
+      referralId: referral.id,
+    });
   } catch (error) {
-    captureError(error, { context: 'api/affiliates/register' });
+    captureError(error, { context: 'api/affiliates' });
     return NextResponse.json(
-      { error: 'Failed to create affiliate profile' },
+      { error: 'Failed to process request' },
       { status: 500 }
     );
   }
@@ -87,7 +106,7 @@ export async function POST(request: NextRequest) {
 
 /**
  * GET /api/affiliates/profile
- * Get affiliate profile and stats
+ * Get affiliate profile, stats, or referrals based on query params
  */
 export async function GET(request: NextRequest) {
   try {
@@ -96,11 +115,35 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { searchParams } = new URL(request.url);
+    const view = searchParams.get('view') || 'profile'; // profile, stats, referrals
+    const status = searchParams.get('status');
+
     const profile = await getAffiliateProfile(user.uid);
     if (!profile) {
       return NextResponse.json({ error: 'Not an affiliate' }, { status: 404 });
     }
 
+    // Return referrals list if requested
+    if (view === 'referrals') {
+      const referrals = await getAffiliateReferrals(user.uid, status || undefined);
+      return NextResponse.json({
+        success: true,
+        total: referrals.length,
+        referrals: referrals.map(r => ({
+          id: r.id,
+          status: r.status,
+          tier: r.referredTier,
+          commission: r.commission.toFixed(2),
+          subscriptionValue: r.subscriptionValue.toFixed(2),
+          referredAt: r.referredAt.toISOString(),
+          qualifiedAt: r.qualifiedAt?.toISOString(),
+          paidAt: r.paidAt?.toISOString(),
+        })),
+      });
+    }
+
+    // Default: return profile with stats and recent referrals
     const stats = await getAffiliateStats(user.uid);
     const referrals = await getAffiliateReferrals(user.uid);
 
@@ -141,73 +184,4 @@ export async function GET(request: NextRequest) {
   }
 }
 
-/**
- * GET /api/affiliates/referrals
- * List affiliate referrals
- */
-export async function GET(request: NextRequest) {
-  try {
-    const user = await getUserFromRequest(request);
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
 
-    const { searchParams } = new URL(request.url);
-    const status = searchParams.get('status');
-
-    const referrals = await getAffiliateReferrals(user.uid, status || undefined);
-
-    return NextResponse.json({
-      success: true,
-      total: referrals.length,
-      referrals: referrals.map(r => ({
-        id: r.id,
-        status: r.status,
-        tier: r.referredTier,
-        commission: r.commission.toFixed(2),
-        subscriptionValue: r.subscriptionValue.toFixed(2),
-        referredAt: r.referredAt.toISOString(),
-        qualifiedAt: r.qualifiedAt?.toISOString(),
-        paidAt: r.paidAt?.toISOString(),
-      })),
-    });
-  } catch (error) {
-    captureError(error, { context: 'api/affiliates/referrals' });
-    return NextResponse.json(
-      { error: 'Failed to fetch referrals' },
-      { status: 500 }
-    );
-  }
-}
-
-/**
- * POST /api/affiliates/referral/track
- * Track new referral
- */
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-    const { affiliateCode, userId, tier } = body;
-
-    if (!affiliateCode || !userId || !tier) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
-    }
-
-    // Track referral
-    const referral = await trackReferral(userId, affiliateCode, tier);
-
-    return NextResponse.json({
-      success: true,
-      referralId: referral.id,
-    });
-  } catch (error) {
-    captureError(error, { context: 'api/affiliates/referral/track' });
-    return NextResponse.json(
-      { error: 'Failed to track referral' },
-      { status: 500 }
-    );
-  }
-}

@@ -7,7 +7,7 @@ import { getConfig, Config } from './config';
 import { initializeApp as initializeFirebase } from 'firebase/app';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import OpenAI from 'openai';
-import { captureMessage, captureException } from './sentry';
+import { captureMessage, captureError } from './sentry';
 
 /**
  * Service initialization status

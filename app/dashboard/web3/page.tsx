@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Wallet, TrendingUp, Send, ArrowUpRight, Eye, EyeOff, Plus, RefreshCw } from 'lucide-react';
+import { Wallet, Send, ArrowUpRight, Eye, EyeOff, RefreshCw } from 'lucide-react';
 import DashboardLayout from '@/components/DashboardLayout';
 
 interface TokenBalance {
@@ -71,8 +71,6 @@ const SAMPLE_ACCOUNTS: WalletAccount[] = [
 ];
 
 export default function Web3Page() {
-  const [tokens, setTokens] = useState<TokenBalance[]>(SAMPLE_TOKENS);
-  const [accounts, setAccounts] = useState<WalletAccount[]>(SAMPLE_ACCOUNTS);
   const [hideBalance, setHideBalance] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState<'portfolio' | 'swap' | 'nfts'>('portfolio');

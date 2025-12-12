@@ -7,7 +7,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getUserFromRequest } from '@/lib/auth-helper';
 import { getTaskStatus, getUserTasks } from '@/lib/task-manager';
-import { captureException } from '@/lib/sentry';
+import { captureError } from '@/lib/sentry';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';

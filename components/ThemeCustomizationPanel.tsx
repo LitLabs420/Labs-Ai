@@ -14,8 +14,6 @@ import { Modal } from './ui/Modal';
 export const ThemeCustomizationPanel: React.FC = () => {
   const { currentTheme, setTheme, customColors, setCustomColors } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedColorKey, setSelectedColorKey] = useState<string | null>(null);
-  const [colorPickerValue, setColorPickerValue] = useState('#c9a961');
 
   const handleThemeSelect = (themeName: string) => {
     setTheme(themeName);

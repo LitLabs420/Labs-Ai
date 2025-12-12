@@ -14,7 +14,6 @@ import {
 import {
   getAffiliateProfile,
   getAffiliateStats,
-  getAffiliateReferrals,
 } from '@/lib/affiliate-system';
 import {
   getWhiteLabelConfig,

@@ -9,7 +9,7 @@ import { submitTask } from '@/lib/task-manager';
 import { Consumer } from '@/lib/nats-consumer';
 import { canPerformActionServer, incrementUsageServer } from '@/lib/firebase-server';
 import { Guardian } from '@/lib/guardian-bot';
-import { captureException } from '@/lib/sentry';
+import { captureError } from '@/lib/sentry';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';

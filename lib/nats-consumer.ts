@@ -6,7 +6,7 @@
 
 import { connect, NatsConnection, Subscription, consumerOpts } from 'nats';
 import { getConfig } from './config';
-import { captureException, captureMessage } from './sentry';
+import { captureError, captureMessage } from './sentry';
 
 export interface ConsumerMetrics {
   messagesProcessed: number;
