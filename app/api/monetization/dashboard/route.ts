@@ -124,7 +124,7 @@ export async function GET(request: NextRequest) {
               customDomain: whiteLabelConfig.customDomain,
               primaryColor: whiteLabelConfig.primaryColor,
               features: Object.entries(whiteLabelConfig.features)
-                .filter(([_, enabled]) => enabled)
+                .filter(([, enabled]) => enabled)
                 .map(([feature]) => feature),
             }
           : {
