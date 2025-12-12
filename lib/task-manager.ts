@@ -328,7 +328,7 @@ async function processTaskByType(task: Task): Promise<Record<string, any>> {
  * Process AI generation task
  */
 async function processAIGeneration(task: Task): Promise<Record<string, any>> {
-  const { content, description, tone, niche } = task.payload;
+  const { content, niche } = task.payload;
   // Integration with actual AI generation would go here
   return {
     content: content || `Generated content for ${niche}`,
@@ -341,7 +341,7 @@ async function processAIGeneration(task: Task): Promise<Record<string, any>> {
  * Process DM reply task
  */
 async function processDMReply(task: Task): Promise<Record<string, any>> {
-  const { message, context } = task.payload;
+  const { message } = task.payload;
   // Integration with DM reply system
   return {
     reply: `Auto-reply to: ${message}`,
@@ -365,7 +365,7 @@ async function processMoneyPlay(task: Task): Promise<Record<string, any>> {
  * Process image generation task
  */
 async function processImageGeneration(task: Task): Promise<Record<string, any>> {
-  const { prompt, style } = task.payload;
+  const { prompt } = task.payload;
   // Image generation logic (DALL-E, Midjourney, etc.)
   return {
     imageUrl: `https://example.com/images/${Date.now()}.jpg`,
@@ -378,7 +378,11 @@ async function processImageGeneration(task: Task): Promise<Record<string, any>> 
  * Process automation task
  */
 async function processAutomation(task: Task): Promise<Record<string, any>> {
+<<<<<<< HEAD
+  const { automationType, trigger } = task.payload;
+=======
   // automation properties - unusedtask.payload;
+>>>>>>> dfd3162b670a3588702e8e5f407b818e3c5676d3
   // Automation execution logic
   return {
     automationId: `auto_${Date.now()}`,

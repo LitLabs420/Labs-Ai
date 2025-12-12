@@ -23,7 +23,6 @@ export const Hero: React.FC<HeroProps> = ({
   description,
   image,
   actions,
-  background = 'gradient',
   imagePosition = 'right',
 }) => {
   const { currentTheme } = useTheme();

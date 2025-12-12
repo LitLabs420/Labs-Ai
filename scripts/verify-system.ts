@@ -13,11 +13,13 @@
  */
 
 import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
 
+<<<<<<< HEAD
+const __dirname = new URL('.', import.meta.url).pathname;
+=======
 // const __filename removed - unused
 // const __dirname = path.dirname(__filename);
+>>>>>>> dfd3162b670a3588702e8e5f407b818e3c5676d3
 
 interface VerificationResult {
   name: string;
@@ -178,7 +180,7 @@ async function verify() {
         log('fail', `Missing dependency: ${dep}`);
       }
     });
-  } catch (error) {
+  } catch {
     log('fail', 'Could not read package.json');
   }
 
@@ -237,7 +239,7 @@ async function verify() {
         log('warn', `Build script missing: ${script}`);
       }
     });
-  } catch (error) {
+  } catch {
     log('fail', 'Could not read build scripts');
   }
 

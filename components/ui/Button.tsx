@@ -37,7 +37,6 @@ export const Button: React.FC<ButtonProps> = ({
   children,
   ...props
 }) => {
-  const { currentTheme } = useTheme();
 
   const baseClasses =
     'inline-flex items-center justify-center font-medium transition-all duration-base font-accent';

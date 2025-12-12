@@ -23,7 +23,6 @@ let stripe: Stripe;
 let auth: any;
 let db: any;
 let testUserId: string;
-let testAffiliateId: string;
 
 beforeAll(async () => {
   // Initialize Firebase
@@ -52,7 +51,7 @@ afterAll(async () => {
   if (testUserId) {
     try {
       await deleteDoc(collection(db, 'users'), testUserId);
-    } catch (error) {
+    } catch {
       console.log('Cleanup note: Could not delete test user');
     }
   }

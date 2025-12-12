@@ -8,7 +8,6 @@ import { Badge } from '@/components/ui/Badge';
 
 export default function DesignShowcase() {
   const [email, setEmail] = React.useState('');
-  const [loading, setLoading] = React.useState(false);
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 text-slate-100 py-12">
@@ -73,6 +72,15 @@ export default function DesignShowcase() {
               />
               <Input label="Email" placeholder="Enter your email" type="email" helperText="We'll never share your email" />
               <Input
+<<<<<<< HEAD
+                label="Email"
+                placeholder="Enter your email"
+                type="email"
+                helperText="We'll never share your email"
+              />
+              <Input
+=======
+>>>>>>> 3df51e9be7d3145683300f3af0af289a37b9e58b
                 label="Password"
                 type="password"
                 placeholder="••••••••"

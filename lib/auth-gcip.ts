@@ -19,7 +19,6 @@ import {
   multiFactor,
   PhoneMultiFactorGenerator,
   PhoneAuthProvider,
-  PhoneAuthCredential
 } from 'firebase/auth';
 import { auth } from './firebase';
 

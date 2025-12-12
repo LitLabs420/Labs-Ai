@@ -3,7 +3,6 @@
 
 import Stripe from 'stripe';
 import { getAdminDb } from '@/lib/firebase-admin';
-import type { FieldValue } from 'firebase-admin/firestore';
 
 const getDb = () => {
   const database = getAdminDb();

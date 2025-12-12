@@ -10,9 +10,6 @@ import {
   where,
   getDocs,
   doc,
-  setDoc,
-  updateDoc,
-  increment,
   Timestamp,
   writeBatch,
 } from 'firebase/firestore';
