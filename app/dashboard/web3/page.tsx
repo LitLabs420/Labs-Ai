@@ -1,49 +1,27 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Wallet, Send, ArrowUpRight, Eye, EyeOff, RefreshCw } from 'lucide-react';
+import { Wallet } from 'lucide-react';
 import DashboardLayout from '@/components/DashboardLayout';
 
-interface WalletAccount {
-  address: string;
-  network: 'ethereum' | 'polygon' | 'arbitrum';
-  balance: number;
-  nftCount: number;
-}
-
 export default function Web3Page() {
-  const [hideBalance, setHideBalance] = useState(false);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [activeTab, setActiveTab] = useState<'portfolio' | 'swap' | 'nfts'>('portfolio');
-  const [isMounted, setIsMounted] = useState(false);
-
-  // Mock data for accounts
-  const accounts: WalletAccount[] = [
-    { address: '0x1234...', network: 'ethereum', balance: 2.5, nftCount: 3 },
-    { address: '0x5678...', network: 'polygon', balance: 150, nftCount: 1 },
-  ];
-
-  // Mock data for tokens
-  const tokens = [
-    { symbol: 'ETH', name: 'Ethereum', balance: 2.5, usdValue: 5250, change24h: 2.5 },
-    { symbol: 'USDC', name: 'USD Coin', balance: 5000, usdValue: 5000, change24h: 0 },
-    { symbol: 'ARB', name: 'Arbitrum', balance: 1000, usdValue: 2000, change24h: -1.2 },
-  ];
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  const totalBalance = tokens.reduce((sum, token) => sum + token.usdValue, 0);
-  const change24h = (
-    tokens.reduce((sum, token) => sum + (token.usdValue * token.change24h) / 100, 0) / totalBalance
-  ) * 100;
-
-  const handleRefresh = async () => {
-    setIsRefreshing(true);
-    // Simulate refresh
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsRefreshing(false);
-  };
-
-  if (!isMounted) return null;
+  return (
+    <DashboardLayout>
+      <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black">
+        <div className="border-b border-cyan-500/20 bg-black/80 backdrop-blur-md sticky top-0 z-40">
+          <div className="max-w-7xl mx-auto px-6 py-6">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent flex items-center gap-2">
+              <Wallet size={32} />
+              Web3 Universe
+            </h1>
+            <p className="text-gray-400 mt-2">Coming soon: Web3 wallet integration and portfolio management</p>
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <div className="bg-black/50 border border-cyan-500/20 rounded-lg p-8 text-center">
+            <p className="text-xl text-gray-300">This feature is under development</p>
+          </div>
+        </div>
+      </div>
+    </DashboardLayout>
+  );
+}
