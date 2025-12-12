@@ -1,6 +1,7 @@
 // Server-side Firebase utilities using Admin SDK
 import { getAdminAuth, getAdminDb } from './firebase-admin';
 import type { Firestore } from 'firebase-admin/firestore';
+import type { NextRequest } from 'next/server';
 
 export async function getServerDb(): Promise<Firestore | null> {
   const db = getAdminDb();
@@ -10,6 +11,32 @@ export async function getServerDb(): Promise<Firestore | null> {
 export async function getServerAuth() {
   const auth = getAdminAuth();
   return auth;
+}
+
+// Extract user from NextRequest
+export async function getUserFromRequest(request: NextRequest) {
+  try {
+    const auth = await getServerAuth();
+    if (!auth) return null;
+
+    // Get the Authorization header
+    const authHeader = request.headers.get('authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return null;
+    }
+
+    const idToken = authHeader.substring(7);
+    const decodedToken = await auth.verifyIdToken(idToken);
+    
+    return {
+      uid: decodedToken.uid,
+      email: decodedToken.email,
+      name: decodedToken.name,
+    };
+  } catch (error) {
+    console.error('Error extracting user from request:', error);
+    return null;
+  }
 }
 
 // Server-side usage tracking using Admin SDK
