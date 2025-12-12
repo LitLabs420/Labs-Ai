@@ -6,3 +6,18 @@
    - Environments: .env.local
 
    Creating an optimized production build ...
+ Γ£ô Compiled successfully in 32.7s
+   Running TypeScript ...
+Failed to compile.
+
+./app/dashboard/web3/page.tsx:96:68
+Type error: Cannot find name 'accounts'.
+
+  94 |               <div className="bg-black/50 border border-cyan-500/20 rounded-lg p-4">
+  95 |                 <p className="text-xs text-gray-400 mb-1">Connected Wallets</p>
+> 96 |                 <p className="text-2xl font-bold text-purple-300">{accounts.length}</p>
+     |                                                                    ^
+  97 |               </div>
+  98 |
+  99 |               <div className="bg-black/50 border border-cyan-500/20 rounded-lg p-4">
+Next.js build worker exited with code: 1 and signal: null
