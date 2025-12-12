@@ -95,23 +95,10 @@ export async function GET(request: NextRequest) {
               joinedAt: m.joinedAt.toISOString(),
             })),
         },
-        affiliate: affiliateProfile
-          ? {
-              status: 'active',
-              referralCode: affiliateProfile.referralCode,
-              referralLink: affiliateProfile.referralLink,
-              tier: affiliateProfile.tier,
-              commissionRate: `${(affiliateProfile.commissionRate * 100).toFixed(0)}%`,
-              totalEarnings: `$${affiliateProfile.totalEarnings.toFixed(2)}`,
-              monthlyEarnings: `$${affiliateProfile.monthlyEarnings.toFixed(2)}`,
-              totalReferrals: affiliateStats?.totalReferrals || 0,
-              activeReferrals: affiliateStats?.activeReferrals || 0,
-              conversionRate: `${(affiliateStats?.conversionRate || 0).toFixed(1)}%`,
-            }
-          : {
-              status: 'inactive',
-              message: 'Not enrolled in affiliate program',
-            },
+        affiliate: {
+          status: 'inactive',
+          message: 'Not enrolled in affiliate program',
+        },
         whiteLabelFeatures: whiteLabelConfig
           ? {
               status: 'active',
@@ -199,3 +186,4 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
