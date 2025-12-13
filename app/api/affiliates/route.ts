@@ -13,6 +13,7 @@ import {
   getAffiliateReferrals,
   getAffiliateStats,
   trackReferral,
+  normalizeTimestamp,
 } from '@/lib/affiliate-system';
 import { db } from '@/lib/firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
@@ -155,9 +156,9 @@ export async function GET(request: NextRequest) {
           tier: r.referredTier,
           commission: r.commission.toFixed(2),
           subscriptionValue: r.subscriptionValue.toFixed(2),
-          referredAt: r.referredAt.toISOString(),
-          qualifiedAt: r.qualifiedAt?.toISOString(),
-          paidAt: r.paidAt?.toISOString(),
+          referredAt: normalizeTimestamp(r.referredAt)?.toISOString(),
+          qualifiedAt: normalizeTimestamp(r.qualifiedAt)?.toISOString(),
+          paidAt: normalizeTimestamp(r.paidAt)?.toISOString(),
         })),
       });
     }
@@ -191,7 +192,7 @@ export async function GET(request: NextRequest) {
         status: r.status,
         tier: r.referredTier,
         commission: r.commission.toFixed(2),
-        referredAt: r.referredAt.toISOString(),
+        referredAt: normalizeTimestamp(r.referredAt)?.toISOString(),
       })),
     });
   } catch (error) {

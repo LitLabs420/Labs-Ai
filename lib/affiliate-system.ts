@@ -19,7 +19,7 @@ import {
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2023-10-16',
+  apiVersion: '2025-11-17.clover',
 });
 
 export interface AffiliateProfile {
@@ -58,12 +58,20 @@ export interface Referral {
   referredTier: string;
   commission: number;
   subscriptionValue: number;
-  referredAt: Date;
-  qualifiedAt?: Date; // First payment received
-  paidAt?: Date;
-  expiresAt: Date;
+  referredAt: Date | Timestamp;
+  qualifiedAt?: Date | Timestamp; // First payment received
+  paidAt?: Date | Timestamp;
+  expiresAt: Date | Timestamp;
   stripeSubscriptionId?: string;
   isPayoutProcessed: boolean;
+}
+
+export function normalizeTimestamp(value?: Date | Timestamp): Date | undefined {
+  if (!value) return undefined;
+  if (value instanceof Timestamp) {
+    return value.toDate();
+  }
+  return value;
 }
 
 export interface AffiliateStats {
@@ -188,10 +196,12 @@ export async function trackReferral(
   };
 
   const referralRef = doc(clientDb, 'referrals', referral.id);
+  const safeReferredAt = normalizeTimestamp(referral.referredAt) || new Date();
+  const safeExpiresAt = normalizeTimestamp(referral.expiresAt) || new Date();
   await setDoc(referralRef, {
     ...referral,
-    referredAt: Timestamp.fromDate(referral.referredAt),
-    expiresAt: Timestamp.fromDate(referral.expiresAt),
+    referredAt: Timestamp.fromDate(safeReferredAt),
+    expiresAt: Timestamp.fromDate(safeExpiresAt),
   });
 
   // Update affiliate stats
@@ -228,12 +238,17 @@ export async function processReferralCommission(
   const commission = subscriptionValue * affiliate.commissionRate;
 
   // Update referral
+  const normalizedReferredAt = normalizeTimestamp(referral.referredAt) || new Date();
+  const normalizedExpiresAt = normalizeTimestamp(referral.expiresAt) || new Date();
+
   await updateDoc(referralRef, {
     status: 'qualified',
     commission,
     subscriptionValue,
     stripeSubscriptionId,
     qualifiedAt: Timestamp.fromDate(new Date()),
+    referredAt: Timestamp.fromDate(normalizedReferredAt),
+    expiresAt: Timestamp.fromDate(normalizedExpiresAt),
   });
 
   // Update affiliate earnings
@@ -250,8 +265,8 @@ export async function processReferralCommission(
     subscriptionValue,
     stripeSubscriptionId,
     qualifiedAt: new Date(),
-    referredAt: referral.referredAt.toDate ? referral.referredAt : new Date(),
-    expiresAt: referral.expiresAt.toDate ? referral.expiresAt : new Date(),
+    referredAt: normalizeTimestamp(referral.referredAt) || new Date(),
+    expiresAt: normalizeTimestamp(referral.expiresAt) || new Date(),
   };
 }
 
@@ -276,10 +291,10 @@ export async function getAffiliateReferrals(
     const data = doc.data() as Referral;
     return {
       ...data,
-      referredAt: data.referredAt?.toDate?.() || new Date(),
-      qualifiedAt: data.qualifiedAt?.toDate?.() || undefined,
-      paidAt: data.paidAt?.toDate?.() || undefined,
-      expiresAt: data.expiresAt?.toDate?.() || new Date(),
+      referredAt: normalizeTimestamp(data.referredAt) || new Date(),
+      qualifiedAt: normalizeTimestamp(data.qualifiedAt),
+      paidAt: normalizeTimestamp(data.paidAt),
+      expiresAt: normalizeTimestamp(data.expiresAt) || new Date(),
     };
   });
 }
@@ -299,7 +314,10 @@ export async function getAffiliateStats(
   // Monthly commissions (last 30 days)
   const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
   const monthlyCommissions = referrals
-    .filter(r => r.qualifiedAt && new Date(r.qualifiedAt) > thirtyDaysAgo)
+    .filter((r) => {
+      const qualifiedAt = normalizeTimestamp(r.qualifiedAt);
+      return qualifiedAt ? qualifiedAt > thirtyDaysAgo : false;
+    })
     .reduce((sum, r) => sum + r.commission, 0);
 
   const conversionRate = totalReferrals > 0 ? (activeReferrals / totalReferrals) * 100 : 0;
@@ -363,7 +381,7 @@ export async function processAffiliatePayouts(): Promise<{ successful: string[];
 /**
  * Update affiliate tier
  */
-export async function updateAffiliatetier(userId: string): Promise<AffiliateProfile | null> {
+export async function updateAffiliateTier(userId: string): Promise<AffiliateProfile | null> {
   if (!clientDb) throw new Error('Firebase not initialized');
 
   const affiliate = await getAffiliateProfile(userId);
@@ -402,5 +420,5 @@ export default {
   getAffiliateReferrals,
   getAffiliateStats,
   processAffiliatePayouts,
-  updateAffiliateUpdateAffiliateUpdateAffiliateUpdateAffiliateUpdateAffiliateTier,
+  updateAffiliateTier,
 };

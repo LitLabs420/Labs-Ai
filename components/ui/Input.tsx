@@ -2,13 +2,13 @@
 
 import React, { InputHTMLAttributes, ReactNode } from 'react';
 
-export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   label?: string;
   error?: string;
   hint?: string;
   icon?: ReactNode;
   iconPosition?: 'left' | 'right';
-  size?: 'sm' | 'md' | 'lg';
+  inputSize?: 'sm' | 'md' | 'lg';
 }
 
 const sizeClasses = {
@@ -27,7 +27,7 @@ export const Input: React.FC<InputProps> = ({
   hint,
   icon,
   iconPosition = 'left',
-  size = 'md',
+  inputSize = 'md',
   className = '',
   id,
   ...props
@@ -43,7 +43,7 @@ export const Input: React.FC<InputProps> = ({
 
   const inputFinalClass = `
     ${inputBaseClass}
-    ${sizeClasses[size]}
+    ${sizeClasses[inputSize]}
     ${inputStateClass}
     ${icon ? (iconPosition === 'left' ? 'pl-10' : 'pr-10') : ''}
     ${className}

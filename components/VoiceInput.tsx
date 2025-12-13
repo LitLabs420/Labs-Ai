@@ -64,7 +64,7 @@ export function VoiceInput({
     }
 
     // Check Whisper support (requires recording capability)
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    if (navigator.mediaDevices && typeof navigator.mediaDevices.getUserMedia === 'function') {
       modes.push('whisper');
     }
 
