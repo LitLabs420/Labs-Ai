@@ -95,7 +95,7 @@ export async function enableMFAPhone(phoneNumber: string): Promise<string> {
     size: 'invisible',
   });
 
-  // const phoneAuthProvider = new PhoneAuthProvider(auth);
+  const phoneAuthProvider = new PhoneAuthProvider(auth);
   const verificationId = await phoneAuthProvider.verifyPhoneNumber(
     phoneNumber,
     recaptchaVerifier
@@ -153,3 +153,4 @@ export function hasMFAEnabled(): boolean {
   
   return multiFactor(user).enrolledFactors.length > 0;
 }
+

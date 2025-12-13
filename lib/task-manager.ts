@@ -5,7 +5,7 @@
 
 import { db } from './firebase';
 import { collection, addDoc, doc, getDoc, updateDoc, query, where, getDocs, Timestamp } from 'firebase/firestore';
-import { captureException } from './sentry';
+import { captureError } from './sentry';
 
 // Simple UUID generator to avoid crypto dependency issues
 function generateUUID() {
@@ -94,7 +94,7 @@ export async function submitTask(input: TaskInput): Promise<Task> {
     // Trigger processing (async)
     processTaskAsync(docRef.id).catch(err => {
       console.error('Task processing error:', err);
-      captureException(err, { context: 'task_processing_error' });
+      captureError(err, { context: 'task_processing_error' });
     });
 
     return {
@@ -104,7 +104,7 @@ export async function submitTask(input: TaskInput): Promise<Task> {
       id: docRef.id,
     };
   } catch (error) {
-    captureException(error, { context: 'task_submission_error' });
+    captureError(error, { context: 'task_submission_error' });
     throw error;
   }
 }

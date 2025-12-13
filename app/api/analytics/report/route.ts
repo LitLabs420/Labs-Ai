@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getUserFromRequest } from '@/lib/firebase-server';
+import { getUserFromRequest } from '@/lib/auth-helper';
 import { captureError } from '@/lib/sentry';
 import {
   getUserInsightsRange,

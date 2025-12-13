@@ -6,7 +6,7 @@
 import Stripe from 'stripe';
 import { getAdminDb } from './firebase-admin';
 import { getConfig } from './config';
-import { captureException, captureMessage } from './sentry';
+import { captureError, captureMessage } from './sentry';
 
 let stripeInstance: Stripe | null = null;
 
@@ -429,3 +429,4 @@ export default {
   getCustomerBillingInfo,
   verifyWebhookSignature,
 };
+

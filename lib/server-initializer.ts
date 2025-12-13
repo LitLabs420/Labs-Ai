@@ -8,7 +8,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import OpenAI from 'openai';
 import { getConfig } from './config';
 import { getDeepSeekConfig } from './config-deepseek';
-import { captureMessage, captureException } from './sentry';
+import { captureMessage, captureError } from './sentry';
 
 /**
  * Initialization status for each service
@@ -80,7 +80,7 @@ class ServerInitializer {
         errors.push(
           `Google Generative AI initialization failed: ${error instanceof Error ? error.message : String(error)}`
         );
-        captureException(error);
+        captureError(error);
       }
 
       // Initialize OpenAI
@@ -100,7 +100,7 @@ class ServerInitializer {
         errors.push(
           `OpenAI initialization failed: ${error instanceof Error ? error.message : String(error)}`
         );
-        captureException(error);
+        captureError(error);
       }
 
       // Initialize DeepSeek
@@ -121,7 +121,7 @@ class ServerInitializer {
         errors.push(
           `DeepSeek initialization failed: ${error instanceof Error ? error.message : String(error)}`
         );
-        captureException(error);
+        captureError(error);
       }
 
       // Firebase is initialized via environment config (admin SDK)
@@ -157,7 +157,7 @@ class ServerInitializer {
 
       return this.status;
     } catch (error) {
-      captureException(error);
+      captureError(error);
       throw error;
     }
   }
@@ -272,3 +272,4 @@ export function getAIClients() {
 }
 
 export default ServerInitializer;
+
