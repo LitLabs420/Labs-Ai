@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Play, Search, Filter, Clock, Star, Download } from 'lucide-react';
+import Image from 'next/image';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Download, Filter, Play, Search, Clock, Star } from 'lucide-react';
 import DashboardLayout from '@/components/DashboardLayout';
 
 interface MediaItem {
@@ -15,24 +16,78 @@ interface MediaItem {
   rating: number;
 }
 
-
+const seedMedia: MediaItem[] = [
+  {
+    id: '1',
+    title: 'Neon Horizons',
+    poster: '/media/neon-horizons.jpg',
+    type: 'movie',
+    progress: 65,
+    duration: 124,
+    source: 'tmdb',
+    rating: 8.7,
+  },
+  {
+    id: '2',
+    title: 'Cyber Pulse',
+    poster: '/media/cyber-pulse.jpg',
+    type: 'music',
+    progress: 0,
+    duration: 4,
+    source: 'youtube',
+    rating: 9.1,
+  },
+  {
+    id: '3',
+    title: 'Galactic Streams',
+    poster: '/media/galactic-streams.jpg',
+    type: 'series',
+    progress: 10,
+    duration: 42,
+    source: 'plex',
+    rating: 8.4,
+  },
+  {
+    id: '4',
+    title: 'Aurora Memories',
+    poster: '/media/aurora-memories.jpg',
+    type: 'photo',
+    progress: 100,
+    duration: 1,
+    source: 'drive',
+    rating: 7.9,
+  },
+  {
+    id: '5',
+    title: 'Jellyfin Jams',
+    poster: '/media/jellyfin-jams.jpg',
+    type: 'music',
+    progress: 25,
+    duration: 3,
+    source: 'jellyfin',
+    rating: 8.0,
+  },
+];
 
 export default function MediaHubPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'movie' | 'series' | 'music' | 'photo'>('all');
   const [isMounted, setIsMounted] = useState(false);
-  const [media, setMedia] = useState<MediaItem[]>([]);
+  const [media, setMedia] = useState<MediaItem[]>(seedMedia);
 
   useEffect(() => {
     setIsMounted(true);
-    // TODO: Load media from API or Firebase
+    // TODO: replace with real data fetch (Firestore/API)
+    setMedia(seedMedia);
   }, []);
 
-  const filteredMedia = media.filter((item) => {
-    const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesType = filterType === 'all' || item.type === filterType;
-    return matchesSearch && matchesType;
-  });
+  const filteredMedia = useMemo(() => {
+    return media.filter((item) => {
+      const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesType = filterType === 'all' || item.type === filterType;
+      return matchesSearch && matchesType;
+    });
+  }, [media, searchTerm, filterType]);
 
   if (!isMounted) return null;
 
@@ -109,13 +164,12 @@ export default function MediaHubPage() {
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
               {filteredMedia.map((item) => (
-                <div
-                  key={item.id}
-                  className="group cursor-pointer relative rounded-lg overflow-hidden"
-                >
-                  <img
+                <div key={item.id} className="group cursor-pointer relative rounded-lg overflow-hidden">
+                  <Image
                     src={item.poster}
                     alt={item.title}
+                    width={320}
+                    height={192}
                     className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
                   />
                   <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -142,9 +196,11 @@ export default function MediaHubPage() {
                   key={item.id}
                   className="flex gap-4 p-4 bg-black/50 border border-cyan-500/10 rounded-lg hover:border-cyan-500/30 transition-colors group cursor-pointer"
                 >
-                  <img
+                  <Image
                     src={item.poster}
                     alt={item.title}
+                    width={128}
+                    height={192}
                     className="w-32 h-48 object-cover rounded group-hover:scale-105 transition-transform"
                   />
                   <div className="flex-1 flex flex-col justify-between py-2">
@@ -155,7 +211,6 @@ export default function MediaHubPage() {
                       </p>
                       <div className="flex items-center gap-3 mt-3">
                         <div className="flex-1 max-w-xs bg-gray-700 h-1 rounded-full overflow-hidden">
-                          { }
                           <div
                             className="bg-gradient-to-r from-cyan-500 to-purple-500 h-full"
                             style={{ width: `${item.progress}%` }}
@@ -194,10 +249,12 @@ function MediaCard({ item }: MediaCardProps) {
   return (
     <div className="group cursor-pointer rounded-lg overflow-hidden bg-black/50 border border-cyan-500/10 hover:border-cyan-500/30 transition-colors">
       <div className="relative overflow-hidden h-64">
-        <img
+        <Image
           src={item.poster}
           alt={item.title}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover group-hover:scale-110 transition-transform duration-300"
         />
         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
           <Play className="text-white fill-white" size={48} />

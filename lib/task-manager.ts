@@ -6,8 +6,7 @@
 import { db } from './firebase';
 import { collection, addDoc, doc, getDoc, updateDoc, query, where, getDocs, Timestamp } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'crypto';
-// captureError import removed - unused
-import './sentry';
+import { captureException } from './sentry';
 
 export type TaskType = 
   | 'ai_generation'
@@ -329,9 +328,12 @@ async function processTaskByType(task: Task): Promise<Record<string, any>> {
  */
 async function processAIGeneration(task: Task): Promise<Record<string, any>> {
   const { content, description, tone, niche } = task.payload;
+  const generatedContent = content || `Generated content for ${niche || 'your audience'}`;
   // Integration with actual AI generation would go here
   return {
-    content: content || `Generated content for ${niche}`,
+    content: generatedContent,
+    summary: description ?? 'AI generated summary',
+    tone: tone ?? 'neutral',
     status: 'success',
     processingTime: Date.now() - task.createdAt.getTime(),
   };
@@ -345,6 +347,7 @@ async function processDMReply(task: Task): Promise<Record<string, any>> {
   // Integration with DM reply system
   return {
     reply: `Auto-reply to: ${message}`,
+    context: context ?? 'general',
     status: 'success',
   };
 }
@@ -353,10 +356,11 @@ async function processDMReply(task: Task): Promise<Record<string, any>> {
  * Process money play task
  */
 async function processMoneyPlay(task: Task): Promise<Record<string, any>> {
-  // description destructured - unusedtask.payload;
+  const { description, goal } = task.payload;
   // Money play generation logic
   return {
-    moneyPlay: `Money play generated for: ${description}`,
+    moneyPlay: description || 'AI-generated money play',
+    goal: goal || 'grow revenue',
     status: 'success',
   };
 }
@@ -369,7 +373,8 @@ async function processImageGeneration(task: Task): Promise<Record<string, any>> 
   // Image generation logic (DALL-E, Midjourney, etc.)
   return {
     imageUrl: `https://example.com/images/${Date.now()}.jpg`,
-    prompt: prompt,
+    prompt,
+    style: style || 'default',
     status: 'success',
   };
 }
@@ -378,10 +383,11 @@ async function processImageGeneration(task: Task): Promise<Record<string, any>> 
  * Process automation task
  */
 async function processAutomation(task: Task): Promise<Record<string, any>> {
-  // automation properties - unusedtask.payload;
+  const { automationType } = task.payload;
   // Automation execution logic
   return {
     automationId: `auto_${Date.now()}`,
+    automationType: automationType || 'workflow',
     status: 'activated',
   };
 }

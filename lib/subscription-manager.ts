@@ -4,7 +4,6 @@
  */
 
 import { db as clientDb } from './firebase';
-import { getAdminDb } from './firebase-admin';
 import {
   doc,
   getDoc,

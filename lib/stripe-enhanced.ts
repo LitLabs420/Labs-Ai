@@ -82,13 +82,15 @@ export async function getOrCreateCustomer(
     }
 
     // Create new customer
-    // const customer removed - unused
+    const customer = await stripe.customers.create({
+      email,
+      name,
+      metadata: { userId },
+    });
 
     // Save to Firestore
     if (db) {
-      await db.collection('users').doc(userId).update({
-        stripeCustomerId: customer.id,
-      });
+      await db.collection('users').doc(userId).set({ stripeCustomerId: customer.id }, { merge: true });
     }
 
     captureMessage(`Created Stripe customer for user ${userId}`, 'info');

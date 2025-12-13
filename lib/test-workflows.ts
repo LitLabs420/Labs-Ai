@@ -23,7 +23,6 @@ let stripe: Stripe;
 let auth: any;
 let db: any;
 let testUserId: string;
-let testAffiliateId: string;
 
 beforeAll(async () => {
   // Initialize Firebase
