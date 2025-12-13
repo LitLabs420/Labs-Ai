@@ -65,8 +65,9 @@ export async function getOrCreateCustomer(
     const db = getAdminDb();
     if (db) {
       const userDoc = await db.collection('users').doc(userId).get();
-      if (userDoc.exists() && userDoc.data()?.stripeCustomerId) {
-        return userDoc.data().stripeCustomerId;
+      const userData = userDoc.data();
+      if (userDoc.exists && userData?.stripeCustomerId) {
+        return userData.stripeCustomerId;
       }
     }
 
@@ -97,7 +98,7 @@ export async function getOrCreateCustomer(
     return customer.id;
   } catch (error) {
     console.error('Error managing customer:', error);
-    captureException(error, 'stripe_customer_error');
+    captureException(error, { context: 'stripe_customer_error' });
     throw error;
   }
 }
@@ -158,7 +159,7 @@ export async function createCheckoutSession(
     return session;
   } catch (error) {
     console.error('Checkout session creation error:', error);
-    captureException(error, 'stripe_checkout_error');
+    captureException(error, { context: 'stripe_checkout_error' });
     throw error;
   }
 }
@@ -222,7 +223,7 @@ export async function updateSubscription(
     return updated;
   } catch (error) {
     console.error('Subscription update error:', error);
-    captureException(error, 'stripe_update_error');
+    captureException(error, { context: 'stripe_update_error' });
     throw error;
   }
 }
@@ -248,7 +249,7 @@ export async function cancelSubscription(
     }
   } catch (error) {
     console.error('Subscription cancellation error:', error);
-    captureException(error, 'stripe_cancel_error');
+    captureException(error, { context: 'stripe_cancel_error' });
     throw error;
   }
 }
@@ -272,7 +273,7 @@ export async function getBillingPortalSession(
     return session;
   } catch (error) {
     console.error('Billing portal session error:', error);
-    captureException(error, 'stripe_portal_error');
+    captureException(error, { context: 'stripe_portal_error' });
     throw error;
   }
 }
@@ -312,7 +313,7 @@ export async function createCoupon(
     return coupon;
   } catch (error) {
     console.error('Coupon creation error:', error);
-    captureException(error, 'stripe_coupon_error');
+    captureException(error, { context: 'stripe_coupon_error' });
     throw error;
   }
 }
@@ -429,4 +430,7 @@ export default {
   getCustomerBillingInfo,
   verifyWebhookSignature,
 };
+
+
+
 

@@ -24,7 +24,7 @@ export function initSentry() {
   sentryInitialized = true;
 }
 
-export function captureError(error: unknown, context?: Record<string, unknown>) {
+export function captureException(error: unknown, context?: Record<string, unknown>) {
   if (!sentryInitialized) return;
   if (context) Sentry.setContext("extra", context);
   Sentry.captureException(error);
@@ -36,3 +36,11 @@ export function captureMessage(message: string, level: "info" | "warning" | "err
 }
 
 export { Sentry };
+
+
+// Alias for compatibility
+export const captureError = captureException;
+
+
+// Alias for compatibility
+export const captureError = captureException;
