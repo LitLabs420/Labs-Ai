@@ -98,7 +98,7 @@ export async function getOrCreateCustomer(
     return customer.id;
   } catch (error) {
     console.error('Error managing customer:', error);
-    captureException(error, { context: 'stripe_customer_error' });
+    // logging disabled
     throw error;
   }
 }
@@ -159,7 +159,7 @@ export async function createCheckoutSession(
     return session;
   } catch (error) {
     console.error('Checkout session creation error:', error);
-    captureException(error, { context: 'stripe_checkout_error' });
+    // logging disabled
     throw error;
   }
 }
@@ -223,7 +223,7 @@ export async function updateSubscription(
     return updated;
   } catch (error) {
     console.error('Subscription update error:', error);
-    captureException(error, { context: 'stripe_update_error' });
+    // logging disabled
     throw error;
   }
 }
@@ -249,7 +249,7 @@ export async function cancelSubscription(
     }
   } catch (error) {
     console.error('Subscription cancellation error:', error);
-    captureException(error, { context: 'stripe_cancel_error' });
+    // logging disabled
     throw error;
   }
 }
@@ -273,7 +273,7 @@ export async function getBillingPortalSession(
     return session;
   } catch (error) {
     console.error('Billing portal session error:', error);
-    captureException(error, { context: 'stripe_portal_error' });
+    // logging disabled
     throw error;
   }
 }
@@ -313,7 +313,7 @@ export async function createCoupon(
     return coupon;
   } catch (error) {
     console.error('Coupon creation error:', error);
-    captureException(error, { context: 'stripe_coupon_error' });
+    // logging disabled
     throw error;
   }
 }
@@ -430,6 +430,8 @@ export default {
   getCustomerBillingInfo,
   verifyWebhookSignature,
 };
+
+
 
 
 
