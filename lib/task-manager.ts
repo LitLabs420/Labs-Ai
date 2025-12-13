@@ -5,8 +5,18 @@
 
 import { db } from './firebase';
 import { collection, addDoc, doc, getDoc, updateDoc, query, where, getDocs, Timestamp } from 'firebase/firestore';
-import { v4 as uuidv4 } from 'crypto';
 import { captureException } from './sentry';
+
+// Simple UUID generator to avoid crypto dependency issues
+function generateUUID() {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
 
 export type TaskType = 
   | 'ai_generation'
@@ -67,7 +77,7 @@ export async function submitTask(input: TaskInput): Promise<Task> {
     // Create task document
     const taskData = {
       ...input,
-      id: uuidv4(),
+      id: generateUUID(),
       status: 'pending' as TaskStatus,
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
@@ -84,7 +94,7 @@ export async function submitTask(input: TaskInput): Promise<Task> {
     // Trigger processing (async)
     processTaskAsync(docRef.id).catch(err => {
       console.error('Task processing error:', err);
-      captureException(err, 'task_processing_error');
+      captureException(err, { context: 'task_processing_error' });
     });
 
     return {
@@ -94,7 +104,7 @@ export async function submitTask(input: TaskInput): Promise<Task> {
       id: docRef.id,
     };
   } catch (error) {
-    captureException(error, 'task_submission_error');
+    captureException(error, { context: 'task_submission_error' });
     throw error;
   }
 }
@@ -145,7 +155,7 @@ async function validateTaskLimits(
       money_play: -1,
       image_generation: -1,
       video_generation: -1,
-      email_generation: -1,
+      email_sequence: -1,
       automation: -1,
       report_generation: -1,
     },
@@ -155,7 +165,7 @@ async function validateTaskLimits(
       money_play: -1,
       image_generation: -1,
       video_generation: -1,
-      email_generation: -1,
+      email_sequence: -1,
       automation: -1,
       report_generation: -1,
     },
@@ -165,7 +175,7 @@ async function validateTaskLimits(
       money_play: -1,
       image_generation: 500,
       video_generation: -1,
-      email_generation: -1,
+      email_sequence: -1,
       automation: -1,
       report_generation: -1,
     },
@@ -328,12 +338,9 @@ async function processTaskByType(task: Task): Promise<Record<string, any>> {
  */
 async function processAIGeneration(task: Task): Promise<Record<string, any>> {
   const { content, description, tone, niche } = task.payload;
-  const generatedContent = content || `Generated content for ${niche || 'your audience'}`;
   // Integration with actual AI generation would go here
   return {
-    content: generatedContent,
-    summary: description ?? 'AI generated summary',
-    tone: tone ?? 'neutral',
+    content: content || `Generated content for ${niche}`,
     status: 'success',
     processingTime: Date.now() - task.createdAt.getTime(),
   };
@@ -347,7 +354,6 @@ async function processDMReply(task: Task): Promise<Record<string, any>> {
   // Integration with DM reply system
   return {
     reply: `Auto-reply to: ${message}`,
-    context: context ?? 'general',
     status: 'success',
   };
 }
@@ -356,11 +362,10 @@ async function processDMReply(task: Task): Promise<Record<string, any>> {
  * Process money play task
  */
 async function processMoneyPlay(task: Task): Promise<Record<string, any>> {
-  const { description, goal } = task.payload;
+  const { description } = task.payload;
   // Money play generation logic
   return {
-    moneyPlay: description || 'AI-generated money play',
-    goal: goal || 'grow revenue',
+    moneyPlay: `Money play generated for: ${description}`,
     status: 'success',
   };
 }
@@ -373,8 +378,7 @@ async function processImageGeneration(task: Task): Promise<Record<string, any>> 
   // Image generation logic (DALL-E, Midjourney, etc.)
   return {
     imageUrl: `https://example.com/images/${Date.now()}.jpg`,
-    prompt,
-    style: style || 'default',
+    prompt: prompt,
     status: 'success',
   };
 }
@@ -383,11 +387,9 @@ async function processImageGeneration(task: Task): Promise<Record<string, any>> 
  * Process automation task
  */
 async function processAutomation(task: Task): Promise<Record<string, any>> {
-  const { automationType } = task.payload;
   // Automation execution logic
   return {
     automationId: `auto_${Date.now()}`,
-    automationType: automationType || 'workflow',
     status: 'activated',
   };
 }

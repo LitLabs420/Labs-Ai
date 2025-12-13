@@ -151,13 +151,11 @@ module.exports = { handleMessage };`);
                   </div>
 
                   <div>
-                    <label htmlFor="ai-model-select-studio" className='block text-sm font-semibold text-white mb-2'>AI Model</label>
+                    <label className='block text-sm font-semibold text-white mb-2'>AI Model</label>
                     <select
-                      id="ai-model-select-studio"
                       value={model}
                       onChange={(e) => setModel(e.target.value)}
                       className='w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:border-purple-500/50'
-                      aria-label="Select AI model for content generation"
                     >
                       <option value='gemini-1.5-flash'>Gemini 1.5 Flash (Fast)</option>
                       <option value='gemini-1.5-pro'>Gemini 1.5 Pro (Smart)</option>

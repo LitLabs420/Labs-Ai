@@ -4,23 +4,6 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
   },
-  webpack: (config, { isServer }) => {
-    // Fix Firebase module resolution for SSR by treating as externals
-    if (isServer) {
-      if (!config.externals) {
-        config.externals = [];
-      }
-      const externals = Array.isArray(config.externals) ? config.externals : [config.externals];
-      config.externals = [
-        ...externals,
-        'firebase/firestore',
-        'firebase/functions',
-        'firebase/auth',
-        'firebase/app',
-      ];
-    }
-    return config;
-  },
   async headers() {
     return [
       {

@@ -10,7 +10,6 @@ export default function SiteHeader() {
     { href: "/#features", label: "Features" },
     { href: "/#pricing", label: "Pricing" },
     { href: "/demo", label: "Demo" },
-    { href: "/speech", label: "Speech" },
     { href: "/faq", label: "FAQ" },
     { href: "/referrals", label: "Earn $" },
     { href: "/dashboard", label: "Login" },

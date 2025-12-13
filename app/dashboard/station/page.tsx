@@ -66,7 +66,6 @@ export default function StationPage() {
                 type="text"
                 value={stationUrl}
                 readOnly
-                aria-label="Station URL"
                 className="flex-1 px-4 py-2 rounded-lg bg-slate-800 border border-slate-700 text-sm"
               />
               <button
@@ -161,43 +160,35 @@ export default function StationPage() {
             <h2 className="text-xl font-semibold mb-4">Customize Your Station</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label htmlFor="display-name-station" className="block text-sm font-medium mb-2">Display Name</label>
+                <label className="block text-sm font-medium mb-2">Display Name</label>
                 <input
-                  id="display-name-station"
                   type="text"
                   placeholder="Your Name or Brand"
                   className="w-full px-4 py-2 rounded-lg bg-slate-800 border border-slate-700"
-                  aria-label="Display name for your station"
                 />
               </div>
               <div>
-                <label htmlFor="bio-station" className="block text-sm font-medium mb-2">Bio</label>
+                <label className="block text-sm font-medium mb-2">Bio</label>
                 <input
-                  id="bio-station"
                   type="text"
                   placeholder="What you do..."
                   className="w-full px-4 py-2 rounded-lg bg-slate-800 border border-slate-700"
-                  aria-label="Your bio description"
                 />
               </div>
               <div>
-                <label htmlFor="profile-image-station" className="block text-sm font-medium mb-2">Profile Image</label>
+                <label className="block text-sm font-medium mb-2">Profile Image</label>
                 <input
-                  id="profile-image-station"
                   type="file"
                   accept="image/*"
                   className="w-full px-4 py-2 rounded-lg bg-slate-800 border border-slate-700"
-                  aria-label="Upload profile image"
                 />
               </div>
               <div>
-                <label htmlFor="cover-image-station" className="block text-sm font-medium mb-2">Cover Image</label>
+                <label className="block text-sm font-medium mb-2">Cover Image</label>
                 <input
-                  id="cover-image-station"
                   type="file"
                   accept="image/*"
                   className="w-full px-4 py-2 rounded-lg bg-slate-800 border border-slate-700"
-                  aria-label="Upload cover image"
                 />
               </div>
             </div>

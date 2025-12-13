@@ -15,14 +15,13 @@ console.log('🔍 MONETIZATION SYSTEM VALIDATION\n');
 console.log('📊 PREMIUM TIER VALIDATION');
 console.log('═'.repeat(50));
 
-const tiers = Object.keys(PREMIUM_TIERS) as const;
+const tiers = Object.keys(PREMIUM_TIERS) as Array<keyof typeof PREMIUM_TIERS>;
 console.log(`✓ Tiers found: ${tiers.join(', ')}`);
 console.log(`✓ Total tiers: ${tiers.length}`);
 
 let totalMonthlyRevenue = 0;
 tiers.forEach(tier => {
   const tierData = PREMIUM_TIERS[tier];
-  const annualPrice = getAnnualPrice(tier, 'annual');
   const savings = (tierData.monthlyPrice * 12) - tierData.annualPrice;
   const savingsPercent = ((savings / (tierData.monthlyPrice * 12)) * 100).toFixed(1);
   
@@ -69,7 +68,7 @@ Object.entries(UPSELL_PACKAGES).forEach(([key, upsell]) => {
 console.log('\n\n₿ CRYPTO MARKETPLACE VALIDATION');
 console.log('═'.repeat(50));
 
-const cryptoAssets = Object.keys(CRYPTO_PAYMENT_CONFIG) as const;
+const cryptoAssets = Object.keys(CRYPTO_PAYMENT_CONFIG) as Array<keyof typeof CRYPTO_PAYMENT_CONFIG>;
 console.log(`✓ Crypto assets supported: ${cryptoAssets.length}`);
 cryptoAssets.forEach(asset => {
   const config = CRYPTO_PAYMENT_CONFIG[asset];

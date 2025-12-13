@@ -1,12 +1,6 @@
 import React from "react";
 import LiveDemo from "../components/LiveDemo";
 import LiveActivityFeed from "../components/LiveActivityFeed";
-import {
-  TestimonialsSection,
-  UseCasesSection,
-  HowItWorksSection,
-  FAQSection,
-} from "../components/LandingPageSections";
 
 // Force the app router to render this page server-side on every request
 // This bypasses Vercel edge HTML caching so we can validate the live change immediately
@@ -446,38 +440,6 @@ export default function Home() {
             </div>
           </div>
         </footer>
-
-        {/* ===== NEW PREMIUM SECTIONS ===== */}
-
-        {/* USE CASES */}
-        <UseCasesSection />
-
-        {/* TESTIMONIALS & TRUST */}
-        <TestimonialsSection />
-
-        {/* HOW IT WORKS DETAILED */}
-        <HowItWorksSection />
-
-        {/* FAQ */}
-        <FAQSection />
-
-        {/* FINAL CTA */}
-        <section className="rounded-2xl border border-emerald-500/50 bg-gradient-to-r from-emerald-500/10 to-emerald-600/10 p-8 text-center space-y-4 md:p-12">
-          <h2 className="text-2xl md:text-3xl font-semibold">
-            Ready to automate your way to more revenue?
-          </h2>
-          <p className="text-slate-300 max-w-xl mx-auto">
-            Join 10,000+ creators already using LitLabs to book more clients, reply to DMs, and earn more—starting today.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
-            <a href="/auth?mode=signup" className="inline-block rounded-xl bg-emerald-500 px-6 py-3 text-sm font-semibold text-slate-950 hover:bg-emerald-400 hover:shadow-xl hover:shadow-emerald-500/50 transition-all">
-              Start Free Trial (14 Days)
-            </a>
-            <a href="#faq" className="inline-block rounded-xl border border-emerald-500/50 px-6 py-3 text-sm font-semibold text-emerald-300 hover:bg-emerald-500/10 transition-all">
-              See FAQ
-            </a>
-          </div>
-        </section>
       </div>
     </main>
   );

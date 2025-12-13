@@ -135,7 +135,7 @@ export default function GCPAnalyticsDashboard({ userId }: { userId: string }) {
           📍 <strong>Data Source:</strong> Analytics API (Firestore → BigQuery)
         </p>
         <p className="text-xs text-blue-800 mt-1">
-          Project: studio-6082148059-d1fec (litreelabsstudio) | Status: Ready
+          Project: studio-4627045237-a2fe9 | Status: Ready
         </p>
       </div>
     </div>

@@ -278,7 +278,6 @@ export default function GodModePanel() {
                   <span className="text-sm font-bold text-purple-600">{Math.round(result.confidence * 100)}%</span>
                 </div>
                 <div className="h-2 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
-
                   <div
                     className="h-full bg-gradient-to-r from-purple-600 to-pink-600 transition-all duration-500"
                     style={{ width: `${result.confidence * 100}%` }}
