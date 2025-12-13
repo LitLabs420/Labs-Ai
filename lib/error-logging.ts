@@ -30,17 +30,12 @@ export function captureException(error: unknown, context?: Record<string, unknow
   Sentry.captureException(error);
 }
 
+// Alias for compatibility
+export const captureError = captureException;
+
 export function captureMessage(message: string, level: "info" | "warning" | "error" = "info") {
   if (!sentryInitialized) return;
   Sentry.captureMessage(message, level);
 }
 
 export { Sentry };
-
-
-// Alias for compatibility
-export const captureError = captureException;
-
-
-// Alias for compatibility
-export const captureError = captureException;
