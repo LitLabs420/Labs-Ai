@@ -15,7 +15,8 @@ import Stripe from 'stripe';
 // Test Configuration
 const TEST_TIMEOUT = 30000;
 const TEST_USER_EMAIL = 'test@litlabs-test.com';
-const TEST_USER_PASSWORD = 'TestPassword123!';
+const TEST_USER_PASSWORD = process.env.TEST_USER_PASSWORD || 'TestPassword123!';
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 // const TEST_AFFILIATE_EMAIL = 'affiliate@litlabs-test.com';
 
 // Initialize services
@@ -51,7 +52,7 @@ afterAll(async () => {
   if (testUserId) {
     try {
       await deleteDoc(collection(db, 'users'), testUserId);
-    } catch (error) {
+    } catch {
       console.log('Cleanup note: Could not delete test user');
     }
   }
@@ -95,7 +96,7 @@ describe('Subscription Workflow', () => {
   it(
     'should retrieve subscription tiers',
     async () => {
-      const response = await fetch('http://localhost:3000/api/subscriptions/tiers');
+      const response = await fetch(`${BASE_URL}/api/subscriptions/tiers`);
       const tiers = await response.json();
 
       expect(tiers).toBeDefined();
@@ -113,7 +114,7 @@ describe('Subscription Workflow', () => {
   it(
     'should initiate checkout session',
     async () => {
-      const response = await fetch('http://localhost:3000/api/stripe/checkout', {
+      const response = await fetch(`${BASE_URL}/api/stripe/checkout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -136,7 +137,7 @@ describe('Subscription Workflow', () => {
   it(
     'should upgrade subscription tier',
     async () => {
-      const response = await fetch('http://localhost:3000/api/stripe/upgrade', {
+      const response = await fetch(`${BASE_URL}/api/stripe/upgrade`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -158,7 +159,7 @@ describe('Subscription Workflow', () => {
   it(
     'should retrieve billing history',
     async () => {
-      const response = await fetch('http://localhost:3000/api/stripe/invoices', {
+      const response = await fetch(`${BASE_URL}/api/stripe/invoices`, {
         headers: {
           'Authorization': `Bearer ${await auth.currentUser?.getIdToken()}`,
         },
@@ -181,7 +182,7 @@ describe('Team Management', () => {
   it(
     'should add team member',
     async () => {
-      const response = await fetch('http://localhost:3000/api/teams/members', {
+      const response = await fetch(`${BASE_URL}/api/teams/members`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -204,7 +205,7 @@ describe('Team Management', () => {
   it(
     'should list team members',
     async () => {
-      const response = await fetch('http://localhost:3000/api/teams/members', {
+      const response = await fetch(`${BASE_URL}/api/teams/members`, {
         headers: {
           'Authorization': `Bearer ${await auth.currentUser?.getIdToken()}`,
         },
@@ -221,7 +222,7 @@ describe('Team Management', () => {
   it(
     'should update member role',
     async () => {
-      const response = await fetch('http://localhost:3000/api/teams/members', {
+      const response = await fetch(`${BASE_URL}/api/teams/members`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -243,7 +244,7 @@ describe('Team Management', () => {
   it(
     'should remove team member',
     async () => {
-      const response = await fetch('http://localhost:3000/api/teams/members', {
+      const response = await fetch(`${BASE_URL}/api/teams/members`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -269,7 +270,7 @@ describe('Affiliate System', () => {
   it(
     'should create affiliate account',
     async () => {
-      const response = await fetch('http://localhost:3000/api/affiliates/register', {
+      const response = await fetch(`${BASE_URL}/api/affiliates/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -294,7 +295,7 @@ describe('Affiliate System', () => {
   it(
     'should get affiliate profile',
     async () => {
-      const response = await fetch('http://localhost:3000/api/affiliates/profile', {
+      const response = await fetch(`${BASE_URL}/api/affiliates/profile`, {
         headers: {
           'Authorization': `Bearer ${await auth.currentUser?.getIdToken()}`,
         },
@@ -311,7 +312,7 @@ describe('Affiliate System', () => {
   it(
     'should track referral',
     async () => {
-      const response = await fetch('http://localhost:3000/api/affiliates/referral/track', {
+      const response = await fetch(`${BASE_URL}/api/affiliates/referral/track`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -334,7 +335,7 @@ describe('Affiliate System', () => {
   it(
     'should retrieve affiliate stats',
     async () => {
-      const response = await fetch('http://localhost:3000/api/affiliates/stats', {
+      const response = await fetch(`${BASE_URL}/api/affiliates/stats`, {
         headers: {
           'Authorization': `Bearer ${await auth.currentUser?.getIdToken()}`,
         },
@@ -358,7 +359,7 @@ describe('Task Submission & Processing', () => {
   it(
     'should submit task',
     async () => {
-      const response = await fetch('http://localhost:3000/api/tasks/submit', {
+      const response = await fetch(`${BASE_URL}/api/tasks/submit`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -387,7 +388,7 @@ describe('Task Submission & Processing', () => {
       // Wait a moment for task processing
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      const response = await fetch(`http://localhost:3000/api/tasks?taskId=${taskId}`, {
+      const response = await fetch(`${BASE_URL}/api/tasks?taskId=${taskId}`, {
         headers: {
           'Authorization': `Bearer ${await auth.currentUser?.getIdToken()}`,
         },
@@ -403,7 +404,7 @@ describe('Task Submission & Processing', () => {
   it(
     'should list user tasks',
     async () => {
-      const response = await fetch('http://localhost:3000/api/tasks', {
+      const response = await fetch(`${BASE_URL}/api/tasks`, {
         headers: {
           'Authorization': `Bearer ${await auth.currentUser?.getIdToken()}`,
         },
@@ -422,7 +423,7 @@ describe('Task Submission & Processing', () => {
       // Try to submit 6 tasks (free tier limit is 5)
       let completedCount = 0;
       for (let i = 0; i < 6; i++) {
-        const response = await fetch('http://localhost:3000/api/tasks/submit', {
+        const response = await fetch(`${BASE_URL}/api/tasks/submit`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -455,7 +456,7 @@ describe('Analytics & Reporting', () => {
   it(
     'should get user insights',
     async () => {
-      const response = await fetch('http://localhost:3000/api/analytics/report?reportType=insights', {
+      const response = await fetch(`${BASE_URL}/api/analytics/report?reportType=insights`, {
         headers: {
           'Authorization': `Bearer ${await auth.currentUser?.getIdToken()}`,
         },
@@ -472,7 +473,7 @@ describe('Analytics & Reporting', () => {
   it(
     'should get revenue report',
     async () => {
-      const response = await fetch('http://localhost:3000/api/analytics/report?reportType=revenue', {
+      const response = await fetch(`${BASE_URL}/api/analytics/report?reportType=revenue`, {
         headers: {
           'Authorization': `Bearer ${await auth.currentUser?.getIdToken()}`,
         },
@@ -489,7 +490,7 @@ describe('Analytics & Reporting', () => {
   it(
     'should get content performance report',
     async () => {
-      const response = await fetch('http://localhost:3000/api/analytics/report?reportType=content', {
+      const response = await fetch(`${BASE_URL}/api/analytics/report?reportType=content`, {
         headers: {
           'Authorization': `Bearer ${await auth.currentUser?.getIdToken()}`,
         },
@@ -505,7 +506,7 @@ describe('Analytics & Reporting', () => {
   it(
     'should perform cohort analysis',
     async () => {
-      const response = await fetch('http://localhost:3000/api/analytics/report', {
+      const response = await fetch(`${BASE_URL}/api/analytics/report`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -533,7 +534,7 @@ describe('White-Label Features', () => {
   it(
     'should create white-label config',
     async () => {
-      const response = await fetch('http://localhost:3000/api/white-label/config', {
+      const response = await fetch(`${BASE_URL}/api/white-label/config`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -558,7 +559,7 @@ describe('White-Label Features', () => {
   it(
     'should retrieve white-label config',
     async () => {
-      const response = await fetch('http://localhost:3000/api/white-label/config', {
+      const response = await fetch(`${BASE_URL}/api/white-label/config`, {
         headers: {
           'Authorization': `Bearer ${await auth.currentUser?.getIdToken()}`,
         },
@@ -574,7 +575,7 @@ describe('White-Label Features', () => {
   it(
     'should generate white-label CSS',
     async () => {
-      const response = await fetch('http://localhost:3000/api/white-label/css', {
+      const response = await fetch(`${BASE_URL}/api/white-label/css`, {
         headers: {
           'Authorization': `Bearer ${await auth.currentUser?.getIdToken()}`,
         },
@@ -596,7 +597,7 @@ describe('Monetization Dashboard', () => {
   it(
     'should retrieve complete monetization overview',
     async () => {
-      const response = await fetch('http://localhost:3000/api/monetization/dashboard', {
+      const response = await fetch(`${BASE_URL}/api/monetization/dashboard`, {
         headers: {
           'Authorization': `Bearer ${await auth.currentUser?.getIdToken()}`,
         },
@@ -625,7 +626,7 @@ describe('Health & System Status', () => {
   it(
     'should report healthy system status',
     async () => {
-      const response = await fetch('http://localhost:3000/api/health');
+      const response = await fetch(`${BASE_URL}/api/health`);
       expect(response.status).toBe(200);
       const health = await response.json();
 
@@ -640,7 +641,7 @@ describe('Health & System Status', () => {
   it(
     'should include service initialization timestamps',
     async () => {
-      const response = await fetch('http://localhost:3000/api/health');
+      const response = await fetch(`${BASE_URL}/api/health`);
       const health = await response.json();
 
       expect(health.timestamp).toBeDefined();
@@ -657,7 +658,7 @@ describe('Security & Rate Limiting', () => {
   it(
     'should reject requests without authorization',
     async () => {
-      const response = await fetch('http://localhost:3000/api/tasks', {
+      const response = await fetch(`${BASE_URL}/api/tasks`, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -676,7 +677,7 @@ describe('Security & Rate Limiting', () => {
 
       // Send 25 rapid requests
       for (let i = 0; i < 25; i++) {
-        const response = await fetch('http://localhost:3000/api/tasks', {
+        const response = await fetch(`${BASE_URL}/api/tasks`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
@@ -697,7 +698,7 @@ describe('Security & Rate Limiting', () => {
     'should verify webhook signatures',
     async () => {
       const invalidSignature = 'invalid_signature_xyz';
-      const response = await fetch('http://localhost:3000/api/stripe-webhook', {
+      const response = await fetch(`${BASE_URL}/api/stripe-webhook`, {
         method: 'POST',
         headers: {
           'stripe-signature': invalidSignature,
@@ -718,7 +719,7 @@ describe('Error Handling & Edge Cases', () => {
   it(
     'should handle invalid subscription tier upgrade',
     async () => {
-      const response = await fetch('http://localhost:3000/api/stripe/upgrade', {
+      const response = await fetch(`${BASE_URL}/api/stripe/upgrade`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -742,7 +743,7 @@ describe('Error Handling & Edge Cases', () => {
       const email = 'duplicate@test.com';
 
       // First invite
-      await fetch('http://localhost:3000/api/teams/members', {
+      await fetch(`${BASE_URL}/api/teams/members`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -752,7 +753,7 @@ describe('Error Handling & Edge Cases', () => {
       });
 
       // Duplicate invite
-      const response = await fetch('http://localhost:3000/api/teams/members', {
+      const response = await fetch(`${BASE_URL}/api/teams/members`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -769,7 +770,7 @@ describe('Error Handling & Edge Cases', () => {
   it(
     'should handle missing required fields',
     async () => {
-      const response = await fetch('http://localhost:3000/api/tasks/submit', {
+      const response = await fetch(`${BASE_URL}/api/tasks/submit`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
