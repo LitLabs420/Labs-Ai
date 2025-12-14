@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { payments, PaymentRequest } from '@/lib/payments';
 import { extractAuth } from '@/lib/auth-middleware';
 import { captureError } from '@/lib/sentry';
+import { rateLimiter } from '@/lib/rate-limiter';
 import { z } from 'zod';
 
 export const runtime = 'nodejs';
@@ -61,6 +62,18 @@ const PaymentSchema = z.object({
  */
 export async function POST(request: NextRequest) {
   try {
+    // CRITICAL: Rate limit FIRST before any authentication or processing
+    const ip = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown";
+    const rateLimitKey = `payment:${ip}`;
+    const allowed = rateLimiter.check(rateLimitKey, 10, 60 * 1000); // 10 attempts per 60 seconds
+
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Too many payment attempts. Try again later.' },
+        { status: 429, headers: { 'Retry-After': '60' } }
+      );
+    }
+
     // Authentication check
     const auth = await extractAuth(request);
     if (!auth) {

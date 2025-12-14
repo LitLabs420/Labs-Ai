@@ -1,8 +1,9 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth-middleware";
 import { supabase } from "@/lib/database";
 import { errorResponse, successResponse } from "@/lib/api-utils";
 import { captureError } from "@/lib/sentry";
+import { rateLimiter } from "@/lib/rate-limiter";
 
 /**
  * GET /api/social/feed
@@ -10,6 +11,18 @@ import { captureError } from "@/lib/sentry";
  */
 export async function GET(request: NextRequest) {
   try {
+    // CRITICAL: Rate limit FIRST
+    const ip = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown";
+    const rateLimitKey = `social-feed:${ip}`;
+    const allowed = rateLimiter.check(rateLimitKey, 30, 60 * 1000); // 30 feed requests per minute
+
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Too many feed requests. Try again later.' },
+        { status: 429, headers: { 'Retry-After': '60' } }
+      );
+    }
+
     const auth = await requireAuth(request);
     if (auth instanceof Response) return auth;
 

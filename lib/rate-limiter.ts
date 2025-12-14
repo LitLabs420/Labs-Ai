@@ -161,10 +161,14 @@ if (typeof setInterval !== "undefined") {
   }, 5 * 60 * 1000);
 }
 
+// Export both named and default for compatibility
+export const rateLimiter = limiter;
+
 export default {
   rateLimit,
   getRateLimitKey,
   getRateLimitHeaders,
   getRateLimitByTier,
   RATE_LIMITS,
+  rateLimiter: limiter,
 };

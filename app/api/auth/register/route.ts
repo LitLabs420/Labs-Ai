@@ -1,7 +1,8 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/database";
 import { errorResponse, successResponse } from "@/lib/api-utils";
 import { captureError } from "@/lib/sentry";
+import { rateLimiter } from "@/lib/rate-limiter";
 import bcrypt from "bcryptjs";
 
 interface RegisterRequest {
@@ -17,6 +18,18 @@ interface RegisterRequest {
  */
 export async function POST(request: NextRequest) {
   try {
+    // CRITICAL: Rate limit FIRST before any processing
+    const ip = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown";
+    const rateLimitKey = `register:${ip}`;
+    const allowed = rateLimiter.check(rateLimitKey, 5, 60 * 1000); // 5 attempts per 60 seconds
+
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Too many registration attempts. Try again later.' },
+        { status: 429, headers: { 'Retry-After': '60' } }
+      );
+    }
+
     const body: RegisterRequest = await request.json();
     const { email, password, displayName, username } = body;
 

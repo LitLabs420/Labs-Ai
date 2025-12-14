@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { marketplace } from '@/lib/marketplace';
 import { extractAuth } from '@/lib/auth-middleware';
+import { rateLimiter } from '@/lib/rate-limiter';
 import { z } from 'zod';
 
 export const runtime = 'nodejs';
@@ -19,6 +20,18 @@ const PurchaseSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    // CRITICAL: Rate limit FIRST
+    const ip = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown";
+    const rateLimitKey = `purchase:${ip}`;
+    const allowed = rateLimiter.check(rateLimitKey, 5, 60 * 1000); // 5 purchases per minute
+
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Too many purchase attempts. Try again later.' },
+        { status: 429, headers: { 'Retry-After': '60' } }
+      );
+    }
+
     const auth = await extractAuth(request);
     if (!auth) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

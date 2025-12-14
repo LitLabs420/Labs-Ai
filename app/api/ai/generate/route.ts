@@ -6,6 +6,7 @@ import {
   optimizeContent,
 } from "@/lib/ai-pipeline";
 import { captureError } from "@/lib/sentry";
+import { rateLimiter } from "@/lib/rate-limiter";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -18,6 +19,18 @@ export const maxDuration = 60;
  */
 export async function POST(request: NextRequest) {
   try {
+    // CRITICAL: Rate limit FIRST
+    const ip = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown";
+    const rateLimitKey = `ai-generate:${ip}`;
+    const allowed = rateLimiter.check(rateLimitKey, 3, 60 * 1000); // 3 AI generations per minute (compute intensive)
+
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Too many AI generation requests. Try again later.' },
+        { status: 429, headers: { 'Retry-After': '60' } }
+      );
+    }
+
     const authHeader = request.headers.get("authorization");
     if (!authHeader?.startsWith("Bearer ")) {
       return NextResponse.json(
