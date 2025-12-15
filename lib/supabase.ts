@@ -1,4 +1,4 @@
-/**
+/**commit
  * Supabase Client Configuration
  * Clean, type-safe Supabase setup
  */

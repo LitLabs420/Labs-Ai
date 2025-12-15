@@ -1,4 +1,4 @@
-/**
+/**commit
  * Authentication Utilities
  * Clean authentication helpers for Supabase
  */
