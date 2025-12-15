@@ -1,0 +1,14 @@
+api:
+  # Set CODACY_API_TOKEN in your environment; do not commit real tokens.
+  token: ${CODACY_API_TOKEN}
+
+project:
+  # Set CODACY_PROJECT_TOKEN in your environment; do not commit real tokens.
+  token: ${CODACY_PROJECT_TOKEN}
+
+files:
+  exclude:
+    - node_modules/**
+    - .next/**
+    - coverage/**
+    - dist/**

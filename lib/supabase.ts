@@ -1,78 +1,110 @@
+/**
+ * Supabase Client Configuration
+ * Clean, type-safe Supabase setup
+ */
+
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+// Environment variables
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('⚠️ Supabase environment variables not configured. Database operations will fail.');
+  throw new Error('Missing Supabase environment variables');
 }
 
+// Server-side client
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-/**
- * Database schema for Stripe webhook handlers
- * 
- * Create these tables in Supabase SQL Editor:
- * 
- * CREATE TABLE payments (
- *   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
- *   stripe_payment_id TEXT UNIQUE NOT NULL,
- *   user_id TEXT NOT NULL,
- *   amount INT NOT NULL,
- *   currency TEXT NOT NULL,
- *   status TEXT NOT NULL,
- *   metadata JSONB,
- *   created_at TIMESTAMP DEFAULT NOW(),
- *   updated_at TIMESTAMP DEFAULT NOW()
- * );
- * 
- * CREATE TABLE subscriptions (
- *   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
- *   stripe_subscription_id TEXT UNIQUE NOT NULL,
- *   user_id TEXT NOT NULL,
- *   stripe_customer_id TEXT NOT NULL,
- *   status TEXT NOT NULL,
- *   current_period_start BIGINT,
- *   current_period_end BIGINT,
- *   cancel_at_period_end BOOLEAN DEFAULT FALSE,
- *   metadata JSONB,
- *   created_at TIMESTAMP DEFAULT NOW(),
- *   updated_at TIMESTAMP DEFAULT NOW()
- * );
- * 
- * CREATE TABLE invoices (
- *   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
- *   stripe_invoice_id TEXT UNIQUE NOT NULL,
- *   subscription_id UUID REFERENCES subscriptions(id),
- *   user_id TEXT NOT NULL,
- *   amount INT NOT NULL,
- *   status TEXT NOT NULL,
- *   paid BOOLEAN DEFAULT FALSE,
- *   metadata JSONB,
- *   created_at TIMESTAMP DEFAULT NOW(),
- *   updated_at TIMESTAMP DEFAULT NOW()
- * );
- * 
- * CREATE TABLE payment_failures (
- *   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
- *   stripe_payment_id TEXT,
- *   user_id TEXT,
- *   error_message TEXT NOT NULL,
- *   error_code TEXT,
- *   metadata JSONB,
- *   created_at TIMESTAMP DEFAULT NOW()
- * );
- * 
- * CREATE TABLE refunds (
- *   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
- *   stripe_refund_id TEXT UNIQUE NOT NULL,
- *   payment_id UUID REFERENCES payments(id),
- *   user_id TEXT NOT NULL,
- *   amount INT NOT NULL,
- *   reason TEXT,
- *   status TEXT NOT NULL,
- *   metadata JSONB,
- *   created_at TIMESTAMP DEFAULT NOW(),
- *   updated_at TIMESTAMP DEFAULT NOW()
- * );
- */
+// Client-side client (for use in components)
+export function getSupabaseClient() {
+  return createClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+    },
+  });
+}
+
+// Service role client (for admin operations)
+export function getServiceRoleClient() {
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  
+  if (!serviceRoleKey) {
+    throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY');
+  }
+  
+  return createClient(supabaseUrl, serviceRoleKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  });
+}
+
+// Type definitions for database tables
+export interface Profile {
+  id: string;
+  email: string;
+  full_name: string | null;
+  avatar_url: string | null;
+  tier: 'free' | 'starter' | 'creator' | 'pro';
+  stripe_customer_id: string | null;
+  preferred_ai: 'openai' | 'claude' | 'gemini';
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Generation {
+  id: string;
+  user_id: string;
+  content_type: 'caption' | 'script' | 'email' | 'post' | 'blog' | 'ad' | 'custom';
+  prompt: string;
+  generated_content: string;
+  ai_provider: 'openai' | 'claude' | 'gemini';
+  model: string;
+  tokens_used: number | null;
+  is_favorite: boolean;
+  tags: string[];
+  created_at: string;
+}
+
+export interface Template {
+  id: string;
+  user_id: string;
+  name: string;
+  description: string | null;
+  content_type: 'caption' | 'script' | 'email' | 'post' | 'blog' | 'ad' | 'custom';
+  prompt_template: string;
+  example_output: string | null;
+  is_favorite: boolean;
+  use_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Subscription {
+  id: string;
+  user_id: string;
+  tier: 'free' | 'starter' | 'creator' | 'pro';
+  status: 'active' | 'canceled' | 'past_due' | 'unpaid';
+  stripe_subscription_id: string | null;
+  stripe_price_id: string | null;
+  current_period_start: string | null;
+  current_period_end: string | null;
+  cancel_at_period_end: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface UsageTracking {
+  id: string;
+  user_id: string;
+  month: string; // DATE format
+  generation_count: number;
+  tokens_used: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export default supabase;

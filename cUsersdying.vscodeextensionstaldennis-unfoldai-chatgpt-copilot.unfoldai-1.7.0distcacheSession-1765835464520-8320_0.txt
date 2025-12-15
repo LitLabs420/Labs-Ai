@@ -1,0 +1,9 @@
+Script started on 2025-12-15 16:51:04-05:00 [TERM="xterm-256color" TTY="/dev/pts/2" COLUMNS="202" LINES="10"]
+Clear-Host
+exec > >(tee -a "c:\Users\dying\.vscode\extensions\taldennis-unfoldai-chatgpt-copilot.unfoldai-1.7.0\dist\cache\Session-1765835464520-8320_0_manual.txt") 2>&1
+[?2004h]0;litree@litree: /mnt/c/Users/dying/Documents/GitHub/Labs-Ai.worktrees/LiTree89/issue15[01;32mlitree@litree[00m:[01;34m/mnt/c/Users/dying/Documents/GitHub/Labs-Ai.worktrees/LiTree89/issue15[00m$ Clear-Host
+[?2004lclear
+Clear-Host: command not found
+[?2004h]0;litree@litree: /mnt/c/Users/dying/Documents/GitHub/Labs-Ai.worktrees/LiTree89/issue15[01;32mlitree@litree[00m:[01;34m/mnt/c/Users/dying/Documents/GitHub/Labs-Ai.worktrees/LiTree89/issue15[00m$ exec > >(tee -a "c:\Users\dying\.vscode\extensions\taldennis-unfoldai-chatgpt-copilot.unfoldai-1.7.0\dist\cache\Session-1765835464520-8320_0_manual.txt") 2>&1
+[?2004l[?2004h]0;litree@litree: /mnt/c/Users/dying/Documents/GitHub/Labs-Ai.worktrees/LiTree89/issue15[01;32mlitree@litree[00m:[01;34m/mnt/c/Users/dying/Documents/GitHub/Labs-Ai.worktrees/LiTree89/issue15[00m$ clear
+[?2004l[H[2J[3J[?2004h]0;litree@litree: /mnt/c/Users/dying/Documents/GitHub/Labs-Ai.worktrees/LiTree89/issue15[01;32mlitree@litree[00m:[01;34m/mnt/c/Users/dying/Documents/GitHub/Labs-Ai.worktrees/LiTree89/issue15[00m$ [K]0;litree@litree: /mnt/c/Users/dying/Documents/GitHub/Labs-Ai.worktrees/LiTree89/issue15[01;32mlitree@litree[00m:[01;34m/mnt/c/Users/dying/Documents/GitHub/Labs-Ai.worktrees/LiTree89/issue15[00m$ 

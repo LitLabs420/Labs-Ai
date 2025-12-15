@@ -1,11 +1,15 @@
 {
-  "buildCommand": "npm run build",
-  "devCommand": "npm run dev",
-  "installCommand": "npm install",
+  "buildCommand": "pnpm run build",
+  "devCommand": "pnpm run dev",
+  "installCommand": "pnpm install",
+  "framework": "nextjs",
   "env": {
     "NEXT_PUBLIC_APP_NAME": "LitReeLab Studio",
     "NEXT_PUBLIC_APP_URL": "@app-url",
-    "NODE_ENV": "production"
+    "NODE_ENV": "production",
+    "VERCEL_API_TOKEN": "@vercel-api-token",
+    "VERCEL_TEAM_ID": "@vercel-team-id",
+    "VERCEL_PROJECT_ID": "@vercel-project-id"
   },
   "build": {
     "env": {
