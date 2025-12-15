@@ -17,6 +17,7 @@ az login
 ```
 
 This will:
+
 - Open your default browser
 - Prompt you to sign in with your Microsoft account
 - Display your available subscriptions after successful login
@@ -28,6 +29,7 @@ az account show
 ```
 
 Expected output:
+
 ```json
 {
   "id": "your-subscription-id",
@@ -63,8 +65,8 @@ Azure MCP (Model Context Protocol) servers integrate Azure tools directly into G
 ### Step 1: Enable MCP in GitHub Settings
 
 1. Visit one of these URLs:
-   - **Personal account**: https://github.com/settings/copilot/features
-   - **Organization (LitLabs420)**: https://github.com/organizations/LitLabs420/settings/copilot/features
+   - **Personal account**: [https://github.com/settings/copilot/features](https://github.com/settings/copilot/features)
+   - **Organization (LitLabs420)**: [https://github.com/organizations/LitLabs420/settings/copilot/features](https://github.com/organizations/LitLabs420/settings/copilot/features)
 
 2. Enable: **"Enable MCP servers in Copilot"**
 
@@ -95,12 +97,14 @@ Once enabled, you should have access to these tools in Copilot:
 ### Step 4: Test Azure MCP
 
 Ask Copilot:
-```
+
+```text
 @copilot What subscriptions do I have access to?
 ```
 
 Or:
-```
+
+```text
 @copilot List my Azure resource groups
 ```
 
@@ -320,6 +324,7 @@ az cognitiveservices account deployment create \
 ### 4. Update Environment Variables
 
 Add to your app settings:
+
 ```bash
 AZURE_OPENAI_API_KEY="your-key"
 AZURE_OPENAI_ENDPOINT="https://litlabs-openai.openai.azure.com/"
@@ -433,6 +438,7 @@ Add the contents to GitHub Secrets as `AZURE_WEBAPP_PUBLISH_PROFILE`.
 ### Issue: "az login" not working
 
 **Solution**:
+
 ```bash
 # Try device code flow
 az login --use-device-code
@@ -444,6 +450,7 @@ az login --tenant your-tenant-id
 ### Issue: Azure MCP tools not showing up in Copilot
 
 **Solution**:
+
 1. Verify MCP is enabled in GitHub settings
 2. Restart VS Code
 3. Check `.vscode/settings.json` has `github.copilot.chat.mcp.enabled: true`
@@ -452,6 +459,7 @@ az login --tenant your-tenant-id
 ### Issue: Deployment fails with "Node version mismatch"
 
 **Solution**:
+
 ```bash
 # Set specific Node version in Azure
 az webapp config appsettings set \
@@ -463,6 +471,7 @@ az webapp config appsettings set \
 ### Issue: Environment variables not loading
 
 **Solution**:
+
 ```bash
 # Verify app settings
 az webapp config appsettings list \
