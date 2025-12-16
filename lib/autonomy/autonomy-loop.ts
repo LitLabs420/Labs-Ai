@@ -75,7 +75,7 @@ export class AutonomyLoop {
         
         // If approved_required, would need human approval here
         if (decision.autonomyLevel === 'approval_required') {
-          captureMessage('Operation requires human approval', 'warn');
+          captureMessage('Operation requires human approval', 'warning');
           throw new Error('Operation requires human approval');
         }
       }
@@ -110,7 +110,7 @@ export class AutonomyLoop {
           if (attempt < this.config.maxRetries) {
             captureMessage(
               `Autonomy execution attempt ${attempt} failed, retrying...`,
-              'warn'
+              'warning'
             );
             await this.sleep(this.config.retryDelay);
           }
@@ -174,7 +174,7 @@ export class AutonomyLoop {
     
     captureMessage(
       `Executing with agent ${decision.selectedAgent.agentId} at ${decision.autonomyLevel} autonomy`,
-      'debug'
+      'info'
     );
 
     await this.sleep(100); // Simulate work
@@ -214,7 +214,7 @@ export class AutonomyLoop {
     if (enforcementLevel === 'strict' && warningViolations.length > 0) {
       captureMessage(
         `Policy warnings: ${warningViolations.map(p => p.message).join('; ')}`,
-        'warn'
+        'warning'
       );
     }
 

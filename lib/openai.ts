@@ -1,17 +1,25 @@
 /**
  * 🤖 OpenAI Integration (ChatGPT, GPT-4, GPT-4 Turbo)
  * Advanced AI generation for premium features
+ * 
+ * NOTE: This module is DISABLED by default due to package conflicts.
+ * To enable: npm install openai@^4.77.0 --legacy-peer-deps
+ * Then uncomment the imports and implementation below.
  */
 
-import OpenAI from 'openai';
+// import OpenAI from 'openai';
 import { getConfig } from './config';
 
-let openaiClient: OpenAI | null = null;
+// let openaiClient: OpenAI | null = null;
+let openaiClient: any = null;
 
 /**
  * Initialize OpenAI client
  */
-export function getOpenAIClient(): OpenAI {
+export function getOpenAIClient(): any {
+  throw new Error('OpenAI integration is disabled. Install openai package to enable.');
+  
+  /* UNCOMMENT TO ENABLE:
   if (!openaiClient) {
     const config = getConfig();
     if (!config.openai.apiKey) {
@@ -25,6 +33,7 @@ export function getOpenAIClient(): OpenAI {
   }
   
   return openaiClient;
+  */
 }
 
 /**
@@ -135,7 +144,7 @@ export async function generateVariationsWithOpenAI(
     });
 
     const text = response.choices[0]?.message?.content || '';
-    return text.split('---').map(v => v.trim()).filter(v => v);
+    return text.split('---').map((v: string) => v.trim()).filter((v: string) => v);
   } catch (error) {
     console.error('OpenAI variations generation failed:', error);
     throw error;
@@ -280,7 +289,7 @@ export async function generateImagePromptWithOpenAI(
     });
 
     const text = response.choices[0]?.message?.content || '';
-    const prompts = text.split('\n').filter(p => p.trim());
+    const prompts = text.split('\n').filter((p: string) => p.trim());
     
     return {
       prompt: prompts[0] || description,

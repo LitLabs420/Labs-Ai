@@ -5,11 +5,11 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getUserFromRequest } from '@/lib/auth-helper';
-import { submitTask } from '@/lib/task-manager';
-import { canPerformActionServer, incrementUsageServer, getUserDocument } from '@/lib/firebase-server';
+import { submitTask, type TaskType } from '@/lib/task-manager';
+import { canPerformActionServer, incrementUsageServer, getUserTierServer } from '@/lib/firebase-server';
 import { Guardian } from '@/lib/guardian-bot';
 import { captureError } from '@/lib/sentry';
-import type { TaskType, UserTier } from '@/types';
+import type { UserTier } from '@/lib/usage-tracker';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -63,10 +63,10 @@ export async function POST(request: NextRequest) {
     }
 
     // 3. Get user tier and check limits
-    const userDoc = await getUserDocument(user.uid);
-    const tier = (userDoc?.tier || 'free') as UserTier;
+    const tier = (await getUserTierServer(user.uid)) as UserTier;
+    const taskType = type as string;
 
-    const check = await canPerformActionServer(user.uid, type);
+    const check = await canPerformActionServer(user.uid, taskType);
     if (!check.allowed) {
       return NextResponse.json(
         { error: check.reason },
@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
     // 4. Security analysis
     const ip = request.headers.get('x-forwarded-for') || 'unknown';
     const guardian = Guardian.getInstance();
-    const securityCheck = await guardian.analyzeUserBehavior(user.uid, type, {
+    const securityCheck = await guardian.analyzeUserBehavior(user.uid, taskType, {
       ip,
       payload: JSON.stringify(payload).substring(0, 100),
     });
@@ -94,12 +94,13 @@ export async function POST(request: NextRequest) {
     }
 
     // 5. Submit task
+    const taskPriority = (priority as 'low' | 'medium' | 'high' | undefined) || 'medium';
     const task = await submitTask({
       type: type as TaskType,
       userId: user.uid,
       tier: tier,
-      payload,
-      priority: priority || 'medium',
+      payload: payload as Record<string, any>,
+      priority: taskPriority,
       metadata: {
         source: 'api',
         tags: ['user-submitted'],
@@ -110,7 +111,7 @@ export async function POST(request: NextRequest) {
     // Tasks will be processed locally via task-manager
 
     // 7. Increment usage
-    await incrementUsageServer(user.uid, type);
+    await incrementUsageServer(user.uid, taskType);
 
     return NextResponse.json(
       {

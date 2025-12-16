@@ -98,7 +98,7 @@ export async function getOrCreateCustomer(
     return customer.id;
   } catch (error) {
     console.error('Error managing customer:', error);
-    captureException(error, { context: 'stripe_customer_error' });
+    captureError(error, { context: 'stripe_customer_error' });
     throw error;
   }
 }
@@ -159,7 +159,7 @@ export async function createCheckoutSession(
     return session;
   } catch (error) {
     console.error('Checkout session creation error:', error);
-    captureException(error, { context: 'stripe_checkout_error' });
+    captureError(error, { context: 'stripe_checkout_error' });
     throw error;
   }
 }
@@ -197,7 +197,7 @@ export async function updateSubscription(
 
     const updateData: Stripe.SubscriptionUpdateParams = {
       metadata: {
-        tier: options.tier,
+        tier: options.tier || '',
       },
     };
 
@@ -223,7 +223,7 @@ export async function updateSubscription(
     return updated;
   } catch (error) {
     console.error('Subscription update error:', error);
-    captureException(error, { context: 'stripe_update_error' });
+    captureError(error, { context: 'stripe_update_error' });
     throw error;
   }
 }
@@ -249,7 +249,7 @@ export async function cancelSubscription(
     }
   } catch (error) {
     console.error('Subscription cancellation error:', error);
-    captureException(error, { context: 'stripe_cancel_error' });
+    captureError(error, { context: 'stripe_cancel_error' });
     throw error;
   }
 }
@@ -273,7 +273,7 @@ export async function getBillingPortalSession(
     return session;
   } catch (error) {
     console.error('Billing portal session error:', error);
-    captureException(error, { context: 'stripe_portal_error' });
+    captureError(error, { context: 'stripe_portal_error' });
     throw error;
   }
 }
@@ -313,7 +313,7 @@ export async function createCoupon(
     return coupon;
   } catch (error) {
     console.error('Coupon creation error:', error);
-    captureException(error, { context: 'stripe_coupon_error' });
+    captureError(error, { context: 'stripe_coupon_error' });
     throw error;
   }
 }
@@ -370,7 +370,7 @@ export async function getCustomerBillingInfo(
       status: 'active',
     });
 
-    const activeSubscription = subscriptions.data[0];
+    const activeSubscription = subscriptions.data[0] as Stripe.Subscription | undefined;
 
     const billingInfo: BillingInfo = {
       customerId,
@@ -381,18 +381,18 @@ export async function getCustomerBillingInfo(
     if (activeSubscription) {
       billingInfo.subscriptionId = activeSubscription.id;
       billingInfo.currentPeriodStart = new Date(
-        activeSubscription.current_period_start * 1000
+        ((activeSubscription as any).current_period_start as number) * 1000
       );
       billingInfo.currentPeriodEnd = new Date(
-        activeSubscription.current_period_end * 1000
+        ((activeSubscription as any).current_period_end as number) * 1000
       );
-      billingInfo.cancelAtPeriodEnd = activeSubscription.cancel_at_period_end;
+      billingInfo.cancelAtPeriodEnd = (activeSubscription as any).cancel_at_period_end;
 
-      if (activeSubscription.cancel_at) {
-        billingInfo.nextBillingDate = new Date(activeSubscription.cancel_at * 1000);
-      } else if (activeSubscription.current_period_end) {
+      if ((activeSubscription as any).cancel_at) {
+        billingInfo.nextBillingDate = new Date(((activeSubscription as any).cancel_at as number) * 1000);
+      } else if ((activeSubscription as any).current_period_end) {
         billingInfo.nextBillingDate = new Date(
-          activeSubscription.current_period_end * 1000
+          ((activeSubscription as any).current_period_end as number) * 1000
         );
       }
     }

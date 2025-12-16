@@ -50,7 +50,9 @@ class CodeGenerationCache {
     if (this.cache.size >= this.maxSize) {
       // Remove oldest entry (FIFO)
       const firstKey = this.cache.keys().next().value;
-      this.cache.delete(firstKey);
+      if (firstKey !== undefined) {
+        this.cache.delete(firstKey);
+      }
     }
 
     this.cache.set(key, res);
@@ -121,7 +123,7 @@ export class DeepSeekCodeAgent {
       // Step 1: Check cache first
       const cached = this.cache.get(request);
       if (cached) {
-        captureMessage(`Cache hit for ${request.language} code generation`, 'debug');
+        captureMessage(`Cache hit for ${request.language} code generation`, 'info');
         return { ...cached, cacheHit: true };
       }
 
@@ -203,7 +205,7 @@ export class DeepSeekCodeAgent {
     // TODO: Integrate actual DeepSeek API call
     // For now, return mock response
     
-    captureMessage(`DeepSeek API called for ${language}`, 'debug');
+    captureMessage(`DeepSeek API called for ${language}`, 'info');
 
     return {
       code: `// Generated ${language} code\n// TODO: Implement actual DeepSeek API integration`,

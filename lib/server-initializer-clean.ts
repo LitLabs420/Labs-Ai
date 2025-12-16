@@ -1,11 +1,13 @@
 /**
  * 🚀 Server Initialization System
  * Handles all startup tasks, API validation, and service initialization
+ * 
+ * NOTE: OpenAI integration is disabled by default.
  */
 
 import { getConfig } from './config';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import OpenAI from 'openai';
+// import OpenAI from 'openai'; // Disabled - package not installed
 import { captureMessage, captureException } from './sentry';
 
 /**
@@ -39,7 +41,7 @@ class ServerInitializer {
   };
 
   private googleAI: GoogleGenerativeAI | null = null;
-  private openAIClient: OpenAI | null = null;
+  private openAIClient: any | null = null; // OpenAI disabled
 
   /**
    * Singleton pattern
@@ -110,7 +112,7 @@ class ServerInitializer {
         initialized: false,
         error: error instanceof Error ? error.message : 'Unknown error',
       };
-      captureException(error, 'firebase_init_error');
+      captureException(error, { context: 'firebase_init_error' });
       console.error('❌ Firebase initialization failed:', error);
     }
   }
@@ -128,28 +130,37 @@ class ServerInitializer {
         initialized: false,
         error: error instanceof Error ? error.message : 'Unknown error',
       };
-      captureException(error, 'google_ai_init_error');
+      captureException(error, { context: 'google_ai_init_error' });
       console.error('❌ Google AI initialization failed:', error);
     }
   }
 
   /**
-   * Initialize OpenAI
+   * Initialize OpenAI (DISABLED - package not installed)
    */
   private async initializeOpenAI(config: any): Promise<void> {
     try {
+      // OpenAI is disabled by default
+      this.initializationStatus.openAI = { 
+        initialized: false,
+        error: 'OpenAI package not installed. Feature disabled.'
+      };
+      console.log('ℹ️  OpenAI initialization skipped (package not installed)');
+      
+      /* UNCOMMENT TO ENABLE:
       this.openAIClient = new OpenAI({
         apiKey: config.openai.apiKey,
         organization: config.openai.orgId,
       });
       this.initializationStatus.openAI = { initialized: true };
       console.log('✅ OpenAI initialized successfully');
+      */
     } catch (error) {
       this.initializationStatus.openAI = {
         initialized: false,
         error: error instanceof Error ? error.message : 'Unknown error',
       };
-      captureException(error, 'openai_init_error');
+      captureException(error, { context: 'openai_init_error' });
       console.error('❌ OpenAI initialization failed:', error);
     }
   }
@@ -168,7 +179,7 @@ class ServerInitializer {
         initialized: false,
         error: error instanceof Error ? error.message : 'Unknown error',
       };
-      captureException(error, 'stripe_init_error');
+      captureException(error, { context: 'stripe_init_error' });
       console.error('❌ Stripe initialization failed:', error);
     }
   }
@@ -213,7 +224,7 @@ class ServerInitializer {
     return this.googleAI;
   }
 
-  getOpenAI(): OpenAI | null {
+  getOpenAI(): any | null {
     return this.openAIClient;
   }
 
