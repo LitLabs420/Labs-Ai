@@ -533,11 +533,11 @@ az monitor metrics list --resource <resource-id>
 
 ## Support Resources
 
-- **Azure Documentation**: https://learn.microsoft.com/azure/
-- **Azure CLI Reference**: https://learn.microsoft.com/cli/azure/
-- **Azure Pricing Calculator**: https://azure.microsoft.com/pricing/calculator/
-- **Azure Status**: https://status.azure.com/
-- **LitLabs GitHub**: https://github.com/LitLabs420/Labs-Ai
+- **Azure Documentation**: [https://learn.microsoft.com/azure/](https://learn.microsoft.com/azure/)
+- **Azure CLI Reference**: [https://learn.microsoft.com/cli/azure/](https://learn.microsoft.com/cli/azure/)
+- **Azure Pricing Calculator**: [https://azure.microsoft.com/pricing/calculator/](https://azure.microsoft.com/pricing/calculator/)
+- **Azure Status**: [https://status.azure.com/](https://status.azure.com/)
+- **LitLabs GitHub**: [https://github.com/LitLabs420/Labs-Ai](https://github.com/LitLabs420/Labs-Ai)
 
 ---
 

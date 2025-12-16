@@ -1,6 +1,5 @@
-
-
-
+{
+    "github.copilot.chat.mcp.enabled": true,
     "python.testing.unittestArgs": [
         "-v",
         "-s",
@@ -19,6 +18,7 @@
         }
     },
     "css.lint.compatibleVendorPrefixes": "warning",
-    "css.lint.vendorPrefix": "warning"
+    "css.lint.vendorPrefix": "warning",
+    "CodeGPT.apiKey": "DeepSeek"
 }
 
