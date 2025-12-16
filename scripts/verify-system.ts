@@ -13,8 +13,8 @@
  */
 
 import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+// import path from 'path';          // Reserved for future path operations
+// import { fileURLToPath } from 'url'; // Reserved for ESM path conversion
 
 // const __filename removed - unused
 // const __dirname = path.dirname(__filename);
@@ -178,7 +178,7 @@ async function verify() {
         log('fail', `Missing dependency: ${dep}`);
       }
     });
-  } catch (error) {
+  } catch {
     log('fail', 'Could not read package.json');
   }
 
@@ -237,7 +237,7 @@ async function verify() {
         log('warn', `Build script missing: ${script}`);
       }
     });
-  } catch (error) {
+  } catch {
     log('fail', 'Could not read build scripts');
   }
 

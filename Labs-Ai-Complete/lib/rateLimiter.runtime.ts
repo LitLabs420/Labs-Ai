@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 // @ts-nocheck
 // Runtime-only optional imports for Redis-backed rate limiter.
-// This file intentionally disables TypeScript checks and some ESLint rules
+// This file intentionally disables TypeScript checks
 // because it performs runtime-only dynamic imports of optional packages.
 
 let initialized: boolean = false as any;

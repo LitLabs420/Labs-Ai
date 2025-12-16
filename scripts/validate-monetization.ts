@@ -5,9 +5,23 @@
  * systems. Runs through key calculations to ensure correct math and logic.
  */
 
-import { PREMIUM_TIERS, FEATURE_MATRIX, UPSELL_PACKAGES, getAnnualPrice, getTierFeatures } from '../lib/premium-pricing';
-import { CRYPTO_PAYMENT_CONFIG, convertUsdToCrypto, calculateTradingFee } from '../lib/crypto-marketplace';
-import { calculateChurnRiskScore, calculateEngagementScore, CHURN_PREVENTION_OFFERS } from '../lib/revenue-maximization';
+import { 
+  PREMIUM_TIERS, 
+  FEATURE_MATRIX, 
+  UPSELL_PACKAGES, 
+  // getAnnualPrice,  // Reserved for future pricing calculations
+  getTierFeatures 
+} from '../lib/premium-pricing';
+import { 
+  CRYPTO_PAYMENT_CONFIG, 
+  convertUsdToCrypto, 
+  // calculateTradingFee  // Reserved for future trading features
+} from '../lib/crypto-marketplace';
+import { 
+  // calculateChurnRiskScore,    // Reserved for future churn analysis
+  // calculateEngagementScore,   // Reserved for future engagement tracking
+  CHURN_PREVENTION_OFFERS 
+} from '../lib/revenue-maximization';
 
 console.log('🔍 MONETIZATION SYSTEM VALIDATION\n');
 
@@ -19,7 +33,7 @@ const tiers = Object.keys(PREMIUM_TIERS) as Array<keyof typeof PREMIUM_TIERS>;
 console.log(`✓ Tiers found: ${tiers.join(', ')}`);
 console.log(`✓ Total tiers: ${tiers.length}`);
 
-let totalMonthlyRevenue = 0;
+// let totalMonthlyRevenue = 0; // Reserved for future revenue calculations
 tiers.forEach(tier => {
   const tierData = PREMIUM_TIERS[tier];
   const savings = (tierData.monthlyPrice * 12) - tierData.annualPrice;
@@ -57,7 +71,7 @@ console.log('\n\n💎 UPSELL PACKAGES VALIDATION');
 console.log('═'.repeat(50));
 
 console.log(`✓ Total upsells: ${Object.keys(UPSELL_PACKAGES).length}`);
-Object.entries(UPSELL_PACKAGES).forEach(([key, upsell]) => {
+Object.entries(UPSELL_PACKAGES).forEach(([_key, upsell]) => {
   console.log(`\n  ${upsell.icon} ${upsell.name}`);
   console.log(`    Price: $${upsell.monthlyPrice}/mo`);
   console.log(`    Compatible tiers: ${upsell.compatibleTiers.join(', ')}`);
@@ -89,7 +103,7 @@ cryptoAssets.forEach(asset => {
   try {
     const amount = convertUsdToCrypto(creatorPrice, asset);
     console.log(`  ${CRYPTO_PAYMENT_CONFIG[asset].icon} ${asset}: ${amount.toFixed(6)} ${asset}`);
-  } catch (e) {
+  } catch {
     console.log(`  ${CRYPTO_PAYMENT_CONFIG[asset].icon} ${asset}: [Price data unavailable]`);
   }
 });
@@ -139,7 +153,7 @@ Object.entries(distribution).forEach(([tier, data]) => {
   projectedMRR += data.monthlyRevenue;
 });
 
-const projectedARR = projectedMRR * 12;
+// const projectedARR = projectedMRR * 12; // Reserved for future ARR calculations
 const upsellMRR = projectedMRR * 0.30; // 30% attachment rate
 const cryptoMRR = projectedMRR * 0.05; // 5% of users pay with crypto
 const marketplaceMRR = projectedMRR * 0.05; // 5% marketplace commission

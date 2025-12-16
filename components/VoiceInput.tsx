@@ -13,7 +13,7 @@ interface VoiceInputProps {
 
 export function VoiceInput({
   onTranscript,
-  placeholder = 'Click mic to speak...',
+  placeholder: _placeholder = 'Click mic to speak...', // Reserved for future UI enhancement
   mode = 'browser',
 }: VoiceInputProps) {
   const [isListening, setIsListening] = useState(false);

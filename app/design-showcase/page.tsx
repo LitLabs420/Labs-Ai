@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/Badge';
 
 export default function DesignShowcase() {
   const [email, setEmail] = React.useState('');
-  const [loading, setLoading] = React.useState(false);
+  // const [loading, setLoading] = React.useState(false); // Reserved for future async operations
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 text-slate-100 py-12">

@@ -38,7 +38,7 @@ import {
   WatchlistItem, 
   Achievement, 
   UserAchievement, 
-  Quest, 
+  // Quest,  // Reserved for future quest features
   UserQuest, 
   Subscription, 
   SystemEvent, 
@@ -123,7 +123,7 @@ class FirebaseHomeRepo extends FirebaseRepository<UserProfile> implements HomeRe
   // but the base create uses addDoc (auto-id). 
   // For users, we usually want to use the Auth UID.
   // So we'll add a specific method for creating/updating users by UID.
-  async createProfile(uid: string, data: Omit<UserProfile, 'id' | 'uid'>): Promise<UserProfile> {
+  async createProfile(_uid: string, _data: Omit<UserProfile, 'id' | 'uid'>): Promise<UserProfile> {
     // Implementation specific to user creation with setDoc would go here
     // For now, we'll assume the base create is used for other things
     // but actually UserProfile usually maps 1:1 with Auth UID.
@@ -473,7 +473,7 @@ class FirebaseEventBus implements EventBus {
     return { id: newDoc.id, ...convertDate(newDoc.data()) } as Job;
   }
 
-  processJobs(type: string, handler: (job: Job) => Promise<void>): void {
+  processJobs(_type: string, _handler: (job: Job) => Promise<void>): void {
     // This is typically a server-side operation. 
     // On client, we might poll or use snapshot, but usually clients don't process jobs.
     console.warn('Job processing should ideally happen on the server.');
