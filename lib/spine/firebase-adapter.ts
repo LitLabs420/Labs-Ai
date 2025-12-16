@@ -76,7 +76,7 @@ const convertDate = (data: any): any => {
 };
 
 // Base Repository Implementation
-class FirebaseRepository<T extends { id: string }> implements Repository<T> {
+class FirebaseRepository<T extends { id?: string; uid?: string }> implements Repository<T> {
   constructor(protected collectionName: string) {}
 
   async get(id: string): Promise<T | null> {
@@ -89,7 +89,7 @@ class FirebaseRepository<T extends { id: string }> implements Repository<T> {
   }
 
   async list(filters?: Record<string, any>): Promise<T[]> {
-    let q = collection(db, this.collectionName) as any;
+    let q = collection(ensureDb(), this.collectionName) as any;
     
     if (filters) {
       for (const [key, value] of Object.entries(filters)) {
@@ -102,7 +102,7 @@ class FirebaseRepository<T extends { id: string }> implements Repository<T> {
   }
 
   async create(data: Omit<T, 'id'>): Promise<T> {
-    const docRef = await addDoc(collection(db, this.collectionName), {
+    const docRef = await addDoc(collection(ensureDb(), this.collectionName), {
       ...data,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()
@@ -114,7 +114,7 @@ class FirebaseRepository<T extends { id: string }> implements Repository<T> {
   }
 
   async update(id: string, data: Partial<T>): Promise<T> {
-    const docRef = doc(db, this.collectionName, id);
+    const docRef = doc(ensureDb(), this.collectionName, id);
     await updateDoc(docRef, {
       ...data,
       updatedAt: serverTimestamp()
@@ -125,7 +125,7 @@ class FirebaseRepository<T extends { id: string }> implements Repository<T> {
   }
 
   async delete(id: string): Promise<void> {
-    await deleteDoc(doc(db, this.collectionName, id));
+    await deleteDoc(doc(ensureDb(), this.collectionName, id));
   }
 }
 
@@ -148,7 +148,7 @@ class FirebaseHomeRepo extends FirebaseRepository<UserProfile> implements HomeRe
   }
 
   async getByEmail(email: string): Promise<UserProfile | null> {
-    const q = query(collection(db, this.collectionName), where('email', '==', email));
+    const q = query(collection(ensureDb(), this.collectionName), where('email', '==', email));
     const querySnapshot = await getDocs(q);
     if (!querySnapshot.empty) {
       const doc = querySnapshot.docs[0];
@@ -158,7 +158,7 @@ class FirebaseHomeRepo extends FirebaseRepository<UserProfile> implements HomeRe
   }
 
   async updateStats(userId: string, stats: Partial<UserProfile['stats']>): Promise<void> {
-    const docRef = doc(db, this.collectionName, userId);
+    const docRef = doc(ensureDb(), this.collectionName, userId);
     // We need to use dot notation for nested updates to avoid overwriting the whole map
     const updates: Record<string, any> = {};
     for (const [key, value] of Object.entries(stats)) {
@@ -179,10 +179,10 @@ class FirebaseWidgetRepo extends FirebaseRepository<Widget> implements WidgetRep
   }
 
   async updateLayout(userId: string, layout: { id: string; x: number; y: number; w: number; h: number }[]): Promise<void> {
-    const batch = writeBatch(db);
+    const batch = writeBatch(ensureDb());
     
     for (const item of layout) {
-      const docRef = doc(db, this.collectionName, item.id);
+      const docRef = doc(ensureDb(), this.collectionName, item.id);
       batch.update(docRef, { 
         'layout.x': item.x, 
         'layout.y': item.y, 
@@ -203,7 +203,7 @@ class FirebaseActionRepo extends FirebaseRepository<Action> implements ActionRep
 
   async getEnabledByUser(userId: string): Promise<Action[]> {
     const q = query(
-      collection(db, this.collectionName), 
+      collection(ensureDb(), this.collectionName), 
       where('userId', '==', userId),
       where('enabled', '==', true)
     );
@@ -226,7 +226,7 @@ class FirebaseVaultRepo extends FirebaseRepository<VaultItem> implements VaultRe
 
   async getItemsInFolder(userId: string, folderId: string | null): Promise<VaultItem[]> {
     const q = query(
-      collection(db, this.collectionName),
+      collection(ensureDb(), this.collectionName),
       where('userId', '==', userId),
       where('parentId', '==', folderId)
     );
@@ -250,7 +250,7 @@ class FirebaseVaultRepo extends FirebaseRepository<VaultItem> implements VaultRe
   async getStorageUrl(path: string): Promise<string> {
     // This would interact with Firebase Storage
     if (!storage) throw new Error("Storage not initialized");
-    const storageRef = ref(storage, path);
+    const storageRef = ref(ensureStorage(), path);
     return await getDownloadURL(storageRef);
   }
 
@@ -272,7 +272,7 @@ class FirebaseVaultRepo extends FirebaseRepository<VaultItem> implements VaultRe
     
     // 1. Upload to Storage
     const storagePath = `vault/${userId}/${Date.now()}_${file.name}`;
-    const storageRef = ref(storage, storagePath);
+    const storageRef = ref(ensureStorage(), storagePath);
     await uploadBytes(storageRef, file);
     const url = await getDownloadURL(storageRef);
 
@@ -298,7 +298,7 @@ class FirebaseVaultRepo extends FirebaseRepository<VaultItem> implements VaultRe
 
     if (item.type === 'file' && item.metadata?.storagePath) {
       if (!storage) throw new Error("Storage not initialized");
-      const storageRef = ref(storage, item.metadata.storagePath);
+      const storageRef = ref(ensureStorage(), item.metadata.storagePath);
       try {
         await deleteObject(storageRef);
       } catch (e) {
@@ -320,13 +320,13 @@ class FirebaseStreamingRepo extends FirebaseRepository<MediaItem> implements Str
   }
 
   async getWatchlist(userId: string): Promise<WatchlistItem[]> {
-    const q = query(collection(db, 'watchlist'), where('userId', '==', userId));
+    const q = query(collection(ensureDb(), 'watchlist'), where('userId', '==', userId));
     const querySnapshot = await getDocs(q);
     return querySnapshot.docs.map(doc => ({ id: doc.id, ...convertDate(doc.data()) } as WatchlistItem));
   }
 
   async addToWatchlist(userId: string, mediaId: string): Promise<WatchlistItem> {
-    const docRef = await addDoc(collection(db, 'watchlist'), {
+    const docRef = await addDoc(collection(ensureDb(), 'watchlist'), {
       userId,
       mediaId,
       progress: 0,
@@ -340,7 +340,7 @@ class FirebaseStreamingRepo extends FirebaseRepository<MediaItem> implements Str
 
   async updateProgress(userId: string, mediaId: string, progress: number, completed: boolean): Promise<void> {
     const q = query(
-      collection(db, 'watchlist'), 
+      collection(ensureDb(), 'watchlist'), 
       where('userId', '==', userId),
       where('mediaId', '==', mediaId)
     );
@@ -357,7 +357,7 @@ class FirebaseStreamingRepo extends FirebaseRepository<MediaItem> implements Str
   }
 
   async getTrending(): Promise<MediaItem[]> {
-    const q = query(collection(db, this.collectionName), orderBy('views', 'desc'), limit(10));
+    const q = query(collection(ensureDb(), this.collectionName), orderBy('views', 'desc'), limit(10));
     const querySnapshot = await getDocs(q);
     return querySnapshot.docs.map(doc => ({ id: doc.id, ...convertDate(doc.data()) } as MediaItem));
   }
@@ -366,12 +366,12 @@ class FirebaseStreamingRepo extends FirebaseRepository<MediaItem> implements Str
 // 6. GamificationRepo Implementation
 class FirebaseGamificationRepo implements GamificationRepo {
   async getAchievements(): Promise<Achievement[]> {
-    const querySnapshot = await getDocs(collection(db, 'achievements'));
+    const querySnapshot = await getDocs(collection(ensureDb(), 'achievements'));
     return querySnapshot.docs.map(doc => ({ id: doc.id, ...convertDate(doc.data()) } as Achievement));
   }
 
   async createAchievement(achievement: Omit<Achievement, 'id'>): Promise<Achievement> {
-    const docRef = await addDoc(collection(db, 'achievements'), {
+    const docRef = await addDoc(collection(ensureDb(), 'achievements'), {
       ...achievement,
       createdAt: serverTimestamp()
     });
@@ -380,13 +380,13 @@ class FirebaseGamificationRepo implements GamificationRepo {
   }
 
   async getUserAchievements(userId: string): Promise<UserAchievement[]> {
-    const q = query(collection(db, 'user_achievements'), where('userId', '==', userId));
+    const q = query(collection(ensureDb(), 'user_achievements'), where('userId', '==', userId));
     const querySnapshot = await getDocs(q);
     return querySnapshot.docs.map(doc => ({ id: doc.id, ...convertDate(doc.data()) } as UserAchievement));
   }
 
   async unlockAchievement(userId: string, achievementId: string): Promise<UserAchievement> {
-    const docRef = await addDoc(collection(db, 'user_achievements'), {
+    const docRef = await addDoc(collection(ensureDb(), 'user_achievements'), {
       userId,
       achievementId,
       unlockedAt: serverTimestamp(),
@@ -398,7 +398,7 @@ class FirebaseGamificationRepo implements GamificationRepo {
 
   async getActiveQuests(userId: string): Promise<UserQuest[]> {
     const q = query(
-      collection(db, 'user_quests'), 
+      collection(ensureDb(), 'user_quests'), 
       where('userId', '==', userId),
       where('status', '==', 'active')
     );
@@ -407,7 +407,7 @@ class FirebaseGamificationRepo implements GamificationRepo {
   }
 
   async updateQuestProgress(userQuestId: string, progress: number): Promise<UserQuest> {
-    const docRef = doc(db, 'user_quests', userQuestId);
+    const docRef = doc(ensureDb(), 'user_quests', userQuestId);
     await updateDoc(docRef, {
       progress,
       updatedAt: serverTimestamp()
@@ -417,7 +417,7 @@ class FirebaseGamificationRepo implements GamificationRepo {
   }
 
   async claimQuestReward(userQuestId: string): Promise<void> {
-    const docRef = doc(db, 'user_quests', userQuestId);
+    const docRef = doc(ensureDb(), 'user_quests', userQuestId);
     await updateDoc(docRef, {
       status: 'completed',
       completedAt: serverTimestamp()
@@ -433,7 +433,7 @@ class FirebaseAccountsRepo extends FirebaseRepository<Subscription> implements A
   }
 
   async getByUser(userId: string): Promise<Subscription | null> {
-    const q = query(collection(db, this.collectionName), where('userId', '==', userId));
+    const q = query(collection(ensureDb(), this.collectionName), where('userId', '==', userId));
     const querySnapshot = await getDocs(q);
     if (!querySnapshot.empty) {
       return { id: querySnapshot.docs[0].id, ...convertDate(querySnapshot.docs[0].data()) } as Subscription;
@@ -451,7 +451,7 @@ class FirebaseAccountsRepo extends FirebaseRepository<Subscription> implements A
 // 8. EventBus Implementation
 class FirebaseEventBus implements EventBus {
   async publish(event: Omit<SystemEvent, 'id' | 'timestamp'>): Promise<void> {
-    await addDoc(collection(db, 'events'), {
+    await addDoc(collection(ensureDb(), 'events'), {
       ...event,
       timestamp: serverTimestamp()
     });
@@ -460,7 +460,7 @@ class FirebaseEventBus implements EventBus {
   subscribe(eventType: string, handler: (event: SystemEvent) => Promise<void>): void {
     // Client-side subscription using onSnapshot
     const q = query(
-      collection(db, 'events'), 
+      collection(ensureDb(), 'events'), 
       where('type', '==', eventType),
       orderBy('timestamp', 'desc'),
       limit(1)
@@ -479,7 +479,7 @@ class FirebaseEventBus implements EventBus {
   }
 
   async queueJob(job: Omit<Job, 'id' | 'status' | 'attempts' | 'createdAt'>): Promise<Job> {
-    const docRef = await addDoc(collection(db, 'jobs'), {
+    const docRef = await addDoc(collection(ensureDb(), 'jobs'), {
       ...job,
       status: 'pending',
       attempts: 0,
