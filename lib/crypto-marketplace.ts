@@ -9,7 +9,7 @@
  * - Wallet management
  */
 
-import { Wallet } from 'ethers';
+// import { Wallet } from 'ethers'; // Reserved for future wallet integration
 
 export type CryptoAsset = 'BTC' | 'ETH' | 'USDC' | 'SOL' | 'XRP' | 'DOGE' | 'MATIC';
 export type ChainNetwork = 'ethereum' | 'solana' | 'polygon' | 'arbitrum' | 'base' | 'optimism';

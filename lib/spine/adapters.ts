@@ -7,7 +7,7 @@ import {
   WatchlistItem, 
   Achievement, 
   UserAchievement, 
-  Quest, 
+  // Quest,  // Reserved for future quest features
   UserQuest, 
   Subscription, 
   SystemEvent, 

@@ -167,7 +167,7 @@ export class AutonomyLoop {
    */
   private async executeWithAgent(
     decision: CEODecision,
-    context: ExecutionContext
+    _context: ExecutionContext
   ): Promise<unknown> {
     // TODO: Route to specific agent based on decision.selectedAgent.agentId
     // For now, return mock execution

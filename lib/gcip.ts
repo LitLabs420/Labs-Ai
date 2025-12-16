@@ -17,7 +17,7 @@ import {
   multiFactor,
   PhoneMultiFactorGenerator,
   PhoneAuthProvider,
-  PhoneAuthCredential
+  // PhoneAuthCredential // Reserved for future phone auth implementation
 } from 'firebase/auth';
 import { auth } from './firebase';
 
@@ -121,7 +121,7 @@ export async function completeMFAVerification(verificationId: string, code: stri
     const multiFactorAssertion = PhoneMultiFactorGenerator.assertion(credential as any);
     
     await multiFactor(user).enroll(multiFactorAssertion, 'My Phone');
-  } catch (error) {
+  } catch {
     // In production, phone MFA verification should be handled server-side
     throw new Error('MFA enrollment requires server-side verification');
   }

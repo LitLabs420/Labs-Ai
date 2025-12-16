@@ -9,7 +9,12 @@
  * - Optimize checkout conversion with social proof
  */
 
-import { PREMIUM_TIERS, UPSELL_PACKAGES, BUNDLE_DEALS, TierName } from './premium-pricing';
+import { 
+  PREMIUM_TIERS, 
+  // UPSELL_PACKAGES,  // Reserved for future upsell features
+  // BUNDLE_DEALS,     // Reserved for future bundle features
+  TierName 
+} from './premium-pricing';
 
 export interface UserMonetizationProfile {
   userId: string;

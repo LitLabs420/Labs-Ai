@@ -6,7 +6,7 @@
 import Stripe from 'stripe';
 import { getAdminDb } from './firebase-admin';
 import { getConfig } from './config';
-import { captureError, captureMessage } from './sentry';
+import { /* captureError, */ captureMessage } from './sentry'; // captureError reserved for future error handling
 
 let stripeInstance: Stripe | null = null;
 
