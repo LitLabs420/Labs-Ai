@@ -7,9 +7,14 @@
  * - NFT integration
  * - Smart contract wrappers
  * - Wallet management
+ * 
+ * NOTE: This module requires 'ethers' package. To enable:
+ * npm install ethers@^6.0.0
  */
 
-import { Wallet } from 'ethers';
+// import { Wallet } from 'ethers';
+// Commented out to avoid build errors when ethers is not installed
+// Uncomment when ethers package is available
 
 export type CryptoAsset = 'BTC' | 'ETH' | 'USDC' | 'SOL' | 'XRP' | 'DOGE' | 'MATIC';
 export type ChainNetwork = 'ethereum' | 'solana' | 'polygon' | 'arbitrum' | 'base' | 'optimism';

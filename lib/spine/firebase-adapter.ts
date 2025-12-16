@@ -45,6 +45,22 @@ import {
   Job 
 } from '@/types/spine';
 
+// Helper to ensure db is initialized
+const ensureDb = () => {
+  if (!db) {
+    throw new Error('Firestore is not initialized');
+  }
+  return db;
+};
+
+// Helper to ensure storage is initialized
+const ensureStorage = () => {
+  if (!storage) {
+    throw new Error('Firebase Storage is not initialized');
+  }
+  return storage;
+};
+
 // Helper to convert Firestore data to typed objects
 const convertDate = (data: any): any => {
   if (!data) return data;
@@ -64,7 +80,7 @@ class FirebaseRepository<T extends { id: string }> implements Repository<T> {
   constructor(protected collectionName: string) {}
 
   async get(id: string): Promise<T | null> {
-    const docRef = doc(db, this.collectionName, id);
+    const docRef = doc(ensureDb(), this.collectionName, id);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       return { id: docSnap.id, ...convertDate(docSnap.data()) } as T;

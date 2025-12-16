@@ -37,10 +37,5 @@ export function captureMessage(message: string, level: "info" | "warning" | "err
 
 export { Sentry };
 
-
-// Alias for compatibility
-export const captureError = captureException;
-
-
 // Alias for compatibility
 export const captureError = captureException;

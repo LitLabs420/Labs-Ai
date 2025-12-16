@@ -4,6 +4,7 @@
 import { initializeApp, getApps, FirebaseApp } from "firebase/app";
 import { getAuth, Auth } from "firebase/auth";
 import { getFirestore, Firestore } from "firebase/firestore";
+import { getStorage, FirebaseStorage } from "firebase/storage";
 
 declare global {
   interface Window {
@@ -29,6 +30,7 @@ function missingConfigFields(cfg: typeof firebaseConfig) {
 let app: FirebaseApp | null = null;
 let authInstance: Auth | null = null;
 let dbInstance: Firestore | null = null;
+let storageInstance: FirebaseStorage | null = null;
 
 // Only initialize if we're actually in a browser context (not build time)
 // and have valid configuration
@@ -40,6 +42,7 @@ if (typeof window !== "undefined") {
       app = apps.length > 0 ? (apps[0] as FirebaseApp) : initializeApp(firebaseConfig);
       authInstance = getAuth(app);
       dbInstance = getFirestore(app);
+      storageInstance = getStorage(app);
 
       // Only enable App Check debug token when explicitly allowed and not in production.
       // Set `NEXT_PUBLIC_FIREBASE_APPCHECK_DEBUG_TOKEN=true` in dev env to enable.
@@ -62,5 +65,6 @@ if (typeof window !== "undefined") {
 // Export instances (will be null during SSR/build, ready on client)
 export const auth = authInstance as Auth | null;
 export const db = dbInstance as Firestore | null;
+export const storage = storageInstance as FirebaseStorage | null;
 export { app };
 
