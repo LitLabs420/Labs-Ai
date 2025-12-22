@@ -1,0 +1,60 @@
+# Android app (not needed for web deployment)
+android-app/
+
+# Development files
+*.log
+.env.local
+.env*.local
+.env.*.example
+
+# Build artifacts
+.next/cache/
+node_modules/
+
+# Testing
+coverage/
+.nyc_output/
+
+# Git
+.git/
+.gitignore
+.github/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Large assets
+*.apk
+*.aab
+
+# Documentation
+docs/
+*.md
+MASTER_*.md
+BUILD_*.md
+DEPLOYMENT_*.md
+SECURITY_*.md
+README.md
+
+# Backups
+.vercel.backup-*/
+.env*.backup
+*.backup
+
+# Firebase local
+.firebase/
+firebase.json
+firestore.rules
+firestore.indexes.json
+
+# Misc
+.turbo/
+.codacy/
+scripts/

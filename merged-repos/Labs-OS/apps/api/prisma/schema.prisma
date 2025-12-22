@@ -1,0 +1,364 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  passwordHash  String?
+  role          String    @default("USER")
+  status        String    @default("ACTIVE")
+  emailVerified Boolean   @default(false)
+  lastLogin     DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  sessions         Session[]
+  refreshTokens    RefreshToken[]
+  deviceSessions   DeviceSession[]
+  auditLogs        AuditLog[]
+  tokenRevocations TokenRevocation[]
+  listings         Listing[]
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ipAddress String?
+  userAgent String?
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model RefreshToken {
+  id              String         @id @default(uuid())
+  userId          String
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token           String         @unique
+  tokenHash       String         @unique
+  expiresAt       DateTime
+  rotationCount   Int            @default(0)
+  lastRotatedAt   DateTime?
+  revokedAt       DateTime?
+  ipAddress       String?
+  userAgent       String?
+  deviceSessionId String?
+  deviceSession   DeviceSession? @relation(fields: [deviceSessionId], references: [id])
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@index([revokedAt])
+}
+
+model TokenRevocation {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String
+  reason    String
+  revokedBy String
+  revokedAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([tokenHash])
+}
+
+model DeviceSession {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  deviceId       String  @unique
+  deviceName     String?
+  deviceType     String
+  deviceOS       String?
+  browserName    String?
+  browserVersion String?
+
+  fingerprint     String @unique
+  fingerprintHash String @unique
+
+  ipAddress String
+  country   String?
+  city      String?
+  timezone  String?
+
+  lastActivityAt DateTime @default(now())
+  lastIpAddress  String?
+  loginAt        DateTime @default(now())
+  status         String   @default("ACTIVE")
+
+  refreshTokens RefreshToken[]
+  auditLogs     AuditLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+model AuditLog {
+  id              String         @id @default(uuid())
+  userId          String
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deviceSessionId String?
+  deviceSession   DeviceSession? @relation(fields: [deviceSessionId], references: [id], onDelete: SetNull)
+
+  action     String
+  resource   String?
+  resourceId String?
+
+  status       String
+  statusCode   Int?
+  errorMessage String?
+
+  ipAddress String?
+  userAgent String?
+
+  changesBefore String?
+  changesAfter  String?
+
+  severity String  @default("INFO")
+  metadata String?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+}
+
+model Asset {
+  id        String   @id @default(uuid())
+  type      String
+  createdAt DateTime @default(now())
+
+  listings Listing[]
+}
+
+model Listing {
+  id       String @id @default(uuid())
+  assetId  String
+  sellerId String
+  price    Int
+
+  asset  Asset @relation(fields: [assetId], references: [id])
+  seller User  @relation(fields: [sellerId], references: [id])
+}
+
+
+model Agent {
+  id                String   @id @default(uuid())
+  name              String
+  type              String   // MARKET, ANALYTICS, CONTENT, SCHEDULER, ADMIN, CUSTOM
+  description       String?
+  version           String   @default("1.0.0")
+  
+  // Configuration
+  systemPrompt      String   // Core behavior definition
+  model             String   @default("gemini-2.0-flash") // gemini-2.0-flash, gpt-4, etc.
+  temperature       Float    @default(0.7)
+  maxTokens         Int      @default(2000)
+  
+  // Capabilities
+  capabilities      String   // JSON array of capabilities
+  toolsEnabled      String   // JSON array of enabled tools
+  
+  // Status
+  status            String   @default("ACTIVE") // ACTIVE, PAUSED, DISABLED
+  isAutonomous      Boolean  @default(true)
+  requiresApproval  Boolean  @default(false)
+  
+  // Execution config
+  maxRetries        Int      @default(3)
+  retryDelayMs      Int      @default(1000)
+  timeoutMs         Int      @default(30000)
+  concurrencyLimit  Int      @default(5)
+  
+  // Metrics
+  totalExecutions   Int      @default(0)
+  successCount      Int      @default(0)
+  failureCount      Int      @default(0)
+  averageLatencyMs  Float    @default(0)
+  lastExecutedAt    DateTime?
+  
+  // Relations
+  tasks             AgentTask[]
+  executions        AgentExecution[]
+  toolCalls         ToolCall[]
+  metrics           AgentMetric[]
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([type])
+  @@index([status])
+}
+
+model AgentTask {
+  id                String   @id @default(uuid())
+  agentId           String
+  agent             Agent    @relation(fields:[agentId], references:[id], onDelete: Cascade)
+  
+  // Task definition
+  title             String
+  description       String?
+  input             String   // JSON
+  expectedOutput    String?  // JSON schema
+  
+  // Scheduling
+  trigger           String   // MANUAL, SCHEDULED, EVENT, WEBHOOK
+  schedule          String?  // Cron for SCHEDULED
+  priority          Int      @default(5) // 1-10
+  
+  // Status
+  status            String   @default("PENDING") // PENDING, RUNNING, COMPLETED, FAILED, CANCELLED
+  attemptCount      Int      @default(0)
+  
+  // Results
+  output            String?  // JSON
+  error             String?
+  executionTimeMs   Int?
+  
+  // Relations
+  executions        AgentExecution[]
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  completedAt       DateTime?
+
+  @@index([agentId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model AgentExecution {
+  id                String   @id @default(uuid())
+  agentId           String
+  agent             Agent    @relation(fields:[agentId], references:[id], onDelete: Cascade)
+  taskId            String?
+  task              AgentTask? @relation(fields:[taskId], references:[id], onDelete: SetNull)
+  
+  // Execution context
+  input             String   // JSON
+  context           String?  // JSON - agent memory/context
+  systemPromptUsed  String
+  modelUsed         String
+  
+  // Results
+  output            String?  // JSON
+  reasoning         String?  // Agent reasoning trace
+  status            String   // SUCCESS, FAILURE, TIMEOUT, CANCELLED
+  statusCode        Int?
+  error             String?
+  errorType         String?
+  
+  // Performance
+  startedAt         DateTime @default(now())
+  completedAt       DateTime?
+  durationMs        Int?
+  
+  // Token usage
+  inputTokens       Int      @default(0)
+  outputTokens      Int      @default(0)
+  totalTokens       Int      @default(0)
+  costUsd           Float    @default(0)
+  
+  // Reliability
+  retryCount        Int      @default(0)
+  parentExecutionId String?  // For retry chains
+  
+  // Relations
+  toolCalls         ToolCall[]
+  
+  createdAt         DateTime @default(now())
+
+  @@index([agentId])
+  @@index([taskId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model ToolCall {
+  id                String   @id @default(uuid())
+  agentId           String
+  agent             Agent    @relation(fields:[agentId], references:[id], onDelete: Cascade)
+  executionId       String
+  execution         AgentExecution @relation(fields:[executionId], references:[id], onDelete: Cascade)
+  
+  // Tool info
+  toolName          String   // get_listings, analyze_market, generate_content, etc.
+  toolVersion       String   @default("1.0")
+  
+  // Invocation
+  arguments         String   // JSON
+  status            String   // PENDING, RUNNING, SUCCESS, FAILURE
+  
+  // Results
+  result            String?  // JSON
+  error             String?
+  
+  // Performance
+  durationMs        Int?
+  
+  createdAt         DateTime @default(now())
+  completedAt       DateTime?
+
+  @@index([agentId])
+  @@index([executionId])
+  @@index([toolName])
+}
+
+model AgentMetric {
+  id                String   @id @default(uuid())
+  agentId           String
+  agent             Agent    @relation(fields:[agentId], references:[id], onDelete: Cascade)
+  
+  // Metric type
+  metric            String   // execution_time, error_rate, token_usage, cost, throughput
+  value             Float
+  
+  // Time bucket
+  hourly            Boolean  @default(false)
+  daily             Boolean  @default(false)
+  
+  // Context
+  timestamp         DateTime @default(now())
+  period            String   // "2025-12-12T09:00", "2025-12-12"
+
+  @@index([agentId])
+  @@index([metric])
+  @@index([timestamp])
+}
+
+model AgentMemory {
+  id                String   @id @default(uuid())
+  agentId           String   @unique
+  
+  // Short-term context (current execution)
+  context           String   // JSON - last execution context
+  
+  // Long-term memory (learned patterns)
+  knowledge         String   // JSON - agent learned knowledge
+  
+  // Statistics
+  totalInteractions Int      @default(0)
+  successRate       Float    @default(0)
+  averageLatency    Float    @default(0)
+  
+  lastUpdatedAt     DateTime @updatedAt
+
+  @@index([agentId])
+}

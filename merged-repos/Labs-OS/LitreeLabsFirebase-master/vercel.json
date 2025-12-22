@@ -1,0 +1,33 @@
+{
+  "projectId": "prj_litree_labstudio",
+  "buildCommand": "pnpm run build",
+  "devCommand": "pnpm run dev",
+  "installCommand": "pnpm install",
+  "nodeVersion": "20.x",
+  "framework": "nextjs",
+  "outputDirectory": ".next",
+  "redirects": [
+    {
+      "source": "https://www.litree-labstudio.com/:path*",
+      "destination": "https://litree-labstudio.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "https://litree-labstudio.vercel.app/:path*",
+      "destination": "https://litree-labstudio.com/:path*",
+      "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "Referrer-Policy", "value": "no-referrer-when-downgrade" },
+        { "key": "Permissions-Policy", "value": "geolocation=(), microphone=(), camera=()" }
+      ]
+    }
+  ]
+}
