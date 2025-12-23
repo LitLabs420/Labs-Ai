@@ -1,18 +1,18 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import DashboardLayout from '@/components/DashboardLayout';
+import { trackEvent } from '@/lib/analytics';
 import { getAuthInstance, getDbInstance } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import {
   collection,
-  query,
+  limit,
   onSnapshot,
   orderBy,
-  limit,
+  query,
 } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
-import { trackEvent } from '@/lib/analytics';
+import { useEffect, useState } from 'react';
 
 type AnalyticsData = {
   totalUsers: number;
@@ -77,7 +77,7 @@ export default function AdminAnalyticsPage() {
   });
 
   useEffect(() => {
-    const authInstance = auth;
+    const authInstance = getAuthInstance();
     const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
 
     if (!authInstance) {
@@ -95,7 +95,7 @@ export default function AdminAnalyticsPage() {
       trackEvent('admin_analytics_view', { uid: user.uid });
 
       // Real-time user analytics
-      const dbInstance = db;
+      const dbInstance = getDbInstance();
       if (!dbInstance) {
         setLoading(false);
         return;
@@ -269,7 +269,7 @@ export default function AdminAnalyticsPage() {
               <p className="text-white/60 text-sm mb-3">Free Tier</p>
               <div className="relative h-8 bg-white/10 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-blue-500 to-cyan-500 transition-all"
+                  className={`h-full bg-gradient-to-r from-blue-500 to-cyan-500 transition-all`}
                   style={{
                     width: `${
                       analytics.totalUsers > 0
@@ -296,7 +296,7 @@ export default function AdminAnalyticsPage() {
               <p className="text-white/60 text-sm mb-3">Pro Tier</p>
               <div className="relative h-8 bg-white/10 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all"
+                  className={`h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all`}
                   style={{
                     width: `${
                       analytics.totalUsers > 0
@@ -322,7 +322,7 @@ export default function AdminAnalyticsPage() {
               <p className="text-white/60 text-sm mb-3">Enterprise Tier</p>
               <div className="relative h-8 bg-white/10 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-orange-500 to-red-500 transition-all"
+                  className={`h-full bg-gradient-to-r from-orange-500 to-red-500 transition-all`}
                   style={{
                     width: `${
                       analytics.totalUsers > 0

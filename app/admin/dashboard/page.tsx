@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import DashboardLayout from '@/components/DashboardLayout';
+import { trackEvent } from '@/lib/analytics';
 import { getAuthInstance } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
-import { trackEvent } from '@/lib/analytics';
+import { useEffect, useState } from 'react';
 
 export default function AdminDashboardPage() {
   const router = useRouter();
@@ -13,7 +13,7 @@ export default function AdminDashboardPage() {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    const authInstance = auth;
+    const authInstance = getAuthInstance();
     if (!authInstance) {
       router.push('/auth');
       return;

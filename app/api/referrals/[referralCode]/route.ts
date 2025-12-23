@@ -1,3 +1,4 @@
+import { getDbInstance } from '@/lib/firebase';
 import {
   addDoc,
   collection,
@@ -17,6 +18,7 @@ export async function GET(
   { params }: { params: Promise<{ referralCode: string }> }
 ) {
   try {
+    const db = getDbInstance();
     if (!db) {
       return NextResponse.json(
         { error: 'Database not initialized' },
@@ -66,12 +68,13 @@ export async function POST(
   { params }: { params: Promise<{ referralCode: string }> }
 ) {
   try {
+    const db = getDbInstance();
     const { referralCode } = await params;
     const { newUserEmail, newUserUid } = await req.json();
 
     // Find referrer
     const q = query(
-      collection(db!, 'users'),
+      collection(db, 'users'),
       where('referralCode', '==', referralCode),
       limit(1)
     );
@@ -88,7 +91,7 @@ export async function POST(
     const referrerId = snapshot.docs[0].id;
 
     // Record referral
-    await addDoc(collection(db!, 'referrals'), {
+    await addDoc(collection(db, 'referrals'), {
       referrerId,
       referralCode,
       newUserEmail,
@@ -99,7 +102,7 @@ export async function POST(
     });
 
     // Update referrer's referral count
-    await updateDoc(doc(db!, 'users', referrerId), {
+    await updateDoc(doc(db, 'users', referrerId), {
       referralCount: increment(1),
       pendingReferrals: increment(1),
     });

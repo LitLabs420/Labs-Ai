@@ -3,16 +3,13 @@
  * Sends payment notifications to Teams channel
  */
 
+import { getDbInstance } from '@/lib/firebase';
 import { getMicrosoftGraphClient } from '@/lib/microsoft-graph';
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
-
-if (!db) {
-  throw new Error('Firebase database not initialized');
-}
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
   apiVersion: '2025-11-17.clover',
@@ -107,6 +104,7 @@ async function sendPaymentNotification(
   status: string
 ) {
   try {
+    const db = getDbInstance();
     const customerId = paymentIntent.customer as string;
 
     // Get user by Stripe customer ID
@@ -125,10 +123,10 @@ async function sendPaymentNotification(
 
     const message =
       status === 'succeeded'
-        ? `✅ Payment of $${(paymentIntent.amount / 100).toFixed(
+        ? `Payment of $${(paymentIntent.amount / 100).toFixed(
             2
           )} has been successfully processed.`
-        : `❌ Payment of $${(paymentIntent.amount / 100).toFixed(
+        : `Payment of $${(paymentIntent.amount / 100).toFixed(
             2
           )} has failed. Please try again or contact support.`;
 
@@ -161,6 +159,7 @@ async function sendSubscriptionNotification(
   status: string
 ) {
   try {
+    const db = getDbInstance();
     const customerId = subscription.customer as string;
 
     // Get user by Stripe customer ID
@@ -179,10 +178,10 @@ async function sendSubscriptionNotification(
 
     const message =
       status === 'updated'
-        ? `📝 Your subscription has been updated to $${
+        ? `Your subscription has been updated to $${
             (subscription.items.data[0]?.price?.unit_amount || 0) / 100
           }/month.`
-        : `❌ Your subscription has been cancelled. Your current billing period ends on ${new Date(
+        : `Your subscription has been cancelled. Your current billing period ends on ${new Date(
             (subscription as any).current_period_end * 1000
           ).toLocaleDateString()}.`;
 
@@ -214,6 +213,7 @@ async function sendInvoiceNotification(
   status: string
 ) {
   try {
+    const db = getDbInstance();
     const customerId = invoice.customer as string;
 
     // Get user by Stripe customer ID
@@ -232,10 +232,10 @@ async function sendInvoiceNotification(
 
     const message =
       status === 'paid'
-        ? `✅ Invoice #${invoice.number} for $${
+        ? `Invoice #${invoice.number} for $${
             (invoice.total || 0) / 100
           } has been paid.`
-        : `⚠️ Invoice #${invoice.number} for $${
+        : `Invoice #${invoice.number} for $${
             (invoice.total || 0) / 100
           } payment failed.`;
 
