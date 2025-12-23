@@ -1,38 +1,61 @@
 'use client';
 
-import { auth } from '@/lib/firebase';
-import { User, onAuthStateChanged } from 'firebase/auth';
+import { auth, db } from '@/lib/firebase';
+import { User, onAuthStateChanged, signOut as firebaseSignOut } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
   isAdmin: boolean;
+  userData: any | null;
+  signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
   isAdmin: false,
+  userData: null,
+  signOut: async () => {},
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [userData, setUserData] = useState<any | null>(null);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
       setLoading(false);
-      // Simple admin check: replace with your logic (e.g., custom claim, email)
-      setIsAdmin(!!user && user.email === 'admin@litlabs.ai');
+      setIsAdmin(!!user && user.email === "admin@litlabs.ai");
+      if (user) {
+        // Fetch userData from Firestore
+        try {
+          const userRef = doc(db, 'users', user.uid);
+          const userSnap = await getDoc(userRef);
+          setUserData(userSnap.exists() ? userSnap.data() : null);
+        } catch (e) {
+          setUserData(null);
+        }
+      } else {
+        setUserData(null);
+      }
     });
     return () => unsubscribe();
   }, []);
 
+  const signOut = async () => {
+    await firebaseSignOut(auth);
+    setUser(null);
+    setUserData(null);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, isAdmin }}>
+    <AuthContext.Provider value={{ user, loading, isAdmin, userData, signOut }}>
       {children}
     </AuthContext.Provider>
   );
