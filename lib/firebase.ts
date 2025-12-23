@@ -1,74 +1,70 @@
 // lib/firebase.ts
-'use client';
 
-import { FirebaseApp, getApps, initializeApp } from 'firebase/app';
-import { Auth, getAuth } from 'firebase/auth';
-import { Firestore, getFirestore } from 'firebase/firestore';
-
-declare global {
-  interface Window {
-    FIREBASE_APPCHECK_DEBUG_TOKEN?: boolean | string;
-  }
-}
-
-const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY ?? '',
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN ?? '',
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID ?? '',
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET ?? '',
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID ?? '',
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID ?? '',
-};
-
-// Minimal client-side config validation to avoid confusing runtime errors
-const requiredClientFields = ['apiKey', 'projectId', 'appId'] as const;
-function missingConfigFields(cfg: typeof firebaseConfig) {
-  return requiredClientFields.filter((k) => !cfg[k]);
-}
+import type { FirebaseApp } from 'firebase/app';
+import type { Auth } from 'firebase/auth';
+import type { Firestore } from 'firebase/firestore';
 
 let app: FirebaseApp | null = null;
-let authInstance: Auth | null = null;
-let dbInstance: Firestore | null = null;
+let auth: Auth | null = null;
+let db: Firestore | null = null;
 
-// Only initialize if we're actually in a browser context (not build time)
-// and have valid configuration
-if (typeof window !== 'undefined') {
-  const missing = missingConfigFields(firebaseConfig);
-  if (missing.length === 0) {
-    try {
-      const apps = getApps();
-      app =
-        apps.length > 0
-          ? (apps[0] as FirebaseApp)
-          : initializeApp(firebaseConfig);
-      authInstance = getAuth(app);
-      dbInstance = getFirestore(app);
+function isClient() {
+  return typeof window !== 'undefined';
+}
 
-      // Only enable App Check debug token when explicitly allowed and not in production.
-      // Set `NEXT_PUBLIC_FIREBASE_APPCHECK_DEBUG_TOKEN=true` in dev env to enable.
-      const allowDebug =
-        process.env.NEXT_PUBLIC_FIREBASE_APPCHECK_DEBUG_TOKEN === 'true' &&
-        process.env.NODE_ENV !== 'production';
+function getFirebaseConfig() {
+  return {
+    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY ?? '',
+    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN ?? '',
+    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID ?? '',
+    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET ?? '',
+    messagingSenderId:
+      process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID ?? '',
+    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID ?? '',
+  };
+}
 
-      if (allowDebug) {
-        window.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
-      }
-    } catch (e) {
-      // Silently fail during build - don't log to avoid noise in build output
-      if (process.env.NODE_ENV === 'development') {
-        console.warn('Firebase client init skipped:', e);
-      }
-    }
+function missingConfigFields(cfg: ReturnType<typeof getFirebaseConfig>) {
+  const required = ['apiKey', 'projectId', 'appId'] as const;
+  return required.filter((k) => !cfg[k]);
+}
+
+export function getFirebaseApp(): FirebaseApp {
+  if (!isClient()) {
+    throw new Error('Firebase can only be initialized on the client.');
   }
+  if (!app) {
+    // Dynamic import to avoid SSR issues
+    const { initializeApp, getApps } = require('firebase/app');
+    const config = getFirebaseConfig();
+    const missing = missingConfigFields(config);
+    if (missing.length > 0) {
+      throw new Error('Missing Firebase config fields: ' + missing.join(', '));
+    }
+    const apps = getApps();
+    app = apps.length > 0 ? apps[0] : initializeApp(config);
+  }
+  return app;
 }
 
-// Export instances - throw error if accessed before initialization
-if (!authInstance || !dbInstance) {
-  throw new Error(
-    'Firebase not initialized. Make sure NEXT_PUBLIC_FIREBASE_* environment variables are set correctly.'
-  );
+export function getAuthInstance(): Auth {
+  if (!isClient()) {
+    throw new Error('Firebase Auth is only available on the client.');
+  }
+  if (!auth) {
+    const { getAuth } = require('firebase/auth');
+    auth = getAuth(getFirebaseApp());
+  }
+  return auth;
 }
 
-export const auth = authInstance;
-export const db = dbInstance;
-export { app };
+export function getDbInstance(): Firestore {
+  if (!isClient()) {
+    throw new Error('Firestore is only available on the client.');
+  }
+  if (!db) {
+    const { getFirestore } = require('firebase/firestore');
+    db = getFirestore(getFirebaseApp());
+  }
+  return db;
+}
