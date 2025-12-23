@@ -66,11 +66,22 @@
     "saas",
     "next.js"
   ],
-  "author": "LiTree Labs",
+  "author": "LiTree Labs <litreelabs@outlook.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/LiTree89/Labs-Ai.git"
+    "url": "https://github.com/LitLabs420/Labs-Ai.git"
   },
-  "homepage": "https://labs-ai.studio"
+  "bugs": {
+    "url": "https://github.com/LitLabs420/Labs-Ai/issues"
+  },
+  "homepage": "https://labs-ai.studio",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "browserslist": [
+    "defaults",
+    "not IE 11"
+  ]
 }
