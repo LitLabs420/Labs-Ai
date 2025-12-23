@@ -1,13 +1,15 @@
-import { getDbInstance } from '@/lib/firebase';
-import { collection, addDoc } from 'firebase/firestore';
+import { addDoc, collection } from 'firebase/firestore';
 
-export async function logActivity(type: 'signup' | 'upgrade' | 'created_content', data: {
-  userName: string;
-  businessName?: string;
-  tier?: string;
-}) {
+export async function logActivity(
+  type: 'signup' | 'upgrade' | 'created_content',
+  data: {
+    userName: string;
+    businessName?: string;
+    tier?: string;
+  }
+) {
   if (!db) return;
-  
+
   try {
     await addDoc(collection(db, 'activity_log'), {
       type,

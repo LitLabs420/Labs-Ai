@@ -1,32 +1,31 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { ReactNode, useEffect, useState } from "react";
-import LitLabsAssistant from "./LitLabsAssistant";
-import SupportChat from "./SupportChat";
-import { getAuthInstance } from "@/lib/firebase";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { ReactNode, useEffect, useState } from 'react';
+import LitLabsAssistant from './LitLabsAssistant';
+import SupportChat from './SupportChat';
 
 const navItems = [
-  { href: "/dashboard", label: "Home", icon: "🏠" },
-  { href: "/dashboard/onboarding", label: "Onboarding", icon: "🧩" },
-  { href: "/dashboard/profile", label: "Profile", icon: "👤" },
-    { href: "/dashboard/station", label: "My Station", icon: "🎯" },
-  { href: "/dashboard/billing", label: "Billing", icon: "💳" },
-  { href: "/dashboard/stats", label: "Stats", icon: "📊" },
+  { href: '/dashboard', label: 'Home', icon: '🏠' },
+  { href: '/dashboard/onboarding', label: 'Onboarding', icon: '🧩' },
+  { href: '/dashboard/profile', label: 'Profile', icon: '👤' },
+  { href: '/dashboard/station', label: 'My Station', icon: '🎯' },
+  { href: '/dashboard/billing', label: 'Billing', icon: '💳' },
+  { href: '/dashboard/stats', label: 'Stats', icon: '📊' },
 ];
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const [isAdmin, setIsAdmin] = useState(false);
-  
+
   useEffect(() => {
     if (!auth) return;
-    
+
     const unsub = auth.onAuthStateChanged((user) => {
       const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
       setIsAdmin(!!user && !!adminEmail && user.email === adminEmail);
     });
-    
+
     return () => unsub();
   }, []);
   const pathname = usePathname();
@@ -70,8 +69,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                   href={item.href}
                   className={`flex items-center gap-2 rounded-xl px-3 py-2 transition ${
                     active
-                      ? "bg-pink-500/20 border border-pink-500/70 text-white shadow-[0_0_20px_rgba(236,72,153,0.5)]"
-                      : "text-white/70 hover:bg-white/5 hover:text-white"
+                      ? 'bg-pink-500/20 border border-pink-500/70 text-white shadow-[0_0_20px_rgba(236,72,153,0.5)]'
+                      : 'text-white/70 hover:bg-white/5 hover:text-white'
                   }`}
                 >
                   <span>{item.icon}</span>
@@ -83,15 +82,15 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             <Link
               href="/referrals"
               className={`flex items-center gap-2 rounded-xl px-3 py-2 transition ${
-                pathname === "/referrals"
-                  ? "bg-emerald-500/20 border border-emerald-500/70 text-white shadow-[0_0_20px_rgba(16,185,129,0.5)]"
-                  : "text-white/70 hover:bg-white/5 hover:text-white"
+                pathname === '/referrals'
+                  ? 'bg-emerald-500/20 border border-emerald-500/70 text-white shadow-[0_0_20px_rgba(16,185,129,0.5)]'
+                  : 'text-white/70 hover:bg-white/5 hover:text-white'
               }`}
             >
               <span>🎁</span>
               <span>Referrals</span>
             </Link>
-            
+
             {/* Admin link - only for founder */}
             {isAdmin && (
               <>
@@ -99,9 +98,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 <Link
                   href="/admin"
                   className={`flex items-center gap-2 rounded-xl px-3 py-2 transition ${
-                    pathname === "/admin"
-                      ? "bg-purple-500/20 border border-purple-500/70 text-white shadow-[0_0_20px_rgba(168,85,247,0.5)]"
-                      : "text-white/70 hover:bg-white/5 hover:text-white"
+                    pathname === '/admin'
+                      ? 'bg-purple-500/20 border border-purple-500/70 text-white shadow-[0_0_20px_rgba(168,85,247,0.5)]'
+                      : 'text-white/70 hover:bg-white/5 hover:text-white'
                   }`}
                 >
                   <span>👑</span>
@@ -113,7 +112,10 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
           <div className="px-3 pb-4 text-[11px] text-white/45 border-t border-white/10">
             <p className="mb-1 font-semibold text-white/60">LitLabs tips</p>
-            <p>Start each day with /daily_post, then /promo if your calendar is light.</p>
+            <p>
+              Start each day with /daily_post, then /promo if your calendar is
+              light.
+            </p>
           </div>
         </aside>
 
@@ -129,7 +131,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             </div>
             <div className="flex items-center gap-3 text-white/60">
               <span className="hidden sm:inline">
-                Plan: <span className="text-emerald-300 font-semibold">Pro</span>
+                Plan:{' '}
+                <span className="text-emerald-300 font-semibold">Pro</span>
               </span>
               <span className="hidden sm:inline">Detroit, MI</span>
             </div>
@@ -144,7 +147,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
       {/* Floating LitLabs AI Assistant */}
       <LitLabsAssistant />
-      
+
       {/* SPARK Support Chat */}
       <SupportChat />
     </div>

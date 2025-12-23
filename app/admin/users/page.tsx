@@ -1,12 +1,18 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import DashboardLayout from '@/components/DashboardLayout';
-import { getAuthInstance, getDbInstance } from '@/lib/firebase';
-import { onAuthStateChanged } from 'firebase/auth';
-import { collection, query, onSnapshot, updateDoc, doc, deleteDoc } from 'firebase/firestore';
-import { useRouter } from 'next/navigation';
 import { trackEvent } from '@/lib/analytics';
+import { onAuthStateChanged } from 'firebase/auth';
+import {
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  query,
+  updateDoc,
+} from 'firebase/firestore';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 type User = {
   uid: string;
@@ -28,8 +34,12 @@ export default function AdminUsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterTier, setFilterTier] = useState<'all' | 'free' | 'pro' | 'enterprise'>('all');
-  const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'suspended'>('all');
+  const [filterTier, setFilterTier] = useState<
+    'all' | 'free' | 'pro' | 'enterprise'
+  >('all');
+  const [filterStatus, setFilterStatus] = useState<
+    'all' | 'active' | 'suspended'
+  >('all');
 
   useEffect(() => {
     const authInstance = auth;
@@ -47,8 +57,8 @@ export default function AdminUsersPage() {
       // Verify admin status via API route
       const res = await fetch('/api/verify-admin', {
         headers: {
-          'Authorization': `Bearer ${await user.getIdToken()}`
-        }
+          Authorization: `Bearer ${await user.getIdToken()}`,
+        },
       });
 
       if (!res.ok) {
@@ -73,7 +83,11 @@ export default function AdminUsersPage() {
     let filtered = usersList;
 
     if (search) {
-      filtered = filtered.filter((u) => u.email.toLowerCase().includes(search.toLowerCase()) || u.displayName?.toLowerCase().includes(search.toLowerCase()));
+      filtered = filtered.filter(
+        (u) =>
+          u.email.toLowerCase().includes(search.toLowerCase()) ||
+          u.displayName?.toLowerCase().includes(search.toLowerCase())
+      );
     }
 
     if (tier !== 'all') {
@@ -112,9 +126,9 @@ export default function AdminUsersPage() {
         const usersList: User[] = [];
         snapshot.forEach((doc) => {
           usersList.push({
-              uid: doc.id,
-              ...(doc.data() as Record<string, unknown>),
-            } as User);
+            uid: doc.id,
+            ...(doc.data() as Record<string, unknown>),
+          } as User);
         });
 
         setUsers(usersList);
@@ -128,8 +142,6 @@ export default function AdminUsersPage() {
 
     return () => unsub();
   }, [router, searchTerm, filterTier, filterStatus]);
-
-  
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);
@@ -180,7 +192,12 @@ export default function AdminUsersPage() {
   };
 
   const deleteUser = async (uid: string, email: string) => {
-    if (!confirm(`⚠️ Are you sure you want to delete ${email}? This cannot be undone.`)) return;
+    if (
+      !confirm(
+        `⚠️ Are you sure you want to delete ${email}? This cannot be undone.`
+      )
+    )
+      return;
 
     try {
       const dbRef = db;
@@ -225,8 +242,12 @@ export default function AdminUsersPage() {
       <div className="space-y-8">
         {/* Header */}
         <div>
-          <h1 className="text-4xl font-bold text-white mb-2">👥 User Management</h1>
-          <p className="text-white/60">Manage user accounts, tiers, and subscriptions</p>
+          <h1 className="text-4xl font-bold text-white mb-2">
+            👥 User Management
+          </h1>
+          <p className="text-white/60">
+            Manage user accounts, tiers, and subscriptions
+          </p>
         </div>
 
         {/* Filters */}
@@ -234,7 +255,9 @@ export default function AdminUsersPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {/* Search */}
             <div>
-              <label className="block text-white/60 text-sm font-medium mb-2">Search</label>
+              <label className="block text-white/60 text-sm font-medium mb-2">
+                Search
+              </label>
               <input
                 type="text"
                 placeholder="Email or name..."
@@ -246,7 +269,12 @@ export default function AdminUsersPage() {
 
             {/* Tier Filter */}
             <div>
-              <label htmlFor="filter-tier" className="block text-white/60 text-sm font-medium mb-2">Tier</label>
+              <label
+                htmlFor="filter-tier"
+                className="block text-white/60 text-sm font-medium mb-2"
+              >
+                Tier
+              </label>
               <select
                 id="filter-tier"
                 aria-label="Filter users by tier"
@@ -263,7 +291,12 @@ export default function AdminUsersPage() {
 
             {/* Status Filter */}
             <div>
-              <label htmlFor="filter-status" className="block text-white/60 text-sm font-medium mb-2">Status</label>
+              <label
+                htmlFor="filter-status"
+                className="block text-white/60 text-sm font-medium mb-2"
+              >
+                Status
+              </label>
               <select
                 id="filter-status"
                 aria-label="Filter users by status"
@@ -279,7 +312,9 @@ export default function AdminUsersPage() {
 
             {/* Results Count */}
             <div>
-              <label className="block text-white/60 text-sm font-medium mb-2">Results</label>
+              <label className="block text-white/60 text-sm font-medium mb-2">
+                Results
+              </label>
               <div className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white font-semibold">
                 {filteredUsers.length} of {users.length}
               </div>
@@ -293,30 +328,53 @@ export default function AdminUsersPage() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-white/10 bg-white/5">
-                  <th className="px-6 py-4 text-left text-white/60 text-sm font-medium">Email</th>
-                  <th className="px-6 py-4 text-left text-white/60 text-sm font-medium">Name</th>
-                  <th className="px-6 py-4 text-left text-white/60 text-sm font-medium">Tier</th>
-                  <th className="px-6 py-4 text-left text-white/60 text-sm font-medium">Status</th>
-                  <th className="px-6 py-4 text-left text-white/60 text-sm font-medium">Posts</th>
-                  <th className="px-6 py-4 text-left text-white/60 text-sm font-medium">Joined</th>
-                  <th className="px-6 py-4 text-left text-white/60 text-sm font-medium">Referrals</th>
-                  <th className="px-6 py-4 text-left text-white/60 text-sm font-medium">Actions</th>
+                  <th className="px-6 py-4 text-left text-white/60 text-sm font-medium">
+                    Email
+                  </th>
+                  <th className="px-6 py-4 text-left text-white/60 text-sm font-medium">
+                    Name
+                  </th>
+                  <th className="px-6 py-4 text-left text-white/60 text-sm font-medium">
+                    Tier
+                  </th>
+                  <th className="px-6 py-4 text-left text-white/60 text-sm font-medium">
+                    Status
+                  </th>
+                  <th className="px-6 py-4 text-left text-white/60 text-sm font-medium">
+                    Posts
+                  </th>
+                  <th className="px-6 py-4 text-left text-white/60 text-sm font-medium">
+                    Joined
+                  </th>
+                  <th className="px-6 py-4 text-left text-white/60 text-sm font-medium">
+                    Referrals
+                  </th>
+                  <th className="px-6 py-4 text-left text-white/60 text-sm font-medium">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {filteredUsers.length > 0 ? (
                   filteredUsers.map((user) => (
-                    <tr key={user.uid} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                      <td className="px-6 py-4 text-white/80 text-sm">{user.email}</td>
-                      <td className="px-6 py-4 text-white/80 text-sm">{user.displayName || '—'}</td>
+                    <tr
+                      key={user.uid}
+                      className="border-b border-white/5 hover:bg-white/5 transition-colors"
+                    >
+                      <td className="px-6 py-4 text-white/80 text-sm">
+                        {user.email}
+                      </td>
+                      <td className="px-6 py-4 text-white/80 text-sm">
+                        {user.displayName || '—'}
+                      </td>
                       <td className="px-6 py-4">
                         <span
                           className={`px-3 py-1 rounded-full text-xs font-semibold ${
                             user.tier === 'free'
                               ? 'bg-blue-500/20 text-blue-400'
                               : user.tier === 'pro'
-                                ? 'bg-purple-500/20 text-purple-400'
-                                : 'bg-orange-500/20 text-orange-400'
+                              ? 'bg-purple-500/20 text-purple-400'
+                              : 'bg-orange-500/20 text-orange-400'
                           }`}
                         >
                           {user.tier}
@@ -339,7 +397,9 @@ export default function AdminUsersPage() {
                       <td className="px-6 py-4 text-white/60 text-sm">
                         {formatDate(user.createdAt)}
                       </td>
-                      <td className="px-6 py-4 text-white/60 text-sm">{user.referralCount || 0}</td>
+                      <td className="px-6 py-4 text-white/60 text-sm">
+                        {user.referralCount || 0}
+                      </td>
                       <td className="px-6 py-4">
                         <div className="flex gap-2">
                           {user.tier !== 'pro' && (
@@ -352,14 +412,18 @@ export default function AdminUsersPage() {
                           )}
                           {user.tier !== 'enterprise' && (
                             <button
-                              onClick={() => upgradeTier(user.uid, 'enterprise')}
+                              onClick={() =>
+                                upgradeTier(user.uid, 'enterprise')
+                              }
                               className="px-3 py-1 rounded text-xs font-medium bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 transition-colors"
                             >
                               → Ent.
                             </button>
                           )}
                           <button
-                            onClick={() => toggleSuspension(user.uid, user.status)}
+                            onClick={() =>
+                              toggleSuspension(user.uid, user.status)
+                            }
                             className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
                               user.status === 'active'
                                 ? 'bg-red-500/20 text-red-400 hover:bg-red-500/30'
@@ -380,7 +444,10 @@ export default function AdminUsersPage() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={8} className="px-6 py-8 text-center text-white/40 text-sm">
+                    <td
+                      colSpan={8}
+                      className="px-6 py-8 text-center text-white/40 text-sm"
+                    >
                       No users found
                     </td>
                   </tr>
@@ -395,8 +462,13 @@ export default function AdminUsersPage() {
 }
 
 function formatDate(value?: { toDate?: () => Date } | string | number | null) {
-  if (!value) return "";
-  if (typeof value === "object" && value !== null && "toDate" in value && typeof (value as { toDate?: unknown }).toDate === "function") {
+  if (!value) return '';
+  if (
+    typeof value === 'object' &&
+    value !== null &&
+    'toDate' in value &&
+    typeof (value as { toDate?: unknown }).toDate === 'function'
+  ) {
     return (value as { toDate: () => Date }).toDate().toLocaleDateString();
   }
   return new Date(value as string | number | Date).toLocaleDateString();

@@ -9,9 +9,13 @@ import DashboardLayout from '@/components/DashboardLayout';
 
 export default function BillingPage() {
   const router = useRouter();
-  const [user, setUser] = useState<{ uid: string; email?: string } | null>(null);
+  const [user, setUser] = useState<{ uid: string; email?: string } | null>(
+    null
+  );
   const [tier, setTier] = useState('free');
-  const [paymentMethod, setPaymentMethod] = useState<'stripe' | 'paypal'>('stripe');
+  const [paymentMethod, setPaymentMethod] = useState<'stripe' | 'paypal'>(
+    'stripe'
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -19,10 +23,10 @@ export default function BillingPage() {
       router.push('/auth');
       return;
     }
-    
+
     const authInstance = auth;
     const dbInstance = db;
-    
+
     const unsub = onAuthStateChanged(authInstance, async (authUser) => {
       if (!authUser) {
         router.push('/auth');
@@ -51,7 +55,10 @@ export default function BillingPage() {
           method: 'POST',
           body: JSON.stringify({
             email: user.email,
-            priceId: selectedTier === 'pro' ? process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO : process.env.NEXT_PUBLIC_STRIPE_PRICE_ENTERPRISE,
+            priceId:
+              selectedTier === 'pro'
+                ? process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO
+                : process.env.NEXT_PUBLIC_STRIPE_PRICE_ENTERPRISE,
           }),
         });
         const data = (await response.json()) as { url?: string };
@@ -85,9 +92,12 @@ export default function BillingPage() {
       <div className="space-y-8">
         {/* Header */}
         <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-pink-500/20 via-purple-500/10 to-sky-500/20 p-12 shadow-2xl">
-          <h1 className="text-4xl font-black text-white mb-4">💳 Billing & Upgrade</h1>
+          <h1 className="text-4xl font-black text-white mb-4">
+            💳 Billing & Upgrade
+          </h1>
           <p className="text-lg text-white/80 max-w-2xl">
-            Choose the plan that fits your beauty business. All plans include email support and AI assistance.
+            Choose the plan that fits your beauty business. All plans include
+            email support and AI assistance.
           </p>
         </div>
 
@@ -95,12 +105,16 @@ export default function BillingPage() {
         <div className="rounded-xl border border-white/10 bg-gradient-to-br from-slate-800 to-slate-900 p-6">
           <p className="text-white/60 text-sm mb-2">Current Plan</p>
           <p className="text-3xl font-bold text-white capitalize">{tier}</p>
-          <p className="text-white/70 mt-2">You&apos;re on the {tier} plan. Manage your subscription below.</p>
+          <p className="text-white/70 mt-2">
+            You&apos;re on the {tier} plan. Manage your subscription below.
+          </p>
         </div>
 
         {/* Payment Method Selector */}
         <div className="rounded-xl border border-white/10 bg-gradient-to-br from-slate-800 to-slate-900 p-6">
-          <h3 className="text-lg font-bold text-white mb-4">Choose Payment Method</h3>
+          <h3 className="text-lg font-bold text-white mb-4">
+            Choose Payment Method
+          </h3>
           <div className="grid grid-cols-2 gap-4">
             <button
               onClick={() => setPaymentMethod('stripe')}
@@ -156,7 +170,10 @@ export default function BillingPage() {
               </li>
             </ul>
             {tier === 'free' && (
-              <button className="w-full px-4 py-2 rounded-lg border border-white/30 text-white font-semibold transition" disabled>
+              <button
+                className="w-full px-4 py-2 rounded-lg border border-white/30 text-white font-semibold transition"
+                disabled
+              >
                 Current Plan
               </button>
             )}
@@ -168,7 +185,9 @@ export default function BillingPage() {
               POPULAR
             </div>
             <h3 className="text-2xl font-bold text-white mb-2">Pro</h3>
-            <p className="text-white/60 mb-6">Perfect for growing beauty pros</p>
+            <p className="text-white/60 mb-6">
+              Perfect for growing beauty pros
+            </p>
             <div className="mb-6">
               <p className="text-4xl font-black text-pink-400">$99</p>
               <p className="text-sm text-white/60 mt-1">/month</p>
@@ -196,7 +215,10 @@ export default function BillingPage() {
               </li>
             </ul>
             {tier === 'pro' ? (
-              <button className="w-full px-4 py-2 rounded-lg border border-pink-500/50 text-white font-semibold transition" disabled>
+              <button
+                className="w-full px-4 py-2 rounded-lg border border-pink-500/50 text-white font-semibold transition"
+                disabled
+              >
                 Current Plan
               </button>
             ) : (
@@ -241,7 +263,10 @@ export default function BillingPage() {
               </li>
             </ul>
             {tier === 'enterprise' ? (
-              <button className="w-full px-4 py-2 rounded-lg border border-purple-500/50 text-white font-semibold transition" disabled>
+              <button
+                className="w-full px-4 py-2 rounded-lg border border-purple-500/50 text-white font-semibold transition"
+                disabled
+              >
                 Current Plan
               </button>
             ) : (
@@ -261,16 +286,31 @@ export default function BillingPage() {
           <h3 className="text-xl font-bold text-white mb-6">❓ FAQ</h3>
           <div className="space-y-4">
             <div>
-              <p className="font-semibold text-white mb-2">Can I change plans?</p>
-              <p className="text-white/70">Yes! Upgrade or downgrade anytime. Changes take effect at the end of your billing cycle.</p>
+              <p className="font-semibold text-white mb-2">
+                Can I change plans?
+              </p>
+              <p className="text-white/70">
+                Yes! Upgrade or downgrade anytime. Changes take effect at the
+                end of your billing cycle.
+              </p>
             </div>
             <div>
-              <p className="font-semibold text-white mb-2">What payment methods do you accept?</p>
-              <p className="text-white/70">We accept credit cards (via Stripe) and PayPal. All payments are secure and encrypted.</p>
+              <p className="font-semibold text-white mb-2">
+                What payment methods do you accept?
+              </p>
+              <p className="text-white/70">
+                We accept credit cards (via Stripe) and PayPal. All payments are
+                secure and encrypted.
+              </p>
             </div>
             <div>
-              <p className="font-semibold text-white mb-2">Do you offer refunds?</p>
-              <p className="text-white/70">Yes! 30-day money-back guarantee if you&apos;re not satisfied. No questions asked.</p>
+              <p className="font-semibold text-white mb-2">
+                Do you offer refunds?
+              </p>
+              <p className="text-white/70">
+                Yes! 30-day money-back guarantee if you&apos;re not satisfied.
+                No questions asked.
+              </p>
             </div>
           </div>
         </div>

@@ -1,24 +1,23 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { getAuthInstance, getDbInstance } from "@/lib/firebase";
-import { collection, addDoc, Timestamp } from "firebase/firestore";
+import { addDoc, collection, Timestamp } from 'firebase/firestore';
+import { useState } from 'react';
 
 export default function DashboardShell() {
-  const [aiResponse, setAiResponse] = useState<string>("");
+  const [aiResponse, setAiResponse] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<
-    "daily_post" | "dm_script" | "promo" | "notes"
-  >("daily_post");
+    'daily_post' | 'dm_script' | 'promo' | 'notes'
+  >('daily_post');
 
   const callLitLabsAI = async (command: string) => {
     setLoading(true);
-    setAiResponse("");
+    setAiResponse('');
 
     try {
-      const res = await fetch("/api/ai-chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/ai-chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           command,
         }),
@@ -29,14 +28,14 @@ export default function DashboardShell() {
       if (data.error) {
         setAiResponse(`Error: ${data.error}`);
       } else {
-        const content = data.text || "No response from LitLabs AI";
+        const content = data.text || 'No response from LitLabs AI';
         setAiResponse(content);
 
         // Save to Firestore if user is logged in
         if (auth?.currentUser && db) {
           try {
             await addDoc(
-              collection(db, "users", auth.currentUser.uid, "contents"),
+              collection(db, 'users', auth.currentUser.uid, 'contents'),
               {
                 command,
                 content,
@@ -45,7 +44,7 @@ export default function DashboardShell() {
               }
             );
           } catch (firestoreErr) {
-            console.error("Failed to save to history:", firestoreErr);
+            console.error('Failed to save to history:', firestoreErr);
             // Don't fail the UI, just log the error
           }
         }
@@ -70,20 +69,18 @@ export default function DashboardShell() {
       {/* Tab Navigation */}
       <div className="flex gap-2 border-b border-gray-800">
         {[
-          { id: "daily_post", label: "Daily Post", icon: "📱" },
-          { id: "dm_script", label: "DM Script", icon: "💬" },
-          { id: "promo", label: "Flash Promo", icon: "🎯" },
-          { id: "notes", label: "Client Notes", icon: "📝" },
+          { id: 'daily_post', label: 'Daily Post', icon: '📱' },
+          { id: 'dm_script', label: 'DM Script', icon: '💬' },
+          { id: 'promo', label: 'Flash Promo', icon: '🎯' },
+          { id: 'notes', label: 'Client Notes', icon: '📝' },
         ].map((tab) => (
           <button
             key={tab.id}
-            onClick={() =>
-              setActiveTab(tab.id as typeof activeTab)
-            }
+            onClick={() => setActiveTab(tab.id as typeof activeTab)}
             className={`px-4 py-3 text-sm font-medium transition border-b-2 ${
               activeTab === tab.id
-                ? "border-pink-500 text-white"
-                : "border-transparent text-gray-400 hover:text-gray-300"
+                ? 'border-pink-500 text-white'
+                : 'border-transparent text-gray-400 hover:text-gray-300'
             }`}
           >
             {tab.icon} {tab.label}
@@ -95,92 +92,92 @@ export default function DashboardShell() {
       <div className="space-y-4">
         {/* Quick Actions */}
         <div className="flex flex-wrap gap-3">
-          {activeTab === "daily_post" && (
+          {activeTab === 'daily_post' && (
             <>
               <button
-                onClick={() => callLitLabsAI("/daily_post")}
+                onClick={() => callLitLabsAI('/daily_post')}
                 disabled={loading}
                 className="px-4 py-2 rounded bg-pink-500 hover:bg-pink-600 text-sm font-semibold disabled:opacity-50 transition"
               >
-                {loading ? "Generating..." : "Generate Daily Post 📱"}
+                {loading ? 'Generating...' : 'Generate Daily Post 📱'}
               </button>
               <button
-                onClick={() => callLitLabsAI("/weekly_pack")}
+                onClick={() => callLitLabsAI('/weekly_pack')}
                 disabled={loading}
                 className="px-4 py-2 rounded bg-purple-600 hover:bg-purple-700 text-sm font-semibold disabled:opacity-50 transition"
               >
-                {loading ? "Generating..." : "Weekly Content Pack 📅"}
+                {loading ? 'Generating...' : 'Weekly Content Pack 📅'}
               </button>
             </>
           )}
 
-          {activeTab === "dm_script" && (
+          {activeTab === 'dm_script' && (
             <>
               <button
-                onClick={() => callLitLabsAI("/dm_cold")}
+                onClick={() => callLitLabsAI('/dm_cold')}
                 disabled={loading}
                 className="px-4 py-2 rounded bg-pink-500 hover:bg-pink-600 text-sm font-semibold disabled:opacity-50 transition"
               >
-                {loading ? "Generating..." : "Cold DM 🆕"}
+                {loading ? 'Generating...' : 'Cold DM 🆕'}
               </button>
               <button
-                onClick={() => callLitLabsAI("/dm_followup")}
+                onClick={() => callLitLabsAI('/dm_followup')}
                 disabled={loading}
                 className="px-4 py-2 rounded bg-purple-600 hover:bg-purple-700 text-sm font-semibold disabled:opacity-50 transition"
               >
-                {loading ? "Generating..." : "Follow-up 🔄"}
+                {loading ? 'Generating...' : 'Follow-up 🔄'}
               </button>
               <button
-                onClick={() => callLitLabsAI("/dm_objection")}
+                onClick={() => callLitLabsAI('/dm_objection')}
                 disabled={loading}
                 className="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-sm font-semibold disabled:opacity-50 transition"
               >
-                {loading ? "Generating..." : "Handle Objection 🎯"}
+                {loading ? 'Generating...' : 'Handle Objection 🎯'}
               </button>
             </>
           )}
 
-          {activeTab === "promo" && (
+          {activeTab === 'promo' && (
             <>
               <button
-                onClick={() => callLitLabsAI("/promo_flash")}
+                onClick={() => callLitLabsAI('/promo_flash')}
                 disabled={loading}
                 className="px-4 py-2 rounded bg-pink-500 hover:bg-pink-600 text-sm font-semibold disabled:opacity-50 transition"
               >
-                {loading ? "Generating..." : "Flash Sale 🏃"}
+                {loading ? 'Generating...' : 'Flash Sale 🏃'}
               </button>
               <button
-                onClick={() => callLitLabsAI("/promo_referral")}
+                onClick={() => callLitLabsAI('/promo_referral')}
                 disabled={loading}
                 className="px-4 py-2 rounded bg-purple-600 hover:bg-purple-700 text-sm font-semibold disabled:opacity-50 transition"
               >
-                {loading ? "Generating..." : "Referral Program 👥"}
+                {loading ? 'Generating...' : 'Referral Program 👥'}
               </button>
               <button
-                onClick={() => callLitLabsAI("/promo_seasonal")}
+                onClick={() => callLitLabsAI('/promo_seasonal')}
                 disabled={loading}
                 className="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-sm font-semibold disabled:opacity-50 transition"
               >
-                {loading ? "Generating..." : "Seasonal Pack 🎄"}
+                {loading ? 'Generating...' : 'Seasonal Pack 🎄'}
               </button>
             </>
           )}
 
-          {activeTab === "notes" && (
+          {activeTab === 'notes' && (
             <>
               <button
-                onClick={() => callLitLabsAI("/note_template")}
+                onClick={() => callLitLabsAI('/note_template')}
                 disabled={loading}
                 className="px-4 py-2 rounded bg-pink-500 hover:bg-pink-600 text-sm font-semibold disabled:opacity-50 transition"
               >
-                {loading ? "Generating..." : "New Note Template 📝"}
+                {loading ? 'Generating...' : 'New Note Template 📝'}
               </button>
               <button
-                onClick={() => callLitLabsAI("/client_follow_up")}
+                onClick={() => callLitLabsAI('/client_follow_up')}
                 disabled={loading}
                 className="px-4 py-2 rounded bg-purple-600 hover:bg-purple-700 text-sm font-semibold disabled:opacity-50 transition"
               >
-                {loading ? "Generating..." : "Follow-up Ideas 💡"}
+                {loading ? 'Generating...' : 'Follow-up Ideas 💡'}
               </button>
             </>
           )}
@@ -190,16 +187,14 @@ export default function DashboardShell() {
         <div className="bg-gray-950 border border-gray-800 rounded-lg p-6 min-h-[300px]">
           {aiResponse ? (
             <div className="space-y-4">
-              <div className="text-sm text-gray-400">
-                LitLabs AI Response:
-              </div>
+              <div className="text-sm text-gray-400">LitLabs AI Response:</div>
               <div className="bg-gray-900 rounded p-4 whitespace-pre-wrap text-sm leading-relaxed overflow-y-auto max-h-[500px]">
                 {aiResponse}
               </div>
               <button
                 onClick={() => {
                   navigator.clipboard.writeText(aiResponse);
-                  alert("Copied to clipboard!");
+                  alert('Copied to clipboard!');
                 }}
                 className="mt-4 px-4 py-2 rounded bg-gray-800 hover:bg-gray-700 text-sm font-medium transition"
               >

@@ -1,8 +1,13 @@
 'use client';
 
+import {
+  collection,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+} from 'firebase/firestore';
 import { useEffect, useState } from 'react';
-import { getDbInstance } from '@/lib/firebase';
-import { collection, query, orderBy, limit, onSnapshot } from 'firebase/firestore';
 
 interface Activity {
   id: string;
@@ -31,12 +36,14 @@ export function LiveActivityFeed() {
       const newActivities = snapshot.docs.map((doc) => {
         const data = doc.data();
         const type = data.type as 'signup' | 'upgrade' | 'created_content';
-        
+
         let message = '';
         if (type === 'signup') {
           message = `${data.userName} just signed up! 🎉`;
         } else if (type === 'upgrade') {
-          message = `${data.businessName || data.userName} upgraded to ${data.tier} 💎`;
+          message = `${data.businessName || data.userName} upgraded to ${
+            data.tier
+          } 💎`;
         } else if (type === 'created_content') {
           message = `${data.userName} created new content 📝`;
         }
@@ -66,7 +73,7 @@ export function LiveActivityFeed() {
           <p className="text-sm font-bold text-white">Live Activity</p>
         </div>
       </div>
-      
+
       <div className="max-h-72 overflow-y-auto">
         {activities.length === 0 ? (
           <div className="p-4 text-center text-slate-400 text-sm">

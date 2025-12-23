@@ -4,7 +4,13 @@ import { useEffect, useState } from 'react';
 import DashboardLayout from '@/components/DashboardLayout';
 import { getAuthInstance, getDbInstance } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
-import { collection, query, onSnapshot, orderBy, limit } from 'firebase/firestore';
+import {
+  collection,
+  query,
+  onSnapshot,
+  orderBy,
+  limit,
+} from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { trackEvent } from '@/lib/analytics';
 
@@ -38,8 +44,13 @@ type Transaction = {
 };
 
 function formatDate(value?: Transaction['createdAt']) {
-  if (!value) return "";
-  if (typeof value === "object" && value !== null && "toDate" in value && typeof (value as { toDate?: unknown }).toDate === "function") {
+  if (!value) return '';
+  if (
+    typeof value === 'object' &&
+    value !== null &&
+    'toDate' in value &&
+    typeof (value as { toDate?: unknown }).toDate === 'function'
+  ) {
     return (value as { toDate: () => Date }).toDate().toLocaleDateString();
   }
   return new Date(value as string | number | Date).toLocaleDateString();
@@ -113,7 +124,8 @@ export default function AdminAnalyticsPage() {
         });
 
         const total = freeCount + proCount + enterpriseCount;
-        const conversion = total > 0 ? ((proCount + enterpriseCount) / total) * 100 : 0;
+        const conversion =
+          total > 0 ? ((proCount + enterpriseCount) / total) * 100 : 0;
 
         setAnalytics((prev) => ({
           ...prev,
@@ -125,12 +137,20 @@ export default function AdminAnalyticsPage() {
           mrr: totalRev,
           conversionRate: conversion,
           avgRevenuePerUser: total > 0 ? (totalRev * 12) / total : 0,
-          userTierBreakdown: { free: freeCount, pro: proCount, enterprise: enterpriseCount },
+          userTierBreakdown: {
+            free: freeCount,
+            pro: proCount,
+            enterprise: enterpriseCount,
+          },
         }));
       });
 
       // Real-time transactions
-      const txnQuery = query(collection(dbInstance, 'transactions'), orderBy('createdAt', 'desc'), limit(10));
+      const txnQuery = query(
+        collection(dbInstance, 'transactions'),
+        orderBy('createdAt', 'desc'),
+        limit(10)
+      );
       const unsubTxn = onSnapshot(txnQuery, (snapshot) => {
         const recentTxn = snapshot.docs.map((doc) => ({
           id: doc.id,
@@ -182,8 +202,12 @@ export default function AdminAnalyticsPage() {
       <div className="space-y-8">
         {/* Header */}
         <div>
-          <h1 className="text-4xl font-bold text-white mb-2">📊 Analytics Dashboard</h1>
-          <p className="text-white/60">Real-time insights into platform performance</p>
+          <h1 className="text-4xl font-bold text-white mb-2">
+            📊 Analytics Dashboard
+          </h1>
+          <p className="text-white/60">
+            Real-time insights into platform performance
+          </p>
         </div>
 
         {/* Key Metrics Grid */}
@@ -191,25 +215,34 @@ export default function AdminAnalyticsPage() {
           {/* Total Users */}
           <div className="rounded-xl border border-white/10 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 p-6">
             <p className="text-white/60 text-sm mb-2">Total Users</p>
-            <p className="text-4xl font-bold text-blue-400">{analytics.totalUsers}</p>
+            <p className="text-4xl font-bold text-blue-400">
+              {analytics.totalUsers}
+            </p>
             <p className="text-white/40 text-xs mt-2">
-              {analytics.freeUsers} free • {analytics.proUsers} pro • {analytics.enterpriseUsers} enterprise
+              {analytics.freeUsers} free • {analytics.proUsers} pro •{' '}
+              {analytics.enterpriseUsers} enterprise
             </p>
           </div>
 
           {/* MRR */}
           <div className="rounded-xl border border-white/10 bg-gradient-to-br from-green-500/10 to-emerald-500/10 p-6">
-            <p className="text-white/60 text-sm mb-2">Monthly Recurring Revenue</p>
-            <p className="text-4xl font-bold text-green-400">${analytics.mrr.toLocaleString()}</p>
+            <p className="text-white/60 text-sm mb-2">
+              Monthly Recurring Revenue
+            </p>
+            <p className="text-4xl font-bold text-green-400">
+              ${analytics.mrr.toLocaleString()}
+            </p>
             <p className="text-white/40 text-xs mt-2">
-              Annual: ${(analytics.totalRevenue).toLocaleString()}
+              Annual: ${analytics.totalRevenue.toLocaleString()}
             </p>
           </div>
 
           {/* Conversion Rate */}
           <div className="rounded-xl border border-white/10 bg-gradient-to-br from-purple-500/10 to-pink-500/10 p-6">
             <p className="text-white/60 text-sm mb-2">Conversion Rate</p>
-            <p className="text-4xl font-bold text-purple-400">{analytics.conversionRate.toFixed(1)}%</p>
+            <p className="text-4xl font-bold text-purple-400">
+              {analytics.conversionRate.toFixed(1)}%
+            </p>
             <p className="text-white/40 text-xs mt-2">
               {analytics.proUsers + analytics.enterpriseUsers} paid users
             </p>
@@ -218,14 +251,18 @@ export default function AdminAnalyticsPage() {
           {/* ARPU */}
           <div className="rounded-xl border border-white/10 bg-gradient-to-br from-orange-500/10 to-red-500/10 p-6">
             <p className="text-white/60 text-sm mb-2">Avg Revenue Per User</p>
-            <p className="text-4xl font-bold text-orange-400">${analytics.avgRevenuePerUser.toFixed(2)}</p>
+            <p className="text-4xl font-bold text-orange-400">
+              ${analytics.avgRevenuePerUser.toFixed(2)}
+            </p>
             <p className="text-white/40 text-xs mt-2">Annual per user</p>
           </div>
         </div>
 
         {/* Tier Breakdown */}
         <div className="rounded-xl border border-white/10 bg-gradient-to-br from-slate-800 to-slate-900 p-6">
-          <h2 className="text-xl font-bold text-white mb-6">User Tier Distribution</h2>
+          <h2 className="text-xl font-bold text-white mb-6">
+            User Tier Distribution
+          </h2>
           <div className="grid grid-cols-3 gap-4">
             {/* Free */}
             <div className="rounded-lg bg-white/5 p-4 border border-white/10">
@@ -234,12 +271,23 @@ export default function AdminAnalyticsPage() {
                 <div
                   className="h-full bg-gradient-to-r from-blue-500 to-cyan-500 transition-all"
                   style={{
-                    width: `${analytics.totalUsers > 0 ? (analytics.freeUsers / analytics.totalUsers) * 100 : 0}%`,
+                    width: `${
+                      analytics.totalUsers > 0
+                        ? (analytics.freeUsers / analytics.totalUsers) * 100
+                        : 0
+                    }%`,
                   }}
                 />
               </div>
               <p className="text-blue-400 font-bold mt-2">
-                {analytics.freeUsers} users ({analytics.totalUsers > 0 ? ((analytics.freeUsers / analytics.totalUsers) * 100).toFixed(1) : 0}%)
+                {analytics.freeUsers} users (
+                {analytics.totalUsers > 0
+                  ? (
+                      (analytics.freeUsers / analytics.totalUsers) *
+                      100
+                    ).toFixed(1)
+                  : 0}
+                %)
               </p>
             </div>
 
@@ -250,12 +298,22 @@ export default function AdminAnalyticsPage() {
                 <div
                   className="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all"
                   style={{
-                    width: `${analytics.totalUsers > 0 ? (analytics.proUsers / analytics.totalUsers) * 100 : 0}%`,
+                    width: `${
+                      analytics.totalUsers > 0
+                        ? (analytics.proUsers / analytics.totalUsers) * 100
+                        : 0
+                    }%`,
                   }}
                 />
               </div>
               <p className="text-purple-400 font-bold mt-2">
-                {analytics.proUsers} users ({analytics.totalUsers > 0 ? ((analytics.proUsers / analytics.totalUsers) * 100).toFixed(1) : 0}%)
+                {analytics.proUsers} users (
+                {analytics.totalUsers > 0
+                  ? ((analytics.proUsers / analytics.totalUsers) * 100).toFixed(
+                      1
+                    )
+                  : 0}
+                %)
               </p>
             </div>
 
@@ -266,12 +324,24 @@ export default function AdminAnalyticsPage() {
                 <div
                   className="h-full bg-gradient-to-r from-orange-500 to-red-500 transition-all"
                   style={{
-                    width: `${analytics.totalUsers > 0 ? (analytics.enterpriseUsers / analytics.totalUsers) * 100 : 0}%`,
+                    width: `${
+                      analytics.totalUsers > 0
+                        ? (analytics.enterpriseUsers / analytics.totalUsers) *
+                          100
+                        : 0
+                    }%`,
                   }}
                 />
               </div>
               <p className="text-orange-400 font-bold mt-2">
-                {analytics.enterpriseUsers} users ({analytics.totalUsers > 0 ? ((analytics.enterpriseUsers / analytics.totalUsers) * 100).toFixed(1) : 0}%)
+                {analytics.enterpriseUsers} users (
+                {analytics.totalUsers > 0
+                  ? (
+                      (analytics.enterpriseUsers / analytics.totalUsers) *
+                      100
+                    ).toFixed(1)
+                  : 0}
+                %)
               </p>
             </div>
           </div>
@@ -279,38 +349,57 @@ export default function AdminAnalyticsPage() {
 
         {/* Recent Transactions */}
         <div className="rounded-xl border border-white/10 bg-gradient-to-br from-slate-800 to-slate-900 p-6">
-          <h2 className="text-xl font-bold text-white mb-6">Recent Transactions</h2>
+          <h2 className="text-xl font-bold text-white mb-6">
+            Recent Transactions
+          </h2>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-white/10">
-                  <th className="px-4 py-3 text-left text-white/60 text-sm font-medium">Date</th>
-                  <th className="px-4 py-3 text-left text-white/60 text-sm font-medium">Customer</th>
-                  <th className="px-4 py-3 text-left text-white/60 text-sm font-medium">Amount</th>
-                  <th className="px-4 py-3 text-left text-white/60 text-sm font-medium">Plan</th>
-                  <th className="px-4 py-3 text-left text-white/60 text-sm font-medium">Status</th>
+                  <th className="px-4 py-3 text-left text-white/60 text-sm font-medium">
+                    Date
+                  </th>
+                  <th className="px-4 py-3 text-left text-white/60 text-sm font-medium">
+                    Customer
+                  </th>
+                  <th className="px-4 py-3 text-left text-white/60 text-sm font-medium">
+                    Amount
+                  </th>
+                  <th className="px-4 py-3 text-left text-white/60 text-sm font-medium">
+                    Plan
+                  </th>
+                  <th className="px-4 py-3 text-left text-white/60 text-sm font-medium">
+                    Status
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {analytics.recentTransactions.length > 0 ? (
                   analytics.recentTransactions.map((txn) => (
-                    <tr key={txn.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                    <tr
+                      key={txn.id}
+                      className="border-b border-white/5 hover:bg-white/5 transition-colors"
+                    >
                       <td className="px-4 py-3 text-white/80 text-sm">
                         {formatDate(txn.createdAt)}
                       </td>
-                      <td className="px-4 py-3 text-white/80 text-sm">{txn.email || 'Unknown'}</td>
+                      <td className="px-4 py-3 text-white/80 text-sm">
+                        {txn.email || 'Unknown'}
+                      </td>
                       <td className="px-4 py-3 text-green-400 font-semibold">
                         ${txn.amount?.toFixed(2) || '0.00'}
                       </td>
-                      <td className="px-4 py-3 text-white/60 text-sm capitalize">{txn.tier || 'pro'}</td>
+                      <td className="px-4 py-3 text-white/60 text-sm capitalize">
+                        {txn.tier || 'pro'}
+                      </td>
                       <td className="px-4 py-3">
                         <span
                           className={`px-2 py-1 rounded-full text-xs font-medium ${
                             txn.status === 'completed'
                               ? 'bg-green-500/20 text-green-400'
                               : txn.status === 'pending'
-                                ? 'bg-yellow-500/20 text-yellow-400'
-                                : 'bg-red-500/20 text-red-400'
+                              ? 'bg-yellow-500/20 text-yellow-400'
+                              : 'bg-red-500/20 text-red-400'
                           }`}
                         >
                           {txn.status || 'completed'}
@@ -320,7 +409,10 @@ export default function AdminAnalyticsPage() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={5} className="px-4 py-8 text-center text-white/40 text-sm">
+                    <td
+                      colSpan={5}
+                      className="px-4 py-8 text-center text-white/40 text-sm"
+                    >
                       No transactions yet
                     </td>
                   </tr>
@@ -334,38 +426,54 @@ export default function AdminAnalyticsPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* User Growth */}
           <div className="rounded-xl border border-white/10 bg-gradient-to-br from-slate-800 to-slate-900 p-6">
-            <h3 className="text-lg font-bold text-white mb-4">📈 Tier Breakdown</h3>
+            <h3 className="text-lg font-bold text-white mb-4">
+              📈 Tier Breakdown
+            </h3>
             <div className="space-y-3">
               <div className="flex justify-between items-center">
                 <span className="text-white/60">Free Users</span>
-                <span className="text-blue-400 font-bold">{analytics.userTierBreakdown.free}</span>
+                <span className="text-blue-400 font-bold">
+                  {analytics.userTierBreakdown.free}
+                </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-white/60">Pro Users</span>
-                <span className="text-purple-400 font-bold">{analytics.userTierBreakdown.pro}</span>
+                <span className="text-purple-400 font-bold">
+                  {analytics.userTierBreakdown.pro}
+                </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-white/60">Enterprise Users</span>
-                <span className="text-orange-400 font-bold">{analytics.userTierBreakdown.enterprise}</span>
+                <span className="text-orange-400 font-bold">
+                  {analytics.userTierBreakdown.enterprise}
+                </span>
               </div>
             </div>
           </div>
 
           {/* Revenue Summary */}
           <div className="rounded-xl border border-white/10 bg-gradient-to-br from-slate-800 to-slate-900 p-6">
-            <h3 className="text-lg font-bold text-white mb-4">💰 Revenue Summary</h3>
+            <h3 className="text-lg font-bold text-white mb-4">
+              💰 Revenue Summary
+            </h3>
             <div className="space-y-3">
               <div className="flex justify-between items-center">
                 <span className="text-white/60">Monthly Recurring</span>
-                <span className="text-green-400 font-bold">${analytics.mrr.toLocaleString()}</span>
+                <span className="text-green-400 font-bold">
+                  ${analytics.mrr.toLocaleString()}
+                </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-white/60">Annual Run Rate</span>
-                <span className="text-green-400 font-bold">${(analytics.mrr * 12).toLocaleString()}</span>
+                <span className="text-green-400 font-bold">
+                  ${(analytics.mrr * 12).toLocaleString()}
+                </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-white/60">Pro Revenue</span>
-                <span className="text-green-400 font-bold">${(analytics.proUsers * 99 * 12).toLocaleString()}</span>
+                <span className="text-green-400 font-bold">
+                  ${(analytics.proUsers * 99 * 12).toLocaleString()}
+                </span>
               </div>
             </div>
           </div>

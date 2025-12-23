@@ -1,18 +1,17 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { getAuthInstance, getDbInstance } from "@/lib/firebase";
-import { onAuthStateChanged } from "firebase/auth";
+import DashboardLayout from '@/components/DashboardLayout';
+import { onAuthStateChanged } from 'firebase/auth';
 import {
   collection,
-  query,
-  orderBy,
-  getDocs,
   deleteDoc,
   doc,
-} from "firebase/firestore";
-import DashboardLayout from "@/components/DashboardLayout";
+  getDocs,
+  orderBy,
+  query,
+} from 'firebase/firestore';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 interface ContentItem {
   id: string;
@@ -23,24 +22,24 @@ interface ContentItem {
 }
 
 const COMMAND_NAMES: Record<string, string> = {
-  "/daily_post": "Daily Post",
-  "/weekly_pack": "Weekly Content Pack",
-  "/dm_cold": "Cold DM",
-  "/dm_followup": "Follow-up DM",
-  "/dm_objection": "Objection Handling",
-  "/promo_flash": "Flash Sale Promo",
-  "/promo_referral": "Referral Promo",
-  "/promo_seasonal": "Seasonal Promo",
-  "/note_template": "Client Note",
-  "/client_follow_up": "Client Follow-up",
+  '/daily_post': 'Daily Post',
+  '/weekly_pack': 'Weekly Content Pack',
+  '/dm_cold': 'Cold DM',
+  '/dm_followup': 'Follow-up DM',
+  '/dm_objection': 'Objection Handling',
+  '/promo_flash': 'Flash Sale Promo',
+  '/promo_referral': 'Referral Promo',
+  '/promo_seasonal': 'Seasonal Promo',
+  '/note_template': 'Client Note',
+  '/client_follow_up': 'Client Follow-up',
 };
 
 export default function HistoryPage() {
   const router = useRouter();
   const [contents, setContents] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<string>("");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [filter, setFilter] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     if (!auth || !db) {
@@ -53,15 +52,15 @@ export default function HistoryPage() {
 
     const unsubscribe = onAuthStateChanged(authInstance, async (user) => {
       if (!user) {
-        router.push("/");
+        router.push('/');
         return;
       }
 
       try {
         // Query Firestore for user's content history
         const q = query(
-          collection(dbInstance, "users", user.uid, "contents"),
-          orderBy("createdAt", "desc")
+          collection(dbInstance, 'users', user.uid, 'contents'),
+          orderBy('createdAt', 'desc')
         );
 
         const snapshot = await getDocs(q);
@@ -75,7 +74,7 @@ export default function HistoryPage() {
 
         setContents(items);
       } catch (err) {
-        console.error("Error loading history:", err);
+        console.error('Error loading history:', err);
       } finally {
         setLoading(false);
       }
@@ -89,11 +88,11 @@ export default function HistoryPage() {
 
     try {
       await deleteDoc(
-        doc(db, "users", auth.currentUser.uid, "contents", contentId)
+        doc(db, 'users', auth.currentUser.uid, 'contents', contentId)
       );
       setContents((prev) => prev.filter((item) => item.id !== contentId));
     } catch (err) {
-      console.error("Error deleting content:", err);
+      console.error('Error deleting content:', err);
     }
   };
 
@@ -139,7 +138,8 @@ export default function HistoryPage() {
           </div>
 
           <div className="text-sm text-slate-400">
-            {filteredContents.length} item{filteredContents.length !== 1 ? "s" : ""}
+            {filteredContents.length} item
+            {filteredContents.length !== 1 ? 's' : ''}
             {filter && ` of type "${COMMAND_NAMES[filter]}"`}
           </div>
         </div>
@@ -150,8 +150,8 @@ export default function HistoryPage() {
         ) : filteredContents.length === 0 ? (
           <div className="text-slate-400 py-8 text-center">
             {contents.length === 0
-              ? "No content generated yet. Start creating!"
-              : "No content matches your filters."}
+              ? 'No content generated yet. Start creating!'
+              : 'No content matches your filters.'}
           </div>
         ) : (
           <div className="space-y-4">
@@ -166,10 +166,10 @@ export default function HistoryPage() {
                       {COMMAND_NAMES[item.command] || item.command}
                     </p>
                     <p className="text-xs text-slate-400 mt-1">
-                      {item.createdAt.toLocaleDateString()} at{" "}
+                      {item.createdAt.toLocaleDateString()} at{' '}
                       {item.createdAt.toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
+                        hour: '2-digit',
+                        minute: '2-digit',
                       })}
                     </p>
                   </div>
@@ -209,17 +209,22 @@ export default function HistoryPage() {
                 const csv = filteredContents
                   .map(
                     (item) =>
-                      `"${item.command}","${item.createdAt.toISOString()}","${item.content.replace(/"/g, '""')}"`
+                      `"${
+                        item.command
+                      }","${item.createdAt.toISOString()}","${item.content.replace(
+                        /"/g,
+                        '""'
+                      )}"`
                   )
-                  .join("\n");
+                  .join('\n');
 
-                const element = document.createElement("a");
+                const element = document.createElement('a');
                 element.setAttribute(
-                  "href",
-                  "data:text/csv;charset=utf-8," + encodeURIComponent(csv)
+                  'href',
+                  'data:text/csv;charset=utf-8,' + encodeURIComponent(csv)
                 );
-                element.setAttribute("download", "litlabs-content-history.csv");
-                element.style.display = "none";
+                element.setAttribute('download', 'litlabs-content-history.csv');
+                element.style.display = 'none';
                 document.body.appendChild(element);
                 element.click();
                 document.body.removeChild(element);

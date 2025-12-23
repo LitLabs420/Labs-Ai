@@ -1,17 +1,16 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getDbInstance } from "@/lib/firebase";
 import {
-  collection,
-  query,
-  where,
-  getDocs,
-  limit,
   addDoc,
-  updateDoc,
-  increment,
+  collection,
   doc,
+  getDocs,
+  increment,
+  limit,
+  query,
   Timestamp,
-} from "firebase/firestore";
+  updateDoc,
+  where,
+} from 'firebase/firestore';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
   req: NextRequest,
@@ -20,7 +19,7 @@ export async function GET(
   try {
     if (!db) {
       return NextResponse.json(
-        { error: "Database not initialized" },
+        { error: 'Database not initialized' },
         { status: 500 }
       );
     }
@@ -29,8 +28,8 @@ export async function GET(
 
     // Find user with this referral code
     const q = query(
-      collection(db, "users"),
-      where("referralCode", "==", referralCode),
+      collection(db, 'users'),
+      where('referralCode', '==', referralCode),
       limit(1)
     );
 
@@ -38,7 +37,7 @@ export async function GET(
 
     if (snapshot.empty) {
       return NextResponse.json(
-        { error: "Invalid referral code" },
+        { error: 'Invalid referral code' },
         { status: 404 }
       );
     }
@@ -47,16 +46,16 @@ export async function GET(
 
     // Return referrer info (without sensitive data)
     return NextResponse.json({
-      referrerName: referrerData.displayName || "LitLabs Member",
+      referrerName: referrerData.displayName || 'LitLabs Member',
       referralCode,
       discountCode: `REFER${referralCode.toUpperCase()}`,
       discountPercentage: 20,
     });
   } catch (error) {
     const err = error as Error;
-    console.error("Error fetching referral info:", err.message);
+    console.error('Error fetching referral info:', err.message);
     return NextResponse.json(
-      { error: "Failed to fetch referral information" },
+      { error: 'Failed to fetch referral information' },
       { status: 500 }
     );
   }
@@ -72,8 +71,8 @@ export async function POST(
 
     // Find referrer
     const q = query(
-      collection(db!, "users"),
-      where("referralCode", "==", referralCode),
+      collection(db!, 'users'),
+      where('referralCode', '==', referralCode),
       limit(1)
     );
 
@@ -81,7 +80,7 @@ export async function POST(
 
     if (snapshot.empty) {
       return NextResponse.json(
-        { error: "Invalid referral code" },
+        { error: 'Invalid referral code' },
         { status: 404 }
       );
     }
@@ -89,31 +88,31 @@ export async function POST(
     const referrerId = snapshot.docs[0].id;
 
     // Record referral
-    await addDoc(collection(db!, "referrals"), {
+    await addDoc(collection(db!, 'referrals'), {
       referrerId,
       referralCode,
       newUserEmail,
       newUserUid,
       createdAt: Timestamp.now(),
-      status: "pending", // pending, converted, credited
+      status: 'pending', // pending, converted, credited
       bonusAmount: 0,
     });
 
     // Update referrer's referral count
-    await updateDoc(doc(db!, "users", referrerId), {
+    await updateDoc(doc(db!, 'users', referrerId), {
       referralCount: increment(1),
       pendingReferrals: increment(1),
     });
 
     return NextResponse.json({
       success: true,
-      message: "Referral recorded",
+      message: 'Referral recorded',
     });
   } catch (error) {
     const err = error as Error;
-    console.error("Error recording referral:", err.message);
+    console.error('Error recording referral:', err.message);
     return NextResponse.json(
-      { error: "Failed to record referral" },
+      { error: 'Failed to record referral' },
       { status: 500 }
     );
   }

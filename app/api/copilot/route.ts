@@ -3,10 +3,9 @@
  * Processes requests from Microsoft 365 Copilot
  */
 
-import { NextRequest, NextResponse } from 'next/server';
 import { getMicrosoftGraphClient } from '@/lib/microsoft-graph';
 import { doc, getDoc } from 'firebase/firestore';
-import { getDbInstance } from '@/lib/firebase';
+import { NextRequest, NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -79,12 +78,21 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function handleGenerateContent(parameters: Record<string, string | string[]>) {
-  const { content_type, topic, tone = 'professional', length = 'medium' } = parameters;
+async function handleGenerateContent(
+  parameters: Record<string, string | string[]>
+) {
+  const {
+    content_type,
+    topic,
+    tone = 'professional',
+    length = 'medium',
+  } = parameters;
 
   // Call the existing AI API
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api'}/ai/generate-content`,
+    `${
+      process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api'
+    }/ai/generate-content`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -124,7 +132,9 @@ async function handleAnalyzeMetrics(
       conversion_rate: 0.085,
       revenue: userData?.subscription_tier === 'pro' ? 5000 : 1000,
     },
-    summary: `Performance metrics for ${time_period}: ${metric_type} trending ${Math.random() > 0.5 ? 'up' : 'down'}.`,
+    summary: `Performance metrics for ${time_period}: ${metric_type} trending ${
+      Math.random() > 0.5 ? 'up' : 'down'
+    }.`,
   };
 }
 
@@ -153,7 +163,8 @@ async function handleManageSubscription(
 
     case 'downgrade':
       return {
-        description: 'Downgrading will reduce your feature access. Please confirm.',
+        description:
+          'Downgrading will reduce your feature access. Please confirm.',
       };
 
     case 'view_invoice':

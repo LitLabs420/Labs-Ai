@@ -28,8 +28,8 @@ export default function AdminDashboardPage() {
       // Verify admin status via API route
       const res = await fetch('/api/verify-admin', {
         headers: {
-          'Authorization': `Bearer ${await user.getIdToken()}`
-        }
+          Authorization: `Bearer ${await user.getIdToken()}`,
+        },
       });
 
       if (!res.ok) {
@@ -73,8 +73,12 @@ export default function AdminDashboardPage() {
       <div className="space-y-8">
         {/* Header */}
         <div>
-          <h1 className="text-4xl font-bold text-white mb-2">🎛️ Admin Control Panel</h1>
-          <p className="text-white/60">Complete platform management and oversight</p>
+          <h1 className="text-4xl font-bold text-white mb-2">
+            🎛️ Admin Control Panel
+          </h1>
+          <p className="text-white/60">
+            Complete platform management and oversight
+          </p>
         </div>
 
         {/* Quick Navigation Grid */}
@@ -88,7 +92,9 @@ export default function AdminDashboardPage() {
             <h3 className="text-white font-bold mb-2 group-hover:text-blue-400 transition-colors">
               Analytics
             </h3>
-            <p className="text-white/60 text-sm">Real-time revenue, users, conversion rates</p>
+            <p className="text-white/60 text-sm">
+              Real-time revenue, users, conversion rates
+            </p>
           </a>
 
           {/* Users Link */}
@@ -100,7 +106,9 @@ export default function AdminDashboardPage() {
             <h3 className="text-white font-bold mb-2 group-hover:text-purple-400 transition-colors">
               User Management
             </h3>
-            <p className="text-white/60 text-sm">Manage tiers, suspend accounts, export users</p>
+            <p className="text-white/60 text-sm">
+              Manage tiers, suspend accounts, export users
+            </p>
           </a>
 
           {/* Billing Link */}
@@ -112,7 +120,9 @@ export default function AdminDashboardPage() {
             <h3 className="text-white font-bold mb-2 group-hover:text-green-400 transition-colors">
               Billing & Pricing
             </h3>
-            <p className="text-white/60 text-sm">Manage payment methods and pricing tiers</p>
+            <p className="text-white/60 text-sm">
+              Manage payment methods and pricing tiers
+            </p>
           </a>
 
           {/* Transactions Link */}
@@ -124,7 +134,9 @@ export default function AdminDashboardPage() {
             <h3 className="text-white font-bold mb-2 group-hover:text-orange-400 transition-colors">
               Transactions
             </h3>
-            <p className="text-white/60 text-sm">View all payments and refunds</p>
+            <p className="text-white/60 text-sm">
+              View all payments and refunds
+            </p>
           </a>
 
           {/* Settings Link */}
@@ -136,7 +148,9 @@ export default function AdminDashboardPage() {
             <h3 className="text-white font-bold mb-2 group-hover:text-indigo-400 transition-colors">
               Settings
             </h3>
-            <p className="text-white/60 text-sm">Configure API keys and webhooks</p>
+            <p className="text-white/60 text-sm">
+              Configure API keys and webhooks
+            </p>
           </a>
 
           {/* Referrals Link */}
@@ -148,13 +162,17 @@ export default function AdminDashboardPage() {
             <h3 className="text-white font-bold mb-2 group-hover:text-cyan-400 transition-colors">
               Referral Program
             </h3>
-            <p className="text-white/60 text-sm">Track affiliate revenue and bonuses</p>
+            <p className="text-white/60 text-sm">
+              Track affiliate revenue and bonuses
+            </p>
           </a>
         </div>
 
         {/* Feature Status */}
         <div className="rounded-xl border border-white/10 bg-gradient-to-br from-slate-800 to-slate-900 p-6">
-          <h2 className="text-xl font-bold text-white mb-6">✨ System Status</h2>
+          <h2 className="text-xl font-bold text-white mb-6">
+            ✨ System Status
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
               { name: 'Stripe Integration', status: 'active', icon: '💳' },
@@ -164,7 +182,10 @@ export default function AdminDashboardPage() {
               { name: 'Referral Program', status: 'active', icon: '🎁' },
               { name: 'Webhook Processing', status: 'active', icon: '🪝' },
             ].map((item) => (
-              <div key={item.name} className="flex items-center justify-between p-3 rounded-lg bg-white/5">
+              <div
+                key={item.name}
+                className="flex items-center justify-between p-3 rounded-lg bg-white/5"
+              >
                 <span className="text-white/80">
                   {item.icon} {item.name}
                 </span>
@@ -180,7 +201,8 @@ export default function AdminDashboardPage() {
         <div className="rounded-xl border border-white/10 bg-gradient-to-br from-slate-800 to-slate-900 p-6">
           <h2 className="text-xl font-bold text-white mb-4">📈 Quick Stats</h2>
           <p className="text-white/60 text-sm">
-            ✅ 30 API routes • ✅ Multi-payment ready • ✅ Real-time admin dashboard • ✅ Advanced user management • ✅ Webhook processing
+            ✅ 30 API routes • ✅ Multi-payment ready • ✅ Real-time admin
+            dashboard • ✅ Advanced user management • ✅ Webhook processing
           </p>
         </div>
       </div>

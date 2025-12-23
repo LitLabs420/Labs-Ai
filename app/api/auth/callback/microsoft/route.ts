@@ -3,10 +3,9 @@
  * Handles the OAuth 2.0 redirect and token exchange
  */
 
-import { NextRequest, NextResponse } from 'next/server';
 import { getMicrosoftGraphClient } from '@/lib/microsoft-graph';
 import { doc, setDoc } from 'firebase/firestore';
-import { getDbInstance } from '@/lib/firebase';
+import { NextRequest, NextResponse } from 'next/server';
 
 if (!db) {
   throw new Error('Firebase database not initialized');
@@ -27,7 +26,9 @@ export async function GET(request: NextRequest) {
       console.error('OAuth error:', error, errorDescription);
       return NextResponse.redirect(
         new URL(
-          `/auth?error=${encodeURIComponent(error)}&description=${encodeURIComponent(errorDescription || '')}`,
+          `/auth?error=${encodeURIComponent(
+            error
+          )}&description=${encodeURIComponent(errorDescription || '')}`,
           request.url
         )
       );
@@ -45,7 +46,9 @@ export async function GET(request: NextRequest) {
     const tokenResponse = await graphClient.getAccessToken(code);
 
     // Get user profile
-    const userProfile = await graphClient.getUserProfile(tokenResponse.access_token);
+    const userProfile = await graphClient.getUserProfile(
+      tokenResponse.access_token
+    );
 
     // Store token and user info in Firebase
     const userDocRef = doc(db as any, 'users', userProfile.id);
@@ -78,7 +81,9 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(
       new URL(
         '/auth?error=callback_failed&description=' +
-          encodeURIComponent(error instanceof Error ? error.message : 'Unknown error'),
+          encodeURIComponent(
+            error instanceof Error ? error.message : 'Unknown error'
+          ),
         request.url
       )
     );

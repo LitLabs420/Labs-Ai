@@ -3,10 +3,9 @@
  * Sends payment notifications to Teams channel
  */
 
+import { getMicrosoftGraphClient } from '@/lib/microsoft-graph';
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { getMicrosoftGraphClient } from '@/lib/microsoft-graph';
-import { getDbInstance } from '@/lib/firebase';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -25,10 +24,7 @@ export async function POST(request: NextRequest) {
     const signature = request.headers.get('stripe-signature');
 
     if (!signature || !process.env.STRIPE_WEBHOOK_SECRET) {
-      return NextResponse.json(
-        { error: 'Missing signature' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing signature' }, { status: 400 });
     }
 
     // Verify webhook signature
@@ -40,10 +36,7 @@ export async function POST(request: NextRequest) {
         process.env.STRIPE_WEBHOOK_SECRET
       );
     } catch {
-      return NextResponse.json(
-        { error: 'Invalid signature' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
     }
 
     // Handle payment events
@@ -65,31 +58,19 @@ async function handleStripeEvent(event: Stripe.Event) {
   switch (event.type) {
     case 'payment_intent.succeeded': {
       const paymentIntent = event.data.object as Stripe.PaymentIntent;
-      await sendPaymentNotification(
-        graphClient,
-        paymentIntent,
-        'succeeded'
-      );
+      await sendPaymentNotification(graphClient, paymentIntent, 'succeeded');
       break;
     }
 
     case 'payment_intent.payment_failed': {
       const paymentIntent = event.data.object as Stripe.PaymentIntent;
-      await sendPaymentNotification(
-        graphClient,
-        paymentIntent,
-        'failed'
-      );
+      await sendPaymentNotification(graphClient, paymentIntent, 'failed');
       break;
     }
 
     case 'customer.subscription.updated': {
       const subscription = event.data.object as Stripe.Subscription;
-      await sendSubscriptionNotification(
-        graphClient,
-        subscription,
-        'updated'
-      );
+      await sendSubscriptionNotification(graphClient, subscription, 'updated');
       break;
     }
 
@@ -105,21 +86,13 @@ async function handleStripeEvent(event: Stripe.Event) {
 
     case 'invoice.paid': {
       const invoice = event.data.object as Stripe.Invoice;
-      await sendInvoiceNotification(
-        graphClient,
-        invoice,
-        'paid'
-      );
+      await sendInvoiceNotification(graphClient, invoice, 'paid');
       break;
     }
 
     case 'invoice.payment_failed': {
       const invoice = event.data.object as Stripe.Invoice;
-      await sendInvoiceNotification(
-        graphClient,
-        invoice,
-        'failed'
-      );
+      await sendInvoiceNotification(graphClient, invoice, 'failed');
       break;
     }
 
@@ -137,7 +110,11 @@ async function sendPaymentNotification(
     const customerId = paymentIntent.customer as string;
 
     // Get user by Stripe customer ID
-    const userQuery = await (db as any).collection('users').where('stripeCustomerId', '==', customerId).limit(1).get();
+    const userQuery = await (db as any)
+      .collection('users')
+      .where('stripeCustomerId', '==', customerId)
+      .limit(1)
+      .get();
 
     if (userQuery.empty) return;
 
@@ -148,8 +125,12 @@ async function sendPaymentNotification(
 
     const message =
       status === 'succeeded'
-        ? `✅ Payment of $${(paymentIntent.amount / 100).toFixed(2)} has been successfully processed.`
-        : `❌ Payment of $${(paymentIntent.amount / 100).toFixed(2)} has failed. Please try again or contact support.`;
+        ? `✅ Payment of $${(paymentIntent.amount / 100).toFixed(
+            2
+          )} has been successfully processed.`
+        : `❌ Payment of $${(paymentIntent.amount / 100).toFixed(
+            2
+          )} has failed. Please try again or contact support.`;
 
     if (userData.teamsChannelId && userData.teamsTeamId) {
       await graphClient.sendTeamsMessage(
@@ -183,7 +164,11 @@ async function sendSubscriptionNotification(
     const customerId = subscription.customer as string;
 
     // Get user by Stripe customer ID
-    const userQuery = await (db as any).collection('users').where('stripeCustomerId', '==', customerId).limit(1).get();
+    const userQuery = await (db as any)
+      .collection('users')
+      .where('stripeCustomerId', '==', customerId)
+      .limit(1)
+      .get();
 
     if (userQuery.empty) return;
 
@@ -194,8 +179,12 @@ async function sendSubscriptionNotification(
 
     const message =
       status === 'updated'
-        ? `📝 Your subscription has been updated to $${(subscription.items.data[0]?.price?.unit_amount || 0) / 100}/month.`
-        : `❌ Your subscription has been cancelled. Your current billing period ends on ${new Date((subscription as any).current_period_end * 1000).toLocaleDateString()}.`;
+        ? `📝 Your subscription has been updated to $${
+            (subscription.items.data[0]?.price?.unit_amount || 0) / 100
+          }/month.`
+        : `❌ Your subscription has been cancelled. Your current billing period ends on ${new Date(
+            (subscription as any).current_period_end * 1000
+          ).toLocaleDateString()}.`;
 
     if (userData.teamsChannelId && userData.teamsTeamId) {
       await graphClient.sendTeamsMessage(
@@ -228,7 +217,11 @@ async function sendInvoiceNotification(
     const customerId = invoice.customer as string;
 
     // Get user by Stripe customer ID
-    const userQuery = await (db as any).collection('users').where('stripeCustomerId', '==', customerId).limit(1).get();
+    const userQuery = await (db as any)
+      .collection('users')
+      .where('stripeCustomerId', '==', customerId)
+      .limit(1)
+      .get();
 
     if (userQuery.empty) return;
 
@@ -239,8 +232,12 @@ async function sendInvoiceNotification(
 
     const message =
       status === 'paid'
-        ? `✅ Invoice #${invoice.number} for $${(invoice.total || 0) / 100} has been paid.`
-        : `⚠️ Invoice #${invoice.number} for $${(invoice.total || 0) / 100} payment failed.`;
+        ? `✅ Invoice #${invoice.number} for $${
+            (invoice.total || 0) / 100
+          } has been paid.`
+        : `⚠️ Invoice #${invoice.number} for $${
+            (invoice.total || 0) / 100
+          } payment failed.`;
 
     if (userData.teamsChannelId && userData.teamsTeamId) {
       await graphClient.sendTeamsMessage(

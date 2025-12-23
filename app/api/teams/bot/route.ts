@@ -3,10 +3,9 @@
  * Handles incoming messages from Teams and routes them to LitLabs AI
  */
 
-import { NextRequest, NextResponse } from 'next/server';
 import { getMicrosoftGraphClient } from '@/lib/microsoft-graph';
 import { doc, getDoc } from 'firebase/firestore';
-import { getDbInstance } from '@/lib/firebase';
+import { NextRequest, NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -82,7 +81,9 @@ async function handleMessage(activity: TeamsActivity) {
 
     // Send message to LitLabs AI for processing
     const aiResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api'}/ai-chat`,
+      `${
+        process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api'
+      }/ai-chat`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -110,7 +111,9 @@ async function handleMessage(activity: TeamsActivity) {
       userData.tokens.access_token,
       activity.channelData.teamsTeamId,
       activity.channelData.teamsChannelId,
-      `<div><strong>LitLabs AI:</strong><br/>${escapeHtml(aiResult.response)}</div>`
+      `<div><strong>LitLabs AI:</strong><br/>${escapeHtml(
+        aiResult.response
+      )}</div>`
     );
 
     return NextResponse.json({ ok: true });

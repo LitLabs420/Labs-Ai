@@ -1,17 +1,16 @@
 'use client';
 
-import { useState } from 'react';
-import { getAuthInstance } from '@/lib/firebase';
 import {
-  signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  GithubAuthProvider,
   GoogleAuthProvider,
   OAuthProvider,
-  GithubAuthProvider,
+  signInWithEmailAndPassword,
   signInWithPopup,
 } from 'firebase/auth';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export default function AuthPage() {
   const router = useRouter();
@@ -151,20 +150,32 @@ export default function AuthPage() {
 
             <div className="space-y-6">
               <div className="space-y-2">
-                <h1 className="text-5xl font-black">Join 2,800+ creators scaling their business</h1>
-                <p className="text-lg text-gray-300">Your AI marketing team is ready. Let&apos;s go.</p>
+                <h1 className="text-5xl font-black">
+                  Join 2,800+ creators scaling their business
+                </h1>
+                <p className="text-lg text-gray-300">
+                  Your AI marketing team is ready. Let&apos;s go.
+                </p>
               </div>
 
               {/* Benefits */}
               <div className="space-y-4 pt-8">
                 {[
-                  { icon: '🤖', text: 'AI handles your DMs, content, & bookings' },
+                  {
+                    icon: '🤖',
+                    text: 'AI handles your DMs, content, & bookings',
+                  },
                   { icon: '⚡', text: 'Save 20+ hours every week' },
                   { icon: '💰', text: '3-10x more revenue in 90 days' },
-                  { icon: '🎮', text: 'Gamified dashboard keeps you motivated' },
+                  {
+                    icon: '🎮',
+                    text: 'Gamified dashboard keeps you motivated',
+                  },
                 ].map((benefit, i) => (
                   <div key={i} className="flex gap-3 items-start">
-                    <span className="text-2xl flex-shrink-0">{benefit.icon}</span>
+                    <span className="text-2xl flex-shrink-0">
+                      {benefit.icon}
+                    </span>
                     <p className="text-gray-200 text-lg">{benefit.text}</p>
                   </div>
                 ))}
@@ -172,7 +183,9 @@ export default function AuthPage() {
 
               {/* Social proof */}
               <div className="pt-8 border-t border-white/10">
-                <p className="text-sm text-gray-400 mb-4">Trusted by beauty pros, creators & agencies</p>
+                <p className="text-sm text-gray-400 mb-4">
+                  Trusted by beauty pros, creators & agencies
+                </p>
                 <div className="flex gap-4 text-center">
                   <div>
                     <p className="text-2xl font-black text-[#ff006e]">2,847</p>
@@ -266,14 +279,18 @@ export default function AuthPage() {
                 <div className="w-full border-t border-white/10"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-black text-gray-400">Or with email</span>
+                <span className="px-4 bg-black text-gray-400">
+                  Or with email
+                </span>
               </div>
             </div>
 
             {/* Email form */}
             <form onSubmit={handleEmailAuth} className="space-y-4">
               <div>
-                <label className="block text-sm font-semibold mb-2">Email</label>
+                <label className="block text-sm font-semibold mb-2">
+                  Email
+                </label>
                 <input
                   type="email"
                   value={email}
@@ -285,7 +302,9 @@ export default function AuthPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold mb-2">Password</label>
+                <label className="block text-sm font-semibold mb-2">
+                  Password
+                </label>
                 <input
                   type="password"
                   value={password}
@@ -296,14 +315,20 @@ export default function AuthPage() {
                 />
               </div>
 
-              {error && <p className="text-red-400 text-sm font-semibold">{error}</p>}
+              {error && (
+                <p className="text-red-400 text-sm font-semibold">{error}</p>
+              )}
 
               <button
                 type="submit"
                 disabled={loading}
                 className="w-full py-3 rounded-lg bg-gradient-to-r from-[#ff006e] via-[#8338ec] to-[#3a86ff] text-white font-bold text-lg hover:brightness-110 transition disabled:opacity-50"
               >
-                {loading ? 'Loading...' : mode === 'signup' ? 'Create Account' : 'Sign In'}
+                {loading
+                  ? 'Loading...'
+                  : mode === 'signup'
+                  ? 'Create Account'
+                  : 'Sign In'}
               </button>
             </form>
 
@@ -312,11 +337,17 @@ export default function AuthPage() {
               <p>🔒 Secure. No spam. No setup fees.</p>
               <p>
                 By signing up, you agree to our{' '}
-                <Link href="/terms-of-service" className="text-[#ff006e] hover:text-[#ff006e]/80">
+                <Link
+                  href="/terms-of-service"
+                  className="text-[#ff006e] hover:text-[#ff006e]/80"
+                >
                   terms
-                </Link>
-                {' '}and{' '}
-                <Link href="/privacy-policy" className="text-[#ff006e] hover:text-[#ff006e]/80">
+                </Link>{' '}
+                and{' '}
+                <Link
+                  href="/privacy-policy"
+                  className="text-[#ff006e] hover:text-[#ff006e]/80"
+                >
                   privacy policy
                 </Link>
               </p>

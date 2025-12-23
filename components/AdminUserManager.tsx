@@ -1,8 +1,7 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { getDbInstance } from "@/lib/firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs } from 'firebase/firestore';
+import { useEffect, useState } from 'react';
 
 type User = {
   uid: string;
@@ -22,8 +21,10 @@ export default function AdminUserManager() {
   const [loading, setLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
-  const [filter, setFilter] = useState<"all" | "active" | "suspended" | "pro">("all");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [filter, setFilter] = useState<'all' | 'active' | 'suspended' | 'pro'>(
+    'all'
+  );
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     loadUsers();
@@ -33,20 +34,20 @@ export default function AdminUserManager() {
     try {
       setLoading(true);
       if (!db) return;
-      
-      const snap = await getDocs(collection(db, "users"));
+
+      const snap = await getDocs(collection(db, 'users'));
       const usersList: User[] = [];
-      
+
       snap.forEach((doc) => {
         usersList.push({
           uid: doc.id,
           ...doc.data(),
         } as User);
       });
-      
+
       setUsers(usersList);
     } catch (error) {
-      console.error("Error loading users:", error);
+      console.error('Error loading users:', error);
     } finally {
       setLoading(false);
     }
@@ -60,9 +61,9 @@ export default function AdminUserManager() {
   ) => {
     setActionLoading(true);
     try {
-      const response = await fetch("/api/admin/users", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/admin/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ uid, action, tier, reason }),
       });
 
@@ -71,11 +72,11 @@ export default function AdminUserManager() {
         await loadUsers();
         setSelectedUser(null);
       } else {
-        alert("❌ Action failed");
+        alert('❌ Action failed');
       }
     } catch (error) {
-      console.error("Error:", error);
-      alert("❌ Error performing action");
+      console.error('Error:', error);
+      alert('❌ Error performing action');
     } finally {
       setActionLoading(false);
     }
@@ -83,10 +84,10 @@ export default function AdminUserManager() {
 
   const filteredUsers = users.filter((user) => {
     const matchesFilter =
-      filter === "all" ||
-      (filter === "active" && user.status === "active") ||
-      (filter === "suspended" && user.status === "suspended") ||
-      (filter === "pro" && (user.tier === "pro" || user.tier === "enterprise"));
+      filter === 'all' ||
+      (filter === 'active' && user.status === 'active') ||
+      (filter === 'suspended' && user.status === 'suspended') ||
+      (filter === 'pro' && (user.tier === 'pro' || user.tier === 'enterprise'));
 
     const matchesSearch =
       !searchTerm ||
@@ -110,25 +111,36 @@ export default function AdminUserManager() {
       {/* Header with Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-gradient-to-br from-blue-950/40 to-slate-950/40 border border-blue-700/50 rounded-2xl p-4">
-          <p className="text-xs uppercase tracking-wide text-blue-400 mb-1">All Users</p>
+          <p className="text-xs uppercase tracking-wide text-blue-400 mb-1">
+            All Users
+          </p>
           <p className="text-2xl font-black text-blue-200">{users.length}</p>
         </div>
         <div className="bg-gradient-to-br from-emerald-950/40 to-slate-950/40 border border-emerald-700/50 rounded-2xl p-4">
-          <p className="text-xs uppercase tracking-wide text-emerald-400 mb-1">Active</p>
+          <p className="text-xs uppercase tracking-wide text-emerald-400 mb-1">
+            Active
+          </p>
           <p className="text-2xl font-black text-emerald-200">
-            {users.filter((u) => u.status !== "suspended").length}
+            {users.filter((u) => u.status !== 'suspended').length}
           </p>
         </div>
         <div className="bg-gradient-to-br from-purple-950/40 to-slate-950/40 border border-purple-700/50 rounded-2xl p-4">
-          <p className="text-xs uppercase tracking-wide text-purple-400 mb-1">Suspended</p>
+          <p className="text-xs uppercase tracking-wide text-purple-400 mb-1">
+            Suspended
+          </p>
           <p className="text-2xl font-black text-purple-200">
-            {users.filter((u) => u.status === "suspended").length}
+            {users.filter((u) => u.status === 'suspended').length}
           </p>
         </div>
         <div className="bg-gradient-to-br from-pink-950/40 to-slate-950/40 border border-pink-700/50 rounded-2xl p-4">
-          <p className="text-xs uppercase tracking-wide text-pink-400 mb-1">Premium</p>
+          <p className="text-xs uppercase tracking-wide text-pink-400 mb-1">
+            Premium
+          </p>
           <p className="text-2xl font-black text-pink-200">
-            {users.filter((u) => u.tier === "pro" || u.tier === "enterprise").length}
+            {
+              users.filter((u) => u.tier === 'pro' || u.tier === 'enterprise')
+                .length
+            }
           </p>
         </div>
       </div>
@@ -143,14 +155,14 @@ export default function AdminUserManager() {
           className="flex-1 px-4 py-2 rounded-lg bg-slate-800 border border-slate-700 text-sm focus:border-pink-500 focus:outline-none"
         />
         <div className="flex gap-2">
-          {(["all", "active", "suspended", "pro"] as const).map((f) => (
+          {(['all', 'active', 'suspended', 'pro'] as const).map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
               className={`px-4 py-2 rounded-lg text-sm font-semibold transition ${
                 filter === f
-                  ? "bg-pink-500 text-white shadow-lg shadow-pink-500/50"
-                  : "bg-slate-800 text-slate-400 hover:bg-slate-700"
+                  ? 'bg-pink-500 text-white shadow-lg shadow-pink-500/50'
+                  : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
               }`}
             >
               {f.charAt(0).toUpperCase() + f.slice(1)}
@@ -188,7 +200,10 @@ export default function AdminUserManager() {
             <tbody>
               {filteredUsers.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-4 py-8 text-center text-slate-500">
+                  <td
+                    colSpan={6}
+                    className="px-4 py-8 text-center text-slate-500"
+                  >
                     No users found
                   </td>
                 </tr>
@@ -201,39 +216,43 @@ export default function AdminUserManager() {
                     <td className="px-4 py-3">
                       <div>
                         <p className="font-semibold text-white">
-                          {user.businessName || "(No business)"}
+                          {user.businessName || '(No business)'}
                         </p>
-                        <p className="text-xs text-slate-400">{user.name || "-"}</p>
+                        <p className="text-xs text-slate-400">
+                          {user.name || '-'}
+                        </p>
                       </div>
                     </td>
                     <td className="px-4 py-3 text-xs text-slate-400">
-                      <p className="font-mono">{user.uid.substring(0, 20)}...</p>
+                      <p className="font-mono">
+                        {user.uid.substring(0, 20)}...
+                      </p>
                     </td>
                     <td className="px-4 py-3 text-slate-300">
-                      {user.city || "-"}
+                      {user.city || '-'}
                     </td>
                     <td className="px-4 py-3">
                       <span
                         className={`text-xs font-bold px-2 py-1 rounded ${
-                          user.tier === "enterprise"
-                            ? "bg-purple-500/30 text-purple-300"
-                            : user.tier === "pro"
-                              ? "bg-pink-500/30 text-pink-300"
-                              : "bg-slate-600/30 text-slate-300"
+                          user.tier === 'enterprise'
+                            ? 'bg-purple-500/30 text-purple-300'
+                            : user.tier === 'pro'
+                            ? 'bg-pink-500/30 text-pink-300'
+                            : 'bg-slate-600/30 text-slate-300'
                         }`}
                       >
-                        {user.tier || "free"}
+                        {user.tier || 'free'}
                       </span>
                     </td>
                     <td className="px-4 py-3">
                       <span
                         className={`text-xs font-bold px-2 py-1 rounded ${
-                          user.status === "suspended"
-                            ? "bg-red-500/30 text-red-300"
-                            : "bg-emerald-500/30 text-emerald-300"
+                          user.status === 'suspended'
+                            ? 'bg-red-500/30 text-red-300'
+                            : 'bg-emerald-500/30 text-emerald-300'
                         }`}
                       >
-                        {user.status || "active"}
+                        {user.status || 'active'}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-center">
@@ -265,16 +284,20 @@ export default function AdminUserManager() {
 
             <div className="space-y-2 text-sm text-slate-300">
               <p>
-                <span className="text-slate-500">Email:</span> {selectedUser.email || "-"}
+                <span className="text-slate-500">Email:</span>{' '}
+                {selectedUser.email || '-'}
               </p>
               <p>
-                <span className="text-slate-500">Owner:</span> {selectedUser.name || "-"}
+                <span className="text-slate-500">Owner:</span>{' '}
+                {selectedUser.name || '-'}
               </p>
               <p>
-                <span className="text-slate-500">Status:</span> {selectedUser.status}
+                <span className="text-slate-500">Status:</span>{' '}
+                {selectedUser.status}
               </p>
               <p>
-                <span className="text-slate-500">Tier:</span> {selectedUser.tier}
+                <span className="text-slate-500">Tier:</span>{' '}
+                {selectedUser.tier}
               </p>
             </div>
 
@@ -282,11 +305,11 @@ export default function AdminUserManager() {
             <div className="space-y-2">
               <p className="text-xs text-slate-500 font-semibold">Set Tier:</p>
               <div className="flex gap-2">
-                {(["free", "pro", "enterprise"] as const).map((t) => (
+                {(['free', 'pro', 'enterprise'] as const).map((t) => (
                   <button
                     key={t}
                     onClick={() =>
-                      performAction(selectedUser.uid, "setTier", t)
+                      performAction(selectedUser.uid, 'setTier', t)
                     }
                     disabled={actionLoading}
                     className="flex-1 px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold transition disabled:opacity-50"
@@ -299,11 +322,9 @@ export default function AdminUserManager() {
 
             {/* Ban/Unban Buttons */}
             <div className="flex gap-2">
-              {selectedUser.status === "suspended" ? (
+              {selectedUser.status === 'suspended' ? (
                 <button
-                  onClick={() =>
-                    performAction(selectedUser.uid, "unban")
-                  }
+                  onClick={() => performAction(selectedUser.uid, 'unban')}
                   disabled={actionLoading}
                   className="flex-1 px-4 py-2 rounded-lg bg-emerald-500/30 hover:bg-emerald-500/50 text-emerald-300 font-semibold transition disabled:opacity-50"
                 >
@@ -312,8 +333,13 @@ export default function AdminUserManager() {
               ) : (
                 <button
                   onClick={() => {
-                    const reason = prompt("Ban reason (optional):");
-                    performAction(selectedUser.uid, "ban", undefined, reason || "");
+                    const reason = prompt('Ban reason (optional):');
+                    performAction(
+                      selectedUser.uid,
+                      'ban',
+                      undefined,
+                      reason || ''
+                    );
                   }}
                   disabled={actionLoading}
                   className="flex-1 px-4 py-2 rounded-lg bg-red-500/30 hover:bg-red-500/50 text-red-300 font-semibold transition disabled:opacity-50"
