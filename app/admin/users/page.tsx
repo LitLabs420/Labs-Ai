@@ -42,8 +42,8 @@ export default function AdminUsersPage() {
     onTierFilter,
     filterStatus,
     onStatusFilter,
-    users,
-    filteredUsers,
+    resultsCount,
+    totalCount,
   }: {
     searchTerm: string;
     onSearch: (v: string) => void;
@@ -51,8 +51,8 @@ export default function AdminUsersPage() {
     onTierFilter: (v: string) => void;
     filterStatus: string;
     onStatusFilter: (v: string) => void;
-    users: User[];
-    filteredUsers: User[];
+    resultsCount: number;
+    totalCount: number;
   }) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -110,7 +110,7 @@ export default function AdminUsersPage() {
             Results
           </label>
           <div className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white font-semibold">
-            {filteredUsers.length} of {users.length}
+            {resultsCount} of {totalCount}
           </div>
         </div>
       </div>
@@ -372,8 +372,8 @@ export default function AdminUsersPage() {
               onTierFilter={handleTierFilter}
               filterStatus={filterStatus}
               onStatusFilter={handleStatusFilter}
-              users={users}
-              filteredUsers={filteredUsers}
+              resultsCount={filteredUsers.length}
+              totalCount={users.length}
             />
           </div>
           {/* Users Table */}

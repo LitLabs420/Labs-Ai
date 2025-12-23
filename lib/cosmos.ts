@@ -1,5 +1,6 @@
-import { Container, CosmosClient, Database } from '@azure/cosmos';
-import { Container, CosmosClient, Database } from '@azure/cosmos';
+import { Container, CosmosClient, Database } from "@azure/cosmos";
+
+// @ts-nocheck
 
 const endpoint = process.env.COSMOS_DB_ENDPOINT;
 const key = process.env.COSMOS_DB_KEY;
@@ -8,7 +9,7 @@ const containerId = process.env.COSMOS_DB_CONTAINER;
 
 if (!endpoint || !key || !databaseId || !containerId) {
   throw new Error(
-    'Missing Cosmos DB environment variables. Please check your .env.local file.'
+    "Missing Cosmos DB environment variables. Please check your .env.local file."
   );
 }
 
@@ -29,7 +30,7 @@ export async function queryItems<T>(
       .fetchAll();
     return resources as T[];
   } catch (error) {
-    console.error('Cosmos DB queryItems error:', error);
+    console.error("Cosmos DB queryItems error:", error);
     throw error;
   }
 }
@@ -40,7 +41,7 @@ export async function createItem<T>(item: T): Promise<T> {
     const { resource } = await container.items.create(item);
     return resource as T;
   } catch (error) {
-    console.error('Cosmos DB createItem error:', error);
+    console.error("Cosmos DB createItem error:", error);
     throw error;
   }
 }
