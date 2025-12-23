@@ -167,5 +167,8 @@
   "workbench.startupEditor": "welcomePage",
   "[editorconfig]": {
     "editor.defaultFormatter": "GlenBuktenica.unicode-substitutions"
+  },
+  "[powershell]": {
+    "editor.defaultFormatter": "ms-vscode.powershell"
   }
 }
