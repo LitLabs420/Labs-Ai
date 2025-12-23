@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
     let stripeCustomerId: string;
 
     try {
-      const customer = await createStripeCustomer(email, email.split("@")[0]);
+      const customer = await createStripeCustomer(email, userId, email.split("@")[0]);
       stripeCustomerId = customer.id;
 
       // Store in Firestore

@@ -19,6 +19,8 @@ type UserProfile = {
 };
 
 function DashboardProfileInner() {
+  const auth = getAuthInstance();
+  const db = getDbInstance();
   const [user, setUser] = useState<{ email?: string; uid: string } | null>(
     null
   );

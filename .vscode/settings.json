@@ -1,5 +1,4 @@
 {
-  // Editor Settings
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": {
@@ -15,8 +14,6 @@
   "editor.guides.bracketPairs": true,
   "editor.inlineSuggest.enabled": true,
   "editor.suggestSelection": "first",
-
-  // Files Settings
   "files.autoSave": "onFocusChange",
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
@@ -34,8 +31,6 @@
     "**/build": true,
     "**/.next": true
   },
-
-  // Terminal Settings
   "terminal.integrated.defaultProfile.windows": "PowerShell",
   "terminal.integrated.profiles.windows": {
     "PowerShell": {
@@ -51,118 +46,7 @@
     }
   },
   "terminal.integrated.fontFamily": "Cascadia Code, Consolas, monospace",
-  "terminal.integrated.fontSize": 14,
-  "terminal.integrated.shellIntegration.enabled": true,
-  "terminal.integrated.shellIntegration.decorationsEnabled": "both",
-  "terminal.integrated.shellIntegration.history": 100,
-  "terminal.integrated.shellIntegration.suggestEnabled": true,
-  "terminal.integrated.suggest.enabled": true,
-  "terminal.integrated.suggest.quickSuggestions": true,
-  "terminal.integrated.enablePersistentSessions": true,
-  "terminal.integrated.rightClickBehavior": "default",
-  "terminal.integrated.commandsToSkipShell": [],
-
-  // Python Settings
-  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
-  "python.analysis.typeCheckingMode": "basic",
-  "python.analysis.autoImportCompletions": true,
-  "python.analysis.inlayHints.functionReturnTypes": true,
-  "python.linting.enabled": true,
-  "python.linting.pylintEnabled": false,
-  "python.linting.flake8Enabled": true,
-  "python.linting.mypyEnabled": true,
-  "python.formatting.provider": "black",
-  "python.testing.pytestEnabled": true,
-  "python.testing.unittestEnabled": false,
-
-  // JavaScript/TypeScript Settings
-  "javascript.updateImportsOnFileMove.enabled": "always",
-  "typescript.updateImportsOnFileMove.enabled": "always",
-  "javascript.preferences.quoteStyle": "single",
-  "typescript.preferences.quoteStyle": "single",
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-
-  // Python File Association
-  "[python]": {
-    "editor.defaultFormatter": "ms-python.black-formatter",
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-      "source.organizeImports": "explicit"
-    }
-  },
-
-  // Azure Settings
-  "azureFunctions.deploySubpath": ".",
-  "azureFunctions.projectLanguage": "Python",
-  "azureFunctions.projectRuntime": "~4",
-  "azureFunctions.pythonVenv": ".venv",
-
-  // Git Settings
-  "git.autofetch": true,
-  "git.confirmSync": false,
-  "git.enableSmartCommit": true,
-  "git.ignoreLimitWarning": true,
-  "scm.defaultViewMode": "tree",
-
-  // Search Settings
-  "search.exclude": {
-    "**/node_modules": true,
-    "**/bower_components": true,
-    "**/.venv": true,
-    "**/__pycache__": true,
-    "**/dist": true,
-    "**/build": true,
-    "**/.next": true
-  },
-
-  // Security
-  "security.workspace.trust.untrustedFiles": "open",
-
-  // Explorer
-  "explorer.confirmDelete": false,
-  "explorer.confirmDragAndDrop": false,
-  "explorer.compactFolders": false,
-
-  // Extensions
-  "extensions.ignoreRecommendations": false,
-
-  // ESLint
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact"
-  ],
-
-  // Prettier
-  "prettier.semi": true,
-  "prettier.singleQuote": true,
-  "prettier.trailingComma": "es5",
-  "prettier.tabWidth": 2,
-  "prettier.printWidth": 80,
-
-  // GitHub Copilot
-  "github.copilot.enable": {
-    "*": true,
-    "yaml": true,
-    "plaintext": false,
-    "markdown": true
-  },
-
-  // Workbench
-  "workbench.colorTheme": "Default Dark Modern",
+  "workbench.colorTheme": "Default Dark+",
   "workbench.iconTheme": "vs-seti",
   "workbench.startupEditor": "welcomePage",
   "[editorconfig]": {

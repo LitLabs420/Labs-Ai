@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { aiChatSchema } from "@/lib/validation";
 import { getUserFromRequest } from "@/lib/auth-helper";
+import { checkRateLimit } from "@/lib/rateLimiter";
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -16,6 +17,21 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
+      );
+    }
+
+    const ip =
+      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      (req as any).ip ||
+      "unknown";
+    const limit = await checkRateLimit(`${user.uid}:${ip}`);
+    if (!limit.ok) {
+      return NextResponse.json(
+        { error: "Rate limit exceeded", retryAfter: limit.retryAfter },
+        {
+          status: 429,
+          headers: limit.retryAfter ? { "Retry-After": String(limit.retryAfter) } : undefined,
+        }
       );
     }
 

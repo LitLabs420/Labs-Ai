@@ -8,6 +8,8 @@ import { doc, getDoc } from 'firebase/firestore';
 import DashboardLayout from '@/components/DashboardLayout';
 
 export default function BillingPage() {
+  const auth = getAuthInstance();
+  const db = getDbInstance();
   const router = useRouter();
   const [user, setUser] = useState<{ uid: string; email?: string } | null>(
     null

@@ -21,6 +21,7 @@ interface SubscriptionData {
 }
 
 export default function BillingPage() {
+  const auth = getAuthInstance();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [user, setUser] = useState<{ uid: string; email?: string } | null>(

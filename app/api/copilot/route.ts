@@ -4,30 +4,44 @@
  */
 
 import { getMicrosoftGraphClient } from '@/lib/microsoft-graph';
-import { doc, getDoc } from 'firebase/firestore';
+import { getAdminDb } from '@/lib/firebase-admin';
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
+import type { Firestore } from 'firebase-admin/firestore';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-if (!db) {
-  throw new Error('Firebase database not initialized');
-}
-
-interface CopilotRequest {
-  function: string;
-  parameters: Record<string, string | string[]>;
-  user_id: string;
-  context?: Record<string, unknown>;
-}
+const copilotRequestSchema = z.object({
+  function: z.string(),
+  parameters: z.record(z.union([z.string(), z.array(z.string())])).default({}),
+  user_id: z.string().min(1),
+  context: z.record(z.unknown()).optional(),
+});
 
 export async function POST(request: NextRequest) {
   try {
-    const body: CopilotRequest = await request.json();
-    const { function: functionName, parameters, user_id } = body;
+    const body = await request.json();
+    const validation = copilotRequestSchema.safeParse(body);
+    if (!validation.success) {
+      return NextResponse.json(
+        { error: 'Invalid request', details: validation.error.issues },
+        { status: 400 }
+      );
+    }
+
+    const { function: functionName, parameters, user_id } = validation.data;
+
+    const db = getAdminDb();
+    if (!db) {
+      return NextResponse.json(
+        { error: 'Server configuration error' },
+        { status: 500 }
+      );
+    }
 
     // Get user's Microsoft token
-    const userDoc = await getDoc(doc(db as any, 'users', user_id));
+    const userDoc = await db.collection('users').doc(user_id).get();
     const userData = userDoc.data();
 
     if (!userData?.tokens?.access_token) {
@@ -46,11 +60,11 @@ export async function POST(request: NextRequest) {
         break;
 
       case 'analyzeMetrics':
-        result = await handleAnalyzeMetrics(user_id, parameters);
+        result = await handleAnalyzeMetrics(db, user_id, parameters);
         break;
 
       case 'manageSubscription':
-        result = await handleManageSubscription(user_id, parameters);
+        result = await handleManageSubscription(db, user_id, parameters);
         break;
 
       case 'sendEmail':
@@ -113,13 +127,14 @@ async function handleGenerateContent(
 }
 
 async function handleAnalyzeMetrics(
+  db: Firestore,
   userId: string,
   parameters: Record<string, string | string[]>
 ) {
   const { metric_type, time_period = 'month' } = parameters;
 
   // Get user's metrics from Firestore
-  const userDoc = await getDoc(doc(db as any, 'users', userId));
+  const userDoc = await db.collection('users').doc(userId).get();
   const userData = userDoc.data();
 
   // Placeholder metrics - replace with real data
@@ -139,12 +154,13 @@ async function handleAnalyzeMetrics(
 }
 
 async function handleManageSubscription(
+  db: Firestore,
   userId: string,
   parameters: Record<string, string | string[]>
 ) {
   const { action } = parameters;
 
-  const userDoc = await getDoc(doc(db as any, 'users', userId));
+  const userDoc = await db.collection('users').doc(userId).get();
   const userData = userDoc.data();
 
   switch (action) {

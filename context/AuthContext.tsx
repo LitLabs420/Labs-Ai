@@ -7,6 +7,7 @@ import {
 } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { getAuthInstance, getDbInstance } from '@/lib/firebase';
 
 interface AuthContextType {
   user: User | null;
@@ -24,6 +25,11 @@ const AuthContext = createContext<AuthContextType>({
   signOut: async () => {},
 });
 
+const auth = getAuthInstance();
+const db = getDbInstance();
+const ADMIN_UID = process.env.NEXT_PUBLIC_ADMIN_UID;
+const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'dyingbreed243@gmail.com';
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -34,14 +40,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
       setLoading(false);
-      setIsAdmin(!!user && user.email === 'admin@litlabs.ai');
+      const adminMatch =
+        !!user &&
+        ((ADMIN_UID && user.uid === ADMIN_UID) ||
+          (ADMIN_EMAIL && user.email === ADMIN_EMAIL));
+      setIsAdmin(adminMatch);
       if (user) {
         // Fetch userData from Firestore
         try {
           const userRef = doc(db, 'users', user.uid);
           const userSnap = await getDoc(userRef);
           setUserData(userSnap.exists() ? userSnap.data() : null);
-        } catch (e) {
+        } catch (error) {
+          console.error('Failed to fetch user data', error);
           setUserData(null);
         }
       } else {

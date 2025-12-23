@@ -68,3 +68,6 @@ export function getDbInstance(): Firestore {
   }
   return db;
 }
+
+// Export instances for compatibility with legacy imports (will be null during SSR/build, ready on client)
+export { app, db, auth };
