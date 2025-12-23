@@ -1,4 +1,4 @@
-import { db } from '@/lib/firebase';
+import { getDbInstance } from '@/lib/firebase';
 import { collection, addDoc, query, where, getDocs, orderBy, Timestamp } from 'firebase/firestore';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 

@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react";
 import { AuthGate } from "@/components/AuthGate";
 import DashboardLayout from "@/components/DashboardLayout";
-import { auth, db } from "@/lib/firebase";
+import { getAuthInstance, getDbInstance } from "@/lib/firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 
 function OnboardingInner() {

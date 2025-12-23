@@ -6,7 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getMicrosoftGraphClient } from '@/lib/microsoft-graph';
 import { doc, getDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { getDbInstance } from '@/lib/firebase';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';

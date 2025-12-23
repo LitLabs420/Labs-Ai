@@ -1,4 +1,4 @@
-import { db } from '@/lib/firebase';
+import { getDbInstance } from '@/lib/firebase';
 import { collection, addDoc } from 'firebase/firestore';
 
 export async function logActivity(type: 'signup' | 'upgrade' | 'created_content', data: {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { auth, db } from "@/lib/firebase";
+import { getAuthInstance, getDbInstance } from "@/lib/firebase";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
 
 export default function DashboardShell() {

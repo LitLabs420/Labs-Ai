@@ -1,23 +1,22 @@
 // app/profile/page.tsx
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { AuthGate } from "@/components/AuthGate";
-import DashboardLayout from "@/components/DashboardLayout";
-import { auth, db } from "@/lib/firebase";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { AuthGate } from '@/components/AuthGate';
+import DashboardLayout from '@/components/DashboardLayout';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { useEffect, useState } from 'react';
 
 function ProfileInner() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
-    name: "",
-    businessName: "",
-    services: "",
-    city: "",
-    idealClient: "",
-    priceRange: "",
-    slowDays: "",
+    name: '',
+    businessName: '',
+    services: '',
+    city: '',
+    idealClient: '',
+    priceRange: '',
+    slowDays: '',
   });
 
   useEffect(() => {
@@ -34,19 +33,19 @@ function ProfileInner() {
         setLoading(false);
         return;
       }
-      const ref = doc(dbInstance, "users", user.uid);
+      const ref = doc(dbInstance, 'users', user.uid);
       const snap = await getDoc(ref);
       if (snap.exists()) {
         const data = snap.data();
         setForm((prev) => ({
           ...prev,
-          name: data.name || "",
-          businessName: data.businessName || "",
-          services: data.services || "",
-          city: data.city || "",
-          idealClient: data.idealClient || "",
-          priceRange: data.priceRange || "",
-          slowDays: data.slowDays || "",
+          name: data.name || '',
+          businessName: data.businessName || '',
+          services: data.services || '',
+          city: data.city || '',
+          idealClient: data.idealClient || '',
+          priceRange: data.priceRange || '',
+          slowDays: data.slowDays || '',
         }));
       }
       setLoading(false);
@@ -63,11 +62,11 @@ function ProfileInner() {
     const user = auth.currentUser;
     setSaving(true);
     try {
-      const ref = doc(db, "users", user.uid);
+      const ref = doc(db, 'users', user.uid);
       await setDoc(ref, form, { merge: true });
-      alert("✅ Profile updated successfully!");
+      alert('✅ Profile updated successfully!');
     } catch (error) {
-      alert("❌ Error updating profile: " + error);
+      alert('❌ Error updating profile: ' + error);
     }
     setSaving(false);
   };
@@ -80,20 +79,20 @@ function ProfileInner() {
         <div>
           <h1 className="text-3xl font-bold mb-2">Profile</h1>
           <p className="text-slate-300">
-            Update your business info. LitLabs uses this to personalize your content,
-            DM scripts, and promos.
+            Update your business info. LitLabs uses this to personalize your
+            content, DM scripts, and promos.
           </p>
         </div>
 
         <div className="space-y-4 bg-slate-900/50 border border-slate-700 rounded-lg p-6">
           {[
-            ["name", "Your Name"],
-            ["businessName", "Business Name"],
-            ["services", "Services"],
-            ["city", "City / Location"],
-            ["idealClient", "Ideal Client"],
-            ["priceRange", "Price Range"],
-            ["slowDays", "Slow Days"],
+            ['name', 'Your Name'],
+            ['businessName', 'Business Name'],
+            ['services', 'Services'],
+            ['city', 'City / Location'],
+            ['idealClient', 'Ideal Client'],
+            ['priceRange', 'Price Range'],
+            ['slowDays', 'Slow Days'],
           ].map(([field, label]) => (
             <div key={field}>
               <label className="block mb-2 text-slate-200 font-semibold text-sm">
@@ -114,7 +113,7 @@ function ProfileInner() {
           disabled={saving}
           className="px-6 py-3 rounded-lg bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold hover:shadow-lg hover:shadow-pink-500/50 transition disabled:opacity-60"
         >
-          {saving ? "Saving..." : "💾 Save Changes"}
+          {saving ? 'Saving...' : '💾 Save Changes'}
         </button>
 
         <p className="text-xs text-slate-500">

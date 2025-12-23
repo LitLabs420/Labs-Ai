@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
 import LitLabsAssistant from "./LitLabsAssistant";
 import SupportChat from "./SupportChat";
-import { auth } from "@/lib/firebase";
+import { getAuthInstance } from "@/lib/firebase";
 
 const navItems = [
   { href: "/dashboard", label: "Home", icon: "🏠" },

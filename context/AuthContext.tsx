@@ -1,6 +1,5 @@
 'use client';
 
-import { auth, db } from '@/lib/firebase';
 import {
   User,
   signOut as firebaseSignOut,

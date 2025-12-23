@@ -6,7 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getMicrosoftGraphClient } from '@/lib/microsoft-graph';
 import { doc, setDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { getDbInstance } from '@/lib/firebase';
 
 if (!db) {
   throw new Error('Firebase database not initialized');

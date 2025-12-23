@@ -1,4 +1,4 @@
-import { db } from '@/lib/firebase';
+import { getDbInstance } from '@/lib/firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 
 export async function checkPostLimit(userId: string): Promise<{
