@@ -1,0 +1,58 @@
+# Codacy CLI Configuration
+# For LitLabs AI Project
+
+# Project identification
+project:
+  provider: gh
+  organization: LitLabs420
+  repository: Labs-Ai
+
+# Analysis configuration
+analysis:
+  # Enable security analysis
+  security: true
+  
+  # Enable code patterns
+  patterns: true
+  
+  # Enable metrics
+  metrics: true
+  
+  # File patterns to analyze
+  include:
+    - "app/**/*.{ts,tsx,js,jsx}"
+    - "components/**/*.{ts,tsx,js,jsx}"
+    - "lib/**/*.{ts,tsx,js,jsx}"
+    - "types/**/*.ts"
+    - "scripts/**/*.{ts,js,py}"
+    - "python-agents/**/*.py"
+  
+  # File patterns to exclude
+  exclude:
+    - "node_modules/**"
+    - ".next/**"
+    - "dist/**"
+    - "build/**"
+    - ".venv/**"
+    - "__pycache__/**"
+    - "*.test.{ts,tsx,js,jsx}"
+    - "*.spec.{ts,tsx,js,jsx}"
+
+# Tool-specific configuration
+tools:
+  # TypeScript/JavaScript
+  eslint:
+    enabled: true
+  
+  # Python
+  pylint:
+    enabled: true
+  
+  # Security
+  trivy:
+    enabled: true
+
+# Output settings
+output:
+  format: json
+  verbose: true
