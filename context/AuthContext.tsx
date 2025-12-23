@@ -1,7 +1,11 @@
 'use client';
 
 import { auth, db } from '@/lib/firebase';
-import { User, onAuthStateChanged, signOut as firebaseSignOut } from 'firebase/auth';
+import {
+  User,
+  signOut as firebaseSignOut,
+  onAuthStateChanged,
+} from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
@@ -31,7 +35,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
       setLoading(false);
-      setIsAdmin(!!user && user.email === "admin@litlabs.ai");
+      setIsAdmin(!!user && user.email === 'admin@litlabs.ai');
       if (user) {
         // Fetch userData from Firestore
         try {
