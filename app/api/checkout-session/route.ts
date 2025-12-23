@@ -4,6 +4,7 @@ import { STRIPE_PRODUCTS } from "@/lib/stripe-client";
 import { getAdminDb } from "@/lib/firebase-admin";
 import { getUserFromRequest } from "@/lib/auth-helper";
 import { getBaseUrl } from "@/lib/url-helper";
+import { checkRateLimit } from "@/lib/rateLimiter";
 import { z } from "zod";
 
 export const runtime = 'nodejs';
@@ -15,6 +16,21 @@ const checkoutSchema = z.object({
 
 export async function POST(req: NextRequest) {
   try {
+    const ip =
+      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      (req as any).ip ||
+      "unknown";
+    const rateLimit = await checkRateLimit(`checkout-session:${ip}`);
+    if (!rateLimit.ok) {
+      return NextResponse.json(
+        { error: "Rate limit exceeded", retryAfter: rateLimit.retryAfter },
+        {
+          status: 429,
+          headers: rateLimit.retryAfter ? { "Retry-After": String(rateLimit.retryAfter) } : undefined,
+        }
+      );
+    }
+
     // Authenticate user
     const user = await getUserFromRequest(req);
     if (!user) {

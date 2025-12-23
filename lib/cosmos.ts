@@ -1,5 +1,4 @@
-// lib/cosmos.ts
-// Azure Cosmos DB integration for Labs-Ai
+import { Container, CosmosClient, Database } from '@azure/cosmos';
 import { Container, CosmosClient, Database } from '@azure/cosmos';
 
 const endpoint = process.env.COSMOS_DB_ENDPOINT;
