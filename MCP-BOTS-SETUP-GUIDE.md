@@ -8,7 +8,7 @@ This guide explains how to set up all Model Context Protocol (MCP) bots for the 
 
 ### ✨ **GOOD NEWS**: MCP Configuration is Complete!
 
-Your [.vscode/settings.json](d:\LiTreeLabStudio\.vscode\settings.json) now has all 14 MCP servers configured:
+Your [.vscode/settings.json](d:\LiTreeLabStudio.vscode\settings.json) now has all 14 MCP servers configured:
 
 1. ✅ **Azure MCP** - Azure resource management & best practices
 2. ✅ **Azure Functions MCP** - Functions development tools
@@ -31,18 +31,18 @@ Some MCP bots require API keys and tokens. Here's what you need:
 
 ### Required (Critical for Key Features)
 
-| Variable | Required For | How to Get |
-|----------|--------------|------------|
-| `AZURE_SUBSCRIPTION_ID` | Azure MCP | [Azure Portal](https://portal.azure.com) → Subscriptions |
-| `GITHUB_TOKEN` | GitHub MCP | [GitHub Settings](https://github.com/settings/tokens) → Personal Access Tokens |
-| `CODACY_API_TOKEN` | Codacy MCP | [Codacy Account](https://app.codacy.com/account/api-tokens) → API Tokens |
+| Variable                | Required For | How to Get                                                                     |
+| ----------------------- | ------------ | ------------------------------------------------------------------------------ |
+| `AZURE_SUBSCRIPTION_ID` | Azure MCP    | [Azure Portal](https://portal.azure.com) → Subscriptions                       |
+| `GITHUB_TOKEN`          | GitHub MCP   | [GitHub Settings](https://github.com/settings/tokens) → Personal Access Tokens |
+| `CODACY_API_TOKEN`      | Codacy MCP   | [Codacy Account](https://app.codacy.com/account/api-tokens) → API Tokens       |
 
 ### Optional (Enhanced Features)
 
-| Variable | Required For | How to Get |
-|----------|--------------|------------|
-| `POSTMAN_API_KEY` | Postman MCP | [Postman Settings](https://postman.co/settings/me/api-keys) → API Keys |
-| `BRAVE_API_KEY` | Web Search MCP | [Brave Search API](https://brave.com/search/api/) → Sign Up |
+| Variable          | Required For   | How to Get                                                             |
+| ----------------- | -------------- | ---------------------------------------------------------------------- |
+| `POSTMAN_API_KEY` | Postman MCP    | [Postman Settings](https://postman.co/settings/me/api-keys) → API Keys |
+| `BRAVE_API_KEY`   | Web Search MCP | [Brave Search API](https://brave.com/search/api/) → Sign Up            |
 
 ## 🚀 Quick Setup
 
@@ -56,6 +56,7 @@ cd "d:\LiTreeLabStudio\Projects\Active\Labs-Ai"
 ```
 
 This script will:
+
 - ✅ Load variables from `.env.local`
 - ✅ Check which MCP bots are configured
 - ✅ Show which environment variables are missing
@@ -66,11 +67,13 @@ This script will:
 #### Step 1: Get API Keys
 
 1. **Azure Subscription ID**
+
    - Go to [Azure Portal](https://portal.azure.com)
    - Navigate to "Subscriptions"
    - Copy your Subscription ID
 
 2. **GitHub Token**
+
    - Go to [GitHub Settings](https://github.com/settings/tokens)
    - Generate new token (classic)
    - Required scopes: `repo`, `read:org`, `workflow`
@@ -134,6 +137,7 @@ Ask about Azure best practices
 All bots are installed automatically via `npx` when first used. No manual installation needed!
 
 The packages used:
+
 - `@azure/mcp-server-azure`
 - `@azure/mcp-server-azure-functions`
 - `@modelcontextprotocol/server-git`
@@ -152,50 +156,59 @@ The packages used:
 ## 🎯 What Each Bot Does
 
 ### Azure MCP (`azure-mcp`)
+
 - Azure resource management
 - Best practices for Azure services
 - Deployment guidance
 - Azure Functions support
 
 ### Git MCP (`git`)
+
 - Branch management
 - Commit operations
 - Repository status
 - Diff viewing
 
 ### GitHub MCP (`github`)
+
 - Pull request operations
 - Issue management
 - Repository insights
 - Workflow automation
 
 ### Codacy MCP (`codacy`)
+
 - **CRITICAL FOR THIS PROJECT**: Automatic code quality analysis
 - Security vulnerability scanning
 - Code complexity analysis
 - See `.github/instructions/codacy.instructions.md` for usage rules
 
 ### Docker MCP (`docker`)
+
 - Container management
 - Image operations
 - Docker Compose support
 
 ### Postman MCP (`postman`)
+
 - API testing
 - Collection management
 - Environment variables
 
 ### MSSQL MCP (`mssql`)
+
 - SQL Server operations
 - Database queries
 - Schema exploration
 
 ### Filesystem MCP (`filesystem`)
+
 - File operations beyond standard VS Code
 - Directory traversal
 - Bulk file operations
 
 ### AI Toolkit MCP (`aitk`)
+
 - AI agent development
 - Model evaluation
 - Tracing and debugging
@@ -205,12 +218,15 @@ The packages used:
 ### MCP Bots Not Showing Up
 
 1. **Check settings are saved**
+
    ```powershell
    Get-Content "d:\LiTreeLabStudio\.vscode\settings.json" | Select-String "mcp"
    ```
+
    Should show MCP configuration.
 
 2. **Verify environment variables**
+
    ```powershell
    .\setup-mcp-env.ps1
    ```
@@ -223,10 +239,12 @@ The packages used:
 ### Specific Bot Not Working
 
 1. **Check API key is valid**
+
    - Tokens can expire
    - Check permissions/scopes
 
 2. **Check bot package**
+
    ```powershell
    npx --yes @azure/mcp-server-azure --version
    ```
@@ -249,12 +267,14 @@ Per the Codacy instructions (`.github/instructions/codacy.instructions.md`):
 ## 📚 Additional Resources
 
 ### Documentation
+
 - [Main README](d:\LiTreeLabStudio\Projects\Active\Labs-Ai\README.md)
 - [Copilot Instructions](.github/copilot-instructions.md)
 - [Codacy Instructions](.github/instructions/codacy.instructions.md)
 - [MCP Setup Guide](.vscode/MCP-SETUP-GUIDE.md)
 
 ### Scripts
+
 - `activate-all-bots.ps1` - Pre-warm MCP bots and optimize performance
 - `setup-mcp-env.ps1` - Configure environment variables (THIS FILE)
 - `quick-commands.ps1` - Useful development aliases
@@ -262,6 +282,7 @@ Per the Codacy instructions (`.github/instructions/codacy.instructions.md`):
 ## 🎉 You're All Set!
 
 Once configured, your MCP bots will:
+
 - ✅ Automatically activate when you ask relevant questions
 - ✅ Enhance Copilot with specialized knowledge
 - ✅ Provide real-time code quality feedback
