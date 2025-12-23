@@ -1,0 +1,16 @@
+{
+  "name": "litreestudio",
+  "version": "1.0.0",
+  "description": "LiTree Studio - Full-Stack Azure App",
+  "scripts": {
+    "install:all": "npm install && cd app && npm install && cd ../api && npm install",
+    "build": "cd app && npm run build",
+    "dev": "npm install && cd app && npm install && npm run dev",
+    "api:start": "cd api && npm start",
+    "api:install": "cd api && npm install",
+    "app:build": "cd app && npm run build"
+  },
+  "keywords": ["azure", "static-web-apps", "functions"],
+  "author": "LiTree89",
+  "license": "MIT"
+}
