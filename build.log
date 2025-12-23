@@ -1,3 +1,7 @@
+
+> labs-ai-studio@1.0.0 build
+> next build
+
    Γû▓ Next.js 16.0.10 (Turbopack)
    - Environments: .env.local
 
@@ -51,33 +55,7 @@ https://nextjs.org/docs/messages/module-not-found
 
 
 > Build error occurred
-Error: Turbopack build failed with 38 errors:
-./app/dashboard/billing/page.tsx:110:31
-Parsing ecmascript source code failed
-  108 |
-  109 |         {message && (
-> 110 |           <div className={p-4 rounded-lg }>
-      |                               ^^^^^^^
-  111 |             {message.text}
-  112 |           </div>
-  113 |         )}
-
-Expected '</', got 'rounded'
-
-
-./app/referrals/page.tsx:29:24
-Parsing ecmascript source code failed
-  27 |       const code = user.displayName?.split(' ')[0].toLowerCase() + '123' || 'user123';
-  28 |       setReferralCode(code);
-> 29 |       setReferralLink(${window.location.origin}/auth?ref=);
-     |                        ^
-  30 |       setStats({
-  31 |         referralCount: 5,
-  32 |         totalBonus: 150,
-
-Expected ',', got '{'
-
-
+Error: Turbopack build failed with 41 errors:
 ./app/api/ai/dm-reply/route.ts:6:1
 Module not found: Can't resolve '@/lib/firebase-server'
   4 | import { verifyRecaptcha } from '@/lib/recaptcha';
@@ -315,6 +293,30 @@ Import traces:
 https://nextjs.org/docs/messages/module-not-found
 
 
+./app/dashboard/billing/page.tsx:5:1
+Module not found: Can't resolve 'firebase/auth'
+  3 | import { useState, useEffect, Suspense } from 'react';
+  4 | import { useRouter, useSearchParams } from 'next/navigation';
+> 5 | import { onAuthStateChanged } from 'firebase/auth';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 | import { auth } from '@/lib/firebase';
+  7 | import DashboardLayout from '@/components/DashboardLayout';
+  8 | import { STRIPE_PRODUCTS } from '@/lib/stripe-client';
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/dashboard/billing/page.tsx [Client Component Browser]
+    ./app/dashboard/billing/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/dashboard/billing/page.tsx [Client Component SSR]
+    ./app/dashboard/billing/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
 ./app/dashboard/onboarding/page.tsx:5:1
 Module not found: Can't resolve 'firebase/auth'
   3 | import { useState } from "react";
@@ -359,6 +361,30 @@ Import traces:
   Client Component SSR:
     ./app/history/page.tsx [Client Component SSR]
     ./app/history/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./app/referrals/page.tsx:5:1
+Module not found: Can't resolve 'firebase/auth'
+  3 | import { useEffect, useState } from 'react';
+  4 | import { useRouter } from 'next/navigation';
+> 5 | import { onAuthStateChanged } from 'firebase/auth';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 | import { auth, db } from '@/lib/firebase';
+  7 | import { doc, getDoc } from 'firebase/firestore';
+  8 |
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/referrals/page.tsx [Client Component Browser]
+    ./app/referrals/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/referrals/page.tsx [Client Component SSR]
+    ./app/referrals/page.tsx [Server Component]
 
 https://nextjs.org/docs/messages/module-not-found
 
@@ -680,6 +706,30 @@ Import traces:
 https://nextjs.org/docs/messages/module-not-found
 
 
+./app/referrals/page.tsx:7:1
+Module not found: Can't resolve 'firebase/firestore'
+   5 | import { onAuthStateChanged } from 'firebase/auth';
+   6 | import { auth, db } from '@/lib/firebase';
+>  7 | import { doc, getDoc } from 'firebase/firestore';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   8 |
+   9 | export default function ReferralsPage() {
+  10 |   const router = useRouter();
+
+
+
+Import traces:
+  Client Component Browser:
+    ./app/referrals/page.tsx [Client Component Browser]
+    ./app/referrals/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/referrals/page.tsx [Client Component SSR]
+    ./app/referrals/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
 ./components/LiveActivityFeed.tsx:5:1
 Module not found: Can't resolve 'firebase/firestore'
   3 | import { useEffect, useState } from 'react';
@@ -956,8 +1006,50 @@ Import trace:
 https://nextjs.org/docs/messages/module-not-found
 
 
-    at <unknown> (./app/dashboard/billing/page.tsx:110:31)
-    at <unknown> (./app/referrals/page.tsx:29:24)
+./lib/functionsClient.ts:3:1
+Module not found: Can't resolve 'firebase/functions'
+  1 | "use client";
+  2 |
+> 3 | import { getFunctions, httpsCallable } from "firebase/functions";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  4 | import { app } from "./firebase";
+  5 |
+  6 | const functions = app ? getFunctions(app, "us-central1") : null;
+
+
+
+Import trace:
+  Client Component Browser:
+    ./lib/functionsClient.ts [Client Component Browser]
+    ./components/dashboard/ChatBot.tsx [Client Component Browser]
+    ./app/dashboard/page.tsx [Client Component Browser]
+    ./app/dashboard/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./lib/functionsClient.ts:4:1
+Export app doesn't exist in target module
+  2 |
+  3 | import { getFunctions, httpsCallable } from "firebase/functions";
+> 4 | import { app } from "./firebase";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 |
+  6 | const functions = app ? getFunctions(app, "us-central1") : null;
+  7 |
+
+The export app was not found in module [project]/lib/firebase.ts [app-client] (ecmascript).
+Did you mean to import auth?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Client Component Browser:
+    ./lib/functionsClient.ts [Client Component Browser]
+    ./components/dashboard/ChatBot.tsx [Client Component Browser]
+    ./app/dashboard/page.tsx [Client Component Browser]
+    ./app/dashboard/page.tsx [Server Component]
+
+
     at <unknown> (./app/api/ai/dm-reply/route.ts:6:1)
     at <unknown> (https://nextjs.org/docs/messages/module-not-found)
     at <unknown> (./app/api/ai/generate-content/route.ts:6:1)
@@ -982,9 +1074,13 @@ https://nextjs.org/docs/messages/module-not-found
     at <unknown> (https://nextjs.org/docs/messages/module-not-found)
     at <unknown> (./app/auth/page.tsx:5:1)
     at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./app/dashboard/billing/page.tsx:5:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
     at <unknown> (./app/dashboard/onboarding/page.tsx:5:1)
     at <unknown> (https://nextjs.org/docs/messages/module-not-found)
     at <unknown> (./app/history/page.tsx:6:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./app/referrals/page.tsx:5:1)
     at <unknown> (https://nextjs.org/docs/messages/module-not-found)
     at <unknown> (./components/AuthGate.tsx:5:1)
     at <unknown> (https://nextjs.org/docs/messages/module-not-found)
@@ -1012,6 +1108,8 @@ https://nextjs.org/docs/messages/module-not-found
     at <unknown> (https://nextjs.org/docs/messages/module-not-found)
     at <unknown> (./app/profile/page.tsx:8:1)
     at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./app/referrals/page.tsx:7:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
     at <unknown> (./components/LiveActivityFeed.tsx:5:1)
     at <unknown> (https://nextjs.org/docs/messages/module-not-found)
     at <unknown> (./lib/advanced-analytics.ts:7:1)
@@ -1030,3 +1128,6 @@ https://nextjs.org/docs/messages/module-not-found
     at <unknown> (https://nextjs.org/docs/messages/module-not-found)
     at <unknown> (./lib/white-label.ts:7:1)
     at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./lib/functionsClient.ts:3:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./lib/functionsClient.ts:4:1)
