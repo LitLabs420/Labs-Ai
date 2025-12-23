@@ -270,12 +270,20 @@ export default function AdminAnalyticsPage() {
               <div className="relative h-8 bg-white/10 rounded-full overflow-hidden">
                 <div
                   className={`h-full bg-gradient-to-r from-blue-500 to-cyan-500 transition-all`}
-                  style={{
-                    width: `${
-                      analytics.totalUsers > 0
-                        ? (analytics.freeUsers / analytics.totalUsers) * 100
-                        : 0
-                    }%`,
+                  style={{ width: '0%' }}
+                  data-width={
+                    analytics.totalUsers > 0
+                      ? (analytics.freeUsers / analytics.totalUsers) * 100
+                      : 0
+                  }
+                  ref={el => {
+                    if (el) {
+                      const percent =
+                        analytics.totalUsers > 0
+                          ? (analytics.freeUsers / analytics.totalUsers) * 100
+                          : 0;
+                      el.style.width = percent + '%';
+                    }
                   }}
                 />
               </div>
@@ -297,12 +305,20 @@ export default function AdminAnalyticsPage() {
               <div className="relative h-8 bg-white/10 rounded-full overflow-hidden">
                 <div
                   className={`h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all`}
-                  style={{
-                    width: `${
-                      analytics.totalUsers > 0
-                        ? (analytics.proUsers / analytics.totalUsers) * 100
-                        : 0
-                    }%`,
+                  style={{ width: '0%' }}
+                  data-width={
+                    analytics.totalUsers > 0
+                      ? (analytics.proUsers / analytics.totalUsers) * 100
+                      : 0
+                  }
+                  ref={el => {
+                    if (el) {
+                      const percent =
+                        analytics.totalUsers > 0
+                          ? (analytics.proUsers / analytics.totalUsers) * 100
+                          : 0;
+                      el.style.width = percent + '%';
+                    }
                   }}
                 />
               </div>
@@ -323,13 +339,20 @@ export default function AdminAnalyticsPage() {
               <div className="relative h-8 bg-white/10 rounded-full overflow-hidden">
                 <div
                   className={`h-full bg-gradient-to-r from-orange-500 to-red-500 transition-all`}
-                  style={{
-                    width: `${
-                      analytics.totalUsers > 0
-                        ? (analytics.enterpriseUsers / analytics.totalUsers) *
-                          100
-                        : 0
-                    }%`,
+                  style={{ width: '0%' }}
+                  data-width={
+                    analytics.totalUsers > 0
+                      ? (analytics.enterpriseUsers / analytics.totalUsers) * 100
+                      : 0
+                  }
+                  ref={el => {
+                    if (el) {
+                      const percent =
+                        analytics.totalUsers > 0
+                          ? (analytics.enterpriseUsers / analytics.totalUsers) * 100
+                          : 0;
+                      el.style.width = percent + '%';
+                    }
                   }}
                 />
               </div>
